@@ -9,13 +9,13 @@ if sys.version < '2.2.3':
     DistributionMetadata.classifiers = None
     DistributionMetadata.download_url = None
 
-setup(name="Validator",
+setup(name="FormEncode",
       version="0.1",
-      description="Validation and Convertion package",
+      description="HTML form validation, generation, and convertion package",
       long_description="""\
-Validator validates and converts nested structures.  It allows for
-a declarative form of defining the validation, and hooks for all
-aspects.
+FormEncode validates and converts nested structures.  It allows for
+a declarative form of defining the validation, and decoupled processes
+for filling and generating forms.
 """,
       classifiers=["Development Status :: 3 - Alpha",
                    "Intended Audience :: Developers",
@@ -25,9 +25,9 @@ aspects.
                    ],
       author="Ian Bicking",
       author_email="ianb@colorstudy.com",
-      url="http://colorstudy.com/svn/trunk/Validators/",
+      url="http://svn.colorstudy.com/Formencode/trunk",
       license="PSF",
-      packages=["validator"],
+      packages=["formencode"],
       download_url="@@",
       )
 
