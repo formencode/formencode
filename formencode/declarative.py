@@ -14,13 +14,14 @@ interpreted as the given keyword arguments.
 If __unpackargs__ is ('*', name), then all the arguments will be put
 in a variable by that name.
 
-Also, you can define a __classinit__(cls) method, which will be called
-when the class is created (including subclasses).
+Also, you can define a __classinit__(cls, new_attrs) method, which
+will be called when the class is created (including subclasses).
 """
 
 from __future__ import generators
 
 import copy
+import new
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -75,11 +76,34 @@ class _methodwrapper(object):
 
 class DeclarativeMeta(type):
 
-    def __new__(meta, class_name, bases, d):
-        cls = type.__new__(meta, class_name, bases, d)
+    def __new__(meta, class_name, bases, new_attrs):
+        cls = type.__new__(meta, class_name, bases, new_attrs)
         cls.declarative_count = counter.next()
-        cls.__classinit__.im_func(cls)
+        cls.__classinit__.im_func(cls, new_attrs)
+        names = getattr(cls, '__singletonmethods__', None)
+        if names:
+            for name in names:
+                meth = cls.__dict__.get(name)
+                if meth and not isinstance(meth, singletonmethod):
+                    setattr(cls, name, singletonmethod(meth))
         return cls
+
+class singletonmethod(object):
+    """
+    For Declarative subclasses, this decorator will call the method
+    on the cls.singleton() object if called as a class method (or
+    as normal if called as an instance method).
+    """
+
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, obj, type=None):
+        if obj is None:
+            obj = type.singleton()
+        if type is None:
+            type = obj.__class__
+        return new.instancemethod(self.func, obj, type)
 
 class Declarative(object):
 
@@ -89,7 +113,9 @@ class Declarative(object):
 
     __metaclass__ = DeclarativeMeta
 
-    def __classinit__(cls):
+    __singletonmethods__ = ()
+
+    def __classinit__(cls, new_attrs):
         pass
 
     def __init__(self, *args, **kw):

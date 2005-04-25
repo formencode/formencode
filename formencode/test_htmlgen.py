@@ -20,9 +20,6 @@ def test_compound():
     inner = html('Hey ', html.i('you'), '!')
     assert html.str(inner) == 'Hey <i>you</i>!'
     assert str(inner) == 'Hey <i>you</i>!'
-    assert (repr(inner)
-            == "ElementList(['Hey ', <Element '<i>you</i>'>, "
-            "'!'])")
     assert str(html.b(inner)) == output
 
 def test_unicode():

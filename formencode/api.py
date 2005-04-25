@@ -5,7 +5,7 @@ except ImportError:
     import dummy_protocols as protocols
     dummy = True
 from interfaces import *
-from declarative import Declarative
+import declarative
 
 __all__ = ['NoDefault', 'adapt_validator', 'to_python',
            'from_python', 'Invalid', 'Validator', 'Identity',
@@ -16,7 +16,7 @@ class NoDefault:
 
 def adapt_validator(obj, state=None):
     try:
-        if isinstance(obj, type) and issubclass(obj, Declarative):
+        if isinstance(obj, type) and issubclass(obj, declarative.Declarative):
             obj = obj.singleton()
         if dummy:
             if not isinstance(obj, Validator):
@@ -112,6 +112,7 @@ class Invalid(Exception):
         dictionaries, and strings.
         """
         if self.error_list:
+            assert not self.error_dict
             result = []
             for item in self.error_list:
                 if not item:
@@ -135,7 +136,7 @@ class Invalid(Exception):
 ## Base Classes
 ############################################################
 
-class Validator(Declarative):
+class Validator(declarative.Declarative):
 
     """
     The base class of most validators.  See `IValidator` for more, and
@@ -151,14 +152,16 @@ class Validator(Declarative):
     repeating = False
     compound = False
 
-    def __classinit__(cls):
+    __singletonmethods__ = ('to_python', 'from_python')
+
+    def __classinit__(cls, new_attrs):
         if hasattr(cls, 'messages'):
             cls._messages = cls._messages.copy()
             cls._messages.update(cls.messages)
             del cls.messages
 
     def __init__(self, *args, **kw):
-        Declarative.__init__(self, *args, **kw)
+        declarative.Declarative.__init__(self, *args, **kw)
         if hasattr(self, 'messages'):
             self._messages = self._messages.copy()
             self._messages.update(self.messages)
@@ -217,7 +220,7 @@ class FancyValidator(Validator):
     however none of these *have* to be overridden, only the ones that
     are appropriate for the validator:
     * __init__():
-      if the `Declarative` model doesn't work for this.
+      if the `declarative.Declarative` model doesn't work for this.
     * .validate_python(value, state):
       This should raise an error if necessary.  The value is a Python
       object, either the result of to_python, or the input to

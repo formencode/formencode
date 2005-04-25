@@ -6,11 +6,11 @@ base_dir = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__))))
 if base_dir not in sys.path:
     sys.path.insert(0, base_dir)
-from validator import htmlfill
-from validator.doctest_xml_compare import xml_compare
+from formencode import htmlfill
+from formencode.doctest_xml_compare import xml_compare
 from elementtree import ElementTree as et
 from xml.parsers.expat import ExpatError
-from validator import htmlfill_schemabuilder
+from formencode import htmlfill_schemabuilder
 
 def test_inputoutput():
     data_dir = os.path.join(os.path.dirname(__file__), 'htmlfill_data')
