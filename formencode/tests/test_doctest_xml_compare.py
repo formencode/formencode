@@ -1,5 +1,5 @@
-import doctest_xml_compare as dxml
-from htmlgen import html
+import formencode.doctest_xml_compare as dxml
+from formencode.htmlgen import html
 import sys
 
 XML = dxml.et.XML

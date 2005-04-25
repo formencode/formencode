@@ -1,10 +1,8 @@
-import validators
-import foreach
-from schema import Schema
-from api import *
-from variabledecode import NestedVariables
+from formencode import validators, foreach
+from formencode.schema import Schema
+from formencode.api import *
+from formencode.variabledecode import NestedVariables
 import cgi
-from pprint import pprint
 
 def d(**kw): return kw
 

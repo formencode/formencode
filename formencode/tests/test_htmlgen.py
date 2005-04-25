@@ -1,4 +1,4 @@
-from htmlgen import html
+from formencode.htmlgen import html
 import doctest
 
 # A test value that can't be encoded as ascii:
