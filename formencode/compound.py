@@ -5,27 +5,13 @@ from api import *
 ## Compound Validators
 ############################################################
 
-class CompoundValidatorMeta(DeclarativeMeta):
-    
-    def __new__(meta, class_name, bases, d):
-        cls = DeclarativeMeta.__new__(meta, class_name, bases, d)
-        cls.validators = cls.validators[:]
-        toAdd = []
-        for name, value in d.items():
-            if name in ('view',):
-                continue
-            validator = adapt_validator(value)
-            if validator and validator is not Identity:
-                toAdd.append((name, value))
-                # @@: Should we really delete too?
-                delattr(cls, name)
-        toAdd.sort()
-        cls.validators.extend([v for n, v in toAdd])
-        return cls
+def to_python(validator, value, state):
+    return validator.to_python(value, state)
+
+def from_python(validator, value, state):
+    return validator.from_python(value, state)
 
 class CompoundValidator(Validator):
-
-    __metaclass__ = CompoundValidatorMeta
 
     if_invalid = NoDefault
 
@@ -34,6 +20,18 @@ class CompoundValidator(Validator):
     __unpackargs__ = ('*', 'validatorArgs')
 
     __mutableattributes__ = ('validators',)
+
+    def __classinit__(cls, new_attrs):
+        toAdd = []
+        for name, value in new_attrs.items():
+            if name in ('view',):
+                continue
+            if is_validator(value) and value is not Identity:
+                toAdd.append((name, value))
+                # @@: Should we really delete too?
+                delattr(cls, name)
+        toAdd.sort()
+        cls.validators.extend([v for n, v in toAdd])
 
     def __init__(self, *args, **kw):
         Validator.__init__(self, *args, **kw)
@@ -148,16 +146,3 @@ class All(CompoundValidator):
                 return v
         return NoDefault
     if_missing = property(if_missing__get)
-
-def _adaptListToAll(v, protocol):
-    if not v:
-        return Identity
-    if len(v) == 1:
-        return adapt_validator(v[0])
-    return All(*v)
-
-# @@: maybe this is fishy?
-#import protocols
-#from interfaces import *
-#protocols.declareAdapter(_adaptListToAll, [IValidator],
-#                         forTypes=[list, tuple])

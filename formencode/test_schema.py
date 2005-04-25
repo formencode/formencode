@@ -4,6 +4,7 @@ from schema import Schema
 from api import *
 from variabledecode import NestedVariables
 import cgi
+from pprint import pprint
 
 def d(**kw): return kw
 
@@ -27,6 +28,7 @@ class DecodeCase(object):
     error_expected = False
 
     def __init__(self, schema, input, **output):
+        self.raw_input = input
         self.schema = schema
         if isinstance(input, str):
             input = cgi_parse(input)
@@ -35,6 +37,7 @@ class DecodeCase(object):
         all_cases.append(self)
 
     def test(self):
+        print self.raw_input
         actual = self.schema.to_python(self.input)
         assert actual == self.output        
 
@@ -48,6 +51,7 @@ class BadCase(DecodeCase):
             self.output = self.output['text']
 
     def test(self):
+        print self.raw_input
         try:
             self.schema.to_python(self.input)
         except Invalid, e:
@@ -81,7 +85,7 @@ BadCase(Name, '',
         lname='Missing value')
 
 class AddressesForm(Schema):
-    pre_validators=[NestedVariables()]
+    pre_validators = [NestedVariables()]
     class addresses(foreach.ForEach):
         class schema(Schema):
             name = Name()

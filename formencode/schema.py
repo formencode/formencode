@@ -1,52 +1,6 @@
 from interfaces import *
 from api import *
 import declarative
-try:
-    import protocols
-except ImportError:
-    import dummy_protocols as protocols
-
-class SchemaMeta(declarative.DeclarativeMeta):
-
-    """
-    Takes a class definition, and puts all the validators it finds
-    into a class variable (fields).  Also makes sure that this class
-    variable is unique to this class (i.e., is not shared by
-    subclasses), as it also does for chained_validators and
-    pre_validators.
-    """
-
-    def __new__(meta, class_name, bases, d):
-        cls = declarative.DeclarativeMeta.__new__(meta, class_name, bases, d)
-        # Don't bother doing anything if this is the most parent
-        # Schema class (which is the only class with just
-        # FancyValidator as a superclass):
-        if bases == (FancyValidator,):
-            return cls
-        # Make sure we have out own copy of fields,
-        # not shared by parent classes (and indirectly not by
-        # children either).  
-        cls.fields = cls.fields.copy()
-        cls.chained_validators = cls.chained_validators[:]
-        cls.pre_validators = cls.pre_validators[:]
-        # Scan through the class variables we've defined *just*
-        # for this subclass, looking for validators (both classes
-        # and instances):
-        for key, value in d.items():
-            if key in ['pre_validators', 'chained_validators',
-                       'view']:
-                continue
-            validator = adapt_validator(value)
-            if validator:
-                cls.fields[key] = value
-                delattr(cls, key)
-            # This last case means we're overwriting a validator
-            # from a superclass:
-            elif cls.fields.has_key(key):
-                del cls.fields[key]
-        for name, value in cls.fields.items():
-            cls.add_field(name, value)
-        return cls
 
 class Schema(FancyValidator):
 
@@ -73,11 +27,6 @@ class Schema(FancyValidator):
             name = None
     """
 
-    __metaclass__ = SchemaMeta
-
-    protocols.advise(
-        instancesProvide=[ISchema])
-
     chained_validators = []
     pre_validators = []
     allow_extra_fields = False
@@ -90,13 +39,55 @@ class Schema(FancyValidator):
         'notExpected': 'The input field %(name)s was not expected.',
         'missingValue': "Missing value",
         }
+
+    __mutableattributes__ = ('fields', 'chained_validators',
+                             'pre_validators')
+
+    def __classinit__(cls, new_attrs):
+        FancyValidator.__classinit__(cls, new_attrs)
+        # Don't bother doing anything if this is the most parent
+        # Schema class (which is the only class with just
+        # FancyValidator as a superclass):
+        if cls.__bases__ == (FancyValidator,):
+            return cls
+        # Scan through the class variables we've defined *just*
+        # for this subclass, looking for validators (both classes
+        # and instances):
+        for key, value in new_attrs.items():
+            if key in ('pre_validators', 'chained_validators',
+                       'view'):
+                continue
+            if is_validator(value):
+                cls.fields[key] = value
+                delattr(cls, key)
+            # This last case means we're overwriting a validator
+            # from a superclass:
+            elif cls.fields.has_key(key):
+                del cls.fields[key]
+        for name, value in cls.fields.items():
+            cls.add_field(name, value)
+
+    def __initargs__(self, new_attrs):
+        for key, value in new_attrs.items():
+            if key in ('pre_validators', 'chained_validators',
+                       'view'):
+                continue
+            if is_validator(value):
+                self.fields[key] = value
+                delattr(self, key)
+            # This last case means we're overwriting a validator
+            # from a superclass:
+            elif self.fields.has_key(key):
+                del self.fields[key]
+        for name, value in self.fields.items():
+            self.add_field(name, value)
     
     def _to_python(self, value_dict, state):
         if not value_dict and self.if_empty is not NoDefault:
             return self.if_empty
-        
+
         for validator in self.pre_validators:
-            value_dict = to_python(validator, value_dict, state)
+            value_dict = validator.to_python(value_dict, state)
         
         new = {}
         errors = {}
@@ -119,7 +110,7 @@ class Schema(FancyValidator):
                         if not self.filter_extra_fields:
                             new[name] = value
                         continue
-                validator = adapt_validator(self.fields[name], state)
+                validator = self.fields[name]
 
                 try:
                     new[name] = validator.to_python(value, state)
@@ -127,7 +118,7 @@ class Schema(FancyValidator):
                     errors[name] = e
 
             for name in unused:
-                validator = adapt_validator(self.fields[name], state)
+                validator = self.fields[name]
                 try:
                     if_missing = validator.if_missing
                 except AttributeError:

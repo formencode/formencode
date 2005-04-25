@@ -2,7 +2,7 @@ try:
     import doctest
     doctest.OutputChecker
 except AttributeError:
-    import doctest24 as doctest
+    import util.doctest24 as doctest
 import formgen
 import doctest_xml_compare
 

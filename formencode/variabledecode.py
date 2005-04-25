@@ -129,8 +129,6 @@ def variable_encode(d, prepend='', result=None):
 
 class NestedVariables(api.FancyValidator):
 
-    protocol = ['http']
-
     def _to_python(self, value, state):
         return variable_decode(value)
     

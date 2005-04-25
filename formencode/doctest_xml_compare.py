@@ -2,7 +2,7 @@ try:
     import doctest
     doctest.OutputChecker
 except AttributeError:
-    import doctest24 as doctest
+    import util.doctest24 as doctest
 import elementtree.ElementTree as et
 from xml.parsers.expat import ExpatError as XMLParseError
 

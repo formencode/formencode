@@ -2,10 +2,14 @@
 Interfaces for FormEncode
 """
 
-try:
-    from protocols import Interface, Attribute
-except ImportError:
-    from dummy_protocols import Interface, Attribute
+class Attribute(object):
+
+    def __init__(self, description, name=None):
+        self.description = description
+        self.name = name
+
+class Interface(object):
+    pass
 
 class IDeclarative(Interface):
 
@@ -27,9 +31,6 @@ class IValidator(IDeclarative):
     messages = Attribute("""
     A dictionary of messages (with formatting strings) for error
     responses""", name='messages')
-    protocols = Attribute("""
-    A list of protocols (strings) that this validator should work on
-    """, name='protocols')
     if_missing = Attribute("""
     If the source that this validator would handle is missing (e.g.,
     a field that was not specified), use this value.  If

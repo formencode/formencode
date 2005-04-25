@@ -78,8 +78,14 @@ class DeclarativeMeta(type):
 
     def __new__(meta, class_name, bases, new_attrs):
         cls = type.__new__(meta, class_name, bases, new_attrs)
+        for name in cls.__mutableattributes__:
+            setattr(cls, name, copy.copy(getattr(cls, name)))
         cls.declarative_count = counter.next()
-        cls.__classinit__.im_func(cls, new_attrs)
+        if (new_attrs.has_key('__classinit__')
+            and not isinstance(cls.__classinit__, staticmethod)):
+            setattr(cls, '__classinit__',
+                    staticmethod(cls.__classinit__.im_func))
+        cls.__classinit__(cls, new_attrs)
         names = getattr(cls, '__singletonmethods__', None)
         if names:
             for name in names:
@@ -141,20 +147,19 @@ class Declarative(object):
                         "keyword parameter '%s' was given by position and name"
                         % name)
                 kw[name] = arg
-        if kw.has_key('__alsocopy'):
-            for name, value in kw['__alsocopy'].items():
-                if not kw.has_key(name):
-                    if name in self.__mutableattributes__:
-                        value = copy.copy(value)
-                    kw[name] = value
-            del kw['__alsocopy']
+        for name in self.__mutableattributes__:
+            if not kw.has_key(name):
+                setattr(self, name, copy.copy(getattr(self, name)))
         for name, value in kw.items():
             setattr(self, name, value)
         if not kw.has_key('declarative_count'):
             self.declarative_count = counter.next()
+        self.__initargs__(kw)
+
+    def __initargs__(self, new_attrs):
+        pass
 
     def __call__(self, *args, **kw):
-        kw['__alsocopy'] = self.__dict__
         return self.__class__(*args, **kw)
 
     def singleton(cls):

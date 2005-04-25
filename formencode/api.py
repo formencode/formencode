@@ -1,68 +1,15 @@
-try:
-    import protocols
-    dummy = False
-except ImportError:
-    import dummy_protocols as protocols
-    dummy = True
-from interfaces import *
 import declarative
 
-__all__ = ['NoDefault', 'adapt_validator', 'to_python',
-           'from_python', 'Invalid', 'Validator', 'Identity',
-           'FancyValidator']
+__all__ = ['NoDefault', 'Invalid', 'Validator', 'Identity',
+           'FancyValidator', 'is_validator']
 
 class NoDefault:
     pass
 
-def adapt_validator(obj, state=None):
-    try:
-        if isinstance(obj, type) and issubclass(obj, declarative.Declarative):
-            obj = obj.singleton()
-        if dummy:
-            if not isinstance(obj, Validator):
-                return None
-            else:
-                return obj
-        validator = protocols.adapt(
-            obj, IValidator)
-        if validator and state:
-            validator = validator.validatorForState(state)
-        return validator
-    except protocols.AdaptationFailure:
-        return None
-
-def to_python(validator, value, state=None):
-    """
-    Validates `value` (with `state`) using `validator`.  Does the
-    appropriate adaptation as necessary.  Also handles the suppression
-    of validation if the state's protocol doesn't match the
-    validators.  (These protocols are distinct from the `protocols`
-    package's concept)
-    """
-    validator = adapt_validator(validator, state=state)
-    if validator:
-        return validator.to_python(value, state)
-    else:
-        return value
-
-
-def from_python(validator, value, state=None):
-    """
-    Validates `value` (with `state`) using `validator`.  Does the
-    appropriate adaptation as necessary.  Also handles the suppression
-    of validation if the state's protocol doesn't match the
-    validators.  (These protocols are distinct from the `protocols`
-    package's concept)
-    """
-    # @@: Ack, this isn't right at all for adaptation:
-    if isinstance(validator, type):
-        validator = validator.singleton()
-    validator = adapt_validator(validator, state=state)
-    if validator:
-        return validator.from_python(value, state)
-    else:
-        return value
-
+def is_validator(obj):
+    return (isinstance(obj, Validator) or
+            (isinstance(obj, type) and
+             issubclass(obj, Validator)))
 
 class Invalid(Exception):
 
@@ -143,11 +90,7 @@ class Validator(declarative.Declarative):
     `FancyValidator` for the more common (and more featureful) class.
     """
 
-    protocols.advise(
-        instancesProvide=[IValidator])
-
     _messages = {}
-    protocols = None
     if_missing = NoDefault
     repeating = False
     compound = False
@@ -155,17 +98,17 @@ class Validator(declarative.Declarative):
     __singletonmethods__ = ('to_python', 'from_python')
 
     def __classinit__(cls, new_attrs):
-        if hasattr(cls, 'messages'):
+        if new_attrs.has_key('messages'):
             cls._messages = cls._messages.copy()
             cls._messages.update(cls.messages)
             del cls.messages
 
     def __init__(self, *args, **kw):
-        declarative.Declarative.__init__(self, *args, **kw)
-        if hasattr(self, 'messages'):
+        if kw.has_key('messages'):
             self._messages = self._messages.copy()
-            self._messages.update(self.messages)
-            del self.messages
+            self._messages.update(kw['messages'])
+            del kw['messages']
+        declarative.Declarative.__init__(self, *args, **kw)
 
     def to_python(self, value, state=None):
         return value
@@ -177,19 +120,10 @@ class Validator(declarative.Declarative):
         try:
             return self._messages[msgName] % kw
         except KeyError:
-            raise KeyError, "Key not found for %r=%r %% %r" \
-                  % (msgName, self._messages.get(msgName), kw)
-
-    def validatorForState(self, state):
-        myProt = self.protocols
-        if myProt is None:
-            return self
-        stateProt = getattr(state, 'protocol', None)
-        if stateProt is None:
-            return self
-        if stateProt in myProt:
-            return self
-        return None
+            raise KeyError(
+                "Key not found for %r=%r %% %r (from: %s)"
+                % (msgName, self._messages.get(msgName), kw,
+                   ', '.join(self._messages.keys())))
 
 class _Identity(Validator):
     def __repr__(self):
@@ -211,10 +145,6 @@ class FancyValidator(Validator):
       error message to give the user.
     * .from_python(value, state):
       Reverses to_python.
-
-    Generally these are actually invoked from the top-level to_python()
-    and from_python() functions.  These functions also do protocol
-    matching, so that validators can cover only specific protocols.
 
     There are five important methods for subclasses to override,
     however none of these *have* to be overridden, only the ones that
