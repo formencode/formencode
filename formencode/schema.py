@@ -2,6 +2,8 @@ from interfaces import *
 from api import *
 import declarative
 
+__all__ = ['Schema']
+
 class Schema(FancyValidator):
 
     """

@@ -20,6 +20,8 @@ explicitly ordered.
 
 import api
 
+__all__ = ['variable_decode', 'variable_encode', 'NestedVariables']
+
 def variable_decode(d):
     """
     Decodes the flat dictionary d into a nested structure.

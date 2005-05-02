@@ -1,6 +1,8 @@
 from api import NoDefault, Invalid
 from compound import CompoundValidator
 
+__all__ = ['ForEach']
+
 class ForEach(CompoundValidator):
 
     """
