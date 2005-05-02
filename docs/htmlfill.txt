@@ -1,3 +1,11 @@
+.. comment (set Emacs mode) -*- doctest -*-
+
+    >>> import sys
+    >>> try:
+    ...     import formencode
+    ... except ImportError:
+    ...     sys.path.append('/usr/home/ianb/colorstudy.com/FormEncode/trunk')
+
 ++++++++
 htmlfill
 ++++++++
@@ -22,7 +30,7 @@ Usage
 
 The basic usage is something like this::
 
-    >>> import htmlfill
+    >>> from formencode import htmlfill
     >>> form = '<input type="text" name="fname">'
     >>> defaults = {'fname': 'Joe'}
     >>> parser = htmlfill.FillingParser(defaults)

@@ -1,3 +1,11 @@
+.. comment (set Emacs mode) -*- doctest -*-
+
+    >>> import sys
+    >>> try:
+    ...     import formencode
+    ... except ImportError:
+    ...     sys.path.append('/usr/home/ianb/colorstudy.com/FormEncode/trunk')
+
 ++++++++++++++
 Validators 0.1
 ++++++++++++++
@@ -15,57 +23,78 @@ TODO
 Using Validation
 ================
 
-Validation and conversion happen simultaneously.  Frequently you
-cannot convert a value without ensuring its validity, and validation
-problems can occur in the middle of conversion.  In many ways, this is
-meant as a general encoding/decoding system.
+In FormEncode validation and conversion happen simultaneously.
+Frequently you cannot convert a value without ensuring its validity,
+and validation problems can occur in the middle of conversion.  In
+many ways, this is meant as a general encoding/decoding system (which
+is where the "Encode" in "FormEncode" comes from).
 
-The basic metaphor for validation is *to_python* and *from_python*.  In
-this context "Python" is meant to refer to "here" -- the trusted
+The basic metaphor for validation is *to_python* and *from_python*.
+In this context "Python" is meant to refer to "here" -- the trusted
 application, your own Python objects.  The "other" may be a web form,
 an external database, an XML-RPC request, or any data source that is
 not completely trusted or does not map directly to Python's object
 model.  *to_python* is the process of taking external data and
 preparing it for internal use, *from_python* generally reverses this
-process (*from_python* is usually the less interesting of the pair).
+process (*from_python* is usually the less interesting of the pair,
+but provides some important features).
 
-The core of this validation process is two functions and an
-exception::
+The core of this validation process is two methods and an exception::
 
-    >>> from validator import validators
+    >>> import formencode
+    >>> from formencode import validators
     >>> validator = validators.Int()
-    >>> validators.to_python(validator, "10")
+    >>> validator.to_python("10")
     10
-    >>> validators.to_python(validator, "ten")
+    >>> validator.to_python("ten")
     Traceback (most recent call last):
-      File "<stdin>", line 1, in ?
-      File "validator/validators.py", line 102, in to_python
-        return validator.to_python(value, state)
-      File "validator/validators.py", line 247, in to_python
-        self.validate_python)
-      File "validator/validators.py", line 231, in attempt_convert
-        converted = convert(value, state)
-      File "validator/validators.py", line 844, in _to_python
-        {}, value, state)
-    validator.validators.Invalid: Please enter an integer value.  Value: 'ten'
+        ...
+    Invalid: Please enter an integer value
 
-Sorry about the traceback.  ``"ten"`` isn't a valid integer, so we get
-a ``validators.Invalid`` exception.  Typically we'd catch that
-exception, and use it for some sort of feedback.  Like::
+``"ten"`` isn't a valid integer, so we get a ``formencode.Invalid``
+exception.  Typically we'd catch that exception, and use it for some
+sort of feedback.  Like:
 
-    >>> def getInteger():
+.. comment (fake raw_input):
+
+    >>> raw_input_input = []
+    >>> def raw_input(prompt):
+    ...     value = raw_input_input.pop(0)
+    ...     print '%s%s' % (prompt, value)
+    ...     return value
+    >>> raw_input_input.extend(['ten', '10'])
+    >>> raw_input_input.extend(['bob', 'bob@nowhere.com'])
+
+::
+
+    >>> def get_integer():
     ...     while 1:
     ...         try:
     ...             value = raw_input('Enter a number: ')
-    ...             return validators.to_python(validator, value)
-    ...         except validators.Invalid, e:
+    ...             return validator.to_python(value)
+    ...         except formencode.Invalid, e:
     ...             print e
     ...
-    >>> getInteger
+    >>> get_integer()
     Enter a number: ten
-    Please enter an integer value.  Value: 'ten'
+    Please enter an integer value
     Enter a number: 10
     10
+
+We can also generalize this kind of function::
+
+    >>> def valid_input(prompt, validator):
+    ...     while 1:
+    ...         try:
+    ...             value = raw_input(prompt)
+    ...             return validator.to_python(value)
+    ...         except formencode.Invalid, e:
+    ...             print e
+    >>> valid_input('Enter your email: ', validators.Email())
+    Enter your email: bob
+    An email address must contain a single @
+    Enter your email: bob@nowhere.com
+    'bob@nowhere.com'
 
 ``Invalid`` exceptions generally give a good, user-readable error
 message about the invalidity of the input.  Using the exception gets
@@ -74,19 +103,9 @@ and lists), which we'll talk about later__.
 
 .. __: `Compound Validators`_
 
-While validators have a ``to_python`` method, we typically use the
-``to_python`` *function* because it handles adaptation_ and a few other
-small details.  Adaptation allows an object to turn into another
-object based on interface (the ``validator.interfaces.IValidator``
-interface, in this case).  This is a common situation with validation,
-as objects typically require validation, but aren't necessarily
-validators themselves -- you can add your own adapters to generate
-validators for your objects.  Read more about this later__.
-
-.. __: `Writing Your Own Validator`_
-
-We'll talk more about these individual validators later, but first we
-need something more motivating than integer conversion...
+We'll talk more about these individual validators later, but first
+we'll talk about more complex validation than just integers or
+individual values.
 
 .. _Schemas:
 
@@ -107,38 +126,81 @@ following fields, with restrictions:
 * password (reasonably secure)
 * password_confirm (matches password)
 
-We express this as a *single* validator::
+There's a couple validators that aren't part of FormEncode, because
+they'll be specific to your application::
 
-    from validator.schema import Schema
-    from validator import validators
+    >>> # We don't really have a database of users, so we'll fake it:
+    >>> usernames = []
+    >>> class UniqueUsername(formencode.FancyValidator):
+    ...     def _to_python(self, value, state):
+    ...         if value in usernames:
+    ...             raise formencode.Invalid(
+    ...                 'That username already exists',
+    ...                 value, state)
+    ...         return value
 
-    class Registration(Schema):
-        first_name = validators.String(not_empty=True)
-        last_name = validators.String(not_empty=True)
-        email = validators.Email(resolve_domain=True)
-        username = validators.All(validators.PlainText(),
-                                  UniqueUsername())
-        password = SecurePassword()
-        password_confirm = validators.String()
+This overrides ``_to_python`` -- ``formencode.FancyValidator`` adds a
+number of extra features, and then calls the private ``_to_python``
+method that you typically write.  When if finds an error it raises an
+exception (``formencode.Invalid``), with the error message and the
+value and "state" objects.  We'll talk about state_ later.  Here's the
+other custom validator, that checks passwords against words in the
+standard Unix word file::
 
-        chained_validators = [validators.FieldsMatch('password',
-                                                     'password_confirm')]
+    >>> class SecurePassword(formencode.FancyValidator):
+    ...     words_filename = '/usr/share/dict/words'
+    ...     def _to_python(self, value, state):
+    ...         f = open(self.words_filename)
+    ...         lower = value.strip().lower()
+    ...         for line in f:
+    ...             if line.strip().lower() == lower:
+    ...                 raise formencode.Invalid(
+    ...                     'Please do not base your password on a '
+    ...                     'dictionary term', value, state)
+    ...         return value
 
-Like any other validator, a ``Registration`` instance can be used with
-the ``to_python`` and ``from_python`` functions.  The input should be a
+And here's a schema::
+
+    >>> class Registration(formencode.Schema):
+    ...     first_name = validators.String(not_empty=True)
+    ...     last_name = validators.String(not_empty=True)
+    ...     email = validators.Email(resolve_domain=True)
+    ...     username = formencode.All(validators.PlainText(),
+    ...                               UniqueUsername())
+    ...     password = SecurePassword()
+    ...     password_confirm = validators.String()
+    ...     chained_validators = [validators.FieldsMatch(
+    ...         'password', 'password_confirm')]
+
+Like any other validator, a ``Registration`` instance will have the
+``to_python`` and ``from_python`` methods.  The input should be a
 dictionary, with keys like ``"first_name"``, ``"password"``, etc.  The
 validators will be applied to each of the values of the dictionary.
 *All* the values will be validated, so if there are multiple invalid
 fields you will get information about all of them.
+
+Most validators (anything that subclasses
+``formencode.FancyValidator``) will take a certain standard set of
+constructor keyword arguments.  See FancyValidator_ for more -- here
+we use ``not_empty=True``.
+
+Another notable one is ``All`` -- this is a *compound validator* --
+that is, it's a validator that takes validators as input.  Schemas are
+one example; ``All`` takes a list of validators and applies each of
+them in turn.  ``Any`` is its compliment, that uses the first passing
+validator in its list.
 
 .. _pre_validators:
 .. _chained_validators:
 
 ``chained_validators`` are validators that are run on the entire
 dictionary after other validation is done (``pre_validators`` are
-applied before the schema validation).  In this case
-``validators.FieldsMatch`` checks that the value of the two fields are
-the same (i.e., that the password matches the confirmation).
+applied before the schema validation).  You could actually achieve the
+same thing by using ``All`` with the schema validators
+(``FieldsMatch`` is just another validator that can be applied to
+dictionaries).  In this case ``validators.FieldsMatch`` checks that
+the value of the two fields are the same (i.e., that the password
+matches the confirmation).
 
 Since a Schema is just another kind of validator, you can nest these
 indefinitely, validating dictionaries of dictionaries.
@@ -150,11 +212,10 @@ let's say we have a form where someone can edit a list of book
 titles.  Each title has an associated book ID, so we can match up the
 new title and the book it is for::
 
-    class BookSchema(Schema):
-        id = validators.Int()
-        title = validators.String(not_empty=True)
-
-    validator = validators.ForEach(BookSchema())
+    >>> class BookSchema(formencode.Schema):
+    ...     id = validators.Int()
+    ...     title = validators.String(not_empty=True)
+    >>> validator = formencode.ForEach(BookSchema())
 
 The ``validator`` we've created will take a list of dictionaries as
 input (like ``[{"id": "1", "title": "War & Peace"}, {"id": "2",
@@ -168,70 +229,51 @@ structured data like this (we'll talk about that later__).
 Writing Your Own Validator
 --------------------------
 
-There were some validators in the ``Registration`` example which
-aren't part of Validator.  It's fairly easy to write your own
-validator.  For instance::
+We gave a brief introduction to creating a validator earlier
+(``UniqueUsername`` and ``SecurePassword``).  We'll discuss that a
+little more.  Here's another implementation of ``SecurePassword``:
 
-    class SecurePassword(validators.FancyValidator):
+    >>> import re
+    >>> class SecurePassword(validators.FancyValidator):
+    ... 
+    ...     min = 3
+    ...     non_letter = 1
+    ...     letter_regex = re.compile(r'[a-zA-Z]')
+    ... 
+    ...     messages = {
+    ...         'too_few': 'Your password must be longer than %(min)i '
+    ...                   'characters long',
+    ...         'non_letter': 'You must include at least %(non_letter)i '
+    ...                      'characters in your password',
+    ...         }
+    ... 
+    ...     def _to_python(self, value, state):
+    ...         # _to_python gets run before validate_python.  Here we
+    ...         # strip whitespace off the password, because leading and
+    ...         # trailing whitespace in a password is too elite.
+    ...         return value.strip()
+    ... 
+    ...     def validate_python(self, value, state):
+    ...         if len(value) < self.min:
+    ...             raise Invalid(self.message("too_few", min=self.min),
+    ...                           value, state)
+    ...         non_letters = self.letter_regex.sub('', value)
+    ...         if len(non_letters) < self.non_letter:
+    ...             raise Invalid(self.message("non_letter", 
+    ...                                         non_letter=self.non_letter),
+    ...                           value, state)
 
-        min = 3
-        non_letter = 1
-	letter_regex = re.compile(r'[a-zA-Z]')
+With all validators, any arguments you pass to the constructor will be
+used to set instance variables.  So ``SecureValidator(min=5)`` will be
+a minimum-five-character validator.  This makes it easy to also
+subclass other validators, giving different default values.
 
-        messages = {
-            'too_few': 'Your password must be longer than %(min)i '
-                      'characters long',
-            'non_letter': 'You must include at least %(non_letter)i '
-                         'characters in your password',
-            }
-
-        def _to_python(self, value, state):
-            # _to_python gets run before validate_python.  Here we
-            # strip whitespace off the password, because leading and
-            # trailing whitespace in a password is too elite.
-            return value.strip()
-
-        def validate_python(self, value, state):
-            if len(value) < self.min:
-                raise Invalid(self.message("too_few", min=self.min),
-                              value, state)
-            non_letters = self.letter_regex.sub('', value)
-            if len(non_letters) < self.non_letter:
-                raise Invalid(self.message("non_letter", 
-                                            non_letter=self.non_letter),
-                              value, state)
-
-(Your validator can be simpler than this too, but this example shows
-what a fairly complete validator will look like)
-
-Now you can use ``SecureValidator()`` just like any validator.  With
-all validators, any arguments you pass to the constructor will be used
-to set instance variables.  So ``SecureValidator(min=5)`` will be a
-minimum-five-character validator.  This makes it easy to also subclass
-other validators, giving different default values.
-
-There's two methods we use: ``validate_python`` and ``_to_python``.
+Unlike the previous implementation we use ``validator_python`` (which
+is another method ``FancyValidator`` allows us to use).
 ``validate_python`` doesn't have any return value, it simply raises an
 exception if it needs to.  It validates the value *after* it has been
 converted (by ``_to_python``).  ``validate_other`` validates before
-conversion, but that is seldom used.
-
-``FancyValidator`` offers some `special features`__ in ``to_python`` which
-is why we ``_to_python`` (with the underscore) which ``FancyValidator``
-calls during ``to_python``.
-
-.. __: FancyValidator_
-
-This is also our first introduction to ``state``, but that is better
-described later__.
-
-.. __: State_
-
-Implementation of ``UniqueUsername`` is left to the reader.  While
-``SecurePassword`` is potentially reusable, ``UniqueUsername`` is more
-closely tied to your particular application, and the user API you are
-using.  It is assumed and intended that you will write some of your
-own validators.
+conversion, but that's usually not that useful.
 
 The use of ``self.message(...)`` is meant to make the messages easy to
 format for different environments, and replacable (with translations,
@@ -247,16 +289,19 @@ Validators use instance variables to store their customization
 information.  You can use either subclassing or normal instantiation
 to set these.  These are (effectively) equivalent::
 
-    plain = Regex(regex='^[a-zA-Z]+$')
-    # and...
-    class Plain(Regex):
-        regex = '^[a-zA-Z]+$'
-    plain = Plain()
+    >>> plain = validators.Regex(regex='^[a-zA-Z]+$')
+    >>> # and...
+    >>> class Plain(validators.Regex):
+    ...     regex = '^[a-zA-Z]+$'
+    >>> plain = Plain()
+
+You can actually use classes most places where you could use an
+instance; ``.to_python()`` and ``.from_python()`` will create
+instances as necessary, and many other methods are available on both
+the instance and the class level.
 
 When dealing with nested validators this class syntax is often easier
-to work with, and better displays the structure.  Classes are
-generally implicitly converted to instances, so you can simply use a
-class definition in many places without instantiating it.
+to work with, and better displays the structure.
 
 .. _FancyValidator:
 
@@ -277,30 +322,18 @@ not_empty:
 State
 -----
 
-All the validators receive a magic ``state`` argument.  And both the
-``to_python()`` and ``from_python()`` functions take this argument as
-well (though it defaults to None).  It's used for very little in the
-validation system.  It is primarily intended to be an object you can
-use to hook your validator into the context of the larger system.
+All the validators receive a magic, somewhat meaningless ``state``
+argument (which defaults to ``None``).  It's used for very little in
+the validation system as distributed, but is primarily intended to be
+an object you can use to hook your validator into the context of the
+larger system.
 
 For instance, imagine a validator that checks that a user is permitted
-access to some resource.  How will the validator know what user is
+access to some resource.  How will the validator know which user is
 logged in?  State!  Imagine you are localizing it, how will the
 validator know the locale?  State!  Whatever else you need to pass in,
 just put it in the state object as an attribute, then look for that
 attribute in your validator.
-
-.. _`protocol attribute`:
-
-As a special instance, the state object can also have a ``protocol``
-attribute.  If present and not None, this should be a string
-representing the protocol (like ``"http"``, ``"xmlrpc"``, ``"sql"``,
-etc).  If a validator has a ``protocol`` value (which should be a list
-of strings) and the state's protocol is not in that list, then the
-validator will not be used.  This way you can use the same validator
-with multiple protocols, selectively leaving out portions of process
-depending on the needs of the protocol (e.g., HTTP needs strings to be
-converted to integers, but XML-RPC has native integers).
 
 Also, during compound validation (a ``Schema`` or ``ForEach``) the
 state (if not None) will have more instance variables added to it.
@@ -320,6 +353,8 @@ value:
     The input to the validator that failed.
 state:
     The associated state_.
+msg:
+    The error message (``str(exc)`` returns this)
 error_list:
     If the exception happened in a ``ForEach`` (list) validator, then
     this will contain a list of ``Invalid`` exceptions.  Each item
@@ -329,6 +364,10 @@ error_dict:
     If the exception happened in a ``Schema`` (dictionary) validator,
     then this will contain ``Invalid`` exceptions for each failing
     field.  Passing fields not be included in this dictionary.
+.unpack_errors():
+    This method returns a set of lists and dictionaries containing
+    strings, for each error.  It's an unpacking of ``error_list``,
+    ``error_dict`` and ``msg``.
 
 .. _Messages:
 
@@ -344,12 +383,12 @@ you only overwrite ones that you specify.
 
 Messages often take arguments, like the number of characters, the
 invalid portion of the field, etc.  These are always substituted as a
-dictionary, that is, by name.  So you will use placeholders like
-``%(key)s`` for each substitution.  This way you can reorder or even
-ignore placeholders in your new message.
+dictionary (by name).  So you will use placeholders like ``%(key)s``
+for each substitution.  This way you can reorder or even ignore
+placeholders in your new message.
 
-When you are creating a validator, you should use the ``message``
-function, like::
+When you are creating a validator, for maximum flexibility you should
+use the ``message`` function, like::
 
     messages = {
         'key': 'my message (with a %(substitution)s)',
@@ -405,46 +444,17 @@ Will be mapped to::
 
 In other words, ``'a.b'`` creates a dictionary in ``'a'``, with
 ``'b'`` as a key (and if ``'a'`` already had a value, then that value
-is associated with the key ``None``).  Lists are created by appending
-``'-int'``, where they are ordered by the integer (the integers are
-used for sorting, missing numbers in a sequence are ignored).
+is associated with the key ``None``).  Lists are created with keys
+with ``'-int'``, where they are ordered by the integer (the integers
+are used for sorting, missing numbers in a sequence are ignored).
 
-``VariableDecode.NestedVariables`` is a validator that decodes and
-encodes dictionaries using this algorithm.  It has the `protocol
-attribute`_ set to ``"http"`` so that it won't encode XML-RPC or other
-input (for which it is not required).  You can use it with a Schema's
+``NestedVariables`` is a validator that decodes and encodes
+dictionaries using this algorithm.  You can use it with a Schema's
 `pre_validators`_ attribute.
 
 Of course, in the example we use the data is rather eclectic -- for
 instance, Tim Smith doesn't have his name separated into first and
 last.  Validators work best when you keep lists homogeneous.  Also, it
-is hard to access the ``'action'`` key; storing the options
-(action.option and action.confirm) under another key would be
+is hard to access the ``'action'`` key in the example; storing the
+options (action.option and action.confirm) under another key would be
 preferable.
-
-.. _Adaptation:
-
-Adaptation and Interfaces
--------------------------
-
-Validator keeps all its interfaces in a module named ``interfaces``,
-as is the convention.  Validators use an ``IValidator`` interface.
-Objects that can be adapted to ``IValidator`` can be used with the
-``to_python`` and ``from_python`` functions.  
-
-Also, any object that has a ``validator`` attribute can be adapted to
-a validator.
-
-You can add your own validator adapters like::
-
-    import protocols
-    from validator.interfaces import IValidator
-    
-    class MyClass(object):
-        ....
-
-    def adaptMyClass(obj, protocol):
-        # Create a validator from a MyClass instance...
-
-    protocols.declareAdapter(adaptMyClass, [IValidator]
-                             forTypes=[MyClass])
