@@ -54,23 +54,23 @@ class ConfirmType(FancyValidator):
     Examples::
     
         >>> cint = ConfirmType(subclass=int)
-        >>> to_python(cint, True)
+        >>> cint.to_python(True)
         True
-        >>> to_python(cint, '1')
+        >>> cint.to_python('1')
         Traceback (most recent call last):
             ...
         Invalid: '1' is not a subclass of <type 'int'>
         >>> cintfloat = ConfirmType(subclass=(float, int))
-        >>> to_python(cintfloat, 1.0), from_python(cintfloat, 1.0)
+        >>> cintfloat.to_python(1.0), cintfloat.from_python(1.0)
         (1.0, 1.0)
-        >>> to_python(cintfloat, 1), from_python(cintfloat, 1)
+        >>> cintfloat.to_python(1), cintfloat.from_python(1)
         (1, 1)
-        >>> to_python(cintfloat, None)
+        >>> cintfloat.to_python(None)
         Traceback (most recent call last):
             ...
         Invalid: None is not a subclass of one of the types <type 'float'>, <type 'int'>
         >>> cint2 = ConfirmType(type=int)
-        >>> from_python(cint2, True)
+        >>> cint2.from_python(True)
         Traceback (most recent call last):
             ...
         Invalid: True must be of the type <type 'int'>
@@ -143,21 +143,21 @@ class Wrapper(FancyValidator):
         >>> def downcase(v):
         ...     return v.lower()
         >>> wrap = Wrapper(to_python=downcase)
-        >>> to_python(wrap, 'This')
+        >>> wrap.to_python('This')
         'this'
-        >>> from_python(wrap, 'This')
+        >>> wrap.from_python('This')
         'This'
         >>> wrap2 = Wrapper(from_python=downcase)
-        >>> from_python(wrap2, 'This')
+        >>> wrap2.from_python('This')
         'this'
-        >>> from_python(wrap2, 1)
+        >>> wrap2.from_python(1)
         Traceback (most recent call last):
           ...
         Invalid: 'int' object has no attribute 'lower'
         >>> wrap3 = Wrapper(validate_python=int)
-        >>> to_python(wrap3, '1')
+        >>> wrap3.to_python('1')
         '1'
-        >>> to_python(wrap3, 'a')
+        >>> wrap3.to_python('a')
         Traceback (most recent call last):
           ...
         Invalid: invalid literal for int(): a
@@ -206,7 +206,7 @@ class Constant(FancyValidator):
 
     Examples::
 
-        >>> to_python(Constant('X'), 'y')
+        >>> Constant('X').to_python('y')
         'X'
     """
 
@@ -230,25 +230,25 @@ class MaxLength(FancyValidator):
     Examples::
 
         >>> max5 = MaxLength(5)
-        >>> to_python(max5, '12345')
+        >>> max5.to_python('12345')
         '12345'
-        >>> from_python(max5, '12345')
+        >>> max5.from_python('12345')
         '12345'
-        >>> to_python(max5, '123456')
+        >>> max5.to_python('123456')
         Traceback (most recent call last):
           ...
         Invalid: Enter a value less than 5 characters long
-        >>> from_python(max5, '123456')
+        >>> max5.from_python('123456')
         Traceback (most recent call last):
           ...
         Invalid: Enter a value less than 5 characters long
-        >>> to_python(max5, [1, 2, 3])
+        >>> max5.to_python([1, 2, 3])
         [1, 2, 3]
-        >>> to_python(max5, [1, 2, 3, 4, 5, 6])
+        >>> max5.to_python([1, 2, 3, 4, 5, 6])
         Traceback (most recent call last):
           ...
         Invalid: Enter a value less than 5 characters long
-        >>> to_python(max5, 5)
+        >>> max5.to_python(5)
         Traceback (most recent call last):
           ...
         Invalid: Invalid value (value with length expected)
@@ -282,25 +282,25 @@ class MinLength(FancyValidator):
     Examples::
 
         >>> min5 = MinLength(5)
-        >>> to_python(min5, '12345')
+        >>> min5.to_python('12345')
         '12345'
-        >>> from_python(min5, '12345')
+        >>> min5.from_python('12345')
         '12345'
-        >>> to_python(min5, '1234')
+        >>> min5.to_python('1234')
         Traceback (most recent call last):
           ...
         Invalid: Enter a value more than 5 characters long
-        >>> from_python(min5, '1234')
+        >>> min5.from_python('1234')
         Traceback (most recent call last):
           ...
         Invalid: Enter a value more than 5 characters long
-        >>> to_python(min5, [1, 2, 3, 4, 5])
+        >>> min5.to_python([1, 2, 3, 4, 5])
         [1, 2, 3, 4, 5]
-        >>> to_python(min5, [1, 2, 3])
+        >>> min5.to_python([1, 2, 3])
         Traceback (most recent call last):
           ...
         Invalid: Enter a value more than 5 characters long
-        >>> to_python(min5, 5)
+        >>> min5.to_python(5)
         Traceback (most recent call last):
           ...
         Invalid: Invalid value (value with length expected)
@@ -334,11 +334,11 @@ class NotEmpty(FancyValidator):
     Examples::
 
         >>> ne = NotEmpty(messages={'empty': 'enter something'})
-        >>> to_python(ne, '')
+        >>> ne.to_python('')
         Traceback (most recent call last):
           ...
         Invalid: enter something
-        >>> to_python(ne, 0)
+        >>> ne.to_python(0)
         0
     """
 
@@ -361,7 +361,7 @@ class Empty(FancyValidator):
 
     Examples::
 
-        >>> to_python(Empty, 0)
+        >>> Empty.to_python(0)
         Traceback (most recent call last):
           ...
         Invalid: You cannot enter a value here
@@ -389,19 +389,19 @@ class Regex(FancyValidator):
     Examples::
 
         >>> cap = Regex(r'^[A-Z]+$')
-        >>> to_python(cap, 'ABC')
+        >>> cap.to_python('ABC')
         'ABC'
-        >>> from_python(cap, 'abc')
+        >>> cap.from_python('abc')
         Traceback (most recent call last):
           ...
         Invalid: The input is not valid
-        >>> to_python(cap, 1)
+        >>> cap.to_python(1)
         Traceback (most recent call last):
           ...
-        Invalid: The input must be a string (not a <type 'int'>)
-        >>> to_python(Regex(r'^[A-Z]+$', strip=True), '  ABC  ')
+        Invalid: The input must be a string (not a <type 'int'>: 1)
+        >>> Regex(r'^[A-Z]+$', strip=True).to_python('  ABC  ')
         'ABC'
-        >>> to_python(Regex(r'this', regexOps=('I',)), 'THIS')
+        >>> Regex(r'this', regexOps=('I',)).to_python('THIS')
         'THIS'
     """
 
@@ -451,15 +451,15 @@ class PlainText(Regex):
 
     Examples::
 
-        >>> to_python(PlainText, '_this9_')
+        >>> PlainText.to_python('_this9_')
         '_this9_'
-        >>> from_python(PlainText, '  this  ')
+        >>> PlainText.from_python('  this  ')
         Traceback (most recent call last):
           ...
         Invalid: Enter only letters, numbers, or _ (underscore)
-        >>> to_python(PlainText(strip=True), '  this  ')
+        >>> PlainText(strip=True).to_python('  this  ')
         'this'
-        >>> from_python(PlainText(strip=True), '  this  ')
+        >>> PlainText(strip=True).from_python('  this  ')
         '  this  '
     """
 
@@ -483,18 +483,18 @@ class OneOf(FancyValidator):
     Examples::
 
         >>> oneof = OneOf([1, 2, 3])
-        >>> to_python(oneof, 1)
+        >>> oneof.to_python(1)
         1
-        >>> to_python(oneof, 4)
+        >>> oneof.to_python(4)
         Traceback (most recent call last):
           ...
-        Invalid: Value must be one of: 1; 2; 3
-        >>> to_python(oneof(testValueList=True), [2, 3, [1, 2, 3]])
+        Invalid: Value must be one of: 1; 2; 3 (not 4)
+        >>> oneof(testValueList=True).to_python([2, 3, [1, 2, 3]])
         [2, 3, [1, 2, 3]]
-        >>> to_python(oneof, [2, 3, [1, 2, 3]])
+        >>> oneof.to_python([2, 3, [1, 2, 3]])
         Traceback (most recent call last):
           ...
-        Invalid: Value must be one of: 1; 2; 3
+        Invalid: Value must be one of: 1; 2; 3 (not [2, 3, [1, 2, 3]])
     """
 
     list = None
@@ -541,18 +541,23 @@ class DictConverter(FancyValidator):
     Examples::
 
         >>> dc = DictConverter({1: 'one', 2: 'two'})
-        >>> to_python(dc, 1)
+        >>> dc.to_python(1)
         'one'
-        >>> from_python(dc, 'one')
+        >>> dc.from_python('one')
         1
-        >>> to_python(dc, 3)
-        Traceback:
+        >>> dc.to_python(3)
+        Traceback (most recent call last):
         Invalid: Enter a value from: 1; 2
-        >>> to_python(dc(hideDict=True), 3)
-        Traceback:
+        >>> dc2 = dc(hideDict=True)
+        >>> dc2.hideDict
+        True
+        >>> dc2.dict
+        {1: 'one', 2: 'two'}
+        >>> dc2.to_python(3)
+        Traceback (most recent call last):
         Invalid: Choose something
-        >>> from_python(dc, 'three')
-        Traceback:
+        >>> dc.from_python('three')
+        Traceback (most recent call last):
         Invalid: Nothing in my dictionary goes by the value 'three'.  Choose one of: 'one'; 'two'
     """
 
@@ -604,20 +609,20 @@ class IndexListConverter(FancyValidator):
     Examples::
 
         >>> index = IndexListConverter(['zero', 'one', 'two'])
-        >>> to_python(index, 0)
+        >>> index.to_python(0)
         'zero'
-        >>> from_python(index, 'zero')
+        >>> index.from_python('zero')
         0
-        >>> to_python(index, '1')
+        >>> index.to_python('1')
         'one'
-        >>> to_python(index, 5)
-        Traceback:
+        >>> index.to_python(5)
+        Traceback (most recent call last):
         Invalid: Index out of range
-        >>> to_python(index, None)
-        Traceback:
+        >>> index.to_python(None)
+        Traceback (most recent call last):
         Invalid: Must be an integer index
-        >>> from_python(index, 'five')
-        Traceback:
+        >>> index.from_python('five')
+        Traceback (most recent call last):
         Invalid: Item 'five' was not found in the list
     """
 
@@ -1001,7 +1006,7 @@ class PhoneNumber(FancyValidator):
     """
     Validates, and converts to ###-###-####, optionally with
     extension (as ext.##...)
-    @@: should add internation phone number support
+    @@: should add international phone number support
     """
 
     _phoneRE = re.compile(r'^\s*(?:1-)?(\d\d\d)[\- \.]?(\d\d\d)[\- \.]?(\d\d\d\d)(?:\s*ext\.?\s*(\d+))?\s*$', re.I)
@@ -1200,36 +1205,36 @@ class TimeConverter(FancyValidator):
     Examples::
 
         >>> tim = TimeConverter()
-        >>> to_python(tim, '8:30')
+        >>> tim.to_python('8:30')
         (8, 30)
-        >>> to_python(tim, '20:30')
+        >>> tim.to_python('20:30')
         (20, 30)
-        >>> to_python(tim, '30:00')
-        Traceback:
+        >>> tim.to_python('30:00')
+        Traceback (most recent call last):
             ...
         Invalid: You must enter an hour in the range 0-23
-        >>> to_python(tim, '13:00pm')
-        Traceback:
+        >>> tim.to_python('13:00pm')
+        Traceback (most recent call last):
             ...
         Invalid: You must enter an hour in the range 1-12
-        >>> to_python(tim, '12:-1')
-        Traceback:
+        >>> tim.to_python('12:-1')
+        Traceback (most recent call last):
             ...
         Invalid: You must enter a minute in the range 0-59
-        >>> to_python(tim, '12:02pm')
+        >>> tim.to_python('12:02pm')
         (12, 2)
-        >>> to_python(tim, '12:02am')
+        >>> tim.to_python('12:02am')
         (0, 2)
-        >>> to_python(tim, '1:00PM')
+        >>> tim.to_python('1:00PM')
         (13, 0)
-        >>> from_python(tim, (13, 0))
+        >>> tim.from_python((13, 0))
         '13:00:00'
         >>> tim2 = tim(use_ampm=True, use_seconds=False)
-        >>> from_python(tim2, (13, 0))
+        >>> tim2.from_python((13, 0))
         '1:00pm'
-        >>> from_python(tim2, (0, 0))
+        >>> tim2.from_python((0, 0))
         '12:00am'
-        >>> from_python(tim2, (12, 0))
+        >>> tim2.from_python((12, 0))
         '12:00pm'
     """
 

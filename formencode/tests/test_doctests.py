@@ -1,9 +1,9 @@
 import os, sys
-try:
-    import formencode
-except ImportError:
-    sys.path.append(os.path.dirname(os.path.dirname(
-        os.path.dirname(__file__))))
+
+if __name__ == '__main__':
+    base = os.path.dirname(os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))))
+    sys.path.append(base)
 try:
     import doctest
     doctest.OutputChecker
@@ -19,13 +19,20 @@ text_files = [
     'Validator.txt',
     ]
 
+from formencode import validators
+modules = [validators]
+
 if __name__ == '__main__':
     import sys
     args = sys.argv[1:]
     if not args:
-        args = text_files
+        args = text_files + modules
     for fn in args:
-        fn = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-                          'docs', fn)
-        doctest.testfile(fn, module_relative=False)
+        if isinstance(fn, str):
+            fn = os.path.join(base, 
+                              'docs', fn)
+            doctest.testfile(fn, module_relative=False)
+        else:
+            doctest.testmod(fn)
+
 

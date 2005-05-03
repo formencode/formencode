@@ -160,7 +160,9 @@ class Declarative(object):
         pass
 
     def __call__(self, *args, **kw):
-        return self.__class__(*args, **kw)
+        current = self.__dict__.copy()
+        current.update(kw)
+        return self.__class__(*args, **current)
 
     def singleton(cls):
         name = '_%s__singleton' % cls.__name__
