@@ -2,6 +2,9 @@
 Things To Do
 ++++++++++++
 
+:revision: $Rev$
+:date: $LastChangedDate$
+
 * Generate documentation for the standard validators.
 
 * Make a test fixture for validators, to make testing really easy.

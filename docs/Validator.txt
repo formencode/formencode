@@ -6,12 +6,13 @@
     ... except ImportError:
     ...     sys.path.append('/usr/home/ianb/colorstudy.com/FormEncode/trunk')
 
-++++++++++++++
-Validators 0.1
-++++++++++++++
++++++++++++++++++++++
+FormEncode Validation
++++++++++++++++++++++
 
-22 October 2004
-Ian Bicking <ianb@colorstudy.com>
+:author: Ian Bicking <ianb@colorstudy.com>
+:revision: $Rev$
+:date: $LastChangedDate$
 
 .. contents::
 

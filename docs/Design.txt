@@ -2,15 +2,15 @@
 FormEncode Design
 +++++++++++++++++
 
+:author: Ian Bicking <ianb@colorstudy.com>
+:revision: $Rev$
+:date: $LastChangedDate$
+
 .. contents::
 
 This is a document to describe why FormEncode looks the way it looks,
 and how it fits into other applications.  It also talks some about the
 false starts I've made.
-
-  -- `Ian Bicking`_
-
-.. _Ian Bicking: http://ianbicking.org
 
 Basic Metaphor
 ==============
