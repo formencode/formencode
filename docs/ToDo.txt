@@ -1,0 +1,42 @@
+++++++++++++
+Things To Do
+++++++++++++
+
+* Generate documentation for the standard validators.
+
+* Make a test fixture for validators, to make testing really easy.
+
+* Consider moving htmlfill to ElementTree or another DOM-ish
+  structure, instead of HTMLParser.
+
+* Generate Javascript for validators, for client-side validation (when
+  possible).
+
+* At least test and give recipes for Ajax-ish validation, when fully
+  client-side validation doesn't work.  (Client side is more
+  interesting to me, though -- Ajax still does a server query, and
+  isn't much better than a full submit)
+
+* Better tests for ``htmlfill`` and ``htmlfill_schemabuilder``.
+
+* Create a ``RequireIfNotEmpty`` form validator, when one field is
+  only required when another is filled in.
+
+* Include at least one good documented form generator.  Consider
+  including rich widgets (Javascript).
+
+* Figure out what the role of ``htmlform`` is.
+
+* Seperate out ``doctest_xml_compare``, maybe (useful in any doctested
+  web test).
+
+* Make ``doctest_xml_compare`` work with wildcards/ellipses.  Maybe
+  with non-XHTML.
+
+* Figure out how the heck to get this to scale to really small forms.
+  Does it make any sense there?  When does it start making sense to
+  use FormEncode?
+
+* Some more ways to build validation.  Validation from docstrings or
+  method signatures.
+
