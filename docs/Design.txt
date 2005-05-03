@@ -1,10 +1,10 @@
-++++++++++++++++
-Validator Design
-++++++++++++++++
++++++++++++++++++
+FormEncode Design
++++++++++++++++++
 
 .. contents::
 
-This is a document to describe why Validator looks the way it looks,
+This is a document to describe why FormEncode looks the way it looks,
 and how it fits into other applications.  It also talks some about the
 false starts I've made.
 
@@ -15,33 +15,33 @@ false starts I've made.
 Basic Metaphor
 ==============
 
-Validator is performs look-before-you-leap validation.  The idea being
+FormEncode performs look-before-you-leap validation.  The idea being
 that you check all the data related to an operation, then apply it.
 The alternative might be a transactional system, where you just start
 applying the data and if there's a problem you raise an exception.
 Someplace else you catch the exception and roll back the transaction.
-Of course, Validator works fine with this system, but unlike this you
-can use it without transactions.
+Of course FormEncode works fine with such a system, but unlike this
+you can use it without transactions.
 
-Validator generally works on primitive types (though you could extend
-it to deal with your own types if you wish).  This fits in with
+FormEncode generally works on primitive types (though you could extend
+it to deal with your own types if you wish).  These are things like
+strings, lists, dictionaries, integers, etc.  This fits in with
 look-before-you-leap; often your domain objects won't exist until
 after you apply the user's request, so it's necessary to work on an
-early form of the data.  Also, Validator doesn't know anything about
+early form of the data.  Also, FormEncode doesn't know anything about
 your domain objects or classes; it's just easier to keep it this way.
 
-Validation only operates on a single value at a time.  The key idea is
-that the single value can itself be compound.  So where some
-validation packages have a built-in notion of fields, Validator simply
-validates a dictionary; that it applies sub-validators to values in
-that dictionary is an implementation detail internal to the validator.
+Validation only operates on a single "value" at a time.  This is
+Python, collections are easy, and collections are themselves a single
+"value" made up of many pieces.  A "Schema validator" is a validator
+made up of many subvalidators.
 
 Domain Objects
 ==============
 
 These are your objects, specific to your application.  I know nothing
-about them, and cannot know.  Validator tries to make few requirements
-on how these objects look.
+about them, and cannot know.  FormEncode doesn't do anything with
+these objects, and doesn't try to know anything about them.  At all.
 
 Validation as directional, not intrinsic
 ========================================
@@ -77,30 +77,29 @@ underlying database.  Also, we may trust the programmer to use the API
 in a reasonable way, but we seldom trust the user under any
 circumstance.
 
-In essence, there is an "inside" and an "outside".  Validator is a
-toolkit for bridging those two areas in a sensible manner.  The
-specific way we bridge this depends on the nature of the user
+In essence, there is an "inside" and an "outside".  FormEncode is a
+toolkit for bridging those two areas in a sensible and secure way.
+The specific way we bridge this depends on the nature of the user
 interface.  An XML-RPC interface can make some assumptions that a GUI
 cannot make.  An HTML interface can typically make even less
 assumptions, including the basic integrity of the input data.  It
 isn't reasonable that the object should know about all means of
 inputs, and the varying UI requirements of those inputs; user
 interfaces are volatile, and more art than science, but domain objects
-work better when they remain stable.
+work better when they remain stable.  For this reason the validation
+schemas are kept in separate objects.
 
 It also didn't work well to annotate domain objects with validation
-schemas, though the option remains open.  Any object can be used as a
-validator, so long as it can be adapted_ into a validator, so
-potentially a domain class could be used as a validator, if you
-register an adapter that can strip out the validation annotations.
-But I leave this to the reader.
+schemas, though the option remains open.  This is experimentation that
+belongs outside of FormEncode, simply because it's more specific to
+your domain than it is to FormEncode.
 
 .. _adapted:
 
 Two sides, two aspects
 ======================
 
-Validator does both validation and version at the same time.
+FormEncode does both validation and conversion at the same time.
 Validation necessarily happens with every conversion; for instance,
 you may want to convert string representation of dates to internal
 date objects; that conversion can fail if the string representation is
@@ -108,7 +107,7 @@ malformed.
 
 To keep things simple, there's only one operation: conversion.  An
 exception raised means there was an error.  If you just want to
-validate, that's a conversion that doesn't do anything.
+validate, that's a conversion that doesn't change anything.
 
 Similarly, there's two sides to the system, the foreign data and the
 local data.  In Validator the local data is called "python" (meaning,
@@ -118,44 +117,33 @@ a natural Python data structure), so we convert ``to_python`` and
 
 For instance, consider the date conversion.  In one form, you may want
 a date like ``mm/dd/yyyy``.  It's easy enough to make the necessary
-converter; but the date object that results doesn't know how it's
-supposed to be formatted for that form.  ``repr`` or *any* method that
-binds an object to its form representation is a bad idea.  The
-converter best knows how to undo its work.
+converter; but the date object that the converter produces doesn't
+know how it's supposed to be formatted for that form.  ``repr`` or
+*any* method that binds an object to its form representation is a bad
+idea.  The converter best knows how to undo its work.  So a date
+converter that expects ``mm/dd/yyyy`` will also know how to turn a
+datetime into that format.
 
 (This becomes even more interesting with compound validators.)
-
-Adaptation
-==========
-
-So, now, adaptation.  Validator uses PyProtocols_, which is an
-interface/adaptation package (similar to Zope's interfaces).
-
-The basic idea behind adaptation is that objects can fulfill multiple
-roles.  When you adapt an object, you either see if the object
-supports the given interface (``validator.interfaces.IValidator``), or
-if there's any adapter registered that can convert your object.
-PyProtocols describes it in more detail.
-
-.. _PyProtocols: http://peak.telecommunity.com/PyProtocols.html
-
-In the future, I might make PyProtocols optional, implementing some
-stubs so that everything works in its absence.
 
 Presentation
 ============
 
-FormEncode included form generation in addition to validation.  The
-form generation worked okay; it was reasonably attractive, and in many
-ways quite powerful.  I might revisit it.  But generation is limited.
-It works *great* at first, then you hit a wall -- you want to make a
-change, and you just *can't*, it doesn't fit into the automatic
-generation.
+At one time FormEncode included form generation in addition to
+validation.  The form generation worked okay; it was reasonably
+attractive, and in many ways quite powerful.  I might revisit it.  But
+generation is limited.  It works *great* at first, then you hit a wall
+-- you want to make a change, and you just *can't*, it doesn't fit
+into the automatic generation.
 
-At this point, my preferred form generation is with htmlfill_.  In
-this model, you write the form however you want (maybe even generating
-it in some fashion) and use ``htmlfill`` to fill in the default values
-and report errors.
+There are also many ways to approach the generation; again it's
+something that is tied to the framework, the presentation layer, and
+the domain objects, and FormEncode doesn't know anything about those.
+
+Instead FormEncode uses htmlfill_.  *You* produce the form however you
+want.  Write it out by hand.  Use a templating language.  Whatever.
+Then htmlfill (which specifically understands HTML) fills in the form
+and any error messages.
 
 .. _htmlfill: htmlfill.html
 
@@ -165,9 +153,11 @@ Declarative and Imperative
 All of the objects -- schemas, repeating elements, individual
 validators -- can be created imperatively, though more declarative
 styles often look better (specifically using subclassing instead of
-construction).  You are free to build validations from other sources.
+construction).  You are free to build the objects either way.
 
-It would be cool, for instance, to augment htmlfill_ to look for
-things like ``form:required`` or ``form:match-regex``, etc., and build
-a validation schema out of that.
+For instance, one extension to ``htmlfill``
+(``htmlfill_schemabuilder``) looks for special attributes in an HTML
+form and builds a validator from that.  Even though validation is
+stored in a separate object from your domain, you can build those
+validators programmatically.
 
