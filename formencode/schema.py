@@ -139,7 +139,7 @@ class Schema(FancyValidator):
                     error_dict=errors)
 
             for validator in self.chained_validators:
-                new = to_python(validator, new, state)
+                new = validator.to_python(new, state)
 
             return new
 
@@ -155,7 +155,7 @@ class Schema(FancyValidator):
         for validator in chained:
             __traceback_info__ = 'for_python chained_validator %s (finished %s)' % (validator, ', '.join(map(repr, finished)) or 'none')
             finished.append(validator)
-            value_dict = from_python(validator, value_dict, state)
+            value_dict = validator.from_python(value_dict, state)
         new = {}
         errors = {}
         unused = self.fields.keys()
