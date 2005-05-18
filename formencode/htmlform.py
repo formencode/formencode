@@ -14,6 +14,8 @@ Usage::
         if not errors:
             do_action(form_result)
             return
+        # Turn into a flat list:
+        errors = errors.unpack_errors()
     defaults = form.schema.from_python(get_defaults_from_model())
     defaults.update(request_dict)
     write(form.render(defaults, errors)
