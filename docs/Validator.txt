@@ -256,7 +256,8 @@ little more.  Here's another implementation of ``SecurePassword``:
     ... 
     ...     def validate_python(self, value, state):
     ...         if len(value) < self.min:
-    ...             raise Invalid(self.message("too_few", min=self.min),
+    ...             raise Invalid(self.message("too_few", state, 
+    ...                                        min=self.min),
     ...                           value, state)
     ...         non_letters = self.letter_regex.sub('', value)
     ...         if len(non_letters) < self.non_letter:
