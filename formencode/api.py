@@ -208,7 +208,7 @@ class FancyValidator(Validator):
             else:
                 converted = value
             if post:
-                post(value, state)
+                post(converted, state)
             return converted
         except Invalid:
             if self.if_invalid is NoDefault:
