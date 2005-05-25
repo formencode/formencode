@@ -46,21 +46,6 @@ class CompoundValidator(Validator):
                 if n != 'validatorArgs']
     _reprVars = staticmethod(_reprVars)
 
-    def validatorForState(self, state):
-        if Validator.validatorForState(self, state) is None:
-            return None
-        changes = 0
-        new = []
-        for validator in self.validators:
-            v = adapt_validator(validator, state=state)
-            if v is not validator:
-                changes = 1
-            if v is not None:
-                new.append(v)
-        if not changes:
-            return self
-        return self(validators=new)
-
     def attempt_convert(self, value, state, convertFunc):
         raise NotImplementedError, "Subclasses must implement attempt_convert"
 
@@ -144,7 +129,7 @@ class All(CompoundValidator):
 
     def if_missing__get(self):
         for validator in self.validators:
-            v = adapt_validator(validator).if_missing
+            v = validator.if_missing
             if v is not NoDefault:
                 return v
         return NoDefault
