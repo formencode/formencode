@@ -718,7 +718,30 @@ class DateValidator(FancyValidator):
                     self.message('future', state,
                                  date=date_formatted),
                     value, state)
-        
+
+class Bool(FancyValidator):
+
+    """
+    Always Valid, returns True or False based on the value and the
+    existance of the value.
+
+    Examples::
+
+        >>> Bool.to_python(0)
+        False
+        >>> Bool.to_python(1)
+        True
+        >>> Bool.to_python('')
+        False
+        >>> Bool.to_python(None)
+        False
+    """
+
+    if_missing = False
+
+    def _to_python(self, value, state):
+        return bool(value)
+    _from_python = _to_python        
 
 class Int(FancyValidator):
 
