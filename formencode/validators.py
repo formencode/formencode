@@ -918,6 +918,7 @@ class URL(FancyValidator):
         if self.check_exists and (value.startswith('http://')
                                   or value.startswith('https://')):
             self._check_url_exists(value, state)
+        return value
 
     def _check_url_exists(self, url, state):
         global httplib, urlparse
@@ -1012,7 +1013,7 @@ class PhoneNumber(FancyValidator):
     _phoneRE = re.compile(r'^\s*(?:1-)?(\d\d\d)[\- \.]?(\d\d\d)[\- \.]?(\d\d\d\d)(?:\s*ext\.?\s*(\d+))?\s*$', re.I)
 
     messages = {
-        'phoneFormat': 'Please enter a number, with area code, in the form ###-###-####, optionally with &quot;ext.####&quot;',
+        'phoneFormat': 'Please enter a number, with area code, in the form ###-###-####, optionally with "ext.####"',
         }
         
     def _to_python(self, value, state):
