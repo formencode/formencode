@@ -27,7 +27,8 @@ for filling and generating forms.
       author_email="ianb@colorstudy.com",
       url="http://svn.colorstudy.com/Formencode/trunk",
       license="PSF",
-      packages=["formencode"],
+      packages=["formencode", "formencode.util"],
+      package_data={'formencode': 'javascript/'},
       download_url="@@",
       )
 
