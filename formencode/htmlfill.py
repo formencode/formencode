@@ -206,7 +206,7 @@ class FillingParser(HTMLParser.HTMLParser):
                 self.set_attr(attrs, 'checked', 'checked')
             else:
                 self.del_attr(attrs, 'checked')
-            self.write_tag('input', attrs)
+            self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)
         elif t == 'radio':
@@ -214,7 +214,7 @@ class FillingParser(HTMLParser.HTMLParser):
                 self.set_attr(attrs, 'checked', 'checked')
             else:
                 self.del_attr(attrs, 'checked')
-            self.write_tag('input', attrs)
+            self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)
         elif t == 'file':
@@ -222,7 +222,7 @@ class FillingParser(HTMLParser.HTMLParser):
         elif t == 'password':
             self.set_attr(attrs, 'value', value or
                           self.get_attr(attrs, 'value', ''))
-            self.write_tag('input', attrs)
+            self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)
         else:
