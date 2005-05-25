@@ -53,10 +53,10 @@ class HTMLForm(object):
         p.close()
         return listener.schema()
 
-    def render(self, defaults={}, errors={}):
+    def render(self, defaults={}, errors={}, use_all_keys=False):
         p = htmlfill.FillingParser(
             defaults=defaults, errors=errors,
-            use_all_keys=True)
+            use_all_keys=use_all_keys)
         p.feed(self.form)
         p.close()
         return p.text()
