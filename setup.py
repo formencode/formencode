@@ -28,7 +28,7 @@ for filling and generating forms.
       url="http://svn.colorstudy.com/Formencode/trunk",
       license="PSF",
       packages=["formencode", "formencode.util"],
-      package_data={'formencode': 'javascript/'},
+      package_data={'formencode': ['javascript/*']},
       download_url="@@",
       )
 
