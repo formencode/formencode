@@ -225,6 +225,12 @@ class FillingParser(HTMLParser.HTMLParser):
             self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)
+        elif t == 'image':
+            self.set_attr(attrs, 'src', value or
+                          self.get_attr(attrs, 'src', ''))
+            self.write_tag('input', attrs, startend)
+            self.skip_next = True
+            self.add_key(name)
         else:
             assert 0, "I don't know about this kind of <input>: %s (pos: %s)" \
                    % (t, self.getpos())

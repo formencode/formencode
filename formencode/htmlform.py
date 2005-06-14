@@ -25,7 +25,7 @@ tags.
 
 import htmlfill
 import htmlfill_schemabuilder
-from validator import Invalid
+from api import Invalid
 
 class HTMLForm(object):
 
