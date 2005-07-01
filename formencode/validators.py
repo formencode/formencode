@@ -39,6 +39,47 @@ True, False = (1==1), (0==1)
 ## Wrapper Validators
 ############################################################
 
+datetime_module = None
+mxDateTime_module = None
+
+def import_datetime(module_type):
+    global datetime_module, mxDateTime_module
+    if module_type is None:
+        try:
+            if datetime_module is None:
+                import datetime as datetime_module
+            return datetime_module
+        except ImportError:
+            if mxDateTime_module is None:
+                from mx import DateTime as mxDateTime_module
+            return mxDateTime_module
+
+    module_type = module_type.lower()
+    assert module_type in ('datetime', 'mxdatetime')
+    if module_type == 'datetime':
+        if datetime_module is None:
+            import datetime as datetime_module
+        return datetime_module
+    else:
+        if mxDateTime_module is None:
+            from mx import DateTime as mxDateTime_module
+        return mxDateTime_module
+
+def datetime_now(module):
+    if module.__name__ == 'datetime':
+        return module.datetime.now()
+    else:
+        return module.now()
+
+def datetime_makedate(module, year, month, day):
+    if module.__name__ == 'datetime':
+        return module.datetime.date(year, month, day)
+    else:
+        try:
+            return module.DateTime(year, month, day)
+        except module.RangeError, e:
+            raise ValueError(str(e))
+
 class ConfirmType(FancyValidator):
 
     """
@@ -665,13 +706,14 @@ class DateValidator(FancyValidator):
     earliest_date and latest_date may be functions; if so, they will
     be called each time before validating.
     """
-    ## @@: This should work with datetime as well, and even better
-    ## handle having some datetime and some mxDateTime dates working
-    ## together.
 
     earliest_date = None
     latest_date = None
     after_now = False
+    # Use 'datetime' to force the Python 2.3+ datetime module, or
+    # 'mxDateTime' to force the mxDateTime module (None means use
+    # datetime, or if not present mxDateTime)
+    datetime_module = None
 
     messages = {
         'after': "Date must be after %(date)s",
@@ -682,7 +724,6 @@ class DateValidator(FancyValidator):
         }
 
     def validate_python(self, value, state):
-        global DateTime
         if self.earliest_date:
             if callable(self.earliest_date):
                 earliest_date = self.earliest_date()
@@ -708,9 +749,8 @@ class DateValidator(FancyValidator):
                                  date=date_formatted),
                     value, state)
         if self.after_now:
-            if DateTime is None:
-                from mx import DateTime
-            now = DateTime.now()
+            dt_mod = import_datetime(self.datetime_module)
+            now = datetime_now(dt_mod)
             if value < now:
                 date_formatted = now.strftime(
                     self.message('date_format', state))
@@ -1077,6 +1117,10 @@ class DateConverter(FancyValidator):
     accept_day = True
     # also allowed: 'dd/mm/yyyy'
     month_style = 'mm/dd/yyyy'
+    # Use 'datetime' to force the Python 2.3+ datetime module, or
+    # 'mxDateTime' to force the mxDateTime module (None means use
+    # datetime, or if not present mxDateTime)
+    datetime_module = None
 
     _day_date_re = re.compile(r'^\s*(\d\d?)[\-\./\\](\d\d?|jan|january|feb|febuary|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december)[\-\./\\](\d\d\d?\d?)\s*$', re.I)
     _month_date_re = re.compile(r'^\s*(\d\d?|jan|january|feb|febuary|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december)[\-\./\\](\d\d\d?\d?)\s*$', re.I)
@@ -1113,17 +1157,6 @@ class DateConverter(FancyValidator):
         'wrongFormat': 'Please enter the date in the form %(format)s',
         }
 
-    def __init__(self, *args, **kw):
-        global DateTime
-        FancyValidator.__init__(self, *args, **kw)
-        if DateTime is None:
-            try:
-                from mx import DateTime
-            except ImportError:
-                import DateTime
-        assert DateTime, (
-            "You must have mxDateTime installed to use DateConverter")
-
     def _to_python(self, value, state):
         if self.accept_day:
             return self.convert_day(value, state)
@@ -1156,9 +1189,10 @@ class DateConverter(FancyValidator):
             raise Invalid(self.message('dayRange', state,
                                        days=self._monthDays[month]),
                           value, state)
+        dt_mod = import_datetime(self.datetime_module)
         try:
-            return DateTime.DateTime(year, month, day)
-        except DateTime.RangeError, v:
+            return datetime_makedate(dt_mod, year, month, day)
+        except ValueError, v:
             raise Invalid(self.message('invalidDate', state,
                                        exception=str(v)),
                           value, state)
@@ -1201,7 +1235,8 @@ class DateConverter(FancyValidator):
         if month > 12 or month < 1:
             raise Invalid(self.message('monthRange', state),
                           value, state)
-        return DateTime.DateTime(year, month)
+        dt_mod = import_datetime(self.datetime_module)
+        return datetime_makedate(dt_mod, year, month, 1)
 
     def _from_python(self, value, state):
         if self.accept_day:
