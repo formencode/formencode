@@ -1,13 +1,6 @@
-from distutils.core import setup
-import warnings
-warnings.filterwarnings("ignore", "Unknown distribution option")
-
-import sys
-# patch distutils if it can't cope with the "classifiers" keyword
-if sys.version < '2.2.3':
-    from distutils.dist import DistributionMetadata
-    DistributionMetadata.classifiers = None
-    DistributionMetadata.download_url = None
+from ez_setup import use_setuptools
+use_setuptools()
+from setuptools import setup
 
 setup(name="FormEncode",
       version="0.1",
