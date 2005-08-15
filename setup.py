@@ -23,6 +23,7 @@ for filling and generating forms.
       packages=["formencode", "formencode.util"],
       package_data={'formencode': ['javascript/*']},
       download_url="@@",
+      extras_require={'testing': ['elementtree']},
       )
 
 # Send announce to:
