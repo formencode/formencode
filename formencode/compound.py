@@ -65,11 +65,15 @@ class Any(CompoundValidator):
     can pass in lists of validators, which will be ANDed)
     """
 
-    def attempt_convert(self, value, state, convertFunc):
+    def attempt_convert(self, value, state, validate):
         lastException = None
-        for validator in self.validators:
+        if validate is to_python:
+            validators = self.validators[::-1]
+        else:
+            validators = self.validators
+        for validator in validators:
             try:
-                return convertFunc(validator, value, state)
+                return validate(validator, value, state)
             except Invalid, e:
                 lastException = e
         if self.if_invalid is NoDefault:
@@ -89,8 +93,14 @@ class All(CompoundValidator):
         return '<All %s>' % self.validators
 
     def attempt_convert(self, value, state, validate):
+        # To preserve the order of the transformations, we do them
+        # differently when we are converting to and from python.
+        if validate is to_python:
+            validators = self.validators[::-1]
+        else:
+            validators = self.validators
         try:
-            for validator in self.validators:
+            for validator in validators:
                 value = validate(validator, value, state)
             return value
         except Invalid:
