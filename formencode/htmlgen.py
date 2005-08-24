@@ -56,6 +56,8 @@ Examples::
 
 """
 
+from __future__ import generators
+
 from cgi import escape
 import elementtree.ElementTree as et
 
