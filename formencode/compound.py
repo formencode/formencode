@@ -96,7 +96,8 @@ class All(CompoundValidator):
         # To preserve the order of the transformations, we do them
         # differently when we are converting to and from python.
         if validate is to_python:
-            validators = self.validators[::-1]
+            validators = list(self.validators)
+            validators.reverse()
         else:
             validators = self.validators
         try:
