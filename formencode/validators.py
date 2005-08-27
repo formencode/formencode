@@ -73,7 +73,7 @@ def datetime_now(module):
 
 def datetime_makedate(module, year, month, day):
     if module.__name__ == 'datetime':
-        return module.datetime.date(year, month, day)
+        return module.date(year, month, day)
     else:
         try:
             return module.DateTime(year, month, day)
