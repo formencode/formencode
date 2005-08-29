@@ -178,8 +178,7 @@ class Schema(FancyValidator):
                         new[name] = value
                 else:
                     try:
-                        new[name] = from_python(self.fields[name],
-                                                value, state)
+                        new[name] = self.fields[name].from_python(value, state)
                     except Invalid, e:
                         errors[name] = e
 
@@ -202,7 +201,7 @@ class Schema(FancyValidator):
             pre.reverse()
             for validator in pre:
                 __traceback_info__ = 'for_python pre_validator %s' % validator
-                new = from_python(validator, new, state)
+                new = validator.from_python(new, state)
 
             return new
             
