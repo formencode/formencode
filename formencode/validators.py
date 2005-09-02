@@ -864,6 +864,8 @@ class Set(FancyValidator):
     ForEach(convertToList=True).
     """
 
+    if_empty = ()
+
     def _to_python(self, value, state):
         if isinstance(value, (list, tuple)):
             return value
