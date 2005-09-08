@@ -839,11 +839,13 @@ class String(FancyValidator):
         }
     
     def validate_python(self, value, state):
-        if self.max is not None and len(value) > self.max:
+        if (self.max is not None and value is not None
+            and len(value) > self.max):
             raise Invalid(self.message('tooLong', state,
                                        max=self.max),
                           value, state)
-        if self.min is not None and len(value) < self.min:
+        if (self.min is not None
+            and (not value or len(value) < self.min)):
             raise Invalid(self.message('tooShort', state,
                                        min=self.min),
                           value, state)
@@ -1054,7 +1056,7 @@ class StateProvince(FancyValidator):
             raise Invalid(
                 self.message('empty', state),
                 value, state)
-        if len(value) != 2:
+        if not value or len(value) != 2:
             raise Invalid(
                 self.message('wrongLength', state),
                 value, state)
