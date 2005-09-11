@@ -191,7 +191,7 @@ class FillingParser(HTMLParser.HTMLParser):
         if (self.error_class
             and self.errors.get(self.get_attr(attrs, 'name'))):
             self.add_class(attrs, self.error_class)
-        if t in ('text', 'hidden', 'submit', 'reset', 'button'):
+        if t in ('text', 'hidden'):
             if value is None:
                 value = self.get_attr(attrs, 'value', '')
             self.set_attr(attrs, 'value', value)
