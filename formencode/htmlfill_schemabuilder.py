@@ -37,10 +37,10 @@ class SchemaBuilder(object):
         if not name:
             # @@: should warn if you try to validate unnamed fields
             return
-        v = compound.All()
+        v = compound.All(validators.Identity())
         # for checkboxes, we must set if_missing = False
         if tag.lower() == "input":
-            if get_attr(attrs, "type").lower() == "checkbox":
+            if get_attr(attrs, "type").lower() == "checkbox" or get_attr(attrs, "type").lower() == "submit":
                 v.validators.append(validators.Bool())
         message = get_attr(attrs, 'form:message')
         required = to_bool(get_attr(attrs, 'form:required', 'false'))
@@ -48,6 +48,8 @@ class SchemaBuilder(object):
             v.validators.append(
                 validators.NotEmpty(
                 messages=get_messages(validators.NotEmpty, message)))
+        else:
+            v.validators[0].if_missing = False
         v_type = get_attr(attrs, 'form:validate', None)
         if v_type:
             pos = v_type.find(':')
