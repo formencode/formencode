@@ -1,13 +1,16 @@
 from formencode.htmlform import HTMLForm
-from formencode.schema import Schema
-from formencode import validators
-from WebKit import Page
+from formencode import validators, compound, schema
+from WebKit.Page import Page
 
 
 page_style = """
 <html>
  <head>
   <title>Tell me about yourself</title>
+  <style type="text/css">
+    .error {background-color: #ffdddd}
+    .error-message {border: 2px solid #f00}
+  </style>
  </head>
  <body>
 
@@ -20,7 +23,7 @@ page_style = """
 
 form_template = '''
 <form action="" method="POST">
-<input type="hidden" name="_action" value="save">
+<input type="hidden" name="_action_" value="save">
 
 Your name:<br>
 <form:error name="name">
@@ -39,29 +42,29 @@ Your favorite color:<br>
 <input type="checkbox" value="black"> Black<br>
 <input type="checkbox" value="green"> Green<br>
 <br>
+
+<input type="submit" value="submit">
+</form>
 '''
 
-class FormSchema(Schema):
-    name = validators.StringCol(not_empty=True)
-    age = validators.IntCol(min=13, max=99)
+class FormSchema(schema.Schema):
+    name = validators.String(not_empty=True)
+    age = validators.Int(min=13, max=99)
     color = compound.All(validators.Set(),
-                         validators.OneOf(['red', 'blue', 'black', 'green']
+                         validators.OneOf(['red', 'blue', 'black', 'green']))
+    filter_extra_fields = True
+    allow_extra_fields = True
 
 
-class webware_servlet(Page):
+class index(Page):
 
     def awake(self, trans):
         Page.awake(self, trans)
         self.form = HTMLForm(form_template, FormSchema)
+        self.rendered_form = None
 
     def actions(self):
         return ['save']
-
-    def defaultAction(self):
-        # No form submitted
-        self.rendered_form = self.form.render(
-            defaults=self.getDefaults())
-        self.showForm()
 
     def save(self):
         results, errors = self.form.validate(
@@ -69,11 +72,23 @@ class webware_servlet(Page):
         if results is not None:
             self.doAction(results)
         else:
+            print "Errors:", errors
             self.rendered_form = self.form.render(
                 defaults=self.request().fields(),
                 errors=errors)
-            self.showForm()
-        
-    def showForm(self):
+            self.writeHTML()
+            
+    def writeContent(self):
+        if self.rendered_form is None:
+            self.rendered_form = self.form.render(
+                defaults=self.getDefaults())
         self.write(page_style % self.rendered_form)
         
+    def getDefaults(self):
+        return dict(
+            age='enter your age',
+            color=['blue'])
+
+    def preAction(self, trans):
+        pass
+    postAction = preAction
