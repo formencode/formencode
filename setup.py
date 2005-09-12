@@ -3,7 +3,7 @@ use_setuptools()
 from setuptools import setup
 
 setup(name="FormEncode",
-      version="0.2",
+      version="0.2.2",
       description="HTML form validation, generation, and convertion package",
       long_description="""\
 FormEncode validates and converts nested structures.  It allows for
