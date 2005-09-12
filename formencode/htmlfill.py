@@ -55,6 +55,8 @@ class FillingParser(HTMLParser.HTMLParser):
         self.in_select = None
         self.skip_next = False        
         self.errors = errors or {}
+        if isinstance(self.errors, (str, unicode)):
+            self.errors = {None: self.errors}
         self.in_error = None
         self.skip_error = False
         self.use_all_keys = use_all_keys
@@ -229,6 +231,12 @@ class FillingParser(HTMLParser.HTMLParser):
         elif t == 'image':
             self.set_attr(attrs, 'src', value or
                           self.get_attr(attrs, 'src', ''))
+            self.write_tag('input', attrs, startend)
+            self.skip_next = True
+            self.add_key(name)
+        elif t == 'submit' or t == 'reset':
+            self.set_attr(attrs, 'value', value or
+                          self.get_attr(attrs, 'value', ''))
             self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)
