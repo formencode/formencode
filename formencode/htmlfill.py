@@ -234,7 +234,7 @@ class FillingParser(HTMLParser.HTMLParser):
             self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)
-        elif t == 'submit' or t == 'reset':
+        elif t == 'submit' or t == 'reset' or t == 'button':
             self.set_attr(attrs, 'value', value or
                           self.get_attr(attrs, 'value', ''))
             self.write_tag('input', attrs, startend)
