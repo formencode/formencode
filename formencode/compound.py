@@ -1,4 +1,3 @@
-from declarative import DeclarativeMeta, Declarative
 from api import *
 
 # @@ ianb 2005-05: should CompoundValidator be included?

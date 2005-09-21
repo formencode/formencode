@@ -24,14 +24,12 @@ Validator/Converters for use with FormEncode.
 """
 
 import re
-import cgi
 DateTime = None
 mxlookup = None
 httplib = None
 urlparse = None
 from interfaces import *
 from api import *
-from declarative import Declarative, DeclarativeMeta
 
 True, False = (1==1), (0==1)
 

@@ -285,37 +285,6 @@ class FillingParser(HTMLParser.HTMLParser):
         self.write_tag('option', attrs)
         self.skip_next = True
 
-    def update_schema(self, attrs):
-        name = self.get_attr(attrs, "name")
-        if not name:
-            return
-        v = compound.All()
-        message = self.get_attr(attrs, "form:message")
-        required = self.get_attr(attrs, "form:required", "no").lower()
-        required = (required == "yes") or (required == "true")
-        if required:
-            v.validators.append(validators.NotEmpty(messages=get_messages(validators.NotEmpty, message)))
-        t = self.get_attr(attrs, "form:validate", None)
-        if t:
-            # validatorname[:argument]
-            i = t.find(":")
-            if i > -1:
-                args = t[i+1:] # TODO: split on commas?
-                t = t[:i].lower()
-            else:
-                args = None
-                t = t.lower()
-            # get the validator class by name
-            vclass = self.validators.get(t)
-            if not vclass:
-                raise ValueError, "Invalid validation type: " + t
-            if args:
-                vinst = vclass(args, messages=get_messages(vclass, message)) # TODO: if something takes more than 1 string argument, wrap in a function which parses args
-            else:
-                vinst = vclass(messages=get_messages(vclass, message))
-            v.validators.append(vinst)
-        self._schema.add_field(name, v)
-
     def write_text(self, text):
         self.content.append(text)
 

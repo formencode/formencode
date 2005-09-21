@@ -22,10 +22,6 @@ from __future__ import generators
 
 import copy
 import new
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
 
 try:
     import itertools

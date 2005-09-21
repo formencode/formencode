@@ -26,16 +26,12 @@ and then there's bunches of classes for the specific kinds of fields.
 It's not unreasonable to do a import * from this module.
 """
 
-import string, re, urllib, cgi
+import urllib
 PILImage = None
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
-import time, md5, whrandom, os
+import os
 from htmlgen import html
 True, False = (1==1), (0==1)
-from declarative import Declarative, DeclarativeMeta
+from declarative import Declarative
 
 class NoDefault: pass
 
@@ -84,7 +80,7 @@ class Options(object):
     def description(self, obj):
         if obj.description:
             return obj.description
-        return self.make_description(current_name)
+        return self.make_description(self.current_name)
 
     def make_description(self, name):
         return name
@@ -229,7 +225,7 @@ class Form(Declarative):
     def __init__(self, *args, **kw):
         Declarative.__init__(self, *args, **kw)
 
-    def render(self, context):
+    def render(self, options):
         assert self.action, "You must provide an action"
         contents = html(
             [f.render(options) for f in self.fields])
@@ -280,13 +276,13 @@ class Layout(Field):
 
     def wrap_fields(self, rendered_fields, options):
         if not options.get('use_fieldset', self):
-            return fields
+            return rendered_fields
         legend = options.get('legend', self)
         if legend:
             legend = html.legend(legend)
         else:
             legend = ''
-        return html.fieldset(legend, fields,
+        return html.fieldset(legend, rendered_fields,
                              class_=options.get('fieldset_class', self))
 
 class TableLayout(Layout):
@@ -452,7 +448,7 @@ class Hidden(Field):
     hidden = True
 
     def html(self, options):
-        return self.html_hidden(request)
+        return self.html_hidden(options)
 
     zpt_html = html
 
@@ -600,7 +596,7 @@ class Select(Field):
                for (value, desc) in selections]))
 
     def zpt_html(self, options):
-        return self.html(option, subsel=self.zpt_selection_html)
+        return self.html(options, subsel=self.zpt_selection_html)
 
     def zpt_selection_html(self, selections, options):
         name = options.name(self)
@@ -610,7 +606,8 @@ class Select(Field):
             c=[html.option(desc,
                            value=value,
                            tal_attributes="selected python: %s == %r, 'selected')"
-                           % (options.zpt_value(self, in_python=True), value))]))
+                           % (options.zpt_value(self, in_python=True), value))
+               for desc, value in self.selections]))
 
     def selected(self, key, default):
         if str(key) == str(default):
