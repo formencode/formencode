@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(name="FormEncode",
       version="0.2.3",
-      description="HTML form validation, generation, and convertion package",
+      description="HTML form validation, generation, and conversion package",
       long_description="""\
 FormEncode validates and converts nested structures.  It allows for
 a declarative form of defining the validation, and decoupled processes
@@ -18,11 +18,10 @@ for filling and generating forms.
                    ],
       author="Ian Bicking",
       author_email="ianb@colorstudy.com",
-      url="http://svn.colorstudy.com/Formencode/trunk",
+      url="http://formencode.org",
       license="PSF",
       packages=["formencode", "formencode.util"],
       package_data={'formencode': ['javascript/*']},
-      download_url="@@",
       extras_require={'testing': ['elementtree']},
       )
 
