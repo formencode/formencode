@@ -53,7 +53,7 @@ def variable_decode(d):
         place = result
         for i in range(len(new_keys)-1):
             try:
-                if isinstance(place[new_keys[i]], (str, unicode, list)):
+                if isinstance(place[new_keys[i]], (int, str, unicode, list)):
                     place[new_keys[i]] = {None: place[new_keys[i]]}
                 place = place[new_keys[i]]
             except KeyError:
