@@ -1474,6 +1474,42 @@ class StripField(FancyValidator):
                           valueDict, state)
         return field, v
 
+
+class StringBoolean(FancyValidator):
+    # Originally from TurboGears
+    """Converts a string to a boolean.
+    
+    Values like 'true' and 'false' are considered True and False,
+    respectively; anything in ``true_values`` is true, anything in
+    ``false_values`` is false, case-insensitive).  The first item of
+    those lists is considered the preferred form.
+    """
+    
+    true_values = ['true', 't', 'yes', 'y', 'on']
+    false_values = ['false', 'f', 'no', 'n', 'off']
+    if_empty = False
+
+    messages = { "string" : "Value should be %(true)r or %(false)r" }
+    
+    def _to_python(self, value, state):
+        if isinstance(value, str):
+            value = value.strip().lower()
+            if value in self.true_values:
+                return True
+            if value in self.false_values:
+                return False
+            raise Invalid(self.message("string", state,
+                                       true=self.true_values[0],
+                                       false=self.false_values[0]),
+                          value, state)
+        return bool(value)
+    
+    def _from_python(self, value, state):
+        if value:
+            return self.true_values[0]
+        else:
+            return self.false_values[0]
+
 class FormValidator(FancyValidator):
     """
     A FormValidator is something that can be chained with a
