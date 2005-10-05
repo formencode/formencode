@@ -187,7 +187,6 @@ class FancyValidator(Validator):
       ``.to_python()``, instead return this value.
       
     * if_invalid_python:
-
       If set, when the Python value (converted with
       ``.from_python()``) is invalid, this value will be returned.
 
