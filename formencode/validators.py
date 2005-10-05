@@ -1487,7 +1487,6 @@ class StringBoolean(FancyValidator):
     
     true_values = ['true', 't', 'yes', 'y', 'on']
     false_values = ['false', 'f', 'no', 'n', 'off']
-    if_empty = False
 
     messages = { "string" : "Value should be %(true)r or %(false)r" }
     
@@ -1496,7 +1495,7 @@ class StringBoolean(FancyValidator):
             value = value.strip().lower()
             if value in self.true_values:
                 return True
-            if value in self.false_values:
+            if not value or value in self.false_values:
                 return False
             raise Invalid(self.message("string", state,
                                        true=self.true_values[0],
