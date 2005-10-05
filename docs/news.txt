@@ -1,0 +1,10 @@
+News
+====
+
+0.2.3
+-----
+
+* ``FancyValidator`` has changed, adding ``if_invalid_python`` and
+  ``validate_python`` options (which also apply to all subclasses).
+  Also ``if_empty`` only applies to ``to_python`` conversions.
+
