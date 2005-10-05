@@ -171,19 +171,37 @@ class FancyValidator(Validator):
     reentrant.
 
     All subclasses can take the arguments/instance variables:
+    
     * if_empty:
       If set, then this value will be returned if the input evaluates
-      to false (empty list, empty string, None, etc).
+      to false (empty list, empty string, None, etc), but not the 0 or
+      False objects.  This only applies to ``.to_python()``.
+      
     * not_empty:
       If true, then if an empty value is given raise an error.
+      (Both with ``.to_python()`` and also ``.from_python()``
+      if ``.validate_python`` is true).
+
     * if_invalid:
-      If set, then when this validator would raise Invalid, instead
-      return this value.
+      If set, then when this validator would raise Invalid during
+      ``.to_python()``, instead return this value.
+      
+    * if_invalid_python:
+
+      If set, when the Python value (converted with
+      ``.from_python()``) is invalid, this value will be returned.
+
+    * validate_python:
+      If False (default True), then ``.validate_python()`` and
+      ``.validate_other()`` will not be called when
+      ``.from_python()`` is used.
     """
 
     if_invalid = NoDefault
+    if_invalid_python = NoDefault
     if_empty = NoDefault
     not_empty = False
+    validate_python = True
 
     messages = {
         'empty': "Please enter a value",
@@ -191,53 +209,58 @@ class FancyValidator(Validator):
         'noneType': "The input must be a string (not None)",
         }
 
-    def attempt_convert(self, value, state, pre, convert, post):
-        """
-        Handles both .to_python() and .from_python().
-        """
-        if not value:
-            if self.if_empty is not NoDefault:
-                return self.if_empty
-            if self.not_empty:
-                raise Invalid(self.message('empty', state), value, state)
+    def to_python(self, value, state=None):
         try:
-            if pre:
-                pre(value, state)
-            if convert:
-                converted = convert(value, state)
-            else:
-                converted = value
-            if post:
-                post(converted, state)
-            return converted
+            if not value and value != 0:
+                # False/0 are not "empty"
+                if self.if_empty is not NoDefault:
+                    return self.if_empty
+                if self.not_empty:
+                    raise Invalid(self.message('empty', state), value, state)
+            vo = self.validate_other
+            if vo:
+                vo(value, state)
+            tp = self._to_python
+            if tp:
+                value = tp(value, state)
+            vp = self.validate_python
+            if vp:
+                vp(value, state)
+            return value
         except Invalid:
             if self.if_invalid is NoDefault:
                 raise
             else:
                 return self.if_invalid
 
-    def to_python(self, value, state=None):
-        return self.attempt_convert(value, state,
-                                    self.validate_other,
-                                    self._to_python,
-                                    self.validate_python)
-    
     def from_python(self, value, state=None):
-        return self.attempt_convert(value, state,
-                                    self.validate_python,
-                                    self._from_python,
-                                    self.validate_other)
-
-    def assert_string(self, value, state):
-        if not isinstance(value, (str, unicode)):
-            if value is None:
-                raise Invalid(self.message('noneType', state),
-                              value, state)
-            raise Invalid(self.message('badType', state,
-                                       type=str(type(value)),
-                                       value=value),
-                          value, state)
-
+        try:
+            if self.validate_python:
+                if (not value and value != 0
+                    and self.not_empty):
+                    raise Invalid(self.message('empty', state),
+                                  value, state)
+                vp = self.validate_python
+                if vp:
+                    vp(value, state)
+                fp = self._from_python
+                if fp:
+                    value = fp(value, state)
+                vo = self.validate_other
+                if vo:
+                    vo(value, state)
+                return value
+            else:
+                fp = self._from_python
+                if fp:
+                    value = self._from_python(value, state)
+                return value
+        except Invalid:
+            if self.if_invalid_python is NoDefault:
+                raise
+            else:
+                return self.if_invalid_python
+    
     validate_python = None
     validate_other = None
     _to_python = None

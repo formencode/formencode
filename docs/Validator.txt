@@ -309,17 +309,29 @@ to work with, and better displays the structure.
 
 There are several options that most validators support (including your
 own validators, if you subclass from ``FancyValidator``):
+    
+``if_empty``:
+  If set, then this value will be returned if the input evaluates
+  to false (empty list, empty string, None, etc), but not the 0 or
+  False objects.  This only applies to ``.to_python()``.
+      
+``not_empty``:
+  If true, then if an empty value is given raise an error.
+  (Both with ``.to_python()`` and also ``.from_python()``
+  if ``.validate_python`` is true).
 
-if_missing:
-    If you set this attribute and the field is missing, this value
-    will be substituted.  This only occurs when the validator is
-    contained in a Schema, and the dictionary key is missing.
-if_invalid:
-    If you set this attribute and the validator fails, this value
-    will be returned.
-not_empty:
-    If true, before anything else is tested the input is tested to
-    see if it is empty (which is anything that evaluates to false).
+``if_invalid``:
+  If set, then when this validator would raise Invalid during
+  ``.to_python()``, instead return this value.
+      
+``if_invalid_python``:
+  If set, when the Python value (converted with
+  ``.from_python()``) is invalid, this value will be returned.
+
+``validate_python``:
+  If False (default True), then ``.validate_python()`` and
+  ``.validate_other()`` will not be called when
+  ``.from_python()`` is used.
 
 State
 -----
