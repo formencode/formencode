@@ -22,8 +22,6 @@
 """
 Fields for use with Forms.  The Field class gives the basic interface,
 and then there's bunches of classes for the specific kinds of fields.
-
-It's not unreasonable to do a import * from this module.
 """
 
 import urllib
@@ -35,177 +33,84 @@ from declarative import Declarative
 
 class NoDefault: pass
 
-class Options(object):
+class Context(object):
 
-    def __init__(self, name=None, **options):
-        self.current_name = name
-        if options.has_key('suboptions'):
-            self.suboptions = options['suboptions']
-            del options['suboptions']
-        else:
-            self.suboptions = None
-        if options.has_key('parent'):
-            self.parent = options['parent']
-            del options['parent']
-        else:
-            self.parent = None
-        self._option_values = options
+    def __init__(self, name_prefix='', id_prefix='', defaults=None):
+        self.name_prefix = name_prefix
+        self.id_prefix = id_prefix
+        self.defaults = defaults
 
-    def get(self, name, obj):
-        if self._option_values.has_key(name):
-            return self._option_values[name]
-        elif self.parent:
-            return self.parent.get(name, obj)
-        elif obj:
-            return getattr(obj, name)
+    def name(self, field, adding=None):
+        if not field.name:
+            assert self.name_prefix, (
+                "Field has not name, and context has no name_prefix")
+            name = self.name_prefix
+        elif self.name_prefix:
+            name = self.name_prefix + field.name
+        else:
+            name = field.name
+        if adding:
+            return name + '.' + adding
+        else:
+            return name
+
+    def id(self, field):
+        return self.id_prefix + field.name
+
+    def default(self, field):
+        if self.defaults:
+            name = self.name(field)
+            return self.defaults.get(name)
         else:
             return None
-
-    def render(self, obj):
-        if self.get('hidden', obj):
-            return obj.html_hidden(self)
-        else:
-            return obj.html(self)
-
-    def subfield(self, obj, name=None):
-        if name is None:
-            name = obj.name
-        if self.suboptions:
-            ops = self.suboptions.get(name, {})
-        else:
-            ops = {}
-        ops['name'] = ops
-        return self.__class__(parent=self, **ops)
-
-    def description(self, obj):
-        if obj.description:
-            return obj.description
-        return self.make_description(self.current_name)
-
-    def make_description(self, name):
-        return name
-
-    def name(self, obj, adding=None):
-        result = self.current_name or obj.name
-        if adding:
-            return result + '.' + adding
-        else:
-            return result
-
-    def default(self, obj):
-        return self.get('default', obj)
-
-    def form__set(self, form):
-        if self.parent:
-            self.parent.form = form
-        else:
-            self._form = form
-
-    def form__get(self):
-        if self.parent:
-            return self.parent.form
-        else:
-            return self._form
-
-    def form__del(self):
-        if self.parent:
-            del self.parent.form
-        else:
-            del self._form
-
-    form = property(form__get, form__set, form__del)
-
-    def wrap_field(self, field):
-        return field
-
-class ZPTOptions(Options):
-
-    def render(self, obj):
-        name = self.name(obj)
-        assert not self.default(obj), (
-            "ZPTOptions cannot render values with preset defaults "
-            "(%s has a default of %r)" % (name,
-                                          self.default(obj)))
-        if self.get('hidden', obj):
-            return obj.zpt_html_hidden(self)
-        else:
-            error = html.tal__if(
-                tal__condition="options/errors/%s | nothing" % name,
-                tal__replace="structure options/errors/%s" % name)
-            return html(error, obj.zpt_html(self))
-
-    def zpt_value(self, obj, in_python=False):
-        name = self.name(obj)
-        if in_python:
-            return 'request.get(%r, options.get(%r))' % (name, name)
-        else:
-            return 'request/%s | options/%s | nothing'
-
-    def add_zpt_attr(self, xml, attr, value):
-        if not attr.startswith('tal:'):
-            attr = 'tal:%s' % attr
-        cur = xml.attrib.get(attr, '')
-        if cur:
-            cur += '; '
-        xml.attrib[attr] = cur + value
-        return xml
-
-    def wrap_field(self, field):
-        if (field.attrib.get('type') == 'hidden'
-            or field.tag in ('submit', 'button', 'reset')):
-            return field
-        name = self.name(field)
-        self.add_zpt_attr(field, 'attributes',
-                          'class python: test(options[\'errors\'].get(%r), %r)'
-                          % (name, self.get('error_class', None)
-                             or 'error'))
-        return field
 
 class Field(Declarative):
 
     description = None
+    id = None
     static = False
     hidden = False
     requires_label = True
     default = None
+    name = None
+    width = None
+    enctype = None
 
-    def render(self, options):
-        return options.render(self)
-        return html(options.before(self),
-                    options.render(self),
-                    options.after(self))
+    def render(self, context):
+        if self.hidden:
+            return self.html_hidden(context)
+        elif self.static:
+            return self.html_static(context)
+        else:
+            return self.html(context)
 
-    def html_hidden(self, options):
+    def html_hidden(self, context):
         """The HTML for a hidden input (<input type="hidden">)"""
         return html.input(
             type='hidden',
-            name=options.name(self),
-            value=options.default(self))
+            id=context.id(self),
+            name=context.name(self),
+            value=context.default(self))
 
-    def html(self, options):
+    def html_static(self, context):
+        return html(
+            self.html_hidden(context),
+            context.default(self))
+
+    def html(self, context):
         """The HTML input code"""
         raise NotImplementedError
 
-    def zpt_hidden(self, options):
-        return options.wrap_field(html.input(
-            type="hidden",
-            name=options.name(self),
-            tal__attributes='value %s' % options.zpt_value(self)))
-
-    def zpt_html(self, options):
-        raise NotImplementedError
-
-    def is_hidden(self, options):
-        return options.subfield(self).get('hidden', self)
-
-    def style_width(self, options):
-        width = options.get('width', self)
-        if width:
-            if isinstance(width, int):
-                width = '%s%%' % width
-            return 'width: %s' % width
+    def style_width(self):
+        if self.width:
+            if isinstance(self.width, int):
+                return 'width: %s%%' % self.width
+            else:
+                return 'width: %s' % self.width
         else:
             return None
+
+    style_width = property(style_width)
 
     def load_javascript(self, filename):
         f = open(os.path.join(os.path.dirname(__file__),
@@ -217,6 +122,7 @@ class Field(Declarative):
 class Form(Declarative):
 
     action = None
+    id = None
     method = "POST"
     fields = []
     form_name = None
@@ -225,15 +131,25 @@ class Form(Declarative):
     def __init__(self, *args, **kw):
         Declarative.__init__(self, *args, **kw)
 
-    def render(self, options):
+    def render(self, context):
         assert self.action, "You must provide an action"
         contents = html(
-            [f.render(options) for f in self.fields])
+            [f.render(context) for f in self.fields])
+        enctype = self.enctype
+        for field in self.fields:
+            if field.enctype:
+                if enctype is None or enctype == field.enctype:
+                    enctype = field.enctype
+                else:
+                    raise ValueError(
+                        "Conflicting enctypes; need %r, field %r wants %r"
+                        % (enctype, field, field.enctype))
         return html.form(
-            action=options.get('action', self),
-            method=options.get('method', self),
-            name=options.get('form_name', self),
-            enctype=options.get('enctype', self),
+            action=self.action,
+            method=self.method,
+            name=context.name(self),
+            id=context.id(self),
+            enctype=enctype,
             c=contents)
 
 class Layout(Field):
@@ -244,46 +160,45 @@ class Layout(Field):
     requires_label = False
     fieldset_class = 'formfieldset'
 
-    def html(self, options):
+    def html(self, context):
         normal = []
         hidden = []
         for field in self.fields:
-            if field.is_hidden(options):
-                hidden.append(field.render(options.subfield(field)))
+            if field.hidden:
+                hidden.append(field.render(context))
             else:
                 normal.append(field)
         self.wrap(hidden, normal, options)
 
-    def wrap(self, hidden, normal, options):
+    def wrap(self, hidden, normal, context):
         hidden.append(self.wrap_fields(
-            [self.wrap_field(field, options) for field in self.normal],
-            options))
+            [self.wrap_field(field, context) for field in self.normal],
+            context))
         return hidden
 
-    def wrap_field(self, field, options):
-        return html(self.format_label(field, options),
-                    field.render(options.subfield(field)),
+    def wrap_field(self, field, context):
+        return html(self.format_label(field, context),
+                    field.render(context),
                     html.br)
 
-    def format_label(self, field, options):
+    def format_label(self, field, context):
         label = ''
-        subops = options.subfield(field)
-        if subops.get('requires_label', field):
-            label = subops.description(field)
+        if self.requires_label:
+            label = field.description
             if label:
-                label = label + options.get('append_to_label', self)
+                label = label + self.append_to_label
         return label
 
-    def wrap_fields(self, rendered_fields, options):
-        if not options.get('use_fieldset', self):
+    def wrap_fields(self, rendered_fields, context):
+        if not self.use_fieldset:
             return rendered_fields
-        legend = options.get('legend', self)
+        legend = self.legend
         if legend:
             legend = html.legend(legend)
         else:
             legend = ''
         return html.fieldset(legend, rendered_fields,
-                             class_=options.get('fieldset_class', self))
+                             class_=self.fieldset_class)
 
 class TableLayout(Layout):
 
@@ -294,39 +209,40 @@ class TableLayout(Layout):
     table_class = 'formtable'
     
 
-    def wrap_field(self, field, options):
+    def wrap_field(self, field, context):
         return html.tr(
-            html.td(self.format_label(field, options),
-                    align=options.get('label_align', self),
-                    class_=options.get('label_class', self)),
-            html.td(field.render(options.subfield(field)),
-                    class_=options.get('field_class', self)))
+            html.td(self.format_label(field, context),
+                    align=self.label_align,
+                    class_=self.label_class),
+            html.td(field.render(context),
+                    class_=self.field_class))
 
-    def wrap_fields(self, rendered_fields, options):
+    def wrap_fields(self, rendered_fields, context):
         return html.table(rendered_fields,
-                          width=options.get('width', self),
-                          class_=options.get('table_class', self))
+                          width=self.width,
+                          class_=self.table_class,
+                          c=rendered_fields)
 
 class FormTableLayout(Layout):
 
     layout = None
     append_to_label = ''
 
-    def wrap(self, hidden, normal, options):
+    def wrap(self, hidden, normal, context):
         fields = {}
         for field in normal:
             fields[field.name] = field
-        layout = options.get('layout', self)
+        layout = self.layout
         assert layout, "You must provide a layout for %s" % self
         output = []
         for line in layout:
             if isinstance(line, (str, unicode)):
                 line = [line]
-            output.append(self.html_line(line, fields, options))
-        hidden.append(self.wrap_fields(output, options))
+            output.append(self.html_line(line, fields, context))
+        hidden.append(self.wrap_fields(output, context))
         return hidden
 
-    def html_line(self, line, fields, options):
+    def html_line(self, line, fields, context):
         """
         Formats lines: '=text' means a literal of 'text', 'name' means
         the named field, ':name' means the named field, but without a
@@ -342,11 +258,11 @@ class FormTableLayout(Layout):
                 label = ''
             else:
                 field = fields[item]
-                label = self.format_label(field, options)
+                label = self.format_label(field, context)
             if label:
                 label = html(label, html.br)
             cells.append(html.td('\n', label, 
-                                 field.render(options.subfield(field)),
+                                 field.render(context),
                                  valign="bottom"))
             cells.append('\n')
         return html.table(html.tr(cells))
@@ -381,27 +297,25 @@ class SubmitButton(Field):
     description = ''
     requires_label = False
 
-    def html(self, options):
-        if options.get('confirm', self):
+    def html(self, context):
+        if self.confirm:
             query = ('return window.confirm(\'%s\')' % 
-                     javascript_quote(options.get('confirm', self)))
+                     javascript_quote(self.confirm))
         else:
             query = None
-        description = (options.get('description', self) or 
-                       options.get('default_description', self))
-        return options.wrap_field(html.input(
+        description = ((self.description) or 
+                       self.default_description)
+        return html.input(
             type='submit',
-            name=options.name(self),
+            name=context.name(self),
             value=description,
-            onclick=query))
+            onclick=query)
 
-    zpt_html = html
-
-    def html_hidden(self, options):
-        if options.default(self):
+    def html_hidden(self, context):
+        if context.default(self):
             return html.input.hidden(
-                name=options.name(self),
-                value=options.get('description', self))
+                name=context.name(self),
+                value=context.default(self))
         else:
             return ''
 
@@ -412,7 +326,7 @@ class ImageSubmit(SubmitButton):
 
     Examples::
 
-        >>> prfield(ImageSubmit(), img_src='test.gif')
+        >>> prfield(ImageSubmit(img_src='test.gif'))
         <input src="test.gif" name="f" border="0" value="" type="image" alt="" />
     """
 
@@ -420,16 +334,16 @@ class ImageSubmit(SubmitButton):
     img_width = None
     border = 0
 
-    def html(self, options):
+    def html(self, context):
         return html.input(
             type='image',
-            name=options.name(self),
-            value=options.get('description', self),
-            src=options.get('img_src', self),
-            height=options.get('img_height', self),
-            width=options.get('img_width', self),
-            border=options.get('border', self),
-            alt=options.get('description', self))
+            name=context.name(self),
+            value=self.description,
+            src=self.img_src,
+            height=self.img_height,
+            width=self.img_width,
+            border=self.border,
+            alt=self.description)
 
 class Hidden(Field):
     """
@@ -440,17 +354,15 @@ class Hidden(Field):
 
     Examples::
 
-        >>> prfield(Hidden(), default='a&value')
-        <input type="hidden" name="f" value="a&amp;value" />
+        >>> prfield(Hidden(), defaults={'f': 'a&value'})
+        <input id="f" type="hidden" name="f" value="a&amp;value" />
     """
 
     requires_label = False
     hidden = True
 
-    def html(self, options):
-        return self.html_hidden(options)
-
-    zpt_html = html
+    def html(self, context):
+        return self.html_hidden(context)
 
 class Text(Field):
 
@@ -462,46 +374,31 @@ class Text(Field):
         >>> t = Text()
         >>> prfield(t)
         <input type="text" name="f"/>
-        >>> prfield(t, default="&whatever&")
+        >>> prfield(t, defaults={'f': "&whatever&"})
         <input type="text" name="f" value="&amp;whatever&amp;" />
         >>> prfield(t(maxlength=20, size=10))
         <input type="text" name="f" size="10" maxlength="20" />
-
-    ZPT::
-
-        >>> t = Text()
-        >>> prfield(t, zpt=True)
-        <tal:if tal:condition="options/errors/f | nothing"
-         tal:replace="structure options/errors/f" />
-        <input name="f" tal:attributes="class python: test(options[&apos;errors&apos;].get(&apos;f&apos;), &apos;error&apos;); value request/%s | options/%s | nothing"
-         type="text" />
     """
 
     size = None
     maxlength = None
     width = None
 
-    def html(self, options):
-        return options.wrap_field(html.input(
+    def html(self, context):
+        return html.input(
             type='text',
-            name=options.name(self),
-            value=options.default(self),
-            maxlength=options.get('maxlength', self),
-            size=options.get('size', self),
-            style=self.style_width(options)))
-
-    def zpt_html(self, options):
-        return options.add_zpt_attr(
-            self.html(options),
-            'attributes',
-            'value %s' % options.zpt_value(self))
+            name=context.name(self),
+            value=context.default(self),
+            maxlength=self.maxlength,
+            size=self.size,
+            style=self.style_width)
 
 class Textarea(Field):
 
     """
     Basic textarea field.  Examples::
 
-        >>> prfield(Textarea(), default='<text>')
+        >>> prfield(Textarea(), defaults={'f': '<text>'})
         <textarea name="f" rows="10" cols="60" wrap="SOFT">&lt;text&gt;</textarea>
     """
 
@@ -510,37 +407,32 @@ class Textarea(Field):
     wrap = "SOFT"
     width = None
 
-    def html(self, options):
-        return options.wrap_field(html.textarea(
-            name=options.name(self),
-            rows=options.get('rows', self),
-            cols=options.get('cols', self),
-            wrap=options.get('wrap', self) or None,
-            style=self.style_width(options),
-            c=options.default(self)))
-
-    def zpt_html(self, options):
-        return self.add_zpt_attr(
-            self.html(options),
-            'content', options.zpt_value(self))
+    def html(self, context):
+        return html.textarea(
+            name=context.name(self),
+            rows=self.rows,
+            cols=self.cols,
+            wrap=self.wrap or None,
+            style=self.style_width,
+            c=context.default(self))
 
 class Password(Text):
 
     """
     Basic password field.  Examples::
 
-        >>> prfield(Password(maxlength=10), default='pass')
+        >>> prfield(Password(maxlength=10), defaults={'f': 'pass'})
         <input type="password" name="f" maxlength="10" value="pass" />
     """
 
-    def html(self, options):
-        return options.wrap_field(html.input(
+    def html(self, context):
+        return html.input(
             type='password',
-            name=options.name(self),
-            value=options.default(self),
-            maxlength=options.get('maxlength', self),
-            size=options.get('size', self),
-            style=self.style_width(options)))
+            name=context.name(self),
+            value=context.default(self),
+            maxlength=self.maxlength,
+            size=self.size,
+            style=self.style_width)
 
 class Select(Field):
     """
@@ -559,7 +451,7 @@ class Select(Field):
 
     Examples::
 
-        >>> prfield(Select(), selections=[(1, 'One'), (2, 'Two')], default='2')
+        >>> prfield(Select(selections=[(1, 'One'), (2, 'Two')]), defaults=dict(f='2'))
         <select name="f">
         <option value="1">One</option>
         <option value="2" selected="selected">Two</option>
@@ -575,39 +467,25 @@ class Select(Field):
     null_input = None
     size = None
 
-    def html(self, options, subsel=None):
-        selections = options.get('selections', self)
-        null_input = options.get('null_input', self)
-        if not options.default(self) and null_input:
+    def html(self, context, subsel=None):
+        selections = self.selections
+        null_input = self.null_input
+        if not context.default(self) and null_input:
+            # @@: list()?
             selections = [('', null_input)] + selections
         if subsel:
-            return subsel(selections, options)
+            return subsel(selections, context)
         else:
-            return self.selection_html(selections, options)
+            return self.selection_html(selections, context)
 
-    def selection_html(self, selections, options):
-        return options.wrap_field(html.select(
-            name=options.name(self),
-            size=options.get('size', self),
+    def selection_html(self, selections, context):
+        return html.select(
+            name=context.name(self),
+            size=self.size,
             c=[html.option(desc,
                            value=value,
-                           selected=self.selected(value, options.default(self))
-                           and "selected" or None)
-               for (value, desc) in selections]))
-
-    def zpt_html(self, options):
-        return self.html(options, subsel=self.zpt_selection_html)
-
-    def zpt_selection_html(self, selections, options):
-        name = options.name(self)
-        return options.wrap_field(html.select(
-            name=name,
-            size=options.get('size', self),
-            c=[html.option(desc,
-                           value=value,
-                           tal_attributes="selected python: %s == %r, 'selected')"
-                           % (options.zpt_value(self, in_python=True), value))
-               for desc, value in self.selections]))
+                           selected=self.selected(value, context.default(self)))
+               for (value, desc) in selections])
 
     def selected(self, key, default):
         if str(key) == str(default):
@@ -637,12 +515,12 @@ class Ordering(Select):
 
     show_reset = False
 
-    def selection_html(self, selections, options):
+    def selection_html(self, selections, context):
         size = len(selections)
         
-        if options.default(self):
+        if context.default(self):
             new_selections = []
-            for default_value in options.default(self):
+            for default_value in context.default(self):
                 for value, desc in selections:
                     if str(value) == str(default_value):
                         new_selections.append((value, desc))
@@ -659,39 +537,35 @@ class Ordering(Select):
         result = []
         result.append(
             html.select(
-            name=options.name(self, adding='func'),
+            name=context.name(self, adding='func'),
             size=size,
             c=[html.option(desc, value=value)
                for value, desc in selections]))
         result.append(html.br())
-        for name, action in self.buttons(options):
+        for name, action in self.buttons(context):
             result.append(html.input(
                 type='button',
                 value=name,
                 onclick=action))
-        result.append(html.script(
-            language="JavaScript",
-            type='text/javascript',
-            c=html.comment(self.javascript(options))))
         result.append(html.input(
             type='hidden',
-            name=options.name(self),
+            name=context.name(self),
             value=encoded_value))
+        result.append(html.script(
+            type='text/javascript',
+            c=self.javascript(context)))
         return result
 
-    def zpt_selection_html(self, selections, options):
-        raise NotImplementedError
-
-    def buttons(self, options):
+    def buttons(self, context):
         buttons = [('up', 'up(this)'),
                    ('down', 'down(this)')]
-        if options.get('show_reset', self):
+        if self.show_reset:
             buttons.append(('reset', 'reset_entries(this)'))
         return buttons
 
-    def javascript(self, options):
-        name = options.name(self, adding='func')
-        hidden_name = options.name(self)
+    def javascript(self, context):
+        name = context.name(self, adding='func')
+        hidden_name = context.name(self)
         return (self.load_javascript('ordering.js')
                 % {'name': name, 'hidden_name': hidden_name})
 
@@ -702,7 +576,7 @@ class OrderingDeleting(Ordering):
     Examples::
 
         >>> o = OrderingDeleting(selections=[('a', 'A'), ('b', 'B')])
-        >>> prfield(o, confirm_on_delete='Yeah?', chop=('<script ', '</script>'))
+        >>> prfield(o(confirm_on_delete='Yeah?', chop=('<script ', '</script>')))
         <select name="f.func" size="2">
         <option value="a">A</option>
         <option value="b">B</option>
@@ -713,13 +587,14 @@ class OrderingDeleting(Ordering):
         <input type="button" value="delete"
          onclick="window.confirm('Yeah?') ? delete_entry(this) : false" />
         <input type="hidden" name="f" value="a b " />
+        <script type="text/javascript">*</script>
     """
 
     confirm_on_delete = None
 
-    def buttons(self, options):
-        buttons = Ordering.buttons(self, options)
-        confirm_on_delete = options.get('confirm_on_delete', self)
+    def buttons(self, context):
+        buttons = Ordering.buttons(self, context)
+        confirm_on_delete = self.confirm_on_delete
         if confirm_on_delete:
             delete_button = (
                 'delete',
@@ -737,8 +612,8 @@ class OrderingDeleting(Ordering):
             new_buttons.append(delete_button)
         return new_buttons
 
-    def javascript(self, options):
-        js = Ordering.javascript(self, options)
+    def javascript(self, context):
+        js = Ordering.javascript(self, context)
         return js + ('''
         function deleteEntry(formElement) {
             var select;
@@ -756,7 +631,7 @@ class Radio(Select):
     Example::
 
         >>> prfield(Radio(selections=[('a', 'A'), ('b', 'B')]),
-        ...         default='b')
+        ...         defaults=dict(f='b'))
         <input type="radio" name="f" value="a" id="f_1" />
         <label for="f_1">A</label><br />
         <input type="radio" name="f" value="b" id="f_2" checked="checked" />
@@ -764,41 +639,23 @@ class Radio(Select):
         
     """
 
-    def selection_html(self, selections, options):
+    def selection_html(self, selections, context):
         id = 0
         result = []
         for value, desc in selections:
             id = id + 1
-            if self.selected(value, options.default(self)):
+            if self.selected(value, context.default(self)):
                 checked = 'checked'
             else:
                 checked = None
-            result.append(options.wrap_field(html.input(
+            result.append(html.input(
                 type='radio',
-                name=options.name(self),
+                name=context.name(self),
                 value=value,
-                id="%s_%i" % (options.name(self), id),
-                checked=checked)))
+                id="%s_%i" % (context.name(self), id),
+                checked=checked))
             result.append(html.label(
-                for_='%s_%i' % (options.name(self), id),
-                c=desc))
-            result.append(html.br())
-        return result
-
-    def zpt_selection_html(self, selections, options):
-        id = 0
-        result = []
-        name = options.name(self)
-        for value, desc in selections:
-            id = id + 1
-            result.append(options.wrap_field(html.input(
-                type='radio',
-                name=name,
-                value=value,
-                id="%s_%i" % (options.name(self), id),
-                tal__attributes="checked python: %s == %r, 'checked')" % (options.zpt_value(self, in_python=True), value))))
-            result.append(html.label(
-                for_='%s_%i' % (options.name(self), id),
+                for_='%s_%i' % (context.name(self), id),
                 c=desc))
             result.append(html.br())
         return result
@@ -820,7 +677,7 @@ class MultiSelect(Select):
         <option value="&amp;b">&amp;amp;B</option>
         <option value="1">1</option>
         </select>
-        >>> prfield(sel, default=['&b', '1'])
+        >>> prfield(sel, defaults=dict(f=['&b', '1']))
         <select size="3" multiple="multiple" name="f">
         <option value="&amp;a">&amp;amp;A</option>
         <option value="&amp;b" selected="selected">&amp;amp;B</option>
@@ -831,18 +688,18 @@ class MultiSelect(Select):
     size = NoDefault
     max_size = 10
 
-    def selection_html(self, selections, options):
+    def selection_html(self, selections, context):
         result = []
-        size = options.get('size', self)
+        size = self.size
         if size is NoDefault:
-            size = min(len(selections), options.get('max_size', self))
+            size = min(len(selections), self.max_size)
         result.append(html.select(
-            name=options.name(self),
+            name=context.name(self),
             size=size,
             multiple="multiple",
             c=[html.option(desc,
                            value=value,
-                           selected=self.selected(value, options.default(self))
+                           selected=self.selected(value, context.default(self))
                            and "selected" or None)
                for value, desc in selections]))
 
@@ -853,60 +710,32 @@ class MultiSelect(Select):
             default = [default]
         return str(key) in map(str, default)
 
-    def html_hidden(self, options):
-        default = options.default(self)
+    def html_hidden(self, context):
+        default = context.default(self)
         if not isinstance(default, (tuple, list)):
             if default is None:
                 default = []
             else:
                 default = [default]
         return html(
-            [html.input.hidden(name=options.name(self),
+            [html.input.hidden(name=context.name(self),
                                value=value)
              for value in default])
 
-    def zpt_html_hidden(self, options):
+    def selection_html(self, selections, context):
         result = []
-        name = options.name(self)
-        for value, desc in options.get('selections', self):
-            result.append(options.wrap_field(html.input(
-                type='hidden',
-                name=name,
-                value=value,
-                tal__condition="python: %s == %r" % (options.zpt_value(self, in_python=True), value))))
-        return result
-
-    def selection_html(self, selections, options):
-        result = []
-        size = options.get('size', self)
+        size = self.size
         if size is NoDefault:
-            size = min(len(selections), options.get('max_size', self))
-        result.append(options.wrap_field(html.select(
-            name=options.name(self),
+            size = min(len(selections), self.max_size)
+        result.append(html.select(
+            name=context.name(self),
             size=size,
             multiple="multiple",
             c=[html.option(desc,
                            value=value,
-                           selected=self.selected(value, options.default(self))
+                           selected=self.selected(value, context.default(self))
                            and "selected" or None)
-               for value, desc in selections])))
-        return result
-
-    def zpt_selection_html(self, selections, options):
-        result = []
-        size = options.get('size', self)
-        if size is NoDefault:
-            size = min(len(selections), options.get('max_size', self))
-        name = options.name(self)
-        result.append(options.wrap_field(html.select(
-            name=name,
-            size=size,
-            multiple="multiple",
-            tal__define="current %s" % options.zpt_value(self),
-            c=[html.option(desc,
-                           value=value,
-                           tal__attributes="selected python: current and %r == current or %r in current" % (value, value))
-               for value, desc in selections])))
+               for value, desc in selections]))
         return result
 
 class MultiCheckbox(MultiSelect):
@@ -917,7 +746,7 @@ class MultiCheckbox(MultiSelect):
     Examples::
 
         >>> sel = MultiCheckbox(selections=[('&a', '&amp;A'), ('&b', '&amp;B'), (1, 1)])
-        >>> prfield(sel, default='&a')
+        >>> prfield(sel, defaults=dict(f='&a'))
         <input type="checkbox" value="&amp;a" name="f" checked="checked"
          id="f_1" />
         <label for="f_1">&amp;amp;A</label><br />
@@ -927,39 +756,21 @@ class MultiCheckbox(MultiSelect):
         <label for="f_3">1</label><br />
     """
 
-    def selection_html(self, selections, options):
+    def selection_html(self, selections, context):
         result = []
         id = 0
         for value, desc in selections:
             id = id + 1
-            result.append(options.wrap_field(html.input(
+            result.append(html.input(
                 type='checkbox',
-                name=options.name(self),
-                id="%s_%i" % (options.name(self), id),
+                name=context.name(self),
+                id="%s_%i" % (context.name(self), id),
                 value=value,
-                checked=self.selected(value, options.default(self))
-                and "checked" or None)))
+                checked=self.selected(value, context.default(self))
+                and "checked" or None))
             result.append(html.label(
                 " " + str(desc),
-                for_="%s_%i" % (options.name(self), id)))
-            result.append(html.br())
-        return result
-
-    def zpt_selection_html(self, selections, options):
-        result = []
-        id = 0
-        for value, desc in selections:
-            id = id + 1
-            result.append(options.wrap_field(html.input(
-                type='checkbox',
-                name=options.name(self),
-                id="%s_%i" % (options.name(self), id),
-                value=value,
-                tal__define="current %s" % options.zpt_value(self),
-                tal__attributes="checked python: current and %r == current or %r current" % (value, value))))
-            result.append(html.label(
-                " " + str(desc),
-                for_="%s_%i" % (options.name(self), id)))
+                for_="%s_%i" % (context.name(self), id)))
             result.append(html.br())
         return result
 
@@ -969,25 +780,18 @@ class Checkbox(Field):
     """
     Simple checkbox.  Examples::
 
-        >>> prfield(Checkbox(), default=0)
+        >>> prfield(Checkbox(), defaults=dict(f=0))
         <input type="checkbox" name="f" />
-        >>> prfield(Checkbox(), default=1)
+        >>> prfield(Checkbox(), defaults=dict(f=1))
         <input type="checkbox" name="f" checked="checked" />
         
     """
 
-    def html(self, options):
+    def html(self, context):
         return html.input(
             type='checkbox',
-            name=options.name(self),
-            checked = options.default(self) and "checked" or None)
-
-    def zpt_html(self, options):
-        return options.add_zpt_attr(
-            self.html(options),
-            'attributes',
-            "checked python: test(%s, 'checked')"
-            % (options.zpt_value(self, in_python=True)))
+            name=context.name(self),
+            checked = context.default(self) and "checked" or None)
 
 class File(Field):
     """
@@ -1010,21 +814,19 @@ class File(Field):
 
     accept = None
     size = None
+    enctype = "multipart/form-data"
 
-    def html(self, options):
-        options.form.enctype = "multipart/form-data"
-        accept = options.get('accept', self)
+    def html(self, context):
+        accept = self.accept
         if accept and accept is not None:
             mime_list = ",".join(accept)
         else:
             mime_list = None
-        return options.wrap_field(html.input(
+        return html.input(
             type='file',
-            name=options.name(self),
-            size=options.get('size', self),
-            accept=mime_list))
-
-    zpt_html = html
+            name=context.name(self),
+            size=self.size,
+            accept=mime_list)
         
 
 class StaticText(Field):
@@ -1035,24 +837,22 @@ class StaticText(Field):
 
         >>> prfield(StaticText('some <b>HTML</b>'))
         some <b>HTML</b>
-        >>> prfield(StaticText('whatever'), hidden=1)
+        >>> prfield(StaticText('whatever', hidden=1))
     """
 
     text = ''
     requires_label = False
     __unpackargs__ = ('text',)
 
-    def html(self, options):
-        default = options.default(self)
+    def html(self, context):
+        default = context.default(self)
         if default is not None:
             return str(default)
         else:
             return str(self.text)
 
-    def html_hidden(self, options):
+    def html_hidden(self, context):
         return ''
-
-    zpt_html = html
 
 class ColorPicker(Field):
 
@@ -1065,16 +865,16 @@ class ColorPicker(Field):
     Examples::
 
         >>> cp = ColorPicker(color_picker_url='/colorpick.html')
-        >>> prfield(cp, defaults='#ff0000')
+        >>> prfield(cp, defaults={'f': '#ff0000'})
         <table border="0" cellspacing="0">
         <tr>
         <td id="f.pick"
-         style=\"background-color: #ffffff; border: thin black solid;\" width="20">
+         style=\"background-color: #ff0000; border: thin black solid;\" width="20">
           </td>
         <td>
           <input name="f"
            onchange="document.getElementById(&apos;f.pick&apos;).style.backgroundColor = this.value; return true"
-           size="8" type="text" />
+           size="8" type="text" value=\"#ff0000\"/>
           <input onclick="colorpick(this, &apos;f&apos;, &apos;f.pick&apos;)"
            type="button" value="pick" />
          </td>
@@ -1084,14 +884,14 @@ class ColorPicker(Field):
 
     color_picker_url = None
 
-    def html(self, options):
-        js = self.javascript(options)
-        color_picker_url = options.get('color_picker_url', self)
+    def html(self, context):
+        js = self.javascript(context)
+        color_picker_url = self.color_picker_url
         assert color_picker_url, (
             'You must give a base URL for the color picker')
-        name = options.name(self)
-        color_id = options.name(self, adding='pick')
-        default_color = options.default(self) or '#ffffff'
+        name = context.name(self)
+        color_id = context.name(self, adding='pick')
+        default_color = context.default(self) or '#ffffff'
         return html.table(
             cellspacing=0, border=0,
             c=[html.tr(
@@ -1101,11 +901,11 @@ class ColorPicker(Field):
             html.td(
             html.input(type='text', size=8,
                        onchange="document.getElementById('%s').style.backgroundColor = this.value; return true" % color_id,
-                       name=name, value=options.default(self)),
+                       name=name, value=context.default(self)),
             html.input(type='button', value="pick",
                        onclick="colorpick(this, '%s', '%s')" % (name, color_id))))])
 
-    def javascript(self, options):
+    def javascript(self, context):
         return """\
 function colorpick(element, textFieldName, color_id) {
     win = window.open('%s?form='
@@ -1115,7 +915,7 @@ function colorpick(element, textFieldName, color_id) {
                       '_blank',
                       'dependent=no,directories=no,width=300,height=130,location=no,menubar=no,status=no,toolbar=no');
 }
-""" % options.get('color_picker_url', self)
+""" % self.color_picker_url
 
 
 ########################################
@@ -1139,18 +939,16 @@ def javascript_quote(value):
     return repr('"' + str(value))[2:-1]
     
 
-def prfield(field, chop=None, zpt=False, **kw):
+def prfield(field, chop=None, **kw):
     """
     Prints a field, useful for doctests.
     """
     if not kw.has_key('name'):
         kw['name'] = 'f'
-    if zpt:
-        ops = ZPTOptions(**kw)
-    else:
-        ops = Options(**kw)
-    ops.form = Form()
-    result = html.str(field(name=kw['name']).render(ops))
+    name = kw.pop('name')
+    context = Context(**kw)
+    context.form = Form()
+    result = html.str(field(name=name).render(context))
     if chop:
         pos1 = result.find(chop[0])
         pos2 = result.find(chop[1])
@@ -1159,4 +957,10 @@ def prfield(field, chop=None, zpt=False, **kw):
         else:
             result = result[:pos1] + result[pos2+len(chop[1]):]
     print result
+    
+if __name__ == '__main__':
+    import doctest
+    import doctest_xml_compare
+    doctest_xml_compare.install()
+    doctest.testmod()
     
