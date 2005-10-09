@@ -138,30 +138,37 @@ class FancyValidator(Validator):
     There is no formal distinction made here.
 
     Validators have two important external methods:
+    
     * .to_python(value, state):
       Attempts to convert the value.  If there is a problem, or the
       value is not valid, an Invalid exception is raised.  The
       argument for this exception is the (potentially HTML-formatted)
       error message to give the user.
+
     * .from_python(value, state):
       Reverses to_python.
 
     There are five important methods for subclasses to override,
     however none of these *have* to be overridden, only the ones that
     are appropriate for the validator:
+    
     * __init__():
       if the `declarative.Declarative` model doesn't work for this.
+
     * .validate_python(value, state):
       This should raise an error if necessary.  The value is a Python
       object, either the result of to_python, or the input to
       from_python.
+
     * .validate_other(value, state):
       Validates the source, before to_python, or after from_python.
       It's more common to use `.validate_python()` however.
+
     * ._to_python(value, state):
       This returns the converted value, or raises an Invalid
       exception if there is an error.  The argument to this exception
       should be the error message.
+
     * ._from_python(value, state):
       Should undo .to_python() in some reasonable way, returning
       a string.

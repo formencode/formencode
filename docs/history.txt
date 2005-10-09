@@ -1,0 +1,41 @@
+On Intentions And History
+=========================
+
+I'm the author of FunFormKit_, a form generation and validation
+package for Webware_.  I consider FunFormKit (FFK) to be a very
+powerful and complete package, with features that few other form
+validation packages for Python have (as to other languages, I haven't
+researched enough to know).  It supports repeating and compound fields
+(which most packages do not), and has a very expressive validation
+system.
+
+However, this is not FFK.  In fact, it signals a deprecation of FFK
+and does not provide backward compatibility.  Why?
+
+Probably the biggest problem was that FFK didn't support compound
+and repeating fields.  Adding them made everything *much* more
+difficult -- it was a sort of clever hack (maybe not even clever), and
+the result was very hard for anyone else to understand.  Ultimately
+hard for me to understand.
+
+Ontop of this was a structure that had too much coupling.  Testing was
+difficult.  I only came to like unit testing after FFK had gone
+through several revisions (and I won't claim to be an addict or
+sufficiently disciplined about unit testing, but at least I'm better
+at it now).  FFK was not made with testability in mind.  It's hard to
+add later.
+
+Also, I wanted to use pieces of FFK without the entire framework.
+Validation without the form generation was the biggest one.  Alternate
+kinds of forms also interested me -- making it easier to do highly
+granual templating, or non-HTML/HTTP forms.  Alternate data sources,
+like SQL or XMLRPC, also seemed important.  All of these were not easy
+within the interfaces that FFK used.
+
+So... FormEncode!  FormEncode takes a lot of ideas from FFK, and a lot
+of the code is just modified FFK code.  All of it is reviewed and
+actively inserted into FormEncode, I'm not transferring anything
+wholesale.  
+
+.. _FunFormKit: http://funformkit.sf.net
+.. _Webware: http://webware.sf.net

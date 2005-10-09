@@ -7,6 +7,7 @@ class ForEach(CompoundValidator):
 
     """
     Use this to apply a validator/converter to each item in a list.
+
     For instance::
 
         ForEach(AsInt(), InList([1, 2, 3]))

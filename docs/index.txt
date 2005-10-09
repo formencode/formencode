@@ -1,0 +1,40 @@
+FormEncode
+==========
+
+Introduction
+------------
+
+FormEncode is a validation and form generation package.  The
+validation can be used separately from the form generation.  The
+validation works on compound data structures, with all parts being
+nestable.  It is separate from HTTP or any other input mechanism.
+
+`Ian Bicking`_ is the author of FormEncode.
+
+.. _Ian Bicking: http://ianbicking.org
+
+Documentation
+-------------
+
+* `Validation Documentation <Validator.html>`_
+* `htmlfill <htmlfill.html>`_
+* `To-Do list <ToDo.html>`_
+* `About FormEncode's design <Design.html>`_ and `history <history.html>`_
+
+Other Links
+-----------
+
+* `Community (mailing list, etc) <community.html>`_
+* `Download <download.html>`_
+
+Projects that use FormEncode:
+
+* `SQLObject <http://sqlobject.org>`_
+* `Subway <http://subway.python-hosting.com>`_
+* `TurboGears <http://turbogears.org>`_
+* `Pylons <http://pylons.groovie.org>`_
+
+.. image:: http://sourceforge.net/sflogo.php?group_id=91231&type=4
+   :height: 37
+   :width: 125
+   :alt: Hosted by SourceForge

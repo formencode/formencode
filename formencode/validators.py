@@ -30,6 +30,7 @@ httplib = None
 urlparse = None
 from interfaces import *
 from api import *
+sha = random = None
 
 True, False = (1==1), (0==1)
 
@@ -81,7 +82,9 @@ def datetime_makedate(module, year, month, day):
 class ConfirmType(FancyValidator):
 
     """
-    Confirms that the input/output is of the proper type, using:
+    Confirms that the input/output is of the proper type.
+
+    Uses the parameters:
 
     subclass:
         The class or a tuple of classes; the item must be an instance
@@ -168,11 +171,12 @@ class ConfirmType(FancyValidator):
 class Wrapper(FancyValidator):
 
     """
-    Used to convert functions to validator/converters.  You can give a
-    simple function for `to_python`, `from_python`, `validate_python` or
-    `validate_other`.  If that function raises an exception, the value
-    is considered invalid.  Whatever value the function returns is
-    considered the converted value.
+    Used to convert functions to validator/converters.
+
+    You can give a simple function for `to_python`, `from_python`,
+    `validate_python` or `validate_other`.  If that function raises an
+    exception, the value is considered invalid.  Whatever value the
+    function returns is considered the converted value.
 
     Unlike validators, the `state` argument is not used.  Functions
     like `int` can be used here, that take a single argument.
@@ -232,16 +236,20 @@ class Wrapper(FancyValidator):
 class Constant(FancyValidator):
 
     """
-    This converter converts everything to the same thing.  I.e., you
-    pass in the constant value when initializing, then all values get
-    converted to that constant value.
+    This converter converts everything to the same thing.
 
-    This is only really useful for funny situations, like:
+    I.e., you pass in the constant value when initializing, then all
+    values get converted to that constant value.
+
+    This is only really useful for funny situations, like::
+
       fromEmailValidator = ValidateAny(
                                ValidEmailAddress(),
                                Constant('unknown@localhost'))
-    In this case, the if the email is not valid 'unknown@localhost' will
-    be used instead.  Of course, you could use if_invalid instead.
+                               
+    In this case, the if the email is not valid
+    ``'unknown@localhost'`` will be used instead.  Of course, you
+    could use ``if_invalid`` instead.
 
     Examples::
 
@@ -366,9 +374,10 @@ class MinLength(FancyValidator):
 class NotEmpty(FancyValidator):
 
     """
-    Invalid if value is empty (empty string, empty list, etc).  Generally
-    for objects that Python considers false, except zero which is not
-    considered invalid.
+    Invalid if value is empty (empty string, empty list, etc).
+
+    Generally for objects that Python considers false, except zero
+    which is not considered invalid.
 
     Examples::
 
@@ -419,6 +428,7 @@ class Regex(FancyValidator):
 
     """
     Invalid if the value doesn't match the regular expression `regex`.
+
     The regular expression can be a compiled re object, or a string
     which will be compiled for you.
 
@@ -511,12 +521,13 @@ class PlainText(Regex):
 class OneOf(FancyValidator):
 
     """
-    Tests that the value is one of the members of a given list.  If
-    testValueLists=True, then if the input value is a list or tuple,
-    all the members of the sequence will be checked (i.e., the input
-    must be a subset of the allowed values).
+    Tests that the value is one of the members of a given list.
 
-    Use hideList=True to keep the list of valid values out of the
+    If ``testValueLists=True``, then if the input value is a list or
+    tuple, all the members of the sequence will be checked (i.e., the
+    input must be a subset of the allowed values).
+
+    Use ``hideList=True`` to keep the list of valid values out of the
     error message in exceptions.
 
     Examples::
@@ -567,9 +578,10 @@ class DictConverter(FancyValidator):
 
     """
     Converts values based on a dictionary which has values as keys for
-    the resultant values.  If allowNull is passed, it will not balk if
-    a false value (e.g., '' or None) is given (it will return None in
-    these cases).
+    the resultant values.
+
+    If ``allowNull`` is passed, it will not balk if a false value
+    (e.g., '' or None) is given (it will return None in these cases).
 
     to_python takes keys and gives values, from_python takes values and
     gives keys.
@@ -824,8 +836,10 @@ class Number(FancyValidator):
 class String(FancyValidator):
     """
     Converts things to string, but treats empty things as the empty
-    string.  Also takes a `max` and `min` argument, and the string
-    length must fall in that range.
+    string.
+
+    Also takes a `max` and `min` argument, and the string length must
+    fall in that range.
     """
 
     min = None
@@ -859,9 +873,10 @@ class Set(FancyValidator):
 
     """
     This is for when you think you may return multiple values for a
-    certain field.  This way the result will always be a list, even if
-    there's only one result.  It's equivalent to
-    ForEach(convertToList=True).
+    certain field.
+
+    This way the result will always be a list, even if there's only
+    one result.  It's equivalent to ForEach(convertToList=True).
     """
 
     if_empty = ()
@@ -875,10 +890,13 @@ class Set(FancyValidator):
             return [value]
 
 class Email(FancyValidator):
-    """Validate an email address.  If you pass resolve_domain=True,
-    then it will try to resolve the domain name to make sure it's valid.
-    This takes longer, of course.  You must have the pyDNS modules
-    installed <http://pydns.sf.net> to look up MX records.
+    """
+    Validate an email address.
+
+    If you pass ``resolve_domain=True``, then it will try to resolve
+    the domain name to make sure it's valid.  This takes longer, of
+    course.  You must have the `pyDNS <http://pydns.sf.net>`_ modules
+    installed to look up MX records.
     """
 
     resolve_domain = False
@@ -1024,11 +1042,12 @@ class URL(FancyValidator):
 class StateProvince(FancyValidator):
     
     """
-    Valid state or province code (two-letter).  Well, for now I don't
-    know the province codes, but it does state codes.  Give your own
-    `states` list to validate other state-like codes; give
-    `extraStates` to add values without losing the current state
-    values.
+    Valid state or province code (two-letter).
+
+    Well, for now I don't know the province codes, but it does state
+    codes.  Give your own `states` list to validate other state-like
+    codes; give `extraStates` to add values without losing the current
+    state values.
     """
 
     states = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE',
@@ -1072,6 +1091,7 @@ class PhoneNumber(FancyValidator):
     """
     Validates, and converts to ###-###-####, optionally with
     extension (as ext.##...)
+    
     @@: should add international phone number support
     """
 
@@ -1105,11 +1125,13 @@ class DateConverter(FancyValidator):
 
     """
     Validates and converts a textual date, like mm/yy, dd/mm/yy,
-    dd-mm-yy, etc Always assumes month comes second value is the
-    month.  Accepts English month names, also abbreviated.  Returns
-    value as mx.DateTime object.  Two year dates are assumed to be
-    within 1950-2020, with dates from 21-49 being ambiguous and
-    signaling an error.
+    dd-mm-yy, etc, always assumes month comes second value is the
+    month.
+
+    Accepts English month names, also abbreviated.  Returns value as
+    mx.DateTime object.  Two year dates are assumed to be within
+    1950-2020, with dates from 21-49 being ambiguous and signaling an
+    error.
 
     Use accept_day=False if you just want a month/year (like for a
     credit card expiration date).
@@ -1453,8 +1475,10 @@ class StripField(FancyValidator):
 
     """
     Take a field from a dictionary, removing the key from the
-    dictionary.  ``name`` is the key.  The field value and a new copy
-    of the dictionary with that field removed are returned.
+    dictionary.
+
+    ``name`` is the key.  The field value and a new copy of the
+    dictionary with that field removed are returned.
     """
 
     __unpackargs__ = ('name',)
@@ -1477,7 +1501,8 @@ class StripField(FancyValidator):
 
 class StringBoolean(FancyValidator):
     # Originally from TurboGears
-    """Converts a string to a boolean.
+    """
+    Converts a string to a boolean.
     
     Values like 'true' and 'false' are considered True and False,
     respectively; anything in ``true_values`` is true, anything in
@@ -1508,6 +1533,65 @@ class StringBoolean(FancyValidator):
             return self.true_values[0]
         else:
             return self.false_values[0]
+
+class SignedString(FancyValidator):
+
+    """
+    Encodes a string into a signed string, and base64 encodes both the
+    signature string and a random nonce.
+
+    It is up to you to provide a secret, and to keep the secret handy
+    and consistent.
+    """
+
+    messages = {
+        'malformed': 'Value does not contain a signature',
+        'badsig': 'Signature is not correct',
+        }
+
+    secret = None
+    nonce_length = 4
+
+    def _to_python(self, value, state):
+        global sha
+        if not sha:
+            import sha
+        assert secret, (
+            "You must give a secret")
+        parts = value.split(None, 1)
+        if not parts or len(parts) == 1:
+            raise Invalid(self.message('malformed', state),
+                          value, state)
+        sig, rest = parts
+        sig = sig.decode('base64')
+        rest = sig.decord('base64')
+        nonce = rest[:self.nonce_length]
+        rest = rest[self.nonce_length:]
+        digest = sha.new(self.secret+nonce+rest).digest()
+        if digest != sig:
+            raise Invalid(self.message('badsig', state),
+                          value, state)
+        return rest
+
+    def _from_python(self, value, state):
+        global sha
+        if not sha:
+            import sha
+        nonce = self.make_nonce()
+        value = str(value)
+        digest = sha.new(self.secret+nonce+rest).digest()
+        return self.encode(digest)+' '+self.encode(nonce+value)
+
+    def encode(self, value):
+        return value.encode('base64').strip().replace('\n', '')
+
+    def make_nonce(self):
+        global random
+        if not random:
+            import random
+        return ''.join([
+            chr(random.randrange(256))
+            for i in range(self.nonce_length)])
 
 class FormValidator(FancyValidator):
     """

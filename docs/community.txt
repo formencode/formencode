@@ -1,0 +1,28 @@
+FormEncode Community
+++++++++++++++++++++
+
+Discussion takes place on the mailing list,
+formencode-discuss@lists.sf.net:
+
+* `Subcribe
+  <http://lists.sourceforge.net/mailman/listinfo/formencode-discuss>`__
+
+* `Archives
+  <http://webwareforpython.org/archives/list/formencode-discuss.en.html>`__
+
+Updates to the repository are emailed to the (inaccurately named)
+mailing list formencode-cvs@lists.sf.net:
+
+* `Subscribe
+  <http://lists.sourceforge.net/mailman/listinfo/formencode-cvs>`__
+
+The repository can be checked out with::
+
+    svn co http://svn.colorstudy.com/FormEncode/trunk FormEncode
+
+Note: the SourceForge CVS repository is out of date and no longer
+used.
+
+Bugs can be reported in the `SourceForge bug tracker
+<http://sourceforge.net/tracker/?atid=596416&group_id=91231&func=browse>`_.
+

@@ -33,12 +33,23 @@ from declarative import Declarative
 
 class NoDefault: pass
 
+class none_dict(dict):
+
+    def __getattr__(self, attr):
+        if attr.startswith('_'):
+            raise AttributeError
+        return self.get(attr)
+
 class Context(object):
 
-    def __init__(self, name_prefix='', id_prefix='', defaults=None):
+    def __init__(self, name_prefix='', id_prefix='', defaults=None,
+                 **kw):
         self.name_prefix = name_prefix
         self.id_prefix = id_prefix
         self.defaults = defaults
+        for name, value in kw.items():
+            setattr(name, value)
+        self.options = none_dict(kw)
 
     def name(self, field, adding=None):
         if not field.name:
@@ -64,6 +75,33 @@ class Context(object):
         else:
             return None
 
+    def push_attr(self, **kw):
+        if 'add_name' in kw:
+            if self.name_prefix:
+                kw['name_prefix'] = self.name_prefix+'.'+kw.pop('add_name')
+            else:
+                kw['name_prefix'] = kw.pop('add_name')
+        restore = {}
+        for name, value in kw.items():
+            restore[name] = getattr(self, name, PopValue.no_value)
+            setattr(self, name, value)
+        return PopValue(self, restore)
+
+class PopValue(object):
+
+    no_value = []
+
+    def __init__(self, object, restore_values):
+        self.object = object
+        self.restore_values = restore_values
+
+    def pop_attr(self):
+        for name, value in self.restore_values.items():
+            if value is self.no_value:
+                delattr(self.object, name)
+            else:
+                setattr(self.object, name, value)
+
 class Field(Declarative):
 
     description = None
@@ -75,6 +113,13 @@ class Field(Declarative):
     name = None
     width = None
     enctype = None
+
+    def __init__(self, *args, **kw):
+        if args:
+            context = args[0]
+            args = args[1:]
+            kw['name'] = context.name_prefix + kw.get('name', '')
+        super(Field, self).__init__(*args, **kw)
 
     def render(self, context):
         if self.hidden:
@@ -396,7 +441,9 @@ class Text(Field):
 class Textarea(Field):
 
     """
-    Basic textarea field.  Examples::
+    Basic textarea field.
+
+    Examples::
 
         >>> prfield(Textarea(), defaults={'f': '<text>'})
         <textarea name="f" rows="10" cols="60" wrap="SOFT">&lt;text&gt;</textarea>
@@ -419,7 +466,9 @@ class Textarea(Field):
 class Password(Text):
 
     """
-    Basic password field.  Examples::
+    Basic password field.
+
+    Examples::
 
         >>> prfield(Password(maxlength=10), defaults={'f': 'pass'})
         <input type="password" name="f" maxlength="10" value="pass" />
@@ -571,7 +620,7 @@ class Ordering(Select):
 
 class OrderingDeleting(Ordering):
     """
-    Like Ordering, but also allows deleting entries
+    Like Ordering, but also allows deleting entries.
 
     Examples::
 
@@ -663,10 +712,11 @@ class Radio(Select):
 class MultiSelect(Select):
 
     """
-    Selection that allows multiple items to be selected.  A list will
-    always be returned.  The size is, by default, the same as the
-    number of selections (so no scrolling by the user is necessary),
-    up to maxSize.
+    Selection that allows multiple items to be selected.
+
+    A list will always be returned.  The size is, by default, the same
+    as the number of selections (so no scrolling by the user is
+    necessary), up to maxSize.
 
     Examples::
 
@@ -778,7 +828,9 @@ class MultiCheckbox(MultiSelect):
 class Checkbox(Field):
 
     """
-    Simple checkbox.  Examples::
+    Simple checkbox.
+
+    Examples::
 
         >>> prfield(Checkbox(), defaults=dict(f=0))
         <input type="checkbox" name="f" />
@@ -833,7 +885,9 @@ class StaticText(Field):
 
     """
     A static piece of text to be put into the field, useful only
-    for layout purposes.  Examples::
+    for layout purposes.
+
+    Examples::
 
         >>> prfield(StaticText('some <b>HTML</b>'))
         some <b>HTML</b>
@@ -858,9 +912,10 @@ class ColorPicker(Field):
 
     """
     This field allows the user to pick a color from a popup window.
-    This window contains a pallete of colors.  They can also enter the
-    hex value of the color.  A color swatch is updated with their
-    chosen color.
+    This window contains a pallete of colors.
+
+    They can also enter the hex value of the color.  A color swatch is
+    updated with their chosen color.
 
     Examples::
 
@@ -923,7 +978,10 @@ function colorpick(element, textFieldName, color_id) {
 ########################################
 
 def javascript_quote(value):
-    """I'm depending on the fact that repr falls back on single quote
+    """
+    Quote a Python value as a Javascript literal.
+    
+    I'm depending on the fact that repr falls back on single quote
     when both single and double quote are there.  Also, JavaScript uses
     the same octal \\ing that Python uses.
 
