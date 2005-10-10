@@ -199,25 +199,86 @@ class Form(Declarative):
 
 class Layout(Field):
 
+    """
+    Represents a set of fields.
+
+    Keyword arguments or attributes that are of type ``Field`` will
+    be collected in the ``fields`` list::
+
+    >>> class MyForm(Layout):
+    ...     name = Text()
+    ...     address = Textarea()
+    >>> [f.name for f in MyForm.fields]
+    ['name', 'address']
+    >>> MyForm.name.name
+    'name'
+    >>> another = MyForm(city=Text())
+    >>> [f.name for f in another.fields]
+    ['name', 'address', 'city']
+    """
+
     append_to_label = ':'
     use_fieldset = False
     legend = None
     requires_label = False
     fieldset_class = 'formfieldset'
+    fields = []
 
-    def html(self, context):
-        normal = []
-        hidden = []
-        for field in self.fields:
-            if field.hidden:
-                hidden.append(field.render(context))
-            else:
-                normal.append(field)
-        self.wrap(hidden, normal, options)
+    __mutableattributes__ = ('fields',)
+
+    def __classinit__(cls, new_attrs):
+        Field.__classinit__(cls, new_attrs)
+        found = []
+        for name, value in new_attrs.items():
+            # @@: Should we capture the name somehow?
+            if isinstance(value, Field):
+                if not value.name:
+                    value.name = name
+                else:
+                    value.name = name + '.' + value.name
+                found.append(value)
+        found.sort(lambda a, b: cmp(a.declarative_count, b.declarative_count))
+        cls.fields.extend(found)
+
+    def __init__(self, *args, **kw):
+        self.fields = self.fields[:]
+        found = []
+        for name, value in kw.items():
+            if isinstance(value, Field):
+                found.append(value)
+                if not value.name:
+                    value.name = name
+                else:
+                    value.name = name + '.' + value.name
+                del kw[name]
+        found.sort(lambda a, b: cmp(a.declarative_count, b.declarative_count))
+        self.fields.extend(found)
+        super(Field, self).__init__(*args, **kw)
+
+    def render(self, context):
+        if self.name:
+            restore = context.push_attr(add_name=self.name+'.')
+        else:
+            restore = None
+        try:
+            if self.hidden:
+                return html([f.html_hidden(context)
+                             for f in self.fields])
+            normal = []
+            hidden = []
+            for field in self.fields:
+                if field.hidden:
+                    hidden.append(field.render(context))
+                else:
+                    normal.append(field)
+            return html(self.wrap(hidden, normal, context))
+        finally:
+            if restore:
+                restore.pop_attr()
 
     def wrap(self, hidden, normal, context):
         hidden.append(self.wrap_fields(
-            [self.wrap_field(field, context) for field in self.normal],
+            [self.wrap_field(field, context) for field in normal],
             context))
         return hidden
 
@@ -889,14 +950,13 @@ class StaticText(Field):
 
     Examples::
 
-        >>> prfield(StaticText('some <b>HTML</b>'))
+        >>> prfield(StaticText(text='some <b>HTML</b>'))
         some <b>HTML</b>
-        >>> prfield(StaticText('whatever', hidden=1))
+        >>> prfield(StaticText(text='whatever', hidden=1))
     """
 
     text = ''
     requires_label = False
-    __unpackargs__ = ('text',)
 
     def html(self, context):
         default = context.default(self)
