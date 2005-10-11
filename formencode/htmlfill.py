@@ -1,14 +1,19 @@
 import HTMLParser
 import cgi
 
+def html_quote(v):
+    if v is None:
+        return ''
+    return cgi.escape(str(v), 1)
+
 def default_formatter(error):
-    return '<span class="error-message">%s</span><br />\n' % cgi.escape(error)
+    return '<span class="error-message">%s</span><br />\n' % html_quote(error)
 
 def none_formatter(error):
     return error
 
 def escape_formatter(error):
-    return cgi.escape(error, 1)
+    return html_quote(error, 1)
 
 class FillingParser(HTMLParser.HTMLParser):
     r"""
@@ -251,7 +256,7 @@ class FillingParser(HTMLParser.HTMLParser):
             self.add_class(attrs, self.error_class)
         self.write_tag('textarea', attrs)
         value = self.defaults.get(name, '')
-        self.write_text(cgi.escape(value, 1))
+        self.write_text(html_quote(value))
         self.write_text('</textarea>')
         self.in_textarea = True
         self.add_key(name)
@@ -289,7 +294,7 @@ class FillingParser(HTMLParser.HTMLParser):
         self.content.append(text)
 
     def write_tag(self, tag, attrs, startend=False):
-        attr_text = ''.join([' %s="%s"' % (n, cgi.escape(str(v), 1))
+        attr_text = ''.join([' %s="%s"' % (n, html_quote(v))
                              for (n, v) in attrs
                              if not n.startswith('form:')])
         if startend:
