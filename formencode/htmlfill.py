@@ -205,7 +205,7 @@ class FillingParser(HTMLParser.HTMLParser):
                 or (self.get_attr(attrs, 'value') is None
                     and value)
                 or (isinstance(value, (list, tuple))
-                    and self.get_attr(attrs, 'value') in value)):
+                    and self.get_attr(attrs, 'value') in map(str, value))):
                 self.set_attr(attrs, 'checked', 'checked')
             else:
                 self.del_attr(attrs, 'checked')
