@@ -268,7 +268,7 @@ class FancyValidator(Validator):
                 return self.if_invalid_python
 
 
-    def assert_string(self, value):
+    def assert_string(self, value, state):
         if not isinstance(value, (str, unicode)):
             raise Invalid(self.message('badType', state),
                           value, state)
