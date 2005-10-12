@@ -1510,8 +1510,8 @@ class StringBoolean(FancyValidator):
     those lists is considered the preferred form.
     """
     
-    true_values = ['true', 't', 'yes', 'y', 'on']
-    false_values = ['false', 'f', 'no', 'n', 'off']
+    true_values = ['true', 't', 'yes', 'y', 'on', '1']
+    false_values = ['false', 'f', 'no', 'n', 'off', '0']
 
     messages = { "string" : "Value should be %(true)r or %(false)r" }
     
