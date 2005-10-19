@@ -19,6 +19,17 @@ def to_bool(value):
     else:
         raise ValueError("Not a boolean value: %r (use 'true'/'false')")
 
+def force_list(v):
+    """
+    Force single items into a list. This is useful for checkboxes.
+    """
+    if isinstance(v, list):
+        return v
+    elif isinstance(v, tuple):
+        return list(v)
+    else:
+        return [v]
+
 class SchemaBuilder(object):
 
     def __init__(self, validators=default_validators):
@@ -40,8 +51,11 @@ class SchemaBuilder(object):
         v = compound.All(validators.Identity())
         # for checkboxes, we must set if_missing = False
         if tag.lower() == "input":
-            if get_attr(attrs, "type").lower() == "checkbox" or get_attr(attrs, "type").lower() == "submit":
+            if get_attr(attrs, "type").lower() == "submit":
                 v.validators.append(validators.Bool())
+            elif get_attr(attrs, "type").lower() == "checkbox":
+                v.if_empty = False
+                v.validators.append(validators.Wrapper(to_python = force_list))
         message = get_attr(attrs, 'form:message')
         required = to_bool(get_attr(attrs, 'form:required', 'false'))
         if required:
