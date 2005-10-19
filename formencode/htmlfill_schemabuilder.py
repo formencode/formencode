@@ -54,7 +54,6 @@ class SchemaBuilder(object):
             if get_attr(attrs, "type").lower() == "submit":
                 v.validators.append(validators.Bool())
             elif get_attr(attrs, "type").lower() == "checkbox":
-                v.if_empty = False
                 v.validators.append(validators.Wrapper(to_python = force_list))
         message = get_attr(attrs, 'form:message')
         required = to_bool(get_attr(attrs, 'form:required', 'false'))
