@@ -1516,7 +1516,7 @@ class StringBoolean(FancyValidator):
     messages = { "string" : "Value should be %(true)r or %(false)r" }
     
     def _to_python(self, value, state):
-        if isinstance(value, str):
+        if isinstance(value, (str, unicode)):
             value = value.strip().lower()
             if value in self.true_values:
                 return True
