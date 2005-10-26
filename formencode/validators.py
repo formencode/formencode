@@ -32,6 +32,10 @@ from interfaces import *
 from api import *
 sha = random = None
 
+import cgi
+
+import fieldstorage
+
 True, False = (1==1), (0==1)
 
 ############################################################
@@ -1120,6 +1124,19 @@ class PhoneNumber(FancyValidator):
         if match.group(4):
             result = result + " ext.%s" % match.group(4)
         return result
+
+class FieldStorageUploadConverter(FancyValidator):
+
+    """
+    Converts a cgi.FieldStorage instance to
+    a value that FormEncode can use for file
+    uploads.
+    """
+    def _to_python(self, value, state):
+        if isinstance(value, cgi.FieldStorage):
+            return fieldstorage.convert_fieldstorage(value)
+        else:
+            return value
 
 class DateConverter(FancyValidator):
 
