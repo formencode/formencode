@@ -59,7 +59,10 @@ class Invalid(Exception):
         dictionaries, and strings.
         """
         if self.error_list:
-            assert not self.error_dict
+            assert not self.error_dict, (
+                "Errors shouldn't have both error dicts and lists "
+                "(error %s has %s and %s)"
+                % (self, self.error_list, self.error_dict))
             result = []
             for item in self.error_list:
                 if not item:
