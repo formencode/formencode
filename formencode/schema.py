@@ -133,6 +133,20 @@ class Schema(FancyValidator):
                     new[name] = validator.if_missing
 
             if errors:
+                for validator in self.chained_validators:
+                    if (not hasattr(validator, 'validate_partial')
+                        or not getattr(validator, 'validate_partial_form', False)):
+                        continue
+                    try:
+                        validator.validate_partial(value_dict, state)
+                    except Invalid, e:
+                        sub_errors = e.unpack_errors()
+                        if not isinstance(sub_errors, dict):
+                            # Can't do anything here
+                            continue
+                        merge_dicts(errors, sub_errors)
+
+            if errors:
                 raise Invalid(
                     format_compound_error(errors),
                     value_dict, state,
@@ -264,3 +278,40 @@ def format_compound_error(v, indent=0):
     else:
         assert 0, "I didn't expect something like %s" % repr(v)
         
+def merge_dicts(d1, d2):
+    for key in d2:
+        if key in d1:
+            d1[key] = merge_values(d1[key], d2[key])
+        else:
+            d1[key] = d2[key]
+    return d1
+
+def merge_values(v1, v2):
+    if (isinstance(v1, (str, unicode))
+        and isinstance(v2, (str, unicode))):
+        return v1 + '\n' + v2
+    elif (isinstance(v1, (list, tuple))
+          and isinstance(v2, (list, tuple))):
+        return merge_lists(v1, v2)
+    elif isinstance(v1, dict) and isinstance(v2, dict):
+        return merge_dicts(v1, v2)
+    else:
+        # @@: Should we just ignore errors?  Seems we do...
+        return v1
+
+def merge_lists(l1, l2):
+    if len(l1) < len(l2):
+        l1 = l1 + [None]*(len(l2)-len(l1))
+    elif len(l2) < len(l1):
+        l2 = l2 + [None]*(len(l1)-len(l2))
+    result = []
+    for l1item, l2item in zip(l1, l2):
+        item = None
+        if l1item is None:
+            item = l2item
+        elif l2item is None:
+            item = l1item
+        else:
+            item = merge_values(l1item, l2item)
+        result.append(item)
+    return result

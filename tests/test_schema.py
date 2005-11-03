@@ -1,5 +1,5 @@
 from formencode import validators, foreach
-from formencode.schema import Schema
+from formencode.schema import Schema, merge_dicts
 from formencode.api import *
 from formencode.variabledecode import NestedVariables
 import cgi
@@ -116,3 +116,16 @@ BadCase(AddressesForm,
 def test_this():
     for case in all_cases:
         yield case.test
+
+def test_merge():
+    assert (merge_dicts(dict(a='a'), dict(b='b'))
+            == dict(a='a', b='b'))
+    assert (merge_dicts(dict(a='a', c='c'), dict(a='a', b='b'))
+            == dict(a='a\na', b='b', c='c'))
+    assert (merge_dicts(dict(a=['a1', 'a2'], b=['b'], c=['c']),
+                        dict(a=['aa1'],
+                             b=['bb', 'bbb'],
+                             c='foo'))
+            == dict(a=['a1\naa1', 'a2'], b=['b\nbb', 'bbb'],
+                    c=['c']))
+    
