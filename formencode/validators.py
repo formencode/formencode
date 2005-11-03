@@ -1676,7 +1676,7 @@ class FieldsMatch(FormValidator):
             error_message = '<br>\n'.join(
                 ['%s: %s' % (name, value) for name, value in error_list])
             raise Invalid(error_message,
-                          {}, field_dict, state,
+                          field_dict, state,
                           error_dict=errors)
 
 class CreditCardValidator(FormValidator):
