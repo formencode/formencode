@@ -1737,8 +1737,8 @@ class CreditCardValidator(FormValidator):
         for prefix, length in self._cardInfo[ccType]:
             if len(number) == length:
                 validLength = True
-            if len(number) == length \
-               and number[:len(prefix)] != prefix:
+            if (len(number) == length 
+                and number.startswith(prefix)):
                 foundValid = True
                 break
         if not validLength:
