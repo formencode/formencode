@@ -1699,7 +1699,7 @@ class CreditCardValidator(FormValidator):
     __unpackargs__ = ('cc_type_field', 'cc_number_field')
 
     messages = {
-        'invalidNumber': "Please enter only the number, no other characters",
+        'notANumber': "Please enter only the number, no other characters",
         'badLength': "You did not enter a valid number of digits",
         'invalidNumber': "That number is not valid",
         }
@@ -1728,7 +1728,7 @@ class CreditCardValidator(FormValidator):
         try:
             long(number)
         except ValueError:
-            return {self.cc_number_field: self.message('invalidNumber', state)}
+            return {self.cc_number_field: self.message('notANumber', state)}
 
         assert self._cardInfo.has_key(ccType), (
             "I can't validate that type of credit card")
