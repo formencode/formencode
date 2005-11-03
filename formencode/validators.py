@@ -1708,9 +1708,9 @@ class CreditCardValidator(FormValidator):
         if not field_dict.get(self.cc_type_field, None) \
            or not field_dict.get(self.cc_number_field, None):
             return None
-        self.validate(field_dict, state)
+        self.validate_python(field_dict, state)
 
-    def validate(self, field_dict, state):
+    def validate_python(self, field_dict, state):
         errors = self._validateReturn(field_dict, state)
         if errors:
             error_list = errors.items()
@@ -1718,7 +1718,6 @@ class CreditCardValidator(FormValidator):
             raise Invalid(
                 '<br>\n'.join(["%s: %s" % (name, value)
                                for name, value in error_list]),
-                {}, 
                 field_dict, state, error_dict=errors)
         
     def _validateReturn(self, field_dict, state):
