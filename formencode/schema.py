@@ -29,10 +29,21 @@ class Schema(FancyValidator):
             name = None
     """
 
-    chained_validators = []
+    # These validators will be applied before this schema:
     pre_validators = []
+    # These validators will be applied after this schema:
+    chained_validators = []
+    # If true, then it is not an error when keys that aren't
+    # associated with a validator are present:
     allow_extra_fields = False
+    # If true, then keys that aren't associated with a validator
+    # are removed:
     filter_extra_fields = False
+    # If this is given, then any keys that aren't available but
+    # are expected  will be replaced with this value (and then
+    # validated!)  This does not override a present .if_missing
+    # attribute on validators:
+    if_key_missing = NoDefault
     compound = True
     fields = {}
     order = []
@@ -126,9 +137,15 @@ class Schema(FancyValidator):
                 except AttributeError:
                     if_missing = NoDefault
                 if if_missing is NoDefault:
-                    errors[name] = Invalid(
-                        self.message('missingValue', state),
-                        None, state)
+                    if self.if_key_missing is NoDefault:
+                        errors[name] = Invalid(
+                            self.message('missingValue', state),
+                            None, state)
+                    else:
+                        try:
+                            new[name] = validator.to_python(self.if_key_missing, state)
+                        except Invalid, e:
+                            errors[name] = e
                 else:
                     new[name] = validator.if_missing
 
