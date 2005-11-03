@@ -1,6 +1,12 @@
 News
 ====
 
+0.3
+---
+
+* Added ``if_key_missing`` attribute to ``schema.Schema``, which will
+  fill in any keys that are missing and pass them to the validator.
+
 0.2.3
 -----
 
