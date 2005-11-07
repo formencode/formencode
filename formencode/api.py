@@ -193,6 +193,10 @@ class FancyValidator(Validator):
       (Both with ``.to_python()`` and also ``.from_python()``
       if ``.validate_python`` is true).
 
+    * strip:
+      If true and the input is a string, strip it (occurs before empty
+      tests).
+
     * if_invalid:
       If set, then when this validator would raise Invalid during
       ``.to_python()``, instead return this value.
@@ -212,6 +216,7 @@ class FancyValidator(Validator):
     if_empty = NoDefault
     not_empty = False
     validate_python = True
+    strip = False
 
     messages = {
         'empty': "Please enter a value",
@@ -221,6 +226,8 @@ class FancyValidator(Validator):
 
     def to_python(self, value, state=None):
         try:
+            if self.strip and isinstance(value, (str, unicode)):
+                value = value.strip()
             if not value and value != 0:
                 # False/0 are not "empty"
                 if self.if_empty is not NoDefault:
@@ -245,6 +252,8 @@ class FancyValidator(Validator):
 
     def from_python(self, value, state=None):
         try:
+            if self.strip and isinstance(value, (str, unicode)):
+                value = value.strip()
             if self.validate_python:
                 if (not value and value != 0
                     and self.not_empty):
