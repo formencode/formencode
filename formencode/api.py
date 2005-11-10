@@ -123,10 +123,10 @@ class Validator(declarative.Declarative):
     def message(self, msgName, state, **kw):
         try:
             return self._messages[msgName] % kw
-        except KeyError:
+        except KeyError, e:
             raise KeyError(
-                "Key not found for %r=%r %% %r (from: %s)"
-                % (msgName, self._messages.get(msgName), kw,
+                "Key not found (%s) for %r=%r %% %r (from: %s)"
+                % (e, msgName, self._messages.get(msgName), kw,
                    ', '.join(self._messages.keys())))        
 
 class _Identity(Validator):
@@ -283,7 +283,8 @@ class FancyValidator(Validator):
 
     def assert_string(self, value, state):
         if not isinstance(value, (str, unicode)):
-            raise Invalid(self.message('badType', state),
+            raise Invalid(self.message('badType', state,
+                                       type=type(value), value=value),
                           value, state)
     
     validate_python = None
