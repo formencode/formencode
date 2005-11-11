@@ -1,10 +1,35 @@
 import HTMLParser
 import cgi
+import re
+
+class htmlliteral(object):
+
+    def __init__(self, html, text=None):
+        if text is None:
+            text = re.sub(r'<.*?>', '', html)
+            text = html.replace('&gt;', '>')
+            text = html.replace('&lt;', '<')
+            text = html.replace('&quot;', '"')
+            # @@: Not very complete
+        self.html = html
+        self.text = text
+
+    def __str__(self):
+        return self.text
+
+    def __repr__(self):
+        return '<%s html=%r text=%r>' % (self.html, self.text)
+
+    def __html__(self):
+        return self.html
 
 def html_quote(v):
     if v is None:
         return ''
-    return cgi.escape(str(v), 1)
+    elif hasattr(v, '__html__'):
+        return v.__html__()
+    else:
+        return cgi.escape(str(v), 1)
 
 def default_formatter(error):
     return '<span class="error-message">%s</span><br />\n' % html_quote(error)
@@ -49,9 +74,10 @@ class FillingParser(HTMLParser.HTMLParser):
 
     def __init__(self, defaults, errors=None, use_all_keys=False,
                  error_formatters=None, error_class='error',
-                 add_attributes=None, listener=None):
+                 add_attributes=None, listener=None,
+                 auto_error_formatter=None):
         HTMLParser.HTMLParser.__init__(self)
-        self.content = []
+        self._content = []
         self.source = None
         self.lines = None
         self.source_pos = None
@@ -76,6 +102,7 @@ class FillingParser(HTMLParser.HTMLParser):
         self.error_class = error_class
         self.add_attributes = add_attributes or {}
         self.listener = listener
+        self.auto_error_formatter = auto_error_formatter
 
     def feed(self, data):
         self.source = data
@@ -87,15 +114,22 @@ class FillingParser(HTMLParser.HTMLParser):
 
     def close(self):
         HTMLParser.HTMLParser.close(self)
+        unused_errors = self.errors.copy()
+        for key in self.used_errors.keys():
+            if unused_errors.has_key(key):
+                del unused_errors[key]
+        print "UNUSED", unused_errors, self.errors
+        if self.auto_error_formatter:
+            for key, value in unused_errors.items():
+                print 'insert at', key, value
+                self.insert_at_marker(
+                    key, self.auto_error_formatter(value))
+            unused_errors = {}
         if self.use_all_keys:
             unused = self.defaults.copy()
-            unused_errors = self.errors.copy()
             for key in self.used_keys.keys():
                 if unused.has_key(key):
                     del unused[key]
-            for key in self.used_errors.keys():
-                if unused_errors.has_key(key):
-                    del unused_errors[key]
             assert not unused, (
                 "These keys from defaults were not used in the form: %s"
                 % unused.keys())
@@ -106,6 +140,8 @@ class FillingParser(HTMLParser.HTMLParser):
                 assert False, (
                     "These errors were not used in the form: %s" % 
                     ', '.join(error_text))
+        self._text = ''.join([
+            t for t in self._content if not isinstance(t, tuple)])
 
     def add_key(self, key):
         self.used_keys[key] = 1
@@ -185,6 +221,7 @@ class FillingParser(HTMLParser.HTMLParser):
     def handle_input(self, attrs, startend):
         t = (self.get_attr(attrs, 'type') or 'text').lower()
         name = self.get_attr(attrs, 'name')
+        self.write_marker(name)
         value = self.defaults.get(name)
         if self.add_attributes.has_key(name):
             for attr_name, attr_value in self.add_attributes[name].items():
@@ -251,6 +288,7 @@ class FillingParser(HTMLParser.HTMLParser):
 
     def handle_textarea(self, attrs):
         name = self.get_attr(attrs, 'name')
+        self.write_marker(name)
         if (self.error_class
             and self.errors.get(name)):
             self.add_class(attrs, self.error_class)
@@ -267,6 +305,7 @@ class FillingParser(HTMLParser.HTMLParser):
 
     def handle_select(self, attrs):
         name = self.get_attr(attrs, 'name')
+        self.write_marker(name)
         if (self.error_class
             and self.errors.get(name)):
             self.add_class(attrs, self.error_class)
@@ -274,7 +313,6 @@ class FillingParser(HTMLParser.HTMLParser):
         self.write_tag('select', attrs)
         self.skip_next = True
         self.add_key(self.in_select)
-        
 
     def handle_end_select(self):
         self.in_select = None
@@ -291,7 +329,20 @@ class FillingParser(HTMLParser.HTMLParser):
         self.skip_next = True
 
     def write_text(self, text):
-        self.content.append(text)
+        self._content.append(text)
+
+    def write_marker(self, marker):
+        self._content.append((marker,))
+
+    def insert_at_marker(self, marker, text):
+        for i, item in enumerate(self._content):
+            if item == (marker,):
+                self._content.insert(i, text)
+                break
+        else:
+            raise ValueError(
+                "Marker %r not found when trying to insert %r"
+                % (marker, text))
 
     def write_tag(self, tag, attrs, startend=False):
         attr_text = ''.join([' %s="%s"' % (n, html_quote(v))
@@ -348,4 +399,4 @@ class FillingParser(HTMLParser.HTMLParser):
         self.set_attr(attr, 'class', new.strip())
             
     def text(self):
-        return ''.join(self.content)
+        return self._text

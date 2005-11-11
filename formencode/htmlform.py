@@ -29,10 +29,12 @@ from api import Invalid
 
 class HTMLForm(object):
 
-    def __init__(self, form, schema=None):
+    def __init__(self, form, schema=None,
+                 auto_insert_errors=True):
         self.form = form
         self._schema = schema
-
+        self.auto_insert_errors = auto_insert_errors
+        
     def schema__get(self):
         if self._schema is not None:
             return self._schema
@@ -48,15 +50,21 @@ class HTMLForm(object):
 
     def parse_schema(self):
         listener = htmlfill_schemabuilder.SchemaBuilder()
-        p = htmlfill.FillingParser(defaults={}, listener=listener)
+        p = htmlfill.FillingParser(
+            defaults={}, listener=listener)
         p.feed(self.form)
         p.close()
         return listener.schema()
 
     def render(self, defaults={}, errors={}, use_all_keys=False):
+        if self.auto_insert_errors:
+            auto_error_formatter = htmlfill.default_formatter
+        else:
+            auto_error_formatter = None
         p = htmlfill.FillingParser(
             defaults=defaults, errors=errors,
-            use_all_keys=use_all_keys)
+            use_all_keys=use_all_keys,
+            auto_error_formatter=auto_error_formatter)
         p.feed(self.form)
         p.close()
         return p.text()
