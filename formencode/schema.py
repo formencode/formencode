@@ -216,7 +216,7 @@ class Schema(FancyValidator):
             del __traceback_info__
 
             for name in unused:
-                validator = adapt_validator(self.fields[name], state)
+                validator = self.fields[name]
                 try:
                     new[name] = validator.from_python(None, state)
                 except Invalid, e:

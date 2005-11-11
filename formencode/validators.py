@@ -1280,6 +1280,8 @@ class DateConverter(FancyValidator):
         return datetime_makedate(dt_mod, year, month, 1)
 
     def _from_python(self, value, state):
+        if self.if_empty is not NoDefault and not value:
+            return ''
         if self.accept_day:
             return self.unconvert_day(value, state)
         else:
