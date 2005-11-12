@@ -205,16 +205,16 @@ class Layout(Field):
     Keyword arguments or attributes that are of type ``Field`` will
     be collected in the ``fields`` list::
 
-    >>> class MyForm(Layout):
-    ...     name = Text()
-    ...     address = Textarea()
-    >>> [f.name for f in MyForm.fields]
-    ['name', 'address']
-    >>> MyForm.name.name
-    'name'
-    >>> another = MyForm(city=Text())
-    >>> [f.name for f in another.fields]
-    ['name', 'address', 'city']
+      >>> class MyForm(Layout):
+      ...     name = Text()
+      ...     address = Textarea()
+      >>> [f.name for f in MyForm.fields]
+      ['name', 'address']
+      >>> MyForm.name.name
+      'name'
+      >>> another = MyForm(city=Text())
+      >>> [f.name for f in another.fields]
+      ['name', 'address', 'city']
     """
 
     append_to_label = ':'
