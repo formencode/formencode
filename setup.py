@@ -29,4 +29,27 @@ for filling and generating forms.
 
 # Send announce to:
 #   python-announce@python.org
-#   python-list@python.org
+#   web-sig@python.org
+#   formencode-discuss@lists.sf.net
+#   turbogears@googlegroups.com
+#   subway-devel@googlegroups.com
+
+# Announcement template:
+"""
+
+What is it?
+-----------
+
+FormEncode is a package for form validation and conversion.  It also includes modules for parsing, filling, and extracting metadata from HTML forms.  It features robust conversion both of incoming and outgoing data, attention paid to helpful error messages, and a wide variety of pre-build validators.  It also supports composition of validators, and validating structured data, including nested and repeating form elements.
+
+FormEncode is being used in several projects, including Subway, TurboGears, and SQLObject.
+
+Where is it?
+------------
+
+Website and docs:
+  http://formencode.org
+Download:
+  http://cheeseshop.python.org/pypi/FormEncode
+
+"""
