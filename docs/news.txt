@@ -1,6 +1,11 @@
 News
 ====
 
+SVN trunk
+---------
+
+Nothing to report yet.
+
 0.3
 -----
 

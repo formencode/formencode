@@ -2,15 +2,17 @@ from ez_setup import use_setuptools
 use_setuptools()
 from setuptools import setup
 
+version = "0.4"
+
 setup(name="FormEncode",
-      version="0.2.3",
+      version=version,
       description="HTML form validation, generation, and conversion package",
       long_description="""\
 FormEncode validates and converts nested structures.  It allows for
 a declarative form of defining the validation, and decoupled processes
 for filling and generating forms.
 """,
-      classifiers=["Development Status :: 3 - Alpha",
+      classifiers=["Development Status :: 4 - Beta",
                    "Intended Audience :: Developers",
                    "License :: OSI Approved :: Python Software Foundation License",
                    "Programming Language :: Python",
