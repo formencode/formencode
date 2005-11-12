@@ -1,16 +1,55 @@
 News
 ====
 
-0.3
----
+0.2.3
+-----
+
+* Allow errors to be inserted automatically into a form when using
+  ``formencode.htmlfill``, when a ``<form:error>`` tag isn't found for
+  an error.
 
 * Added ``if_key_missing`` attribute to ``schema.Schema``, which will
   fill in any keys that are missing and pass them to the validator.
-
-0.2.3
------
 
 * ``FancyValidator`` has changed, adding ``if_invalid_python`` and
   ``validate_python`` options (which also apply to all subclasses).
   Also ``if_empty`` only applies to ``to_python`` conversions.
 
+* ``FancyValidator`` now has a ``strip`` option, which if true and if
+  input is a string, will strip whitespace from the string.
+
+* Allow chained validators to validate otherwise-invalid forms, if
+  they define a ``validate_partial`` method.  The credit card
+  validator does this.
+
+* Handle ``FieldStorage`` input (from file uploads); added a
+  ``formencode.fieldstorage`` module to wrap those instances in
+  something a bit nicer.  Added
+  ``validators.FieldStorageUploadConverter`` to make this conversion.
+
+* Added ``StringBoolean`` converter, which converts strings like
+  ``"true"`` to Python booleans.
+
+Bugfixes
+~~~~~~~~
+
+* A couple fixes to ``DateConverter``, ``FieldsMatch``,
+  ``StringBoolean``, ``CreditCardValidator``.
+
+* Added missing ``Validator.assert_string`` method.
+
+* ``formencode.htmlfill_schemabuilder`` handles checkboxes better.
+
+* Be a little more careful about how ``Invalid`` exceptions are
+  created (catch some errors sooner).
+
+* Improved handling of non-string input in ``htmlfill``.
+
+Experiments
+~~~~~~~~~~~
+
+* Some experimental work in ``formencode.formgen``.  Experimental, I
+  say!
+
+* Added an experimental ``formencode.context`` module for
+  dynamically-scoped variables.
