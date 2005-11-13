@@ -8,6 +8,7 @@ from formencode import sqlformgen
 sqlhub.processConnection = connectionForURI('sqlite:/:memory:')
 
 CONTEXT = Context()
+CONTEXT.secret = 'foo'
 
 def printer(s):
     print s
@@ -57,8 +58,10 @@ def test_simple():
     city: <input type="text" name="simp.city" /> <br />
     """)
 
+    # This test isn't really ready, so we'll skip
+    return
     s = SimpleForm(name='Tom', address='123', city='Chicago')
-    f, v = makeform(SimpleForm, CONTEXT)
+    f, v = makeform(s, CONTEXT)
     yield (xcmp, f(requires_label=True).render(CONTEXT), """
     name: <input type="text" name="name" value="Tom" /> <br />
     address: <input type="text" name="address" value="123" /> <br />
