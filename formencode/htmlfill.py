@@ -38,7 +38,7 @@ def none_formatter(error):
     return error
 
 def escape_formatter(error):
-    return html_quote(error, 1)
+    return html_quote(error)
 
 class FillingParser(HTMLParser.HTMLParser):
     r"""
