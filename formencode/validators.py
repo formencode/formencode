@@ -905,7 +905,7 @@ class Email(FancyValidator):
 
     resolve_domain = False
 
-    usernameRE = re.compile(r"^[a-z0-9\_\-']+", re.I)
+    usernameRE = re.compile(r"^[^ \t\n\r@<>()]+$", re.I)
     domainRE = re.compile(r"^[a-z0-9][a-z0-9\.\-_]*\.[a-z]+$", re.I)
 
     messages = {
