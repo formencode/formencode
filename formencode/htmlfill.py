@@ -399,4 +399,9 @@ class FillingParser(HTMLParser.HTMLParser):
         self.set_attr(attr, 'class', new.strip())
             
     def text(self):
-        return self._text
+        try:
+            return self._text
+        except AttributeError:
+            raise Exception(
+                "You must .close() a parser instance before getting "
+                "the text from it")
