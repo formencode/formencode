@@ -906,7 +906,7 @@ class Email(FancyValidator):
     resolve_domain = False
 
     usernameRE = re.compile(r"^[a-z0-9\_\-']+", re.I)
-    domainRE = re.compile(r"^[a-z0-9\.\-]+\.[a-z]+$", re.I)
+    domainRE = re.compile(r"^[a-z0-9][a-z0-9\.\-_]*\.[a-z]+$", re.I)
 
     messages = {
         'empty': 'Please enter an email address',
@@ -976,7 +976,10 @@ class URL(FancyValidator):
     check_exists = False
     add_http = True
 
-    url_re = re.compile(r'^(http|https)://[a-z\-\.]+\.[a-z]+(?:[0-9]+)?(?:/.*)?$', re.I)
+    url_re = re.compile(r'^(http|https)://'
+                        r'[a-z0-9][a-z0-9\-\._]*\.[a-z]+'
+                        r'(?:[0-9]+)?'
+                        r'(?:.*)?$', re.I) 
     scheme_re = re.compile(r'^[a-zA-Z]+:')
 
     messages = {

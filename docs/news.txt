@@ -4,7 +4,12 @@ News
 SVN trunk
 ---------
 
-Nothing to report yet.
+Bugfixes
+~~~~~~~~
+
+* Fix typo in ``htmlfill``
+
+* Made URL and email regular expressions a little more lax/correct.
 
 0.3
 -----
