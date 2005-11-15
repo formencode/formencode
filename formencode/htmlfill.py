@@ -118,7 +118,6 @@ class FillingParser(HTMLParser.HTMLParser):
         for key in self.used_errors.keys():
             if unused_errors.has_key(key):
                 del unused_errors[key]
-        print "UNUSED", unused_errors, self.errors
         if self.auto_error_formatter:
             for key, value in unused_errors.items():
                 print 'insert at', key, value
