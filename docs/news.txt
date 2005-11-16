@@ -4,6 +4,9 @@ News
 SVN trunk
 ---------
 
+* Added ``formencode.sqlschema`` for wrapping SQLObject
+  classes/instances.  See the docstring for more.
+
 * Added ``ignore_key_missing`` to ``Schema`` objects, which ignore
   missing keys (where fields are present) when no ``if_missing`` is
   provided for the field.
