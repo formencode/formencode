@@ -11,6 +11,9 @@ Bugfixes
 
 * Made URL and email regular expressions a little more lax/correct.
 
+* A bunch of fixes to ``validators.SignedString``, which apparently
+  was completely broken.
+
 0.3
 -----
 

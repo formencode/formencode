@@ -1578,7 +1578,7 @@ class SignedString(FancyValidator):
         global sha
         if not sha:
             import sha
-        assert secret, (
+        assert self.secret is not None, (
             "You must give a secret")
         parts = value.split(None, 1)
         if not parts or len(parts) == 1:
@@ -1586,11 +1586,11 @@ class SignedString(FancyValidator):
                           value, state)
         sig, rest = parts
         sig = sig.decode('base64')
-        rest = sig.decord('base64')
+        rest = rest.decode('base64')
         nonce = rest[:self.nonce_length]
         rest = rest[self.nonce_length:]
-        digest = sha.new(self.secret+nonce+rest).digest()
-        if digest != sig:
+        expected = sha.new(str(self.secret)+nonce+rest).digest()
+        if expected != sig:
             raise Invalid(self.message('badsig', state),
                           value, state)
         return rest
@@ -1601,7 +1601,7 @@ class SignedString(FancyValidator):
             import sha
         nonce = self.make_nonce()
         value = str(value)
-        digest = sha.new(self.secret+nonce+rest).digest()
+        digest = sha.new(self.secret+nonce+value).digest()
         return self.encode(digest)+' '+self.encode(nonce+value)
 
     def encode(self, value):
