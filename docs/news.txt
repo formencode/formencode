@@ -4,6 +4,10 @@ News
 SVN trunk
 ---------
 
+* Added ``ignore_key_missing`` to ``Schema`` objects, which ignore
+  missing keys (where fields are present) when no ``if_missing`` is
+  provided for the field.
+
 Bugfixes
 ~~~~~~~~
 

@@ -44,6 +44,9 @@ class Schema(FancyValidator):
     # validated!)  This does not override a present .if_missing
     # attribute on validators:
     if_key_missing = NoDefault
+    # If true, then missing keys will be missing in the result,
+    # if the validator doesn't have if_missing on it already:
+    ignore_key_missing = False
     compound = True
     fields = {}
     order = []
@@ -137,6 +140,8 @@ class Schema(FancyValidator):
                 except AttributeError:
                     if_missing = NoDefault
                 if if_missing is NoDefault:
+                    if self.ignore_key_missing:
+                        continue
                     if self.if_key_missing is NoDefault:
                         errors[name] = Invalid(
                             self.message('missingValue', state),
