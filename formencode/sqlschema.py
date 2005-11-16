@@ -32,6 +32,18 @@ class SQLSchema(schema.Schema):
 
     You can override ``_invoke_to_python`` to change the actual
     instantiation.
+
+    The basic idea is that a SQLSchema 'wraps' a class or instance
+    (most typically a class).  So it would look like::
+
+        class PersonSchema(SQLSchema):
+            wrap = Person
+
+        ps = PersonSchema()
+        form_defaults = ps.from_python(None)
+        new_object = ps.to_python(form_input)
+        form_defaults = ps.from_python(aPerson)
+        edited_person = ps.to_python(edited_form_input)
     """
 
 
