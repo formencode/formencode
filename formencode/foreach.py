@@ -1,5 +1,10 @@
 from api import NoDefault, Invalid
-from compound import CompoundValidator
+from compound import CompoundValidator, to_python, from_python
+try:
+    from sets import Set
+except ImportError:
+    # We only use it for type information now:
+    Set = None
 
 __all__ = ['ForEach']
 
@@ -27,17 +32,14 @@ class ForEach(CompoundValidator):
     encountered.  If errors are encountered, they will be collected
     and a single Invalid exception will be raised at the end (with
     error_list set).
+
+    If the incoming value is a Set, then we return a Set.
     """
 
-    convert_to_list = False
-    not_empty = False
+    convert_to_list = True
     if_empty = NoDefault
     if_missing = []
     repeating = True
-
-    messages = {
-        'empty': 'Please enter a value',
-        }
     
     def attempt_convert(self, value, state, validate):
         if self.convert_to_list:
@@ -45,12 +47,15 @@ class ForEach(CompoundValidator):
         if self.if_empty is not NoDefault and not value:
             return self.if_empty
         if self.not_empty and not value:
+            if validate is from_python and self.accept_python:
+                return []
             raise Invalid(
                 self.message('empty', state),
                 value, state)
         new_list = []
         errors = []
         all_good = True
+        is_set = isinstance(value, Set)
         if state is not None:
             previous_index = getattr(state, 'index', NoDefault)
             previous_full_list = getattr(state, 'full_list', NoDefault)
@@ -74,6 +79,8 @@ class ForEach(CompoundValidator):
                     errors.append(None)
                 new_list.append(sub_value)
             if all_good:
+                if is_set:
+                    new_list = Set(new_list)
                 return new_list
             else:
                 raise Invalid(

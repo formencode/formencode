@@ -13,7 +13,7 @@ def to_python(validator, value, state):
 def from_python(validator, value, state):
     return validator.from_python(value, state)
 
-class CompoundValidator(Validator):
+class CompoundValidator(FancyValidator):
 
     if_invalid = NoDefault
 
