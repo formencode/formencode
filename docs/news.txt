@@ -4,6 +4,16 @@ News
 SVN trunk
 ---------
 
+* Make all validators accept empty values if ``not_empty`` is False
+  (the default).  "Empty" means ``""`` or ``None``, and will generally
+  be converted None.
+
+* Added ``accept_python`` boolean to all ``FancyValidator`` validators
+  (which is most validators).  This is a fixed version of the broken
+  ``validate_python`` boolean added in 0.3.  Also, it defaults to
+  true, which means that all validators will not validate during
+  ``.from_python()`` calls by default.
+
 * Added ``htmlfill.render(form, defaults, errors)`` for easier
   rendering of forms.
 

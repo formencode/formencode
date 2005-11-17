@@ -205,8 +205,8 @@ class FancyValidator(Validator):
       If set, when the Python value (converted with
       ``.from_python()``) is invalid, this value will be returned.
 
-    * validate_python:
-      If False (default True), then ``.validate_python()`` and
+    * accept_python:
+      If True (the default), then ``.validate_python()`` and
       ``.validate_other()`` will not be called when
       ``.from_python()`` is used.
     """
@@ -215,7 +215,7 @@ class FancyValidator(Validator):
     if_invalid_python = NoDefault
     if_empty = NoDefault
     not_empty = False
-    validate_python = True
+    accept_python = True
     strip = False
 
     messages = {
@@ -254,11 +254,14 @@ class FancyValidator(Validator):
         try:
             if self.strip and isinstance(value, (str, unicode)):
                 value = value.strip()
-            if self.validate_python:
-                if (not value and value != 0
-                    and self.not_empty):
-                    raise Invalid(self.message('empty', state),
-                                  value, state)
+            if not self.accept_python:
+                if self.not_empty:
+                    if not value and value != 0:
+                        raise Invalid(self.message('empty', state),
+                                      value, state)
+                else:
+                    if self.is_empty(value):
+                        return self.empty_value(value)
                 vp = self.validate_python
                 if vp:
                     vp(value, state)
@@ -270,6 +273,8 @@ class FancyValidator(Validator):
                     vo(value, state)
                 return value
             else:
+                if not self.not_empty and self.is_empty(value):
+                    return self.empty_value(value)
                 fp = self._from_python
                 if fp:
                     value = self._from_python(value, state)
@@ -280,6 +285,11 @@ class FancyValidator(Validator):
             else:
                 return self.if_invalid_python
 
+    def is_empty(self, value):
+        return value is None or value == ''
+
+    def empty_value(self, value):
+        return None
 
     def assert_string(self, value, state):
         if not isinstance(value, (str, unicode)):
