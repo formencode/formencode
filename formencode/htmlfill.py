@@ -3,7 +3,8 @@ import cgi
 import re
 
 def render(form, defaults=None, errors=None, use_all_keys=False,
-           auto_insert_errors=True, auto_error_formatter=None):
+           auto_insert_errors=True, auto_error_formatter=None,
+           text_as_default=False):
     """
     Render the ``form`` (which should be a string) given the defaults
     and errors.  Defaults are the values that go in the input fields
@@ -23,6 +24,9 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     ``auto_error_formatter`` is used to create the HTML that goes
     above the fields.  By default it wraps the error message in a span
     and adds a ``<br>``.
+
+    If ``text_as_default`` is true (default false) then ``<input
+    type=unknown>`` will be treated as text inputs.
     """
     if errors is None:
         errors = {}
@@ -34,6 +38,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
         defaults=defaults, errors=errors,
         use_all_keys=use_all_keys,
         auto_error_formatter=auto_error_formatter,
+        text_as_default=text_as_default,
         )
     p.feed(form)
     p.close()
@@ -113,7 +118,8 @@ class FillingParser(HTMLParser.HTMLParser):
     def __init__(self, defaults, errors=None, use_all_keys=False,
                  error_formatters=None, error_class='error',
                  add_attributes=None, listener=None,
-                 auto_error_formatter=None):
+                 auto_error_formatter=None,
+                 text_as_default=False):
         HTMLParser.HTMLParser.__init__(self)
         self._content = []
         self.source = None
@@ -141,6 +147,7 @@ class FillingParser(HTMLParser.HTMLParser):
         self.add_attributes = add_attributes or {}
         self.listener = listener
         self.auto_error_formatter = auto_error_formatter
+        self.text_as_default = text_as_default
 
     def feed(self, data):
         self.source = data
@@ -315,6 +322,13 @@ class FillingParser(HTMLParser.HTMLParser):
         elif t == 'submit' or t == 'reset' or t == 'button':
             self.set_attr(attrs, 'value', value or
                           self.get_attr(attrs, 'value', ''))
+            self.write_tag('input', attrs, startend)
+            self.skip_next = True
+            self.add_key(name)
+        elif self.text_as_default:
+            if value is None:
+                value = self.get_attr(attrs, 'value', '')
+            self.set_attr(attrs, 'value', value)
             self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)

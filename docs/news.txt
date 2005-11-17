@@ -4,6 +4,11 @@ News
 SVN trunk
 ---------
 
+* Added ``text_as_default`` option to htmlfill.  This treats all
+  ``<input type="something-weird">`` elements as text fields.  WHAT-WG
+  adds weird input types, which can usually be usefully treated as
+  text fields.
+
 * Make all validators accept empty values if ``not_empty`` is False
   (the default).  "Empty" means ``""`` or ``None``, and will generally
   be converted None.
