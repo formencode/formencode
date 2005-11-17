@@ -200,6 +200,7 @@ class Schema(FancyValidator):
             previous_full_dict = getattr(state, 'full_dict', None)
             state.full_dict = value_dict
         try:
+            __traceback_info__ = None
             for name, value in value_dict.items():
                 __traceback_info__ = 'for_python in %s' % name
                 try:
