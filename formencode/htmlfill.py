@@ -356,20 +356,34 @@ class FillingParser(HTMLParser.HTMLParser):
     def handle_option(self, attrs):
         assert self.in_select, "<option> outside of <select>: %s" % self.getpos()
         default = self.defaults.get(self.in_select, '')
-        selected = False
-        if isinstance(default, (list, tuple)):
-            if self.get_attr(attrs, 'value') in map(str, default):
-                selected = True
-        else:
-            if str(default) == self.get_attr(attrs, 'value'):
-                selected = True
-        if selected:
+        
+        if self.selected_multiple(self.defaults.get(self.in_select, ''),
+                                  self.get_attr(attrs, 'value')):
             self.set_attr(attrs, 'selected', 'selected')
             self.add_key(self.in_select)
         else:
             self.del_attr(attrs, 'selected')
         self.write_tag('option', attrs)
         self.skip_next = True
+
+    def selected_multiple(self, obj, value):
+        """
+        Returns true/false if obj indicates that value should be
+        selected.  If obj has a __contains__ method it is used, otherwise
+        identity is used.
+        """
+        if obj is None:
+            return value == ""
+        if isinstance(obj, (str, unicode)):
+            return obj == value
+        if hasattr(obj, '__contains__'):
+            if value in obj:
+                return True
+        if hasattr(obj, '__iter__'):
+            for inner in obj:
+                if str(inner) == value:
+                    return True
+        return str(obj) == value
 
     def write_text(self, text):
         self._content.append(text)
