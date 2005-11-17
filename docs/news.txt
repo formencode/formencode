@@ -4,6 +4,13 @@ News
 SVN trunk
 ---------
 
+* Added ``htmlfill.render(form, defaults, errors)`` for easier
+  rendering of forms.
+
+* Errors automatically inserted by ``htmlfill`` will go at the top of
+  the form if there's no field associated with the error (raised an
+  error in 0.3).
+
 * Added ``formencode.sqlschema`` for wrapping SQLObject
   classes/instances.  See the docstring for more.
 

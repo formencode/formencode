@@ -2,6 +2,44 @@ import HTMLParser
 import cgi
 import re
 
+def render(form, defaults=None, errors=None, use_all_keys=False,
+           auto_insert_errors=True, auto_error_formatter=None):
+    """
+    Render the ``form`` (which should be a string) given the defaults
+    and errors.  Defaults are the values that go in the input fields
+    (overwriting any values that are there) and errors are displayed
+    inline in the form (and also effect input classes).  Returns the
+    rendered string.
+
+    If ``auto_insert_errors`` is true (the default) then any errors
+    for which ``<form:error>`` tags can't be found will be put just
+    above the associated input field, or at the top of the form if no
+    field can be found.
+
+    If ``use_all_keys`` is true, if there are any extra fields from
+    defaults or errors that couldn't be used in the form it will be an
+    error.
+
+    ``auto_error_formatter`` is used to create the HTML that goes
+    above the fields.  By default it wraps the error message in a span
+    and adds a ``<br>``.
+    """
+    if errors is None:
+        errors = {}
+    if defaults is None:
+        defaults = {}
+    if auto_insert_errors and auto_error_formatter is None:
+        auto_error_formatter = default_formatter
+    p = FillingParser(
+        defaults=defaults, errors=errors,
+        use_all_keys=use_all_keys,
+        auto_error_formatter=auto_error_formatter,
+        )
+    p.feed(form)
+    p.close()
+    return p.text()
+        
+
 class htmlliteral(object):
 
     def __init__(self, html, text=None):
@@ -120,7 +158,6 @@ class FillingParser(HTMLParser.HTMLParser):
                 del unused_errors[key]
         if self.auto_error_formatter:
             for key, value in unused_errors.items():
-                print 'insert at', key, value
                 self.insert_at_marker(
                     key, self.auto_error_formatter(value))
             unused_errors = {}
@@ -339,9 +376,7 @@ class FillingParser(HTMLParser.HTMLParser):
                 self._content.insert(i, text)
                 break
         else:
-            raise ValueError(
-                "Marker %r not found when trying to insert %r"
-                % (marker, text))
+            self._content.insert(0, text)
 
     def write_tag(self, tag, attrs, startend=False):
         attr_text = ''.join([' %s="%s"' % (n, html_quote(v))
