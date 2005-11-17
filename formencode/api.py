@@ -273,7 +273,7 @@ class FancyValidator(Validator):
                     vo(value, state)
                 return value
             else:
-                if not self.not_empty and self.is_empty(value):
+                if self.is_empty(value):
                     return self.empty_value(value)
                 fp = self._from_python
                 if fp:
