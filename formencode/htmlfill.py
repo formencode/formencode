@@ -355,8 +355,15 @@ class FillingParser(HTMLParser.HTMLParser):
 
     def handle_option(self, attrs):
         assert self.in_select, "<option> outside of <select>: %s" % self.getpos()
-        if str(self.defaults.get(self.in_select, '')) == \
-               self.get_attr(attrs, 'value'):
+        default = self.defaults.get(self.in_select, '')
+        selected = False
+        if isinstance(default, (list, tuple)):
+            if self.get_attr(attrs, 'value') in map(str, default):
+                selected = True
+        else:
+            if str(default) == self.get_attr(attrs, 'value'):
+                selected = True
+        if selected:
             self.set_attr(attrs, 'selected', 'selected')
             self.add_key(self.in_select)
         else:
