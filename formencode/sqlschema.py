@@ -30,7 +30,7 @@ class SQLSchema(schema.Schema):
     (assigning it to the same name as the SQLObject class's date
     column) to have this serialize date columns to/from strings.
 
-    You can override ``_invoke_to_python`` to change the actual
+    You can override ``update_object`` to change the actual
     instantiation.
 
     The basic idea is that a SQLSchema 'wraps' a class or instance
@@ -122,7 +122,10 @@ class SQLSchema(schema.Schema):
     def _from_python(self, obj, state):
         if obj is None:
             obj = self.object()
-        value_dict = self._sqlobject_from_python(obj, state)
+        if isinstance(obj, sqlobject.SQLObject):
+            value_dict = self.get_current(obj, state)
+        else:
+            value_dict = self.get_defaults(obj, state)
         result = schema.Schema._from_python(self, value_dict, state)
         if isinstance(obj, sqlobject.SQLObject):
             id = str(obj.id)
@@ -151,45 +154,53 @@ class SQLSchema(schema.Schema):
                               id, state)
             add_values['id'] = id
         result = schema.Schema._to_python(self, value_dict, state)
-        result = self._to_python_dictionary(result, state)
+        result, extra = self._to_python_dictionary(result, state)
         result.update(add_values)
-        return self._invoke_to_python(result, state)
+        return self.update_object(result, extra, state)
 
-    def _invoke_to_python(self, value_dict, state):
+    def update_object(self, columns, extra_fields, state):
         """
         Actually do the action, like create or update an object.
         """
+        if extra_fields:
+            errors = {}
+            for key in extra_fields.keys():
+                errors[key] = Invalid(
+                    self.message('notExpected', state, name=repr(key)),
+                    columns, state)
+            raise Invalid(
+                schema.format_compound_error(errors),
+                columns, state,
+                error_dict=errors)
         obj = self.object()
         create = False
         if self.instance():
-            if obj.id != value_dict['id']:
-                raise Invalid(self.message('badID', state, value=value_dict['id']),
-                              value_dict['id'], state)
-            del value_dict['id']
-        elif 'id' in value_dict:
-            obj = obj.get(value_dict['id'])
-            del value_dict['id']
+            if obj.id != columns['id']:
+                raise Invalid(self.message('badID', state, value=columns['id']),
+                              columns['id'], state)
+            del columns['id']
+        elif 'id' in columns:
+            obj = obj.get(columns['id'])
+            del columns['id']
         else:
             create = True
         if create:
-            obj = obj(**value_dict)
+            obj = obj(**columns)
         else:
-            obj.set(**value_dict)
+            obj.set(**columns)
         return obj
 
     def _to_python_dictionary(self, value_dict, state):
         obj = self.object()
         sqlmeta = obj.sqlmeta
         columns = sqlmeta.columns
-        extra = value_dict.keys()
+        extra = value_dict.copy()
         found = []
         for name, value in value_dict.items():
             if name not in columns:
-                raise Invalid(self.message('notExpected',
-                                           state, name=name),
-                              value_dict, state)
+                continue
             found.append(name)
-            extra.remove(name)
+            del extra[name]
             if columns[name].validator:
                 # We throw the result away, but let the exception
                 # get through
@@ -213,31 +224,23 @@ class SQLSchema(schema.Schema):
                         '%s: %s' % (name, exc),
                         value_dict, state,
                         error_dict={name: exc})
-        if extra:
-            errors = {}
-            for key in extra:
-                errors[key] = Invalid(
-                    self.message('notExpected', state, name=repr(key)),
-                    value_dict, state)
-            raise Invalid(
-                schema.format_compound_error(errors),
-                value_dict, state,
-                error_dict=errors)
-        return value_dict
+        for key in extra:
+            del value_dict[key]
+        return value_dict, extra
 
-    def _sqlobject_from_python(self, obj, state):
-        if isinstance(obj, sqlobject.SQLObject):
-            if hasattr(obj.sqlmeta, 'asDict'):
-                # Added in 0.8
-                result = obj.sqlmeta.asDict()
-                del result['id']
-            else:
-                result = {}
-                for key in obj.sqlmeta.columns:
-                    result[key] = getattr(obj, key)
-            return result
+    def get_current(self, obj, state):
+        if hasattr(obj.sqlmeta, 'asDict'):
+            # Added in 0.8
+            result = obj.sqlmeta.asDict()
+            del result['id']
         else:
-            # @@: Should this take into account column defaults?
-            # Yes!  Hmm... need to fix.
-            return {}
+            result = {}
+            for key in obj.sqlmeta.columns:
+                result[key] = getattr(obj, key)
+        return result
+
+    def get_defaults(self, soClass, state):
+        # @@: Should this take into account column defaults?
+        # Yes!  Hmm... need to fix.
+        return {}
             
