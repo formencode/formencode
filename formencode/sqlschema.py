@@ -75,10 +75,12 @@ class SQLSchema(schema.Schema):
     
     def __initargs__(self, new_attrs):
         schema.Schema.__initargs__(self, new_attrs)
-        next = self.chained_validators
-        next.append(SQLObjectInternalValidatorWrapper(schema=self))
         if self.sign_id:
             self._signer = validators.SignedString(secret=self.secret)
+
+    def is_empty(self, value):
+        # For this class, None has special meaning, and isn't empty
+        return False
 
     #@classinstancemethod
     def object(self, cls):
@@ -118,9 +120,10 @@ class SQLSchema(schema.Schema):
     instance = classinstancemethod(instance)
 
     def _from_python(self, obj, state):
-        if obj is None and self.instance():
+        if obj is None:
             obj = self.object()
-        result = schema.Schema._from_python(self, obj, state)
+        value_dict = self._sqlobject_from_python(obj, state)
+        result = schema.Schema._from_python(self, value_dict, state)
         if isinstance(obj, sqlobject.SQLObject):
             id = str(obj.id)
             if self.sign_id:
@@ -148,6 +151,7 @@ class SQLSchema(schema.Schema):
                               id, state)
             add_values['id'] = id
         result = schema.Schema._to_python(self, value_dict, state)
+        result = self._to_python_dictionary(result, state)
         result.update(add_values)
         return self._invoke_to_python(result, state)
 
@@ -172,31 +176,17 @@ class SQLSchema(schema.Schema):
         else:
             obj.set(**value_dict)
         return obj
-            
-    
-class SQLObjectInternalValidatorWrapper(validators.FancyValidator):
 
-    """
-    This validates against the SQLObject validators, but doesn't apply
-    any conversions those validators do (those conversions are
-    automatically applied when updating or creating the object).
-
-    This object also does the restriction and requirement of fields,
-    which the master schema does not do.
-    """
-
-    schema = None
-
-    def _to_python(self, value_dict, state):
-        obj = self.schema.object()
+    def _to_python_dictionary(self, value_dict, state):
+        obj = self.object()
         sqlmeta = obj.sqlmeta
         columns = sqlmeta.columns
         extra = value_dict.keys()
         found = []
         for name, value in value_dict.items():
             if name not in columns:
-                raise Invalid(self.schema.message('notExpected',
-                                                  state, name=name),
+                raise Invalid(self.message('notExpected',
+                                           state, name=name),
                               value_dict, state)
             found.append(name)
             extra.remove(name)
@@ -206,7 +196,7 @@ class SQLObjectInternalValidatorWrapper(validators.FancyValidator):
                 columns[name].validator.to_python(value, state)
             if columns[name].notNone and value is None:
                 # This isn't present in the validator information
-                exc = Invalid(self.schema.message('notNone', state),
+                exc = Invalid(self.message('notNone', state),
                               value, state)
                 raise Invalid(
                     '%s: %s' % (name, exc),
@@ -217,7 +207,7 @@ class SQLObjectInternalValidatorWrapper(validators.FancyValidator):
             for name, column in columns.items():
                 if (name not in found
                     and column.default is sqlobject.col.NoDefault):
-                    exc = Invalid(self.schema.message('missingValue', state),
+                    exc = Invalid(self.message('missingValue', state),
                                   value_dict, state)
                     raise Invalid(
                         '%s: %s' % (name, exc),
@@ -227,7 +217,7 @@ class SQLObjectInternalValidatorWrapper(validators.FancyValidator):
             errors = {}
             for key in extra:
                 errors[key] = Invalid(
-                    self.schema.message('notExpected', state, name=repr(key)),
+                    self.message('notExpected', state, name=repr(key)),
                     value_dict, state)
             raise Invalid(
                 schema.format_compound_error(errors),
@@ -235,7 +225,7 @@ class SQLObjectInternalValidatorWrapper(validators.FancyValidator):
                 error_dict=errors)
         return value_dict
 
-    def _from_python(self, obj, state):
+    def _sqlobject_from_python(self, obj, state):
         if isinstance(obj, sqlobject.SQLObject):
             if hasattr(obj.sqlmeta, 'asDict'):
                 # Added in 0.8
@@ -250,4 +240,4 @@ class SQLObjectInternalValidatorWrapper(validators.FancyValidator):
             # @@: Should this take into account column defaults?
             # Yes!  Hmm... need to fix.
             return {}
-
+            
