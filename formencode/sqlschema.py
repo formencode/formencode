@@ -127,17 +127,14 @@ class SQLSchema(schema.Schema):
         else:
             value_dict = self.get_defaults(obj, state)
         result = schema.Schema._from_python(self, value_dict, state)
-        if isinstance(obj, sqlobject.SQLObject):
-            id = str(obj.id)
-            if self.sign_id:
-                id = self._signer.from_python(id)
-            result['id'] = id
+        if 'id' in result and self.sign_id:
+            result['id'] = self._signer.from_python(result['id'])
         return result
 
     def _to_python(self, value_dict, state):
         value_dict = value_dict.copy()
         add_values = {}
-        if self.instance() or 'id' in value_dict:
+        if self.instance() or value_dict.get('id'):
             if not self.instance() and not self.allow_edit:
                 raise Invalid(self.message('editNotAllowed', state, value=value_dict['id']),
                               value_dict['id'], state)
@@ -153,6 +150,10 @@ class SQLSchema(schema.Schema):
                 raise Invalid(self.message('invalidID', state, error=e),
                               id, state)
             add_values['id'] = id
+        elif 'id' in value_dict and not value_dict['id']:
+            # Empty id, which is okay and means we are creating
+            # an object
+            del value_dict['id']
         result = schema.Schema._to_python(self, value_dict, state)
         result, extra = self._to_python_dictionary(result, state)
         result.update(add_values)
@@ -232,11 +233,11 @@ class SQLSchema(schema.Schema):
         if hasattr(obj.sqlmeta, 'asDict'):
             # Added in 0.8
             result = obj.sqlmeta.asDict()
-            del result['id']
         else:
             result = {}
             for key in obj.sqlmeta.columns:
                 result[key] = getattr(obj, key)
+            result['id'] = obj.id
         return result
 
     def get_defaults(self, soClass, state):
