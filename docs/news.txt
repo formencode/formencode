@@ -4,6 +4,11 @@ News
 SVN trunk
 ---------
 
+* Added a ``validators.FileUploadKeeper`` validator for helping with
+  file uploads in failed forms.  It still requires some annoying
+  fiddling to make work, though, since file upload fields are so
+  weird.
+
 * Added ``text_as_default`` option to htmlfill.  This treats all
   ``<input type="something-weird">`` elements as text fields.  WHAT-WG
   adds weird input types, which can usually be usefully treated as
