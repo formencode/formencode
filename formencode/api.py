@@ -296,6 +296,13 @@ class FancyValidator(Validator):
             raise Invalid(self.message('badType', state,
                                        type=type(value), value=value),
                           value, state)
+
+    def base64encode(self, value):
+        """
+        Encode a string in base64, stripping whitespace and removing
+        newlines.
+        """
+        return value.encode('base64').strip().replace('\n', '')
     
     validate_python = None
     validate_other = None
