@@ -4,6 +4,8 @@ News
 SVN trunk
 ---------
 
+* Added ``today_or_after`` option to ``validators.DateValidator``.
+
 * Added a ``validators.FileUploadKeeper`` validator for helping with
   file uploads in failed forms.  It still requires some annoying
   fiddling to make work, though, since file upload fields are so

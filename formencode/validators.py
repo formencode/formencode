@@ -39,9 +39,11 @@ import fieldstorage
 True, False = (1==1), (0==1)
 
 ############################################################
-## Wrapper Validators
+## Utility methods
 ############################################################
 
+# These all deal with accepting both mxDateTime and datetime
+# modules and types
 datetime_module = None
 mxDateTime_module = None
 
@@ -82,6 +84,10 @@ def datetime_makedate(module, year, month, day):
             return module.DateTime(year, month, day)
         except module.RangeError, e:
             raise ValueError(str(e))
+
+############################################################
+## Wrapper Validators
+############################################################
 
 class ConfirmType(FancyValidator):
 
@@ -725,13 +731,46 @@ class DateValidator(FancyValidator):
     Validates that a date is within the given range.  Be sure to call
     DateConverter first if you aren't expecting mxDateTime input.
 
-    earliest_date and latest_date may be functions; if so, they will
-    be called each time before validating.
+    ``earliest_date`` and ``latest_date`` may be functions; if so,
+    they will be called each time before validating.
+
+    ``after_now`` means a time after the current timestamp; note that
+    just a few milliseconds before now is invalid!  ``today_or_after``
+    is more permissive, and ignores hours and minutes.
+
+    Examples::
+
+        >>> from datetime import datetime, timedelta
+        >>> d = DateValidator(earliest_date=datetime(2003, 1, 1))
+        >>> d.to_python(datetime(2004, 1, 1))
+        datetime.datetime(2004, 1, 1, 0, 0)
+        >>> d.to_python(datetime(2002, 1, 1))
+        Traceback (most recent call last):
+            ...
+        Invalid: Date must be after Wednesday, 01 January 2003
+        >>> d.to_python(datetime(2003, 1, 1))
+        datetime.datetime(2003, 1, 1, 0, 0)
+        >>> d = DateValidator(after_now=True)
+        >>> now = datetime.now()
+        >>> d.to_python(now+timedelta(seconds=5)) == now+timedelta(seconds=5)
+        True
+        >>> d.to_python(now-timedelta(days=1))
+        Traceback (most recent call last):
+            ...
+        Invalid: The date must be sometime in the future
+        >>> d.to_python(now+timedelta(days=1)) > now
+        True
+        >>> d = DateValidator(today_or_after=True)
+        >>> d.to_python(now) == now
+        True
+    
     """
 
     earliest_date = None
     latest_date = None
     after_now = False
+    # Like after_now, but just after this morning:
+    today_or_after = False
     # Use 'datetime' to force the Python 2.3+ datetime module, or
     # 'mxDateTime' to force the mxDateTime module (None means use
     # datetime, or if not present mxDateTime)
@@ -780,6 +819,21 @@ class DateValidator(FancyValidator):
                     self.message('future', state,
                                  date=date_formatted),
                     value, state)
+        if self.today_or_after:
+            dt_mod = import_datetime(self.datetime_module)
+            now = datetime_now(dt_mod)
+            today = datetime_makedate(dt_mod,
+                                      now.year, now.month, now.day)
+            value_as_date = datetime_makedate(
+                dt_mod, value.year, value.month, value.day)
+            if value_as_date < today:
+                date_formatted = now.strftime(
+                    self.message('date_format', state))
+                raise Invalid(
+                    self.message('future', state,
+                                 date=date_formatted),
+                    value, state)
+            
 
 class Bool(FancyValidator):
 
