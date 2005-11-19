@@ -1038,14 +1038,38 @@ class Set(FancyValidator):
         return []
 
 class Email(FancyValidator):
-    """
+    r"""
     Validate an email address.
 
     If you pass ``resolve_domain=True``, then it will try to resolve
     the domain name to make sure it's valid.  This takes longer, of
     course.  You must have the `pyDNS <http://pydns.sf.net>`_ modules
     installed to look up MX records.
-    """
+
+    ::
+
+        >>> e = Email()
+        >>> e.to_python(' test@foo.com ')
+        'test@foo.com'
+        >>> e.to_python('test')
+        Traceback (most recent call last):
+            ...
+        Invalid: An email address must contain a single @
+        >>> e.to_python('test@foobar.com.5')
+        Traceback (most recent call last):
+            ...
+        Invalid: The domain portion of the email address is invalid (the portion after the @: foobar.com.5)
+        >>> e.to_python('o*reilly@test.com')
+        'o*reilly@test.com'
+        >>> e = Email(resolve_domain=True)
+        >>> e.to_python('doesnotexist@colorstudy.com')
+        'doesnotexist@colorstudy.com'
+        >>> e.to_python('test@thisdomaindoesnotexistithink.com')
+        Traceback (most recent call last):
+            ...
+        Invalid: The domain of the email address does not exist (the portion after the @: thisdomaindoesnotexistithink.com)
+        
+    """ 
 
     resolve_domain = False
 
@@ -1066,6 +1090,8 @@ class Email(FancyValidator):
         if self.resolve_domain:
             if mxlookup is None:
                 try:
+                    import DNS.Base
+                    DNS.Base.ParseResolvConf()
                     from DNS.lazy import mxlookup
                 except ImportError:
                     import warnings
