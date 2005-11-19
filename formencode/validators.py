@@ -31,6 +31,10 @@ urlparse = None
 from interfaces import *
 from api import *
 sha = random = None
+try:
+    import sets
+except ImportError:
+    sets = None
 
 import cgi
 
@@ -985,17 +989,53 @@ class Set(FancyValidator):
 
     This way the result will always be a list, even if there's only
     one result.  It's equivalent to ForEach(convertToList=True).
+
+    If you give ``use_set=True``, then it will return an actual
+    ``sets.Set`` object.
+
+    ::
+
+       >>> Set.to_python(None)
+       []
+       >>> Set.to_python('this')
+       ['this']
+       >>> Set.to_python(('this', 'that'))
+       ['this', 'that']
+       >>> s = Set(use_set=True)
+       >>> s.to_python(None)
+       Set([])
+       >>> s.to_python('this')
+       Set(['this'])
+       >>> s.to_python(('this',))
+       Set(['this'])
     """
 
-    if_empty = ()
+    use_set = False
 
     def _to_python(self, value, state):
-        if isinstance(value, (list, tuple)):
-            return value
-        elif value is None:
-            return []
+        if self.use_set:
+            if isinstance(value, sets.Set):
+                return value
+            elif isinstance(value, (list, tuple)):
+                return sets.Set(value)
+            elif value is None:
+                return sets.Set()
+            else:
+                return sets.Set([value])
         else:
-            return [value]
+            if isinstance(value, list):
+                return value
+            elif sets and isinstance(value, sets.Set):
+                return list(value)
+            elif isinstance(value, tuple):
+                return list(value)
+            elif value is None:
+                return []
+            else:
+                return [value]
+
+    def empty_value(self, value):
+        return []
 
 class Email(FancyValidator):
     """
