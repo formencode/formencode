@@ -280,6 +280,12 @@ class Schema(FancyValidator):
 
     add_pre_validator = declarative.classinstancemethod(add_pre_validator)
 
+    def subvalidators(self):
+        result = []
+        result.extend(self.pre_validators)
+        result.extend(self.chained_validators)
+        result.extend(self.fields.values())
+        return result
 
 def format_compound_error(v, indent=0):
     if isinstance(v, Exception):

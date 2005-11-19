@@ -4,6 +4,9 @@ News
 SVN trunk
 ---------
 
+* Added an ``.all_messages()`` method to all validators, primarily
+  intended to be used for documentation purposes.
+
 * Changed preferred name of ``StringBoolean`` to ``StringBool`` (to go
   with ``bool`` and ``validators.Bool``).  Old alias still available.
 
