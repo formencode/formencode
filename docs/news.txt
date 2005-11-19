@@ -43,6 +43,9 @@ SVN trunk
   missing keys (where fields are present) when no ``if_missing`` is
   provided for the field.
 
+* Renamed ``validators.StateProvince.extraStates`` to
+  ``extra_states``, to normalize style.
+
 Bugfixes
 ~~~~~~~~
 

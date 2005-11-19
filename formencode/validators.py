@@ -1256,20 +1256,34 @@ class StateProvince(FancyValidator):
 
     Well, for now I don't know the province codes, but it does state
     codes.  Give your own `states` list to validate other state-like
-    codes; give `extraStates` to add values without losing the current
-    state values.
+    codes; give `extra_states` to add values without losing the
+    current state values.
+
+    ::
+
+        >>> s = StateProvince('XX')
+        >>> s.to_python('IL')
+        'IL'
+        >>> s.to_python('XX')
+        'XX'
+        >>> s.to_python('xx')
+        'XX'
+        >>> s.to_python('YY')
+        Traceback (most recent call last):
+            ...
+        Invalid: That is not a valid state code
     """
 
     states = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE',
-               'FL', 'GA', 'HI', 'IA', 'ID', 'IN', 'IL', 'KS', 'KY',
-               'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT',
-               'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH',
-               'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT',
-               'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
+              'FL', 'GA', 'HI', 'IA', 'ID', 'IN', 'IL', 'KS', 'KY',
+              'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT',
+              'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH',
+              'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT',
+              'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
 
-    extraStates = []
+    extra_states = []
 
-    __unpackargs__ = ('extraStates',)
+    __unpackargs__ = ('extra_states',)
 
     messages = {
         'empty': 'Please enter a state code',
@@ -1288,7 +1302,7 @@ class StateProvince(FancyValidator):
                 self.message('wrongLength', state),
                 value, state)
         if value not in self.states \
-           and not (self.extraStates and value in self.extraStates):
+           and not (self.extra_states and value in self.extra_states):
             raise Invalid(
                 self.message('invalid', state),
                 value, state)
@@ -1303,7 +1317,24 @@ class PhoneNumber(FancyValidator):
     extension (as ext.##...)
     
     @@: should add international phone number support
+
+    ::
+
+        >>> p = PhoneNumber()
+        >>> p.to_python('333-3333')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a number, with area code, in the form ###-###-####, optionally with "ext.####"
+        >>> p.to_python('555-555-5555')
+        '555-555-5555'
+        >>> p.to_python('1-393-555-3939')
+        '1-393-555-3939'
+        >>> p.to_python('321.555.4949')
+        '321.555.4949'
+        >>> p.to_python('3335550000')
+        '3335550000'
     """
+    # for emacs: "
 
     _phoneRE = re.compile(r'^\s*(?:1-)?(\d\d\d)[\- \.]?(\d\d\d)[\- \.]?(\d\d\d\d)(?:\s*ext\.?\s*(\d+))?\s*$', re.I)
 
@@ -1418,6 +1449,22 @@ class DateConverter(FancyValidator):
 
     Use accept_day=False if you just want a month/year (like for a
     credit card expiration date).
+
+    ::
+
+        >>> d = DateConverter()
+        >>> d.to_python('12/3/09')
+        datetime.date(2009, 12, 3)
+        >>> d.to_python('12/3/2009')
+        datetime.date(2009, 12, 3)
+        >>> d.to_python('2/30/04')
+        Traceback (most recent call last):
+            ...
+        Invalid: That month only has 29 days
+        >>> d.to_python('13/2/05')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a month from 1 to 12
     """
     ## @@: accepts only US-style dates
 
