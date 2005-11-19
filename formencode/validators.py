@@ -841,6 +841,9 @@ class Bool(FancyValidator):
     Always Valid, returns True or False based on the value and the
     existance of the value.
 
+    If you want to convert strings like ``'true'`` to booleans, then
+    use ``StringBoolean``.
+
     Examples::
 
         >>> Bool.to_python(0)
@@ -863,6 +866,15 @@ class Int(FancyValidator):
 
     """
     Convert a value to an integer.
+
+    Example::
+
+        >>> Int.to_python('10')
+        10
+        >>> Int.to_python('ten')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter an integer value
     """
 
     messages = {
@@ -1643,7 +1655,7 @@ class StripField(FancyValidator):
         return field, v
 
 
-class StringBoolean(FancyValidator):
+class StringBool(FancyValidator):
     # Originally from TurboGears
     """
     Converts a string to a boolean.
@@ -1677,6 +1689,9 @@ class StringBoolean(FancyValidator):
             return self.true_values[0]
         else:
             return self.false_values[0]
+
+# Should deprecate:
+StringBoolean = StringBool
 
 class SignedString(FancyValidator):
 
