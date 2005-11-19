@@ -28,6 +28,7 @@ DateTime = None
 mxlookup = None
 httplib = None
 urlparse = None
+socket = None
 from interfaces import *
 from api import *
 sha = random = None
@@ -1141,6 +1142,30 @@ class URL(FancyValidator):
 
     If add_http is true, then if no scheme is present we'll add
     http://
+
+    ::
+
+        >>> u = URL(add_http=True)
+        >>> u.to_python('foo.com')
+        'http://foo.com'
+        >>> u.to_python('http://hahaha/bar.html')
+        Traceback (most recent call last):
+            ...
+        Invalid: That is not a valid URL
+        >>> u.to_python('https://test.com')
+        'https://test.com'
+        >>> u = URL(add_http=False, check_exists=True)
+        >>> u.to_python('http://google.com')
+        'http://google.com'
+        >>> u.to_python('http://colorstudy.com/doesnotexist.html')
+        Traceback (most recent call last):
+            ...
+        Invalid: The server responded that the page could not be found
+        >>> u.to_python('http://this.domain.does.not.exists.formencode.org/test.html')
+        Traceback (most recent call last):
+            ...
+        Invalid: An error occured when trying to connect to the server: (-2, 'Name or service not known')
+        
     """
 
     check_exists = False
@@ -1156,6 +1181,7 @@ class URL(FancyValidator):
         'noScheme': 'You must start your URL with http://, https://, etc',
         'badURL': 'That is not a valid URL',
         'httpError': 'An error occurred when trying to access the URL: %(error)s',
+        'socketError': 'An error occured when trying to connect to the server: %(error)s',
         'notFound': 'The server responded that the page could not be found',
         'status': 'The server responded with a bad status code (%(status)s)',
         }
@@ -1181,11 +1207,13 @@ class URL(FancyValidator):
         return value
 
     def _check_url_exists(self, url, state):
-        global httplib, urlparse
+        global httplib, urlparse, socket
         if httplib is None:
             import httplib
         if urlparse is None:
             import urlparse
+        if socket is None:
+            import socket
         scheme, netloc, path, params, query, fragment = urlparse.urlparse(
             url, 'http')
         if scheme == 'http':
@@ -1204,12 +1232,17 @@ class URL(FancyValidator):
             raise Invalid(
                 self.message('httpError', state, error=e),
                 state, url)
+        except socket.error, e:
+            raise Invalid(
+                self.message('socketError', state, error=e),
+                state, url)
         else:
             if res.status == 404:
                 raise Invalid(
                     self.message('notFound', state),
                     state, url)
-            if res.status != 200:
+            if (res.status < 200
+                or res.status >= 500):
                 raise Invalid(
                     self.message('status', state, status=res.status),
                     state, url)

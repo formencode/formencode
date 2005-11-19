@@ -46,6 +46,9 @@ SVN trunk
 Bugfixes
 ~~~~~~~~
 
+* When checking destinations, ``validators.URL`` now allows redirect
+  codes, and catches socket errors and turns them into proper errors.
+
 * Fix typo in ``htmlfill``
 
 * Made URL and email regular expressions a little more lax/correct.
