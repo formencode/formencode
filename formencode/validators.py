@@ -116,7 +116,7 @@ class ConfirmType(FancyValidator):
             ...
         Invalid: None is not a subclass of one of the types <type 'float'>, <type 'int'>
         >>> cint2 = ConfirmType(type=int)
-        >>> cint2.from_python(True)
+        >>> cint2(accept_python=False).from_python(True)
         Traceback (most recent call last):
             ...
         Invalid: True must be of the type <type 'int'>
@@ -143,7 +143,7 @@ class ConfirmType(FancyValidator):
         if self.type:
             if isinstance(self.type, list):
                 self.type = tuple(self.type)
-            elif not isinstance(self.subclass, tuple):
+            elif not isinstance(self.type, tuple):
                 self.type = (self.type,)
             self.validate_python = self.confirm_type
 
@@ -289,7 +289,7 @@ class MaxLength(FancyValidator):
         Traceback (most recent call last):
           ...
         Invalid: Enter a value less than 5 characters long
-        >>> max5.from_python('123456')
+        >>> max5(accept_python=False).from_python('123456')
         Traceback (most recent call last):
           ...
         Invalid: Enter a value less than 5 characters long
@@ -341,7 +341,7 @@ class MinLength(FancyValidator):
         Traceback (most recent call last):
           ...
         Invalid: Enter a value more than 5 characters long
-        >>> min5.from_python('1234')
+        >>> min5(accept_python=False).from_python('1234')
         Traceback (most recent call last):
           ...
         Invalid: Enter a value more than 5 characters long
@@ -444,7 +444,13 @@ class Regex(FancyValidator):
         >>> cap = Regex(r'^[A-Z]+$')
         >>> cap.to_python('ABC')
         'ABC'
+
+    Note that ``.from_python()`` calls (in general) do not validate
+    the input:
+    
         >>> cap.from_python('abc')
+        'abc'
+        >>> cap(accept_python=False).from_python('abc')
         Traceback (most recent call last):
           ...
         Invalid: The input is not valid
@@ -507,13 +513,15 @@ class PlainText(Regex):
         >>> PlainText.to_python('_this9_')
         '_this9_'
         >>> PlainText.from_python('  this  ')
+        '  this  '
+        >>> PlainText(accept_python=False).from_python('  this  ')
         Traceback (most recent call last):
           ...
         Invalid: Enter only letters, numbers, or _ (underscore)
         >>> PlainText(strip=True).to_python('  this  ')
         'this'
         >>> PlainText(strip=True).from_python('  this  ')
-        '  this  '
+        'this'
     """
 
     regex = r"^[a-zA-Z_\-0-9]*$"

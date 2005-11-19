@@ -1,8 +1,8 @@
 import os, sys
 
 if __name__ == '__main__':
-    base = os.path.dirname(os.path.dirname(
-        os.path.dirname(os.path.abspath(__file__))))
+    base = os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__)))
     sys.path.append(base)
 try:
     import doctest
