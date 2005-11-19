@@ -895,6 +895,18 @@ class Number(FancyValidator):
     """
     Convert a value to a float or integer.  Tries to convert it to
     an integer if no information is lost.
+
+    ::
+
+        >>> Number.to_python('10')
+        10
+        >>> Number.to_python('10.5')
+        10.5
+        >>> Number.to_python('ten')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a number
+
     """
     
     messages = {
@@ -918,6 +930,21 @@ class String(FancyValidator):
 
     Also takes a `max` and `min` argument, and the string length must
     fall in that range.
+
+    ::
+
+        >>> String(min=2).to_python('a')
+        Traceback (most recent call last):
+            ...
+        Invalid: Enter a value 2 characters long or more
+        >>> String(max=10).to_python('xxxxxxxxxxx')
+        Traceback (most recent call last):
+            ...
+        Invalid: Enter a value less than 10 characters long
+        >>> String().from_python(None)
+        ''
+        >>> String().from_python([])
+        ''
     """
 
     min = None
@@ -946,6 +973,9 @@ class String(FancyValidator):
         if value == 0:
             return str(value)
         return ""
+
+    def empty_value(self, value):
+        return ''
 
 class Set(FancyValidator):
 
