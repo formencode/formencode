@@ -1,4 +1,27 @@
+"""
+Extension to ``htmlfill`` that can parse out schema-defining
+statements.
+
+You can either pass ``SchemaBuilder`` to ``htmlfill.render`` (the
+``listen`` argument), or call ``parse_schema`` to just parse out a
+``Schema`` object.
+"""
+
 import validators, schema, compound
+
+__all__ = ['parse_schema', 'SchemaBuilder']
+
+def parse_schema(form):
+    """
+    Given an HTML form, parse out the schema defined in it and return
+    that schema.
+    """
+    listener = htmlfill_schemabuilder.SchemaBuilder()
+    p = htmlfill.FillingParser(
+        defaults={}, listener=listener)
+    p.feed(self.form)
+    p.close()
+    return listener.schema()
 
 default_validators = dict(
     [(name.lower(), getattr(validators, name))

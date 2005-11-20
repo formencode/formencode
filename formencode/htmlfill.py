@@ -1,10 +1,20 @@
+"""
+Parser for HTML forms, that fills in defaults and errors.  See
+``render``.
+"""
+
 import HTMLParser
 import cgi
 import re
 
+__all__ = ['render', 'htmlliteral', 'default_formatter',
+           'none_formatter', 'escape_formatter',
+           'FillingParser']
+
 def render(form, defaults=None, errors=None, use_all_keys=False,
+           error_formatters=None, add_attributes=None,
            auto_insert_errors=True, auto_error_formatter=None,
-           text_as_default=False):
+           text_as_default=False, listener=None):
     """
     Render the ``form`` (which should be a string) given the defaults
     and errors.  Defaults are the values that go in the input fields
@@ -21,15 +31,28 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     defaults or errors that couldn't be used in the form it will be an
     error.
 
+    ``error_formatters`` is a dictionary of formatter names to
+    one-argument functions that format an error into HTML.  Some
+    default formatters are provided if you don't provide this.
+
+    ``error_class`` is the class added to input fields when there is
+    an error for that field.
+
+    ``add_attributes`` is a dictionary of field names to a dictionary
+    of attribute name/values.  If the name starts with ``+`` then the
+    value will be appended to any existing attribute (e.g.,
+    ``{'+class': ' important'}``).
+
     ``auto_error_formatter`` is used to create the HTML that goes
     above the fields.  By default it wraps the error message in a span
     and adds a ``<br>``.
 
     If ``text_as_default`` is true (default false) then ``<input
     type=unknown>`` will be treated as text inputs.
+
+    ``listener`` can be an object that watches fields pass; the only
+    one currently is in ``htmlfill_schemabuilder.SchemaBuilder``
     """
-    if errors is None:
-        errors = {}
     if defaults is None:
         defaults = {}
     if auto_insert_errors and auto_error_formatter is None:
@@ -37,8 +60,11 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     p = FillingParser(
         defaults=defaults, errors=errors,
         use_all_keys=use_all_keys,
+        error_formatters=error_formatters,
+        add_attributes=add_attributes,
         auto_error_formatter=auto_error_formatter,
         text_as_default=text_as_default,
+        listener=listener,
         )
     p.feed(form)
     p.close()
