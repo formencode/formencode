@@ -1794,6 +1794,17 @@ class PostalCode(Regex):
 
     """
     US Postal codes (aka Zip Codes).
+
+    ::
+
+        >>> PostalCode.to_python('55555')
+        '55555'
+        >>> PostalCode.to_python('55555-5555')
+        '55555-5555'
+        >>> PostalCode.to_python('5555')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a zip code (5 digits)
     """
 
     regex = r'^\d\d\d\d\d(?:-\d\d\d\d)?$'
@@ -1811,6 +1822,14 @@ class StripField(FancyValidator):
 
     ``name`` is the key.  The field value and a new copy of the
     dictionary with that field removed are returned.
+
+    >>> StripField('test').to_python({'a': 1, 'test': 2})
+    (2, {'a': 1})
+    >>> StripField('test').to_python({})
+    Traceback (most recent call last):
+        ...
+    Invalid: The name 'test' is missing
+    
     """
 
     __unpackargs__ = ('name',)
@@ -1840,6 +1859,18 @@ class StringBool(FancyValidator):
     respectively; anything in ``true_values`` is true, anything in
     ``false_values`` is false, case-insensitive).  The first item of
     those lists is considered the preferred form.
+
+    ::
+
+        >>> s = StringBoolean()
+        >>> s.to_python('yes'), s.to_python('no')
+        (True, False)
+        >>> s.to_python(1), s.to_python('N')
+        (True, False)
+        >>> s.to_python('ye')
+        Traceback (most recent call last):
+            ...
+        Invalid: Value should be 'true' or 'false'
     """
     
     true_values = ['true', 't', 'yes', 'y', 'on', '1']
@@ -1960,6 +1991,16 @@ class FieldsMatch(FormValidator):
     Tests that the given fields match, i.e., are identical.  Useful
     for password+confirmation fields.  Pass the list of field names in
     as `field_names`.
+
+    ::
+
+        >>> f = FieldsMatch('pass', 'conf')
+        >>> f.to_python({'pass': 'xx', 'conf': 'xx'})
+        {'conf': 'xx', 'pass': 'xx'}
+        >>> f.to_python({'pass': 'xx', 'conf': 'yy'})
+        Traceback (most recent call last):
+            ...
+        Invalid: conf: Fields do not match
     """
 
     show_match = False
@@ -2008,6 +2049,18 @@ class CreditCardValidator(FormValidator):
 
     You must check the expiration date yourself (there is no
     relation between CC number/types and expiration dates).
+
+        >>> cc = CreditCardValidator()
+        >>> cc.to_python({'ccType': 'visa', 'ccNumber': '4111111111111111'})
+        {'ccNumber': '4111111111111111', 'ccType': 'visa'}
+        >>> cc.to_python({'ccType': 'visa', 'ccNumber': '411111111111111'})
+        Traceback (most recent call last):
+            ...
+        Invalid: ccNumber: You did not enter a valid number of digits
+        >>> cc.to_python({'ccType': 'visa', 'ccNumber': '411111111111112'})
+        Traceback (most recent call last):
+            ...
+        Invalid: ccNumber: You did not enter a valid number of digits
     """
 
     validate_partial_form = True
