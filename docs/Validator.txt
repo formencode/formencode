@@ -110,6 +110,14 @@ individual values.
 
 .. _Schemas:
 
+Available Validators
+--------------------
+
+There's lots of validators.  The best way to read about the individual
+validators available in the ``formencode.validators`` module is to
+read the `validators generated documentation
+<module-formencode.validators.html#classes>`_.
+
 Compound Validators
 -------------------
 
@@ -142,7 +150,7 @@ they'll be specific to your application::
 
 .. note::
    `formencode.FancyValidator
-   <class-formencode.api.FancyValidator.html>`_ is the superclass for
+   <class-formencode.api.FancyValidator.html>`__ is the superclass for
    most validators in FormEncode, and it provides a number of useful
    features that most validators can use -- for instance, you can pass
    ``strip=True`` into any of these validators, and they'll strip
@@ -193,7 +201,7 @@ of them.
 Most validators (anything that subclasses
 ``formencode.FancyValidator``) will take a certain standard set of
 constructor keyword arguments.  See `FancyValidator
-<class-formencode.api.FancyValidator.html>`_ for more -- here we use
+<class-formencode.api.FancyValidator.html>`__ for more -- here we use
 ``not_empty=True``.
 
 Another notable validator is `All
@@ -223,7 +231,7 @@ dictionaries of dictionaries.
 .. _ForEach:
 
 You can also validate lists of items using `ForEach
-<class-formencode.foreach.ForEach.html>`_.  For example, let's say we
+<class-formencode.foreach.ForEach.html>`__.  For example, let's say we
 have a form where someone can edit a list of book titles.  Each title
 has an associated book ID, so we can match up the new title and the
 book it is for::
@@ -325,7 +333,7 @@ to work with, and better displays the structure.
 
 There are several options that most validators support (including your
 own validators, if you subclass from `FancyValidator
-<class-formencode.api.FancyValidator.html>`_):
+<class-formencode.api.FancyValidator.html>`__):
     
 ``if_empty``:
       If set, then this value will be returned if the input evaluates
@@ -372,7 +380,7 @@ attribute in your validator.
 
 Also, during compound validation (a `Schema
 <class-formencode.schema.Schema.html>`_ or `ForEach
-<class-formencode.foreach.ForEach.html>`_) the state (if not None)
+<class-formencode.foreach.ForEach.html>`__) the state (if not None)
 will have more instance variables added to it.  During a ``Schema``
 (dictionary) validation the instance variable ``key`` and
 ``full_dict`` will be added -- ``key`` is the current key (i.e.,
@@ -448,7 +456,7 @@ HTTP/HTML Form Input
 
 The validation expects nested data structures; specifically `Schema
 <class-formencode.schema.Schema.html>`_ and `ForEach
-<class-formencode.foreach.ForEach.html>`_ deal with these structures
+<class-formencode.foreach.ForEach.html>`__ deal with these structures
 well.  HTML forms, however, do not produce nested structures -- they
 produce flat structures with keys (input names) and associated values.
 
