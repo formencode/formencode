@@ -1,3 +1,7 @@
+"""
+Experimental extensible form generation
+"""
+
 # @@: This is experimental
 
 import fields

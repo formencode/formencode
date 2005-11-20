@@ -1,3 +1,7 @@
+"""
+Validators for applying validations in sequence.
+"""
+
 from api import *
 
 # @@ ianb 2005-05: should CompoundValidator be included?

@@ -1,10 +1,9 @@
 """
-.. note::
-
-   This is deprecated, as it's not that helpful.
-
 Class to encapsulate an HTML form, using htmlfill and
-htmlfill_schemabuilder
+htmlfill_schemabuilder (deprecated).
+
+.. note::
+   This is deprecated, as it's not that helpful.
 
 Usage::
 

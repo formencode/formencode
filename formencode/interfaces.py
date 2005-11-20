@@ -1,5 +1,5 @@
 """
-Interfaces for FormEncode
+Interfaces for FormEncode (for documentation purposes only)
 """
 
 class Attribute(object):

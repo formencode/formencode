@@ -457,7 +457,7 @@ class Regex(FancyValidator):
         'ABC'
 
     Note that ``.from_python()`` calls (in general) do not validate
-    the input:
+    the input::
     
         >>> cap.from_python('abc')
         'abc'
@@ -2050,6 +2050,8 @@ class CreditCardValidator(FormValidator):
     You must check the expiration date yourself (there is no
     relation between CC number/types and expiration dates).
 
+    ::
+
         >>> cc = CreditCardValidator()
         >>> cc.to_python({'ccType': 'visa', 'ccNumber': '4111111111111111'})
         {'ccNumber': '4111111111111111', 'ccType': 'visa'}
@@ -2156,4 +2158,9 @@ class CreditCardValidator(FormValidator):
                 ('2131', 15),
                 ('1800', 15)],
             }
+
+__all__ = []
+for name, value in globals().items():
+    if isinstance(value, type) and issubclass(value, Validator):
+        __all__.append(name)
 

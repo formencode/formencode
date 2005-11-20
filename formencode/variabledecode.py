@@ -1,9 +1,6 @@
 """
-VariableDecode.py
-Ian Bicking <ianb@colorstudy.com>
-
-Takes GET/POST variable dictionary, as might be returned by
-`cgi`, and turns them into lists and dictionaries.
+Takes GET/POST variable dictionary, as might be returned by ``cgi``,
+and turns them into lists and dictionaries.
 
 Keys (variable names) can have subkeys, with a ``.`` and
 can be numbered with ``-``, like ``a.b-3=something`` means that

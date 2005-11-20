@@ -1,10 +1,7 @@
 .. comment (set Emacs mode) -*- doctest -*-
 
     >>> import sys
-    >>> try:
-    ...     import formencode
-    ... except ImportError:
-    ...     sys.path.append('/usr/home/ianb/colorstudy.com/FormEncode/trunk')
+    >>> import formencode
 
 +++++++++++++++++++++
 FormEncode Validation
@@ -19,26 +16,29 @@ FormEncode Validation
 Introduction
 ============
 
-TODO
+Validation (which encompasses conversion as well) is the core function
+of FormEncode.  FormEncode really tries to *encode* the values from
+one source into another (hence the name).  So a Python structure can
+be encoded in a series of HTML fields (a flat dictionary of strings).
+A HTML form submission can in turn be turned into a the original
+Python structure.
 
 Using Validation
 ================
 
 In FormEncode validation and conversion happen simultaneously.
 Frequently you cannot convert a value without ensuring its validity,
-and validation problems can occur in the middle of conversion.  In
-many ways, this is meant as a general encoding/decoding system (which
-is where the "Encode" in "FormEncode" comes from).
+and validation problems can occur in the middle of conversion.
 
-The basic metaphor for validation is *to_python* and *from_python*.
-In this context "Python" is meant to refer to "here" -- the trusted
-application, your own Python objects.  The "other" may be a web form,
-an external database, an XML-RPC request, or any data source that is
-not completely trusted or does not map directly to Python's object
-model.  *to_python* is the process of taking external data and
-preparing it for internal use, *from_python* generally reverses this
-process (*from_python* is usually the less interesting of the pair,
-but provides some important features).
+The basic metaphor for validation is **to_python** and
+**from_python**.  In this context "Python" is meant to refer to "here"
+-- the trusted application, your own Python objects.  The "other" may
+be a web form, an external database, an XML-RPC request, or any data
+source that is not completely trusted or does not map directly to
+Python's object model.  ``to_python`` is the process of taking
+external data and preparing it for internal use, ``from_python``
+generally reverses this process (``from_python`` is usually the less
+interesting of the pair, but provides some important features).
 
 The core of this validation process is two methods and an exception::
 
@@ -98,7 +98,7 @@ We can also generalize this kind of function::
     'bob@nowhere.com'
 
 ``Invalid`` exceptions generally give a good, user-readable error
-message about the invalidity of the input.  Using the exception gets
+message about the problem with the input.  Using the exception gets
 more complicated when you use compound data structures (dictionaries
 and lists), which we'll talk about later__.
 
@@ -120,12 +120,12 @@ Much more interesting is validating a set of values.  This is called a
 For instance, imagine a registration form for a website.  It takes the
 following fields, with restrictions:
 
-* first_name (not empty)
-* last_name (not empty)
-* email (not empty, valid email)
-* username (not empty, unique)
-* password (reasonably secure)
-* password_confirm (matches password)
+* ``first_name`` (not empty)
+* ``last_name`` (not empty)
+* ``email`` (not empty, valid email)
+* ``username`` (not empty, unique)
+* ``password`` (reasonably secure)
+* ``password_confirm`` (matches password)
 
 There's a couple validators that aren't part of FormEncode, because
 they'll be specific to your application::
@@ -140,10 +140,19 @@ they'll be specific to your application::
     ...                 value, state)
     ...         return value
 
-This overrides ``_to_python`` -- ``formencode.FancyValidator`` adds a
+.. note::
+   `formencode.FancyValidator
+   <class-formencode.api.FancyValidator.html>`_ is the superclass for
+   most validators in FormEncode, and it provides a number of useful
+   features that most validators can use -- for instance, you can pass
+   ``strip=True`` into any of these validators, and they'll strip
+   whitespace from the incoming value before any other validation.
+
+This overrides ``_to_python``: ``formencode.FancyValidator`` adds a
 number of extra features, and then calls the private ``_to_python``
-method that you typically write.  When if finds an error it raises an
-exception (``formencode.Invalid``), with the error message and the
+method, which is the method you'll typically write.  When a validator
+finds an error it raises an exception (`formencode.Invalid
+<class-formencode.api.Invalid.html>`_), with the error message and the
 value and "state" objects.  We'll talk about state_ later.  Here's the
 other custom validator, that checks passwords against words in the
 standard Unix word file::
@@ -176,20 +185,24 @@ And here's a schema::
 Like any other validator, a ``Registration`` instance will have the
 ``to_python`` and ``from_python`` methods.  The input should be a
 dictionary, with keys like ``"first_name"``, ``"password"``, etc.  The
-validators will be applied to each of the values of the dictionary.
-*All* the values will be validated, so if there are multiple invalid
-fields you will get information about all of them.
+validators you give as attributes will be applied to each of the
+values of the dictionary.  *All* the values will be validated, so if
+there are multiple invalid fields you will get information about all
+of them.
 
 Most validators (anything that subclasses
 ``formencode.FancyValidator``) will take a certain standard set of
-constructor keyword arguments.  See FancyValidator_ for more -- here
-we use ``not_empty=True``.
+constructor keyword arguments.  See `FancyValidator
+<class-formencode.api.FancyValidator.html>`_ for more -- here we use
+``not_empty=True``.
 
-Another notable one is ``All`` -- this is a *compound validator* --
-that is, it's a validator that takes validators as input.  Schemas are
-one example; ``All`` takes a list of validators and applies each of
-them in turn.  ``Any`` is its compliment, that uses the first passing
-validator in its list.
+Another notable validator is `All
+<class-formencode.compound.All.html>`_ -- this is a *compound
+validator* -- that is, it's a validator that takes validators as
+input.  Schemas are one example; in this case ``All`` takes a list of
+validators and applies each of them in turn.  `Any
+<class-formencode.compound.Any.html>`_ is its compliment, that uses
+the first passing validator in its list.
 
 .. _pre_validators:
 .. _chained_validators:
@@ -197,21 +210,23 @@ validator in its list.
 ``chained_validators`` are validators that are run on the entire
 dictionary after other validation is done (``pre_validators`` are
 applied before the schema validation).  You could actually achieve the
-same thing by using ``All`` with the schema validators
-(``FieldsMatch`` is just another validator that can be applied to
-dictionaries).  In this case ``validators.FieldsMatch`` checks that
-the value of the two fields are the same (i.e., that the password
-matches the confirmation).
+same thing by using ``All`` with the schema validators (`FieldsMatch
+<class-formencode.validators.FieldsMatch.html>`_ is just another
+validator that can be applied to dictionaries).  In this case
+``validators.FieldsMatch`` checks that the value of the two fields are
+the same (i.e., that the password matches the confirmation).
 
-Since a Schema is just another kind of validator, you can nest these
-indefinitely, validating dictionaries of dictionaries.
+Since a `Schema <class-formencode.schema.Schema.html>`_ is just
+another kind of validator, you can nest these indefinitely, validating
+dictionaries of dictionaries.
 
 .. _ForEach:
 
-You can also validate lists of items using ``ForEach``.  For example,
-let's say we have a form where someone can edit a list of book
-titles.  Each title has an associated book ID, so we can match up the
-new title and the book it is for::
+You can also validate lists of items using `ForEach
+<class-formencode.foreach.ForEach.html>`_.  For example, let's say we
+have a form where someone can edit a list of book titles.  Each title
+has an associated book ID, so we can match up the new title and the
+book it is for::
 
     >>> class BookSchema(formencode.Schema):
     ...     id = validators.Int()
@@ -232,7 +247,8 @@ Writing Your Own Validator
 
 We gave a brief introduction to creating a validator earlier
 (``UniqueUsername`` and ``SecurePassword``).  We'll discuss that a
-little more.  Here's another implementation of ``SecurePassword``:
+little more.  Here's a more complete implementation of
+``SecurePassword``::
 
     >>> import re
     >>> class SecurePassword(validators.FancyValidator):
@@ -270,7 +286,7 @@ used to set instance variables.  So ``SecureValidator(min=5)`` will be
 a minimum-five-character validator.  This makes it easy to also
 subclass other validators, giving different default values.
 
-Unlike the previous implementation we use ``validator_python`` (which
+Unlike the previous implementation we use ``validate_python`` (which
 is another method ``FancyValidator`` allows us to use).
 ``validate_python`` doesn't have any return value, it simply raises an
 exception if it needs to.  It validates the value *after* it has been
@@ -308,30 +324,35 @@ to work with, and better displays the structure.
 .. _FancyValidator:
 
 There are several options that most validators support (including your
-own validators, if you subclass from ``FancyValidator``):
+own validators, if you subclass from `FancyValidator
+<class-formencode.api.FancyValidator.html>`_):
     
 ``if_empty``:
-  If set, then this value will be returned if the input evaluates
-  to false (empty list, empty string, None, etc), but not the 0 or
-  False objects.  This only applies to ``.to_python()``.
+      If set, then this value will be returned if the input evaluates
+      to false (empty list, empty string, None, etc), but not the 0 or
+      False objects.  This only applies to ``.to_python()``.
       
 ``not_empty``:
-  If true, then if an empty value is given raise an error.
-  (Both with ``.to_python()`` and also ``.from_python()``
-  if ``.validate_python`` is true).
+      If true, then if an empty value is given raise an error.
+      (Both with ``.to_python()`` and also ``.from_python()``
+      if ``.validate_python`` is true).
+
+``strip``:
+      If true and the input is a string, strip it (occurs before empty
+      tests).
 
 ``if_invalid``:
-  If set, then when this validator would raise Invalid during
-  ``.to_python()``, instead return this value.
+      If set, then when this validator would raise Invalid during
+      ``.to_python()``, instead return this value.
       
 ``if_invalid_python``:
-  If set, when the Python value (converted with
-  ``.from_python()``) is invalid, this value will be returned.
+      If set, when the Python value (converted with
+      ``.from_python()``) is invalid, this value will be returned.
 
-``validate_python``:
-  If False (default True), then ``.validate_python()`` and
-  ``.validate_other()`` will not be called when
-  ``.from_python()`` is used.
+``accept_python``:
+      If True (the default), then ``.validate_python()`` and
+      ``.validate_other()`` will not be called when
+      ``.from_python()`` is used.
 
 State
 -----
@@ -349,39 +370,49 @@ validator know the locale?  State!  Whatever else you need to pass in,
 just put it in the state object as an attribute, then look for that
 attribute in your validator.
 
-Also, during compound validation (a ``Schema`` or ``ForEach``) the
-state (if not None) will have more instance variables added to it.
-During a ``Schema`` (dictionary) validation the instance variable
-``key`` and ``full_dict`` will be added -- ``key`` is the current key
-(i.e., validator name), and ``full_dict`` is the rest of the values
-being validated.  During a ``ForEeach`` (list) validation, ``index``
-and ``full_list`` will be set.
+Also, during compound validation (a `Schema
+<class-formencode.schema.Schema.html>`_ or `ForEach
+<class-formencode.foreach.ForEach.html>`_) the state (if not None)
+will have more instance variables added to it.  During a ``Schema``
+(dictionary) validation the instance variable ``key`` and
+``full_dict`` will be added -- ``key`` is the current key (i.e.,
+validator name), and ``full_dict`` is the rest of the values being
+validated.  During a ``ForEeach`` (list) validation, ``index`` and
+``full_list`` will be set.
 
 Invalid Exceptions
 ------------------
 
-Besides the string error message, ``Invalid`` exceptions have a few
-other instance variables:
+Besides the string error message, `Invalid
+<class-formencode.api.Invalid.html>`_ exceptions have a few other
+instance variables:
 
-value:
+``value``:
     The input to the validator that failed.
-state:
+
+``state``:
     The associated state_.
-msg:
+
+``msg``:
     The error message (``str(exc)`` returns this)
-error_list:
+
+``error_list``:
     If the exception happened in a ``ForEach`` (list) validator, then
     this will contain a list of ``Invalid`` exceptions.  Each item
     from the list will have an entry, either None for no error, or an
     exception.
-error_dict:
+
+``error_dict``:
     If the exception happened in a ``Schema`` (dictionary) validator,
     then this will contain ``Invalid`` exceptions for each failing
     field.  Passing fields not be included in this dictionary.
-.unpack_errors():
+
+``.unpack_errors()``:
     This method returns a set of lists and dictionaries containing
     strings, for each error.  It's an unpacking of ``error_list``,
-    ``error_dict`` and ``msg``.
+    ``error_dict`` and ``msg``.  If you get an Invalid exception from
+    a ``Schema``, you probably want to call this method on the
+    exception object.
 
 .. _Messages:
 
@@ -389,11 +420,11 @@ Messages, Language Customization
 --------------------------------
 
 All of the error messages can be customized.  Each error message has a
-key associated with it, like ``"too_few"`` in the registration example.
-You can overwrite these messages by using you own ``messages = {"key":
-"text"}`` in the class statement, or as an argument when you call a
-class.  Either way, you do not lose messages that you do not define,
-you only overwrite ones that you specify.
+key associated with it, like ``"too_few"`` in the registration
+example.  You can overwrite these messages by using you own ``messages
+= {"key": "text"}`` in the class statement, or as an argument when you
+call a class.  Either way, you do not lose messages that you do not
+define, you only overwrite ones that you specify.
 
 Messages often take arguments, like the number of characters, the
 invalid portion of the field, etc.  These are always substituted as a
@@ -415,13 +446,15 @@ use the ``message`` function, like::
 HTTP/HTML Form Input
 --------------------
 
-The validation expects nested data structures; specifically Schema and
-ForEach deal with these structures well.  HTML forms, however, do not
-produce nested structures -- they produce flat structures with keys
-(input names) and associated values.
+The validation expects nested data structures; specifically `Schema
+<class-formencode.schema.Schema.html>`_ and `ForEach
+<class-formencode.foreach.ForEach.html>`_ deal with these structures
+well.  HTML forms, however, do not produce nested structures -- they
+produce flat structures with keys (input names) and associated values.
 
-Validator includes the module ``variabledecode``, which allows you to
-encode nested dictionary and list structures into a flat dictionary.
+Validator includes the module `variabledecode
+<module-formencode.variabledecode.html>`, which allows you to encode
+nested dictionary and list structures into a flat dictionary.
 
 To do this it uses keys with ``"."`` for nested dictionaries, and
 ``"-int"`` for (ordered) lists.  So something like:
@@ -462,9 +495,10 @@ is associated with the key ``None``).  Lists are created with keys
 with ``'-int'``, where they are ordered by the integer (the integers
 are used for sorting, missing numbers in a sequence are ignored).
 
-``NestedVariables`` is a validator that decodes and encodes
-dictionaries using this algorithm.  You can use it with a Schema's
-`pre_validators`_ attribute.
+`NestedVariables
+<class-formencode.variabledecode.NestedVariables.html>`_ is a
+validator that decodes and encodes dictionaries using this algorithm.
+You can use it with a Schema's `pre_validators`_ attribute.
 
 Of course, in the example we use the data is rather eclectic -- for
 instance, Tim Smith doesn't have his name separated into first and

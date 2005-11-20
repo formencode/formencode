@@ -1,3 +1,7 @@
+"""
+Validator for repeating items.
+"""
+
 from api import NoDefault, Invalid
 from compound import CompoundValidator, to_python, from_python
 try:

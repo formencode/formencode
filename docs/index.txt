@@ -33,6 +33,7 @@ Projects that use FormEncode:
 * `Subway <http://subway.python-hosting.com>`_
 * `TurboGears <http://turbogears.org>`_
 * `Pylons <http://pylons.groovie.org>`_
+* More? `Email me <ianb@colorstudy.com>`_
 
 .. image:: http://sourceforge.net/sflogo.php?group_id=91231&type=4
    :height: 37

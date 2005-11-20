@@ -1,10 +1,6 @@
 .. comment (set Emacs mode) -*- doctest -*-
 
-    >>> import sys
-    >>> try:
-    ...     import formencode
-    ... except ImportError:
-    ...     sys.path.append('/usr/home/ianb/colorstudy.com/FormEncode/trunk')
+    >>> import formencode
 
 ++++++++
 htmlfill
@@ -19,15 +15,11 @@ htmlfill
 Introduction
 ============
 
-`htmlfill` is a library to fill out forms, both with default values
-and error messages.  It's like a template library, but more limited,
-and it can be used with the output from other templates.
-
-Prerequisites
--------------
-
-None.  I believe it should be Python 2.1 compatible, but I haven't
-tried.  If not, that could be easily resolved.
+`htmlfill <module-formencode.htmlfill.html>`_ is a library to fill out
+forms, both with default values and error messages.  It's like a
+template library, but more limited, and it can be used with the output
+from other templates.  It has no prerequesites, and can be used
+without any other parts of FormEncode.
 
 Usage
 =====
@@ -37,12 +29,8 @@ The basic usage is something like this::
     >>> from formencode import htmlfill
     >>> form = '<input type="text" name="fname">'
     >>> defaults = {'fname': 'Joe'}
-    >>> parser = htmlfill.FillingParser(defaults)
-    >>> parser.feed(form)
-    >>> parser.close()
-    >>> parser.text()
+    >>> htmlfill.render(form, defaults)
     '<input type="text" name="fname" value="Joe">'
-    >>> parser.close()
 
 The parser looks for HTML input elements (including ``select`` and
 ``textarea``) and fills in the defaults.  The quintessential way to
@@ -50,24 +38,8 @@ use this would be with a form submission that had errors -- you can
 return the form to the user with the values they entered, in addition
 to errors.
 
-The parser takes several optional arguments:
-
-``errors`` (default ``{}``):
-    A dictionary of errors to display (see Errors_)
-``use_all_keys`` (default ``False``): 
-    If true, if defaults contain a key that isn't used by the form an
-    error will be raised when ``.close()`` is called.
-``error_class`` (default ``"error"``):
-    If a input field has an error in the ``errors`` dictionary, then
-    it will have this class added.  Note that elements may have
-    multiple classes, so this won't remove any class that the element
-    already had.  You can use this to color invalid fields.
-``error_formatters``:
-    This is a dictionary of formatters for errors.  See Errors_.
-``add_attributes``:
-    This is a dictionary of dictionaries.  E.g., ``{'submit':
-    {'value': 'Add'}}`` could be used to change the ``value``
-    attributes of the submit button.
+See `formencode.htmlfill.render for more
+<module-formencode.htmlfill.html#render>`_ for more.
 
 Errors
 ------
@@ -91,17 +63,21 @@ the formatter returns::
 
     <span class="error-message">(message)</span><br>
 
+In addition to explicit error tags, any leftover errors will be placed
+immediately above the associated input field.
+
 Valid form templates
 --------------------
 
-When you call ``parser.close()`` the parser will check that you've
-fully used all the defaults and errors that were given in the
-constructor.  If not, an ``AssertionError`` will be raised.
+When you call ``parser.close()`` (also called by ``render()``) the
+parser will check that you've fully used all the defaults and errors
+that were given in the constructor if you pass in
+``use_all_keys=True``.  If there are leftover fields an
+``AssertionError`` will be raised.
 
 In most cases, htmlfill tries to keep the template the way it found
 it, without reformatting it too much.  If HTMLParser_ chokes on the
-code, so will htmlfill.  Whitespace is being mucked up some right now,
-but I'm not sure why; it's not intentional.
+code, so will htmlfill.
 
 .. _HTMLParser: http://python.org/doc/current/lib/module-HTMLParser.html
 

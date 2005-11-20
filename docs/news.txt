@@ -4,6 +4,12 @@ News
 SVN trunk
 ---------
 
+* Fixed up all the documentation.
+
+* Validator ``__doc__`` attributes will include some
+  automatically-appended information about all the message strings
+  that validator uses.
+
 * Deprecated ``formencode.htmlform`` module, because it is dumb.
 
 * Added an ``.all_messages()`` method to all validators, primarily

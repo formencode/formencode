@@ -1,4 +1,10 @@
+"""
+Core classes for validation.
+"""
+
 import declarative
+import textwrap
+import re
 
 __all__ = ['NoDefault', 'Invalid', 'Validator', 'Identity',
            'FancyValidator', 'is_validator']
@@ -106,6 +112,7 @@ class Validator(declarative.Declarative):
             cls._messages = cls._messages.copy()
             cls._messages.update(cls.messages)
             del cls.messages
+        cls._initialize_docstring()
 
     def __init__(self, *args, **kw):
         if kw.has_key('messages'):
@@ -165,6 +172,24 @@ class Validator(declarative.Declarative):
         this to accumulate all possible messages.
         """
         return []
+
+    #@classmethod
+    def _initialize_docstring(cls):
+        """
+        This changes the class's docstring to include information
+        about all the messages this validator uses.
+        """
+        doc = cls.__doc__ or ''
+        doc = [textwrap.dedent(doc).rstrip()]
+        messages = cls._messages.items()
+        messages.sort()
+        doc.append('\n\n**Messages**\n\n')
+        for name, default in messages:
+            default = re.sub(r'(%\(.*?\)[rsifcx])', r'``\1``', default)
+            doc.append('``'+name+'``:\n')
+            doc.append('  '+default+'\n\n')
+        cls.__doc__ = ''.join(doc)
+    _initialize_docstring = classmethod(_initialize_docstring)
 
 class _Identity(Validator):
     def __repr__(self):
