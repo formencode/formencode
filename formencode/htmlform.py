@@ -1,4 +1,8 @@
 """
+.. note::
+
+   This is deprecated, as it's not that helpful.
+
 Class to encapsulate an HTML form, using htmlfill and
 htmlfill_schemabuilder
 
@@ -26,11 +30,16 @@ tags.
 import htmlfill
 import htmlfill_schemabuilder
 from api import Invalid
+import warnings
 
 class HTMLForm(object):
 
     def __init__(self, form, schema=None,
                  auto_insert_errors=True):
+        warnings.warn(
+            'HTMLForm has been deprecated; use the htmlfill and '
+            'htmlfill_schemabuilder modules directly.',
+            DeprecationWarning)
         self.form = form
         self._schema = schema
         self.auto_insert_errors = auto_insert_errors

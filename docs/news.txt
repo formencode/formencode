@@ -4,6 +4,8 @@ News
 SVN trunk
 ---------
 
+* Deprecated ``formencode.htmlform`` module, because it is dumb.
+
 * Added an ``.all_messages()`` method to all validators, primarily
   intended to be used for documentation purposes.
 
