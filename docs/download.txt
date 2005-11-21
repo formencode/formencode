@@ -10,9 +10,11 @@ The repository can be checked out with::
 
 Available files:
 
-* `FormEncode-0.3.tar.gz
-  <http://cheeseshop.python.org/packages/source/F/FormEncode/FormEncode-0.3.tar.gz>`_
+* `FormEncode-0.4.tar.gz
+  <http://cheeseshop.python.org/packages/source/F/FormEncode/FormEncode-0.4.tar.gz>`_
 
-* `FormEncode-0.3-py2.4.egg
-  <http://cheeseshop.python.org/packages/2.4/F/FormEncode/FormEncode-0.3-py2.4.egg>`_
+* `FormEncode-0.4-py2.4.egg
+  <http://cheeseshop.python.org/packages/2.4/F/FormEncode/FormEncode-0.4-py2.4.egg>`_
 
+* `FormEncode-0.4-py2.3.egg
+  <http://cheeseshop.python.org/packages/2.4/F/FormEncode/FormEncode-0.4-py2.3.egg>`_
