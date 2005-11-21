@@ -1,8 +1,10 @@
 News
 ====
 
-SVN trunk
----------
+.. contents::
+
+0.4
+---
 
 * Fixed up all the documentation.
 

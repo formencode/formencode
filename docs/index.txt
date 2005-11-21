@@ -16,6 +16,7 @@ nestable.  It is separate from HTTP or any other input mechanism.
 Documentation
 -------------
 
+* `News <news.html>`_
 * `Validation Documentation <Validator.html>`_
 * `htmlfill <htmlfill.html>`_
 * `To-Do list <ToDo.html>`_
