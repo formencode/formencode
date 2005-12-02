@@ -38,7 +38,8 @@ class HTMLForm(object):
         warnings.warn(
             'HTMLForm has been deprecated; use the htmlfill and '
             'htmlfill_schemabuilder modules directly.',
-            DeprecationWarning)
+            DeprecationWarning,
+            stacklevel=1)
         self.form = form
         self._schema = schema
         self.auto_insert_errors = auto_insert_errors
@@ -64,7 +65,8 @@ class HTMLForm(object):
         p.close()
         return listener.schema()
 
-    def render(self, defaults={}, errors={}, use_all_keys=False):
+    def render(self, defaults={}, errors={}, use_all_keys=False,
+               text_as_default=False):
         if self.auto_insert_errors:
             auto_error_formatter = htmlfill.default_formatter
         else:
@@ -72,7 +74,8 @@ class HTMLForm(object):
         p = htmlfill.FillingParser(
             defaults=defaults, errors=errors,
             use_all_keys=use_all_keys,
-            auto_error_formatter=auto_error_formatter)
+            auto_error_formatter=auto_error_formatter,
+            text_as_default=text_as_default)
         p.feed(self.form)
         p.close()
         return p.text()
