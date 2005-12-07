@@ -3,6 +3,15 @@ News
 
 .. contents::
 
+SVN trunk
+---------
+
+* Added ``htmlfill.default_formatter_dict``, and you can poke new
+  formatters in there to effective register them.
+
+* Added an ``escapenl`` formatter (nl=newline) that escapes HTML and
+  turns newlines into ``<br>``.
+
 0.4
 ---
 

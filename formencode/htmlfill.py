@@ -101,13 +101,31 @@ def html_quote(v):
         return cgi.escape(str(v), 1)
 
 def default_formatter(error):
+    """
+    Formatter that escapes the error, wraps the error in a span with
+    class ``error-message``, and adds a ``<br>``
+    """
     return '<span class="error-message">%s</span><br />\n' % html_quote(error)
 
 def none_formatter(error):
+    """
+    Formatter that does nothing, no escaping HTML, nothin'
+    """
     return error
 
 def escape_formatter(error):
+    """
+    Formatter that escapes HTML, no more.
+    """
     return html_quote(error)
+
+def escapenl_formatter(error):
+    """
+    Formatter that escapes HTML, and translates newlines to ``<br>``
+    """
+    error = html_quote(error)
+    error = error.replace('\n', '<br>\n')
+    return error
 
 class FillingParser(HTMLParser.HTMLParser):
     r"""
@@ -164,9 +182,7 @@ class FillingParser(HTMLParser.HTMLParser):
         self.used_keys = {}
         self.used_errors = {}
         if error_formatters is None:
-            self.error_formatters = {'default': default_formatter,
-                                     'none': none_formatter,
-                                     'escape': escape_formatter}
+            self.error_formatters = default_formatter_dict
         else:
             self.error_formatters = error_formatters
         self.error_class = error_class
@@ -500,3 +516,9 @@ class FillingParser(HTMLParser.HTMLParser):
             raise Exception(
                 "You must .close() a parser instance before getting "
                 "the text from it")
+
+# This can potentially be extended globally
+default_formatter_dict = {'default': default_formatter,
+                          'none': none_formatter,
+                          'escape': escape_formatter,
+                          'escapenl': escapenl_formatter}
