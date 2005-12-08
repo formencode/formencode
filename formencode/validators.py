@@ -2210,8 +2210,8 @@ class CreditCardExpires(FormValidator):
                 field_dict, state, error_dict=errors)
         
     def _validateReturn(self, field_dict, state):
-        ccExpiresMonth = field_dict[self.cc_expires_month_field].strip()
-        ccExpiresYear = field_dict[self.cc_expires_year_field].strip()
+        ccExpiresMonth = str(field_dict[self.cc_expires_month_field]).strip()
+        ccExpiresYear = str(field_dict[self.cc_expires_year_field]).strip()
 
         try:
             ccExpiresMonth = int(ccExpiresMonth)
