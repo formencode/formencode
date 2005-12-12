@@ -328,11 +328,7 @@ class FillingParser(HTMLParser.HTMLParser):
             self.skip_next = True
             self.add_key(name)
         elif t == 'checkbox':
-            if (str(value) == self.get_attr(attrs, 'value')
-                or (self.get_attr(attrs, 'value') is None
-                    and value)
-                or (isinstance(value, (list, tuple))
-                    and self.get_attr(attrs, 'value') in map(str, value))):
+            if self.selected_multiple(value, self.get_attr(attrs, 'value')):
                 self.set_attr(attrs, 'checked', 'checked')
             else:
                 self.del_attr(attrs, 'checked')
