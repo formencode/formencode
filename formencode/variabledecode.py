@@ -13,13 +13,18 @@ This doesn't deal with multiple keys, like in a query string of
 '20']}``.  That's left to someplace else to interpret.  If you want to
 represent lists in this model, you use indexes, and the lists are
 explicitly ordered.
+
+If you want to change the character that determines when to split for
+a dict or list, both variable_decode and variable_encode take dict_char
+and list_char keyword args. For example, to have the GET/POST variables,
+``a_1=something`` as a list, you would use a list_char='_'.
 """
 
 import api
 
 __all__ = ['variable_decode', 'variable_encode', 'NestedVariables']
 
-def variable_decode(d):
+def variable_decode(d, dict_char='.', list_char='-'):
     """
     Decodes the flat dictionary d into a nested structure.
     """
@@ -27,7 +32,7 @@ def variable_decode(d):
     dicts_to_sort = {}
     known_lengths = {}
     for key, value in d.items():
-        keys = key.split('.')
+        keys = key.split(dict_char)
         new_keys = []
         was_repetition_count = False
         for key in keys:
@@ -37,8 +42,8 @@ def variable_decode(d):
                 known_lengths[tuple(new_keys)] = int(value)
                 was_repetition_count = True
                 break
-            elif '-' in key:
-                key, index = key.split('-')
+            elif list_char in key:
+                key, index = key.split(list_char)
                 new_keys.append(key)
                 dicts_to_sort[tuple(new_keys)] = 1
                 new_keys.append(int(index))
@@ -99,7 +104,7 @@ def variable_decode(d):
         
     return result
 
-def variable_encode(d, prepend='', result=None):
+def variable_encode(d, prepend='', result=None, dict_char='.', list_char='-'):
     """
     Encodes a nested structure into a flat dictionary.
     """
@@ -112,11 +117,11 @@ def variable_encode(d, prepend='', result=None):
             elif not prepend:
                 name = key
             else:
-                name = "%s.%s" % (prepend, key)
+                name = "%s%s%s" % (prepend, dict_char, key)
             variable_encode(value, name, result)
     elif isinstance(d, list):
         for i in range(len(d)):
-            variable_encode(d[i], "%s-%i" % (prepend, i), result)
+            variable_encode(d[i], "%s%s%i" % (prepend, list_char, i), result)
         if prepend:
             repName = '%s--repetitions' % prepend
         else:
