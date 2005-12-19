@@ -104,7 +104,11 @@ def variable_decode(d, dict_char='.', list_char='-'):
         
     return result
 
+<<<<<<< .mine
+def variable_encode(d, prepend='', result=None, add_repetitions=True):
+=======
 def variable_encode(d, prepend='', result=None, dict_char='.', list_char='-'):
+>>>>>>> .r1430
     """
     Encodes a nested structure into a flat dictionary.
     """
@@ -118,15 +122,16 @@ def variable_encode(d, prepend='', result=None, dict_char='.', list_char='-'):
                 name = key
             else:
                 name = "%s%s%s" % (prepend, dict_char, key)
-            variable_encode(value, name, result)
+            variable_encode(value, name, result, add_repetitions)
     elif isinstance(d, list):
         for i in range(len(d)):
             variable_encode(d[i], "%s%s%i" % (prepend, list_char, i), result)
-        if prepend:
-            repName = '%s--repetitions' % prepend
-        else:
-            repName = '__repetitions__'
-        result[repName] = str(len(d))
+        if add_repetitions:
+            if prepend:
+                repName = '%s--repetitions' % prepend
+            else:
+                repName = '__repetitions__'
+            result[repName] = str(len(d))
     else:
         result[prepend] = d
     return result

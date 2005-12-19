@@ -63,12 +63,17 @@ class Invalid(Exception):
         #    val += " (value: %s)" % repr(self.value)
         return val    
 
-    def unpack_errors(self):
+    def unpack_errors(self, encode_variables=False):
         """
         Returns the error as a simple data structure -- lists,
         dictionaries, and strings.
+        
+        If ``encode_variables`` is true, then this will return a flat
+        dictionary, encoded with variable_encode
         """
         if self.error_list:
+            assert not encode_variables, (
+                "You can only encode dictionary errors")
             assert not self.error_dict
             result = []
             for item in self.error_list:
@@ -84,8 +89,13 @@ class Invalid(Exception):
                     result[name] = item
                 else:
                     result[name] = item.unpack_errors()
+            if encode_variables:
+                import variabledecode
+                result = variabledecode.variable_encode(result, add_repetitions=False)
             return result
         else:
+            assert not encode_variables, (
+                "You can only encode dictionary errors")
             return self.msg
 
 
