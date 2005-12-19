@@ -104,11 +104,8 @@ def variable_decode(d, dict_char='.', list_char='-'):
         
     return result
 
-<<<<<<< .mine
-def variable_encode(d, prepend='', result=None, add_repetitions=True):
-=======
-def variable_encode(d, prepend='', result=None, dict_char='.', list_char='-'):
->>>>>>> .r1430
+def variable_encode(d, prepend='', result=None, add_repetitions=True,
+                    dict_char='.', list_char='-'):
     """
     Encodes a nested structure into a flat dictionary.
     """
