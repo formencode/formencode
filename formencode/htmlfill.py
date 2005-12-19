@@ -207,8 +207,10 @@ class FillingParser(HTMLParser.HTMLParser):
                 del unused_errors[key]
         if self.auto_error_formatter:
             for key, value in unused_errors.items():
+                error_message = self.auto_error_formatter(value)
+                error_message = '<!-- for: %s -->\n%s' % (key, error_message)
                 self.insert_at_marker(
-                    key, self.auto_error_formatter(value))
+                    key, error_message)
             unused_errors = {}
         if self.use_all_keys:
             unused = self.defaults.copy()
