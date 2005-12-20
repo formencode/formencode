@@ -1985,6 +1985,31 @@ class FormValidator(FancyValidator):
     validate_partial_python = None
     validate_partial_other = None
 
+class RequireIfMissing(FormValidator):
+
+    # Field that potentially is required:
+    require = None
+    # If this field is missing, then it is required:
+    missing = None
+    # If this field is present, then it is required:
+    present = None
+    __unpackargs__ = ('require',)
+
+    def _to_python(self, value_dict, state):
+        is_required = False
+        if self.missing and not value_dict.get(self.missing):
+            is_required = True
+        if self.present and value_dict.get(self.present):
+            is_required = True
+        if is_required and not value_dict.get(self.required):
+            raise Invalid('You must give a value for %s' % self.required,
+                          value, state,
+                          error_dict={self.required: Invalid(self.message(
+                              'empty', state), value, state)})
+        return value_dict
+
+RequireIfPresent = RequireIfMissing
+
 class FieldsMatch(FormValidator):
 
     """
@@ -2232,6 +2257,78 @@ class CreditCardExpires(FormValidator):
         except AssertionError:
             return {self.cc_expires_month_field: self.message('invalidNumber', state),
                     self.cc_expires_year_field: self.message('invalidNumber', state)}
+
+class CreditCardSecurityCode(FormValidator):
+    """
+    Checks that credit card security code has the correct number
+    of digits for the given credit card type.
+
+    You pass in the name of the field that has the credit card
+    type and the field with the credit card security code.
+
+    ::
+
+        >>> code = CreditCardSecurityCode()
+        >>> code.to_python({'ccType': 'visa', 'ccCode': '111'})
+        {'ccType': 'visa', 'ccCode': '111'}
+        >>> code.to_python({'ccType': 'visa', 'ccCode': '1111'})
+        Traceback (most recent call last):
+            ...
+        Invalid: ccCode: Invalid credit card security code length
+    """
+
+    validate_partial_form = True
+
+    cc_type_field = 'ccType'
+    cc_code_field = 'ccCode'
+    __unpackargs__ = ('cc_type_field', 'cc_code_field')
+
+    messages = {
+        'notANumber': "Please enter numbers only for credit card security code",
+        'badLength': "Invalid credit card security code length",
+        }
+
+    def validate_partial(self, field_dict, state):
+        if not field_dict.get(self.cc_type_field, None) \
+           or not field_dict.get(self.cc_code_field, None):
+            return None
+        self.validate_python(field_dict, state)
+
+    def validate_python(self, field_dict, state):
+        errors = self._validateReturn(field_dict, state)
+        if errors:
+            error_list = errors.items()
+            error_list.sort()
+            raise Invalid(
+                '<br>\n'.join(["%s: %s" % (name, value)
+                               for name, value in error_list]),
+                field_dict, state, error_dict=errors)
+
+    def _validateReturn(self, field_dict, state):
+        ccType = str(field_dict[self.cc_type_field]).strip()
+        ccCode = str(field_dict[self.cc_code_field]).strip()
+
+        try:
+            ccCode = int(ccCode)
+        except ValueError:
+            return {self.cc_code_field: self.message('notANumber', state)}
+
+        length = self._cardInfo[ccType]
+        validLength = False
+        if len(str(ccCode)) == length:
+            validLength = True
+        if not validLength:
+            return {self.cc_code_field: self.message('badLength', state)}
+
+    # key = credit card type
+    # value = length of security code
+    _cardInfo = {
+        "visa": 3,
+        "mastercard": 3,
+        "discover": 3,
+        "amex": 4,
+            }
+
 
 __all__ = []
 for name, value in globals().items():
