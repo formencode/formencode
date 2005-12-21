@@ -399,12 +399,13 @@ class FillingParser(HTMLParser.HTMLParser):
         self.skip_next = True
 
     def handle_select(self, attrs):
-        name = self.get_attr(attrs, 'name')
-        self.write_marker(name)
+        name = self.get_attr(attrs, 'name', False)
+        if name:
+            self.write_marker(name)
         if (self.error_class
             and self.errors.get(name)):
             self.add_class(attrs, self.error_class)
-        self.in_select = self.get_attr(attrs, 'name')
+        self.in_select = self.get_attr(attrs, 'name', False)
         self.write_tag('select', attrs)
         self.skip_next = True
         self.add_key(self.in_select)
@@ -413,15 +414,18 @@ class FillingParser(HTMLParser.HTMLParser):
         self.in_select = None
 
     def handle_option(self, attrs):
-        assert self.in_select, "<option> outside of <select>: %s" % self.getpos()
-        default = self.defaults.get(self.in_select, '')
-        
-        if self.selected_multiple(self.defaults.get(self.in_select, ''),
-                                  self.get_attr(attrs, 'value')):
-            self.set_attr(attrs, 'selected', 'selected')
-            self.add_key(self.in_select)
-        else:
-            self.del_attr(attrs, 'selected')
+        assert self.in_select is not None, (
+            "<option> outside of <select>: line %i, column %i"
+            % self.getpos())
+        if self.in_select != False:
+            default = self.defaults.get(self.in_select, '')
+
+            if self.selected_multiple(self.defaults.get(self.in_select, ''),
+                                      self.get_attr(attrs, 'value')):
+                self.set_attr(attrs, 'selected', 'selected')
+                self.add_key(self.in_select)
+            else:
+                self.del_attr(attrs, 'selected')
         self.write_tag('option', attrs)
         self.skip_next = True
 
