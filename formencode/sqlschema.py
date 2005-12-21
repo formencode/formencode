@@ -44,6 +44,29 @@ class SQLSchema(schema.Schema):
         new_object = ps.to_python(form_input)
         form_defaults = ps.from_python(aPerson)
         edited_person = ps.to_python(edited_form_input)
+
+    To override the encoding and decoding, use ``update_object`` and
+    ``get_current``.  In this example, lets say that we take a single
+    name field instead of a first_name and last_name (which is what
+    the database has)::
+
+        class PersonSchema(SQLSchema):
+            wrap = Person
+            
+            def update_object(self, columns, extra, state):
+                name = extra.pop('name')
+                fname, lname = name.split(None, 1)
+                columns['first_name'] = fname
+                columns['last_name'] = lname
+                return super(PersonSchema).update_object(
+                    columns, extra, state)
+
+            def get_current(self, obj, state):
+                value = super(PersonSchema).get_current(obj, state)
+                value['name'] = '%(first_name)s %(last_name)s' % value
+                del value['first_name']
+                del value['last_name']
+            
     """
 
 
