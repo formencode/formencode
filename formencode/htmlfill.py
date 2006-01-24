@@ -97,7 +97,10 @@ def html_quote(v):
         return ''
     elif hasattr(v, '__html__'):
         return v.__html__()
+    elif isinstance(v, basestring):
+        return cgi.escape(v, 1)
     else:
+        # @@: Should this be unicode(v) or str(v)?
         return cgi.escape(str(v), 1)
 
 def default_formatter(error):
