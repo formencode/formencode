@@ -1201,7 +1201,7 @@ class URL(FancyValidator):
         >>> u.to_python('http://this.domain.does.not.exists.formencode.org/test.html')
         Traceback (most recent call last):
             ...
-        Invalid: An error occured when trying to connect to the server: (-2, 'Name or service not known')
+        Invalid: An error occured when trying to connect to the server: (7, 'No address associated with nodename')
         
     """
 
