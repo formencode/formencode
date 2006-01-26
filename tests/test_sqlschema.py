@@ -54,17 +54,17 @@ def test_update():
 
 def test_defaults():
     res = EventObjectSchema().from_python(None)
-    assert res == dict(date=None, description=None)
+    assert res == dict(date=None, description='')
     obj = EventObject(name='foobar2', date=date(2020, 10, 1),
                       description=None)
     res = EventObjectSchema(wrap=obj).from_python(None)
-    assert res == dict(id=str(obj.id), date='10/01/2020',
-                       name='foobar2', description=None)
+    assert res == dict(id=obj.id, date='10/01/2020',
+                       name='foobar2', description='')
     obj2 = EventObject(name='bar', date=date(2002, 10, 1),
                        description='foobarish')
     # @@: Should this give an error?
     res = EventObjectSchema(wrap=obj).from_python(obj2)
-    assert res == dict(id=str(obj2.id), date='10/01/2002',
+    assert res == dict(id=obj2.id, date='10/01/2002',
                        name='bar', description='foobarish')
     res2 = EventObjectSchema().from_python(obj2)
     assert res2 == res
