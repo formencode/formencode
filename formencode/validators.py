@@ -982,6 +982,43 @@ class String(FancyValidator):
     def empty_value(self, value):
         return ''
 
+class UnicodeString(String):
+    """
+    Converts things to unicode string, this is a specialization of
+    the String class.
+    
+    In addition to the String arguments, an encoding argument is also
+    accepted. By default the encoding will be utf-8.
+    
+    All converted strings are returned as Unicode strings.
+    
+    ::
+    
+        >>> UnicodeString().from_python(None)
+        u''
+        >>> UnicodeString().from_python([])
+        u''
+        >>> UnicodeString(encoding='utf-7').from_python('Ni Ni Ni')
+        u'Ni Ni Ni'
+    """
+    
+    encoding = 'utf-8'
+    
+    def _from_python(self, value, state):
+        if value:
+            # If it is already an unicode string...
+            if isinstance(value, unicode):
+                # ... we return it as-is.
+                return value
+            # Otherwise we convert it.
+            return unicode(value, self.encoding)
+        if value == 0:
+            return unicode(value, self.encoding)
+        return unicode("", self.encoding)
+
+    def empty_value(self, value):
+        return unicode("", self.encoding)
+
 class Set(FancyValidator):
 
     """
