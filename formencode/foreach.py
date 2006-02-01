@@ -95,11 +95,17 @@ class ForEach(CompoundValidator):
         finally:
             if state is not None:
                 if previous_index is NoDefault:
-                    del state.index
+                    try:
+                        del state.index
+                    except AttributeError:
+                        pass
                 else:
                     state.index = previous_index
                 if previous_full_list is NoDefault:
-                    del state.full_list
+                    try:
+                        del state.full_list
+                    except AttributeError:
+                        pass
                 else:
                     state.full_list = previous_full_list
 
