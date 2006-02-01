@@ -119,10 +119,12 @@ def variable_encode(d, prepend='', result=None, add_repetitions=True,
                 name = key
             else:
                 name = "%s%s%s" % (prepend, dict_char, key)
-            variable_encode(value, name, result, add_repetitions)
+            variable_encode(value, name, result, add_repetitions,
+                            dict_char=dict_char, list_char=list_char)
     elif isinstance(d, list):
         for i in range(len(d)):
-            variable_encode(d[i], "%s%s%i" % (prepend, list_char, i), result)
+            variable_encode(d[i], "%s%s%i" % (prepend, list_char, i), result,
+                            add_repetitions, dict_char=dict_char, list_char=list_char)
         if add_repetitions:
             if prepend:
                 repName = '%s--repetitions' % prepend
