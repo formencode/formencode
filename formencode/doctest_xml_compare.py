@@ -49,7 +49,10 @@ class HTMLOutputChecker(RealOutputChecker):
             got_xml = make_xml(got)
             got_norm = make_string(got_xml)
         except XMLParseError, e:
-            got_norm = '(bad XML: %s)' % e
+            if example.want.startswith('<'):
+                got_norm = '(bad XML: %s)' % e
+            else:
+                return actual
         s = '%s\nXML Wanted: %s\nXML Got   : %s\n' % (
             actual, want_norm, got_norm)
         if got_xml and want_xml:

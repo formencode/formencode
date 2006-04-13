@@ -15,8 +15,9 @@ from formencode import doctest_xml_compare
 doctest_xml_compare.install()
 
 text_files = [
-    'htmlfill.txt',
-    'Validator.txt',
+    'docs/htmlfill.txt',
+    'docs/Validator.txt',
+    'tests/non_empty.txt',
     ]
 
 from formencode import validators
@@ -29,10 +30,10 @@ if __name__ == '__main__':
         args = text_files + modules
     for fn in args:
         if isinstance(fn, str):
-            fn = os.path.join(base, 
-                              'docs', fn)
-            doctest.testfile(fn, module_relative=False)
+            fn = os.path.join(base, fn)
+            doctest.testfile(fn, module_relative=False,
+                             optionflags=doctest.ELLIPSIS)
         else:
-            doctest.testmod(fn)
+            doctest.testmod(fn, optionflags=doctest.ELLIPSIS)
 
 

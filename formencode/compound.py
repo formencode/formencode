@@ -52,11 +52,11 @@ class CompoundValidator(FancyValidator):
     def attempt_convert(self, value, state, convertFunc):
         raise NotImplementedError, "Subclasses must implement attempt_convert"
 
-    def to_python(self, value, state=None):
+    def _to_python(self, value, state=None):
         return self.attempt_convert(value, state,
                                     to_python)
     
-    def from_python(self, value, state=None):
+    def _from_python(self, value, state=None):
         return self.attempt_convert(value, state,
                                     from_python)
 
@@ -86,6 +86,13 @@ class Any(CompoundValidator):
             raise lastException
         else:
             return self.if_invalid
+
+    def not_empty__get(self):
+        not_empty = True
+        for validator in self.validators:
+            not_empty = not_empty and validator.not_empty
+        return not_empty
+    not_empty = property(not_empty__get)
 
 class All(CompoundValidator):
 
@@ -151,3 +158,10 @@ class All(CompoundValidator):
                 return v
         return NoDefault
     if_missing = property(if_missing__get)
+
+    def not_empty__get(self):
+        not_empty = False
+        for validator in self.validators:
+            not_empty = not_empty or validator.not_empty
+        return not_empty
+    not_empty = property(not_empty__get)

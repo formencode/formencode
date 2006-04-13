@@ -300,12 +300,14 @@ class FancyValidator(Validator):
         try:
             if self.strip and isinstance(value, (str, unicode)):
                 value = value.strip()
-            if not value and value != 0:
-                # False/0 are not "empty"
-                if self.if_empty is not NoDefault:
-                    return self.if_empty
+            if self.is_empty(value):
                 if self.not_empty:
                     raise Invalid(self.message('empty', state), value, state)
+                else:
+                    if self.if_empty is not NoDefault:
+                        return self.if_empty
+                    else:
+                        return self.empty_value(value)
             vo = self.validate_other
             if vo:
                 vo(value, state)
@@ -327,12 +329,11 @@ class FancyValidator(Validator):
             if self.strip and isinstance(value, (str, unicode)):
                 value = value.strip()
             if not self.accept_python:
-                if self.not_empty:
-                    if not value and value != 0:
+                if self.is_empty(value):
+                    if self.not_empty:
                         raise Invalid(self.message('empty', state),
                                       value, state)
-                else:
-                    if self.is_empty(value):
+                    else:
                         return self.empty_value(value)
                 vp = self.validate_python
                 if vp:
@@ -358,6 +359,7 @@ class FancyValidator(Validator):
                 return self.if_invalid_python
 
     def is_empty(self, value):
+        # None and '' are "empty"
         return value is None or value == ''
 
     def empty_value(self, value):

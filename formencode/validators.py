@@ -183,6 +183,9 @@ class ConfirmType(FancyValidator):
             raise Invalid(msg, value, state)
         return value
 
+    def is_empty(self, value):
+        return False
+
 class Wrapper(FancyValidator):
 
     """
@@ -404,6 +407,7 @@ class NotEmpty(FancyValidator):
         >>> ne.to_python(0)
         0
     """
+    not_empty = True
 
     messages = {
         'empty': "Please enter a value",
@@ -692,9 +696,9 @@ class IndexListConverter(FancyValidator):
         >>> index.to_python(5)
         Traceback (most recent call last):
         Invalid: Index out of range
-        >>> index.to_python(None)
+        >>> index(not_empty=True).to_python(None)
         Traceback (most recent call last):
-        Invalid: Must be an integer index
+        Invalid: Please enter a value
         >>> index.from_python('five')
         Traceback (most recent call last):
         Invalid: Item 'five' was not found in the list
@@ -866,6 +870,9 @@ class Bool(FancyValidator):
     def _to_python(self, value, state):
         return bool(value)
     _from_python = _to_python        
+
+    def empty_value(self, value):
+        return False
 
 class Int(FancyValidator):
 
@@ -1073,7 +1080,10 @@ class Set(FancyValidator):
                 return [value]
 
     def empty_value(self, value):
-        return []
+        if self.use_set:
+            return sets.Set([])
+        else:
+            return []
 
 class Email(FancyValidator):
     r"""
@@ -1100,12 +1110,14 @@ class Email(FancyValidator):
         >>> e.to_python('o*reilly@test.com')
         'o*reilly@test.com'
         >>> e = Email(resolve_domain=True)
+        >>> e.resolve_domain
+        True
         >>> e.to_python('doesnotexist@colorstudy.com')
         'doesnotexist@colorstudy.com'
-        >>> e.to_python('test@thisdomaindoesnotexistithink.com')
+        >>> e.to_python('test@thisdomaindoesnotexistithinkforsure.com')
         Traceback (most recent call last):
             ...
-        Invalid: The domain of the email address does not exist (the portion after the @: thisdomaindoesnotexistithink.com)
+        Invalid: The domain of the email address does not exist (the portion after the @: thisdomaindoesnotexistithinkforsure.com)
         
     """ 
 
@@ -1201,7 +1213,7 @@ class URL(FancyValidator):
         >>> u.to_python('http://this.domain.does.not.exists.formencode.org/test.html')
         Traceback (most recent call last):
             ...
-        Invalid: An error occured when trying to connect to the server: (7, 'No address associated with nodename')
+        Invalid: An error occured when trying to connect to the server: (7, 'No address associated with ...')
         
     """
 
