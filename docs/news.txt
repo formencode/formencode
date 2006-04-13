@@ -12,6 +12,9 @@ SVN trunk
 * Added an ``escapenl`` formatter (nl=newline) that escapes HTML and
   turns newlines into ``<br>``.
 
+* When ``not_empty=False``, empty is assumed to be allowed.  Thus
+  ``Int().to_python(None)`` will now return ``None``.
+
 0.4
 ---
 
