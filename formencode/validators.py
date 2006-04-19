@@ -375,7 +375,7 @@ class MinLength(FancyValidator):
     __unpackargs__ = ('minLength',)
 
     messages = {
-        'tooShort': "Enter a value more than %(minLength)i characters long",
+        'tooShort': "Enter a value at least %(minLength)i characters long",
         'invalid': "Invalid value (value with length expected)",
         }
 
