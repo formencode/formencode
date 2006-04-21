@@ -90,7 +90,7 @@ class Any(CompoundValidator):
     def not_empty__get(self):
         not_empty = True
         for validator in self.validators:
-            not_empty = not_empty and validator.not_empty
+            not_empty = not_empty and getattr(validator, 'not_empty', False)
         return not_empty
     not_empty = property(not_empty__get)
 
@@ -162,6 +162,6 @@ class All(CompoundValidator):
     def not_empty__get(self):
         not_empty = False
         for validator in self.validators:
-            not_empty = not_empty or validator.not_empty
+            not_empty = not_empty or getattr(validator, 'not_empty', False)
         return not_empty
     not_empty = property(not_empty__get)

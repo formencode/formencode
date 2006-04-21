@@ -3,8 +3,14 @@ News
 
 .. contents::
 
-SVN trunk
----------
+0.5.1
+-----
+
+* Fixed compound validators and ``not_empty`` (was breaking
+  SQLObject's PickleCol)
+
+0.5
+---
 
 * Added ``htmlfill.default_formatter_dict``, and you can poke new
   formatters in there to effective register them.
