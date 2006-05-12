@@ -289,7 +289,14 @@ class Schema(FancyValidator):
 
 def format_compound_error(v, indent=0):
     if isinstance(v, Exception):
-        return str(v)
+        try:
+            return str(v)
+        except UnicodeDecodeError:
+            # There doesn't seem to be a better way to get a str()
+            # version if possible, and unicode() if necessary, because
+            # testing for the presence of a __unicode__ method isn't
+            # enough
+            return unicode(v)
     elif isinstance(v, dict):
         l = v.items()
         l.sort()
