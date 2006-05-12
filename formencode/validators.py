@@ -2037,12 +2037,12 @@ class FormValidator(FancyValidator):
 class RequireIfMissing(FormValidator):
 
     # Field that potentially is required:
-    require = None
+    required = None
     # If this field is missing, then it is required:
     missing = None
     # If this field is present, then it is required:
     present = None
-    __unpackargs__ = ('require',)
+    __unpackargs__ = ('required',)
 
     def _to_python(self, value_dict, state):
         is_required = False
