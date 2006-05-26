@@ -2358,13 +2358,13 @@ class CreditCardSecurityCode(FormValidator):
         ccCode = str(field_dict[self.cc_code_field]).strip()
 
         try:
-            ccCode = int(ccCode)
+            int(ccCode)
         except ValueError:
             return {self.cc_code_field: self.message('notANumber', state)}
 
         length = self._cardInfo[ccType]
         validLength = False
-        if len(str(ccCode)) == length:
+        if len(ccCode) == length:
             validLength = True
         if not validLength:
             return {self.cc_code_field: self.message('badLength', state)}
