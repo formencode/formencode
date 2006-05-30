@@ -1013,15 +1013,21 @@ class UnicodeString(String):
     
     def _from_python(self, value, state):
         if value:
-            # If it is already an unicode string...
             if isinstance(value, unicode):
-                # ... we return it as-is.
                 return value
-            # Otherwise we convert it.
+            if hasattr(value, '__unicode__'):
+                return unicode(value)
             return unicode(value, self.encoding)
         if value == 0:
             return unicode(value, self.encoding)
         return unicode("", self.encoding)
+    
+    def _from_python(self, value, state):
+        if hasattr(value, '__unicode__'):
+            value = unicode(value)
+        if isinstance(value, unicode):
+            return value.encode(self.encoding)
+        return str(value)
 
     def empty_value(self, value):
         return unicode("", self.encoding)
