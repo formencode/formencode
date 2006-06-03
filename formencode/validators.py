@@ -1007,30 +1007,36 @@ class UnicodeString(String):
         u''
         >>> UnicodeString(encoding='utf-7').from_python('Ni Ni Ni')
         u'Ni Ni Ni'
+    
     """
-    
     encoding = 'utf-8'
+    messages = {
+        'badEncoding' : "Invalid data or incorrect encoding",
+    }
     
-    def _from_python(self, value, state):
+    def __init__(self, inputEncoding=None, outputEncoding=None, **kw):
+        String.__init__(self, **kw)
+        self.inputEncoding = inputEncoding or self.encoding
+        self.outputEncoding = outputEncoding or self.encoding
+    
+    def _to_python(self, value, state):
         if value:
             if isinstance(value, unicode):
                 return value
             if hasattr(value, '__unicode__'):
                 return unicode(value)
-            return unicode(value, self.encoding)
-        if value == 0:
-            return unicode(value, self.encoding)
-        return unicode("", self.encoding)
+            try:
+                return unicode(value, self.inputEncoding)
+            except UnicodeDecodeError:
+                raise Invalid(self.message('badEncoding', state), value, state)
+        return u''
     
     def _from_python(self, value, state):
         if hasattr(value, '__unicode__'):
             value = unicode(value)
         if isinstance(value, unicode):
-            return value.encode(self.encoding)
+            return value.encode(self.outputEncoding)
         return str(value)
-
-    def empty_value(self, value):
-        return unicode("", self.encoding)
 
 class Set(FancyValidator):
 
