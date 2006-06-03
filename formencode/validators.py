@@ -1424,17 +1424,18 @@ class PhoneNumber(FancyValidator):
         return result
 
 class FieldStorageUploadConverter(FancyValidator):
-
     """
     Converts a cgi.FieldStorage instance to
     a value that FormEncode can use for file
     uploads.
     """
-    def _to_python(self, value, state):
+    def _to_python(self, value, state=None):
         if isinstance(value, cgi.FieldStorage):
-            return fieldstorage.convert_fieldstorage(value)
+            if value.filename:
+                return value
+            raise Invalid('invalid', value, state)
         else:
-            return value
+            return value 
 
 class FileUploadKeeper(FancyValidator):
     """
