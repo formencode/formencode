@@ -29,6 +29,7 @@ mxlookup = None
 httplib = None
 urlparse = None
 socket = None
+DNSError = None
 from interfaces import *
 from api import *
 sha = random = None
@@ -1142,6 +1143,7 @@ class Email(FancyValidator):
         'empty': 'Please enter an email address',
         'noAt': 'An email address must contain a single @',
         'badUsername': 'The username portion of the email address is invalid (the portion before the @: %(username)s)',
+        'socketError': 'An error occured when trying to connect to the server: %(error)s',
         'badDomain': 'The domain portion of the email address is invalid (the portion after the @: %(domain)s)',
         'domainDoesNotExist': 'The domain of the email address does not exist (the portion after the @: %(domain)s)',
         }
@@ -1185,7 +1187,19 @@ class Email(FancyValidator):
                              domain=splitted[1]),
                 value, state)
         if self.resolve_domain:
-            domains = mxlookup(splitted[1])
+	    global socket, DNSError
+	    if socket is None:
+        	import socket
+
+	    if DNSError is None:
+		from DNS.Base import DNSError
+
+	    try:
+                domains = mxlookup(splitted[1])
+	    except (socket.error, DNSError), e:
+		raise Invalid(
+		    self.message('socketError', state, error=e),
+		    value, state)
             if not domains:
                 raise Invalid(
                     self.message('domainDoesNotExist', state,
