@@ -355,17 +355,17 @@ class MinLength(FancyValidator):
         >>> min5.to_python('1234')
         Traceback (most recent call last):
           ...
-        Invalid: Enter a value more than 5 characters long
+        Invalid: Enter a value at least 5 characters long
         >>> min5(accept_python=False).from_python('1234')
         Traceback (most recent call last):
           ...
-        Invalid: Enter a value more than 5 characters long
+        Invalid: Enter a value at least 5 characters long
         >>> min5.to_python([1, 2, 3, 4, 5])
         [1, 2, 3, 4, 5]
         >>> min5.to_python([1, 2, 3])
         Traceback (most recent call last):
           ...
-        Invalid: Enter a value more than 5 characters long
+        Invalid: Enter a value at least 5 characters long
         >>> min5.to_python(5)
         Traceback (most recent call last):
           ...
@@ -958,15 +958,31 @@ class String(FancyValidator):
         ''
         >>> String().from_python([])
         ''
+        >>> String().to_python(None)
+        ''
+        >>> String(min=3).to_python(None)
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a value
+        >>> String(min=1).to_python('')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a value
+    
     """
 
     min = None
     max = None
+    not_empty = None
 
     messages = {
         'tooLong': "Enter a value less than %(max)i characters long",
         'tooShort': "Enter a value %(min)i characters long or more",
         }
+
+    def __initargs__(self, new_attrs):
+        if self.not_empty is None and self.min:
+            self.not_empty = True
     
     def validate_python(self, value, state):
         if (self.max is not None and value is not None
@@ -1002,11 +1018,11 @@ class UnicodeString(String):
     
     ::
     
-        >>> UnicodeString().from_python(None)
+        >>> UnicodeString().to_python(None)
+        ''
+        >>> UnicodeString().to_python([])
         u''
-        >>> UnicodeString().from_python([])
-        u''
-        >>> UnicodeString(encoding='utf-7').from_python('Ni Ni Ni')
+        >>> UnicodeString(encoding='utf-7').to_python('Ni Ni Ni')
         u'Ni Ni Ni'
     
     """
@@ -1239,7 +1255,7 @@ class URL(FancyValidator):
         >>> u.to_python('http://this.domain.does.not.exists.formencode.org/test.html')
         Traceback (most recent call last):
             ...
-        Invalid: An error occured when trying to connect to the server: (7, 'No address associated with ...')
+        Invalid: An error occured when trying to connect to the server: ...
         
     """
 
@@ -2410,4 +2426,3 @@ __all__ = []
 for name, value in globals().items():
     if isinstance(value, type) and issubclass(value, Validator):
         __all__.append(name)
-

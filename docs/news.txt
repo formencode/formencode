@@ -3,6 +3,11 @@ News
 
 .. contents::
 
+svn trunk
+---------
+
+* ``String(min=1)`` implies ``not_empty`` (which seems more intuitive)
+
 0.5.1
 -----
 
