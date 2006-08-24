@@ -8,6 +8,9 @@ svn trunk
 
 * ``String(min=1)`` implies ``not_empty`` (which seems more intuitive)
 
+* Added ``list_char`` and ``dict_char`` arguments to
+  ``Invalid.unpack_errors`` (passed through to ``variable_encode``)
+
 0.5.1
 -----
 
