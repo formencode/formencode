@@ -11,6 +11,10 @@ svn trunk
 * Added ``list_char`` and ``dict_char`` arguments to
   ``Invalid.unpack_errors`` (passed through to ``variable_encode``)
 
+* Added a ``use_datetime`` option to ``TimeValidator``, which will
+  cause it to use ``datetime.time`` objects instead of tuples.  It was
+  previously able to consume but not produce these objects.
+
 0.5.1
 -----
 

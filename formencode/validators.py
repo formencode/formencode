@@ -91,6 +91,19 @@ def datetime_makedate(module, year, month, day):
         except module.RangeError, e:
             raise ValueError(str(e))
 
+
+# TODO: Needs being extended to support mx.DateTime as well.
+def datetime_time(module):
+    if module.__name__ == 'datetime':
+        return module.time
+
+# TODO: Needs being extended to support mx.DateTime as well.
+def datetime_isotime(module):
+    if module.__name__ == 'datetime':
+        return module.time.isoformat
+
+
+
 ############################################################
 ## Wrapper Validators
 ############################################################
@@ -1743,15 +1756,43 @@ class TimeConverter(FancyValidator):
         '12:00am'
         >>> tim2.from_python((12, 0))
         '12:00pm'
+
+    Examples with ``datetime.time``::
+
+        >>> v = TimeConverter(use_datetime=True)
+        >>> a = v.to_python('18:00')
+        >>> a
+        datetime.time(18, 0)
+        >>> b = v.to_python('30:00')
+        Traceback (most recent call last):
+            ...
+        Invalid: You must enter an hour in the range 0-23
+        >>> v2 = TimeConverter(prefer_ampm=True, use_datetime=True)
+        >>> v2.from_python(a)
+        '6:00:00pm'
+        >>> v3 = TimeConverter(prefer_ampm=True,
+        ...                    use_seconds=False, use_datetime=True)
+        >>> a = v3.to_python('18:00')
+        >>> a
+        datetime.time(18, 0)
+        >>> v3.from_python(a)
+        '6:00pm'
+        >>> a = v3.to_python('18:00:00')
+        Traceback (most recent call last):
+            ...
+        Invalid: You may not enter seconds
     """
 
     use_ampm = 'optional'
     prefer_ampm = False
     use_seconds = 'optional'
+    use_datetime = False
+    # This can be set to make it prefer mxDateTime:
+    datetime_module = None
 
     messages = {
         'noAMPM': 'You must indicate AM or PM',
-        'tooManyColon': 'There are two many :\'s',
+        'tooManyColon': 'There are too many :\'s',
         'noSeconds': 'You may not enter seconds',
         'secondsRequired': 'You must enter seconds',
         'minutesRequired': 'You must enter minutes (after a :)',
@@ -1762,6 +1803,15 @@ class TimeConverter(FancyValidator):
         }
 
     def _to_python(self, value, state):
+        result = self._to_python_tuple(value, state)
+        if self.use_datetime:
+            dt_mod = import_datetime(self.datetime_module)
+            time_class = datetime_time(dt_mod)
+            return time_class(*result)
+        else:
+            return result
+
+    def _to_python_tuple(self, value, state):
         time = value.strip()
         explicit_ampm = False
         if self.use_ampm:
@@ -1860,6 +1910,7 @@ class TimeConverter(FancyValidator):
             return value
         if hasattr(value, 'hour'):
             hour, minute = value.hour, value.minute
+            second = value.second
         elif len(value) == 3:
             hour, minute, second = value
         elif len(value) == 2:
@@ -1880,7 +1931,6 @@ class TimeConverter(FancyValidator):
             return '%i:%02i:%02i%s' % (hour, minute, second, ampm)
         else:
             return '%i:%02i%s' % (hour, minute, ampm)
-        
 
 class PostalCode(Regex):
 
