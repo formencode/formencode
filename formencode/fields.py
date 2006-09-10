@@ -326,8 +326,7 @@ class TableLayout(Layout):
     def wrap_fields(self, rendered_fields, context):
         return html.table(rendered_fields,
                           width=self.width,
-                          class_=self.table_class,
-                          c=rendered_fields)
+                          class_=self.table_class)
 
 class FormTableLayout(Layout):
 
