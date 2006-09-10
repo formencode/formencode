@@ -312,13 +312,13 @@ class FancyValidator(Validator):
                     else:
                         return self.empty_value(value)
             vo = self.validate_other
-            if vo:
+            if vo and vo is not self._validate_noop:
                 vo(value, state)
             tp = self._to_python
             if tp:
                 value = tp(value, state)
             vp = self.validate_python
-            if vp:
+            if vp and vp is not self._validate_noop:
                 vp(value, state)
             return value
         except Invalid:
@@ -339,13 +339,13 @@ class FancyValidator(Validator):
                     else:
                         return self.empty_value(value)
                 vp = self.validate_python
-                if vp:
+                if vp and vp is not self._validate_noop:
                     vp(value, state)
                 fp = self._from_python
                 if fp:
                     value = fp(value, state)
                 vo = self.validate_other
-                if vo:
+                if vo and co is not self._validate_noop:
                     vo(value, state)
                 return value
             else:
@@ -380,9 +380,14 @@ class FancyValidator(Validator):
         newlines.
         """
         return value.encode('base64').strip().replace('\n', '')
+
+    def _validate_noop(self, value, state):
+        """
+        A validation method that doesn't do anything.
+        """
+        pass
     
-    validate_python = None
-    validate_other = None
+    validate_python = validate_other = _validate_noop
     _to_python = None
     _from_python = None
 

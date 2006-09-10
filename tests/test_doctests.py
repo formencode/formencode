@@ -26,14 +26,20 @@ modules = [validators]
 if __name__ == '__main__':
     import sys
     args = sys.argv[1:]
+    verbose = False
+    if '-v' in args:
+        args.remove('-v')
+        verbose = True
     if not args:
         args = text_files + modules
     for fn in args:
         if isinstance(fn, str):
             fn = os.path.join(base, fn)
             doctest.testfile(fn, module_relative=False,
-                             optionflags=doctest.ELLIPSIS)
+                             optionflags=doctest.ELLIPSIS,
+                             verbose=verbose)
         else:
-            doctest.testmod(fn, optionflags=doctest.ELLIPSIS)
+            doctest.testmod(fn, optionflags=doctest.ELLIPSIS,
+                            verbose=verbose)
 
 
