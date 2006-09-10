@@ -48,7 +48,7 @@ class Context(object):
         self.id_prefix = id_prefix
         self.defaults = defaults
         for name, value in kw.items():
-            setattr(name, value)
+            setattr(self, name, value)
         self.options = none_dict(kw)
 
     def name(self, field, adding=None):
