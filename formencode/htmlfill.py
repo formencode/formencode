@@ -282,9 +282,16 @@ class FillingParser(HTMLParser.HTMLParser):
 
     def handle_iferror(self, attrs):
         name = self.get_attr(attrs, 'name')
+        notted = False
+        if name.startswith('not '):
+            notted = True
+            name = name.split(None, 1)[1]
         assert name, "Name attribute in <iferror> required (%s)" % self.getpos()
         self.in_error = name
-        if not self.errors.get(name):
+        ok = self.errors.get(name)
+        if notted:
+            ok = not ok
+        if not ok:
             self.skip_error = True
         self.skip_next = True
 

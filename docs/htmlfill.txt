@@ -54,7 +54,9 @@ this purpose:
     formatter (``"default"`` if no ``format`` attribute is given).
 ``<form:iferror name="field_name">...</form:iferror>``:
     If the named field doesn't have an error, everything between the
-    tags will be eliminated.
+    tags will be eliminated.  Use ``name="not field_name"`` to invert
+    the behavior (i.e., include text only if there are no errors for
+    the field).
 
 Formatters are functions that take the error text as a single
 argument.  (In the future they may take extra arguments as well.)

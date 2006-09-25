@@ -15,6 +15,9 @@ svn trunk
   cause it to use ``datetime.time`` objects instead of tuples.  It was
   previously able to consume but not produce these objects.
 
+* Added ``<form:iferror name="not field_name">`` when you want to
+  include text only when a field has no errors.
+
 0.5.1
 -----
 
