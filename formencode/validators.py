@@ -1547,10 +1547,11 @@ class DateConverter(FancyValidator):
     dd-mm-yy, etc, always assumes month comes second value is the
     month.
 
-    Accepts English month names, also abbreviated.  Returns value as
-    mx.DateTime object.  Two year dates are assumed to be within
-    1950-2020, with dates from 21-49 being ambiguous and signaling an
-    error.
+    Accepts English month names, also abbreviated.  Returns value as a
+    datetime object (you can get mx.DateTime objects if you use
+    ``datetime_module='mxDateTime'``).  Two year dates are assumed to
+    be within 1950-2020, with dates from 21-49 being ambiguous and
+    signaling an error.
 
     Use accept_day=False if you just want a month/year (like for a
     credit card expiration date).
