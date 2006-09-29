@@ -18,6 +18,9 @@ svn trunk
 * Added ``<form:iferror name="not field_name">`` when you want to
   include text only when a field has no errors.
 
+* There was a problem installing 0.5.1 on Windows with Python 2.5, now
+  resolved.
+
 0.5.1
 -----
 
