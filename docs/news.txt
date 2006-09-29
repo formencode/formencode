@@ -3,6 +3,11 @@ News
 
 .. contents::
 
+svn trunk
+---------
+
+* No changes yet
+
 0.6
 ---
 
