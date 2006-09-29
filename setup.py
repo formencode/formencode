@@ -2,7 +2,7 @@ from ez_setup import use_setuptools
 use_setuptools()
 from setuptools import setup
 
-version = '0.5.2'
+version = '0.6'
 
 setup(name="FormEncode",
       version=version,
