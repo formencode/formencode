@@ -8,7 +8,7 @@ from sqlobject import SQLObject
 from sqlobject import col
 
 
-@makeform.when('isinstance(obj, SQLObject) or (isinstance(obj, type) and issubclass(obj, SQLObject))')
+#@makeform.when('isinstance(obj, SQLObject) or (isinstance(obj, type) and issubclass(obj, SQLObject))')
 def makeform_new_sqlobject(obj, context):
     isinst = isinstance(obj, SQLObject)
     sqlmeta = obj.sqlmeta
@@ -43,18 +43,27 @@ def makeform_new_sqlobject(obj, context):
         restore.pop_attr()
     return layout, s
 
+makeform_new_sqlobject = makeform.when('isinstance(obj, SQLObject) or (isinstance(obj, type) and issubclass(obj, SQLObject))')(makeform_new_sqlobject)
+
 def coldesc(col):
     return getattr(col, 'description', col.name)
 
-@makeform.when('isinstance(obj, col.SOStringLikeCol)')
+#@makeform.when('isinstance(obj, col.SOStringLikeCol)')
 def makeform_string_col(obj, context):
     return fields.Text(context, description=coldesc(obj)), None
 
-@makeform.when('isinstance(obj, col.SOBoolCol)')
+makeform_string_col = makeform.when('isinstance(obj, col.SOStringLikeCol)')(makeform_string_col)
+
+#@makeform.when('isinstance(obj, col.SOBoolCol)')
 def makeform_bool_col(obj, context):
     return (fields.Checkbox(context, description=coldesc(obj)),
             validators.Bool())
 
-@makeform.when('isinstance(obj, col.SOForeignKey) and getattr(obj, "editinline", False)')
+makeform_bool_col = makeform.when('isinstance(obj, col.SOBoolCol)')(makeform_bool_col)
+
+#@makeform.when('isinstance(obj, col.SOForeignKey) and getattr(obj, "editinline", False)')
 def makeform_foreign(obj, context):
     external_class = col.findClass(obj.foreignKey)
+
+makeform_foreign = makeform.when('isinstance(obj, col.SOForeignKey) and getattr(obj, "editinline", False)')(makeform_foreign)
+

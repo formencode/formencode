@@ -9,7 +9,7 @@ import pkg_resources
 pkg_resources.require('RuleDispatch')
 import dispatch
 
-@dispatch.generic()
+#@dispatch.generic()
 def makeform(obj, context):
     """
     Return ``(field_obj, Schema)``.
@@ -19,4 +19,6 @@ def makeform(obj, context):
     will be applied before other validation.
     """
     raise NotImplementedError
+
+makeform = dispatch.generic()(makeform)
 
