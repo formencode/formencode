@@ -505,13 +505,13 @@ class Regex(FancyValidator):
     
     def __init__(self, *args, **kw):
         FancyValidator.__init__(self, *args, **kw)
-        if isinstance(self.regex, str):
+        if isinstance(self.regex, basestring):
             ops = 0
-            assert not isinstance(self.regexOps, str), (
+            assert not isinstance(self.regexOps, basestring), (
                 "regexOps should be a list of options from the re module "
                 "(names, or actual values)")
             for op in self.regexOps:
-                if isinstance(op, str):
+                if isinstance(op, basestring):
                     ops |= getattr(re, op)
                 else:
                     ops |= op
@@ -519,15 +519,14 @@ class Regex(FancyValidator):
 
     def validate_python(self, value, state):
         self.assert_string(value, state)
-        if self.strip and (isinstance(value, str) or isinstance(value, unicode)):
+        if self.strip and isinstance(value, basestring):
             value = value.strip()
         if not self.regex.search(value):
             raise Invalid(self.message('invalid', state),
                           value, state)
 
     def _to_python(self, value, state):
-        if self.strip and \
-               (isinstance(value, str) or isinstance(value, unicode)):
+        if self.strip and isinstance(value, basestring):
             return value.strip()
         return value
 
@@ -1160,6 +1159,8 @@ class Email(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: The domain of the email address does not exist (the portion after the @: thisdomaindoesnotexistithinkforsure.com)
+        >>> e = Email(not_empty=False)
+        >>> e.to_python('')
         
     """ 
 
