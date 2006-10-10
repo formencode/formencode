@@ -9,6 +9,9 @@ svn trunk
 * Fixes `#1457145: Fails on URLs with port numbers
   <http://sourceforge.net/tracker/index.php?func=detail&aid=1457145&group_id=91231&atid=596416>`_
 
+* Fixes `#1559918 Schema fails to accept unicode errors
+  <http://sourceforge.net/tracker/index.php?func=detail&aid=1559918&group_id=91231&atid=596416>`_
+
 0.6
 ---
 

@@ -309,7 +309,7 @@ def format_compound_error(v, indent=0):
             ['%s' % (format_compound_error(value, indent=indent))
              for value in v
              if value is not None])
-    elif isinstance(v, str):
+    elif isinstance(v, basestring):
         return v
     else:
         assert 0, "I didn't expect something like %s" % repr(v)

@@ -1509,8 +1509,9 @@ class FileUploadKeeper(FancyValidator):
         if isinstance(upload, cgi.FieldStorage):
             filename = upload.filename
             content = upload.value
-        elif isinstance(upload, str) and upload:
+        elif isinstance(upload, basestring) and upload:
             filename = None
+            # @@: Should this encode upload if it is unicode?
             content = upload
         if not content and static:
             filename, content = static.split(None, 1)
