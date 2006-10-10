@@ -12,6 +12,9 @@ svn trunk
 * Fixes `#1559918 Schema fails to accept unicode errors
   <http://sourceforge.net/tracker/index.php?func=detail&aid=1559918&group_id=91231&atid=596416>`_
 
+* ``from formencode.validators import *`` will import the ``Invalid``
+  exception now.
+
 0.6
 ---
 

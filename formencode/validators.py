@@ -2474,7 +2474,7 @@ class CreditCardSecurityCode(FormValidator):
             }
 
 
-__all__ = []
+__all__ = ['Invalid']
 for name, value in globals().items():
     if isinstance(value, type) and issubclass(value, Validator):
         __all__.append(name)
