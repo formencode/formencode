@@ -236,17 +236,17 @@ class FillingParser(HTMLParser.HTMLParser):
                 t for t in self._content if not isinstance(t, tuple)])
         except UnicodeDecodeError, e:
             if self.data_is_str:
-                raise UnicodeDecodeError(
+                e.reason += (
                     "The form was passed in as an encoded string, but "
                     "some data or error messages were unicode strings; "
-                    "the form should be passed in as a unicode string "
-                    "(error: %s)" % e)
+                    "the form should be passed in as a unicode string")
             else:
-                raise UnicodeDecodeError(
+                e.reason += (
                     "The form was passed in as an unicode string, but "
                     "some data or error message was an encoded string; "
                     "the data and error messages should be passed in as "
-                    "unicode strings (error: %s)" % e)
+                    "unicode strings")
+            raise
 
     def add_key(self, key):
         self.used_keys[key] = 1
