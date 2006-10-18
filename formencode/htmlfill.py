@@ -195,6 +195,7 @@ class FillingParser(HTMLParser.HTMLParser):
         self.text_as_default = text_as_default
 
     def feed(self, data):
+        self.data_is_str = isinstance(data, str)
         self.source = data
         self.lines = data.split('\n')
         self.source_pos = 1, 0
@@ -230,8 +231,22 @@ class FillingParser(HTMLParser.HTMLParser):
                 assert False, (
                     "These errors were not used in the form: %s" % 
                     ', '.join(error_text))
-        self._text = ''.join([
-            t for t in self._content if not isinstance(t, tuple)])
+        try:
+            self._text = ''.join([
+                t for t in self._content if not isinstance(t, tuple)])
+        except UnicodeDecodeError, e:
+            if self.data_is_str:
+                raise UnicodeDecodeError(
+                    "The form was passed in as an encoded string, but "
+                    "some data or error messages were unicode strings; "
+                    "the form should be passed in as a unicode string "
+                    "(error: %s)" % e)
+            else:
+                raise UnicodeDecodeError(
+                    "The form was passed in as an unicode string, but "
+                    "some data or error message was an encoded string; "
+                    "the data and error messages should be passed in as "
+                    "unicode strings (error: %s)" % e)
 
     def add_key(self, key):
         self.used_keys[key] = 1
