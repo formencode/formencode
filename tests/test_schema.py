@@ -4,6 +4,23 @@ from formencode.api import *
 from formencode.variabledecode import NestedVariables
 import cgi
 
+
+def setup_module(module):
+    """Disable i18n translation
+    """
+    def notranslation(s): return s
+    import __builtin__
+    __builtin__._ = notranslation
+
+    
+
+def teardown_module(module):
+    """Remove translation function
+    """
+    import __builtin__
+    del __builtin__._
+
+
 def d(**kw): return kw
 
 def cgi_parse(qs):
@@ -114,8 +131,10 @@ BadCase(AddressesForm,
         text="The input field 'whatever' was not expected.")
 
 def test_this():
+
     for case in all_cases:
         yield case.test
+
 
 def test_merge():
     assert (merge_dicts(dict(a='a'), dict(b='b'))
@@ -128,4 +147,5 @@ def test_merge():
                              c='foo'))
             == dict(a=['a1\naa1', 'a2'], b=['b\nbb', 'bbb'],
                     c=['c']))
-    
+
+

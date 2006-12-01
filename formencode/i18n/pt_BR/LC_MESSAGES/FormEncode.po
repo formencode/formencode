@@ -1,0 +1,325 @@
+# Brazilian Portuguese translation for FormEncode 
+# Copyright (C) 2006 Jorge Godoy - G2C Tech Consultoria Ltda., licensed under LGPL V2.0
+# Jorge Godoy <godoy@g2ctech.com>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: FormEncode 0.51\n"
+"POT-Creation-Date: 2006-10-02 20:59+CEST\n"
+"PO-Revision-Date: 2006-10-03 08:59-0300\n"
+"Last-Translator: Jorge Godoy <godoy@g2ctech.com>\n"
+"Language-Team: Jorge Godoy <godoy@g2ctech.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: UTF-8\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: api.py:335 validators.py:433
+msgid "Please enter a value"
+msgstr "Por favor digite um valor"
+
+#: api.py:336
+msgid "The input must be a string (not a %(type)s: %(value)r)"
+msgstr "A entrada deve ser uma string (não %(type)s: %(value)r)"
+
+#: api.py:337
+msgid "The input must be a string (not None)"
+msgstr "A entrada deve ser uma string (não nula)"
+
+#: validators.py:160
+msgid "%(object)r is not a subclass of %(subclass)s"
+msgstr "%(object)r não é uma subclasse de %(subclass)s"
+
+#: validators.py:161
+msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
+msgstr "%(object)r não é uma subclasse de nenhum dos tipos %(subclassList)s"
+
+#: validators.py:162
+msgid "%(object)r must be one of the types %(typeList)s"
+msgstr "%(object)r deve pertencer aos tipos %(typeList)s"
+
+#: validators.py:163
+msgid "%(object)r must be of the type %(type)s"
+msgstr "%(object)r deve ser do tipo %(type)s"
+
+#: validators.py:344
+msgid "Enter a value less than %(maxLength)i characters long"
+msgstr "Digite um valor com menos de %(maxLength)i caracteres"
+
+#: validators.py:345 validators.py:399
+msgid "Invalid value (value with length expected)"
+msgstr "Valor inválido (valor com comprimento esperado)"
+
+#: validators.py:398
+msgid "Enter a value at least %(minLength)i characters long"
+msgstr "Digite um valor com pelo menos %(minLength)i caracteres"
+
+#: validators.py:458
+msgid "You cannot enter a value here"
+msgstr "Você não pode digitar um valor aqui"
+
+#: validators.py:509
+msgid "The input is not valid"
+msgstr "A entrada não é válida"
+
+#: validators.py:565
+msgid "Enter only letters, numbers, or _ (underscore)"
+msgstr "Digite apenas letras, números ou _ (sublinhado)"
+
+#: validators.py:604
+msgid "Invalid value"
+msgstr "Valor inválido"
+
+#: validators.py:605
+msgid "Value must be one of: %(items)s (not %(value)r)"
+msgstr "O valor deve estar entre: %(items)s (não %(value)r)"
+
+#: validators.py:668
+msgid "Choose something"
+msgstr "Escolha algo"
+
+#: validators.py:669
+msgid "Enter a value from: %(items)s"
+msgstr "Digite um dos valores de: %(items)s"
+
+#: validators.py:670
+msgid "That value is not known"
+msgstr "Este valor é desconhecido"
+
+#: validators.py:671
+msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
+msgstr "Nada no meu dicionário tem esse valor %(value)s.  Escolha um dos itens: %(items)s"
+
+#: validators.py:732
+msgid "Must be an integer index"
+msgstr "Deve possuir um índice inteiro"
+
+#: validators.py:733
+msgid "Index out of range"
+msgstr "Índice fora de faixa"
+
+#: validators.py:734
+msgid "Item %(value)s was not found in the list"
+msgstr "O item %(value)s não foi encontrado na lista"
+
+#: validators.py:809
+msgid "Date must be after %(date)s"
+msgstr "A data deve ser após %(date)s"
+
+#: validators.py:810
+msgid "Date must be before %(date)s"
+msgstr "A data deve ser antes de %(date)s"
+
+#: validators.py:812
+msgid "%%A, %%d %%B %%Y"
+msgstr "%%A, %%d de %%B de %%Y"
+
+#: validators.py:813
+msgid "The date must be sometime in the future"
+msgstr "A data deve indicar algum tempo no futuro"
+
+#: validators.py:913
+msgid "Please enter an integer value"
+msgstr "Por favor digite um valor inteiro"
+
+#: validators.py:945
+msgid "Please enter a number"
+msgstr "Por favor digite um número"
+
+#: validators.py:998
+msgid "Enter a value less than %(max)i characters long"
+msgstr "Digite um valor menor que %(max)i caracteres"
+
+#: validators.py:999
+msgid "Enter a value %(min)i characters long or more"
+msgstr "Digite um valor com %(min)i caracteres ou mais"
+
+#: validators.py:1050
+msgid "Invalid data or incorrect encoding"
+msgstr "Dados inválidos ou codificação incorreta"
+
+#: validators.py:1178
+msgid "Please enter an email address"
+msgstr "Por favor digite um endereço de email"
+
+#: validators.py:1179
+msgid "An email address must contain a single @"
+msgstr "Um endereço de email deve conter apenas uma @"
+
+#: validators.py:1180
+msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
+msgstr "O nome de usuário do email é inválido (a parte antes da @: %(username)s)"
+
+#: validators.py:1181 validators.py:1294
+msgid "An error occured when trying to connect to the server: %(error)s"
+msgstr "Um erro aconteceu durante a tentativa de conexão ao servidor: %(error)s"
+
+#: validators.py:1182
+msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
+msgstr "O domínio do email é inválido (a parte após a @: %(domain)s)"
+
+#: validators.py:1183
+msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
+msgstr "O domínio do endereço de email não existe (a parte após a @: %(domain)s)"
+
+#: validators.py:1291
+msgid "You must start your URL with http://, https://, etc"
+msgstr "Você deve iniciar a URL com http://, https://, etc."
+
+#: validators.py:1292
+msgid "That is not a valid URL"
+msgstr "Esta não é uma URL válida"
+
+#: validators.py:1293
+msgid "An error occurred when trying to access the URL: %(error)s"
+msgstr "Um erro aconteceu na tentativa de acesso à URL: %(error)s"
+
+#: validators.py:1295
+msgid "The server responded that the page could not be found"
+msgstr "O servidor respondeu que a página não pôde ser encontrada"
+
+#: validators.py:1296
+msgid "The server responded with a bad status code (%(status)s)"
+msgstr "O servidor respondeu com um código de erro (%(status)s)"
+
+#: validators.py:1399
+msgid "Please enter a state code"
+msgstr "Por favor digite a sigla de um Estado"
+
+#: validators.py:1400
+msgid "Please enter a state code with TWO letters"
+msgstr "Por favor digite a sigla de um Estado com DUAS letras"
+
+#: validators.py:1401
+msgid "That is not a valid state code"
+msgstr "Este não é um Estado válido"
+
+#: validators.py:1452
+msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
+msgstr "Por favor digite um número com código de área no formato ###-###-####, opcionalmente com \"ext.####\""
+
+#: validators.py:1614 validators.py:1622
+msgid "Please enter the date in the form %(format)s"
+msgstr "Por favor digite uma data no formato %(format)s"
+
+#: validators.py:1615
+msgid "Please enter a month from 1 to 12"
+msgstr "Por favor digite um mês de 1 a 12"
+
+#: validators.py:1616
+msgid "Please enter a valid day"
+msgstr "Por favor digite um dia válido"
+
+#: validators.py:1617
+msgid "That month only has %(days)i days"
+msgstr "Este mês tem apenas %(days)i dias"
+
+#: validators.py:1618
+msgid "That is not a valid day (%(exception)s)"
+msgstr "Este não é um dia válido (%(exception)s)"
+
+#: validators.py:1619
+msgid "Unknown month name: %(month)s"
+msgstr "Nome de mês desconhecido: %(month)s"
+
+#: validators.py:1620
+msgid "Please enter a number for the year"
+msgstr "Por favor digite um número para o ano"
+
+#: validators.py:1621
+msgid "Please enter a four-digit year"
+msgstr "Por favor digite o ano com quatro dígitos"
+
+#: validators.py:1800
+msgid "You must indicate AM or PM"
+msgstr "Você deve indicar AM ou PM"
+
+#: validators.py:1801
+msgid "There are too many :'s"
+msgstr "Há muitos :'s"
+
+#: validators.py:1802
+msgid "You may not enter seconds"
+msgstr "Você não pode digitar os segundos"
+
+#: validators.py:1803
+msgid "You must enter seconds"
+msgstr "Você deve digitar os segundos"
+
+#: validators.py:1804
+msgid "You must enter minutes (after a :)"
+msgstr "Você deve digitar os minutos (após :)"
+
+#: validators.py:1805
+msgid "The %(part)s value you gave is not a number: %(number)r"
+msgstr "O valor para %(part)s que você forneceu não é um número: %(number)r"
+
+#: validators.py:1806
+msgid "You must enter an hour in the range %(range)s"
+msgstr "Você deve digitar uma hora na faixa %(range)s"
+
+#: validators.py:1807
+msgid "You must enter a minute in the range 0-59"
+msgstr "Você deve digitar um minuto na faixa 0-59"
+
+#: validators.py:1808
+msgid "You must enter a second in the range 0-59"
+msgstr "Você deve entrar com os segundos na faixa 0-59"
+
+#: validators.py:1962
+msgid "Please enter a zip code (5 digits)"
+msgstr "Por favor digite um CEP (5 dígitos)"
+
+#: validators.py:1986
+msgid "The name %(name)s is missing"
+msgstr "O nome %(name)s está faltando"
+
+#: validators.py:2027
+msgid "Value should be %(true)r or %(false)r"
+msgstr "O valor deve ser %(true)r ou %(false)r"
+
+#: validators.py:2062
+msgid "Value does not contain a signature"
+msgstr "O valor não contém uma assinatura"
+
+#: validators.py:2063
+msgid "Signature is not correct"
+msgstr "A assinatura não está correta"
+
+#: validators.py:2185
+msgid "Fields do not match (should be %(match)s)"
+msgstr "Os campos não são iguais (deveriam ser %(match)s)"
+
+#: validators.py:2186
+msgid "Fields do not match"
+msgstr "Os campos não são iguais"
+
+#: validators.py:2248
+msgid "Please enter only the number, no other characters"
+msgstr "Por favor digite apenas o número, nenhum outro caractere"
+
+#: validators.py:2249
+msgid "You did not enter a valid number of digits"
+msgstr "Você não digitou uma quantidade de dígitos válida"
+
+#: validators.py:2250
+msgid "That number is not valid"
+msgstr "Este número não é válido"
+
+#: validators.py:2365
+msgid "Please enter numbers only for month and year"
+msgstr "Por favor digite os números apenas para o mês e o ano"
+
+#: validators.py:2366
+msgid "Invalid Expiration Date"
+msgstr "Data de expiração inválida"
+
+#: validators.py:2435
+msgid "Please enter numbers only for credit card security code"
+msgstr "Por favor digite apenas os números do código de segurança do cartão de crédito"
+
+#: validators.py:2436
+msgid "Invalid credit card security code length"
+msgstr "Tamanho incorreto para o código de segurança do cartão de crédito"
+

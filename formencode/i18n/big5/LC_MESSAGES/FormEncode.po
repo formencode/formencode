@@ -1,0 +1,328 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2006-10-02 20:59+CEST\n"
+"PO-Revision-Date: 2006-10-03 20:12+0800\n"
+"Last-Translator: Fred Lin <gasolin@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n" 
+"Generated-By: pygettext.py 1.5\n"
+
+#: api.py:335
+#: validators.py:433
+msgid "Please enter a value"
+msgstr "請輸入一個值"
+
+#: api.py:336
+msgid "The input must be a string (not a %(type)s: %(value)r)"
+msgstr "輸入必須為字串  (而非 %(type)s: %(value)r)"
+
+#: api.py:337
+msgid "The input must be a string (not None)"
+msgstr "輸入必須為字串 (不能為空白)"
+
+#: validators.py:160
+msgid "%(object)r is not a subclass of %(subclass)s"
+msgstr "%(object)r 不是 %(subclass)s 的子類別"
+
+#: validators.py:161
+msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
+msgstr "%(object)r 不是 %(subclassList)s 等類型的子類別"
+
+#: validators.py:162
+msgid "%(object)r must be one of the types %(typeList)s"
+msgstr "%(object)r 必須為 %(typeList)s 中的一個類型"
+
+#: validators.py:163
+msgid "%(object)r must be of the type %(type)s"
+msgstr "%(object)r 必須為 %(typeList)s 類型"
+
+#: validators.py:344
+msgid "Enter a value less than %(maxLength)i characters long"
+msgstr "輸入一個少於長度 %(maxLength)i 的值"
+
+#: validators.py:345
+#: validators.py:399
+msgid "Invalid value (value with length expected)"
+msgstr "不正確的值 (長度不正確)"
+
+#: validators.py:398
+msgid "Enter a value at least %(minLength)i characters long"
+msgstr "輸入一個大於長度 %(minLength)i 的值"
+
+#: validators.py:458
+msgid "You cannot enter a value here"
+msgstr "此處不可輸入值"
+
+#: validators.py:509
+msgid "The input is not valid"
+msgstr "輸入資料不正確"
+
+#: validators.py:565
+msgid "Enter only letters, numbers, or _ (underscore)"
+msgstr "僅支持字元, 數字, 或底線(_) 這三種輸入格式"
+
+#: validators.py:604
+msgid "Invalid value"
+msgstr "不正確的值"
+
+#: validators.py:605
+msgid "Value must be one of: %(items)s (not %(value)r)"
+msgstr "值必須為 %(items)s 中一個 (而非 %(value)r)"
+
+#: validators.py:668
+msgid "Choose something"
+msgstr "必須作選擇"
+
+#: validators.py:669
+msgid "Enter a value from: %(items)s"
+msgstr "從 %(items)s 中選擇一個值輸入"
+
+#: validators.py:670
+msgid "That value is not known"
+msgstr "值不能辨識"
+
+#: validators.py:671
+msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
+msgstr "字典中沒有 %(value)s 這個值.  從 %(items)s 中選擇一個值輸入"
+
+#: validators.py:732
+msgid "Must be an integer index"
+msgstr "必須是整數的索引"
+
+#: validators.py:733
+msgid "Index out of range"
+msgstr "索引超過範圍"
+
+#: validators.py:734
+msgid "Item %(value)s was not found in the list"
+msgstr "列表中找不到 %(value)s"
+
+#: validators.py:809
+msgid "Date must be after %(date)s"
+msgstr "資料必須在 %(date)s 之後"
+
+#: validators.py:810
+msgid "Date must be before %(date)s"
+msgstr "資料必須在 %(date)s 之前"
+
+#: validators.py:812
+msgid "%%A, %%d %%B %%Y"
+msgstr "%%A, %%d %%B %%Y"
+
+#: validators.py:813
+msgid "The date must be sometime in the future"
+msgstr "請選擇在今日之後的日期"
+
+#: validators.py:913
+msgid "Please enter an integer value"
+msgstr "請輸入整數的值"
+
+#: validators.py:945
+msgid "Please enter a number"
+msgstr "請輸入數字"
+
+#: validators.py:998
+msgid "Enter a value less than %(max)i characters long"
+msgstr "請輸入少於 %(max)i 個字元的值"
+
+#: validators.py:999
+msgid "Enter a value %(min)i characters long or more"
+msgstr "請輸入大於 %(min)i 個字元的值"
+
+#: validators.py:1050
+msgid "Invalid data or incorrect encoding"
+msgstr "不正確的資料或不正確的編碼"
+
+#: validators.py:1178
+msgid "Please enter an email address"
+msgstr "請輸入 email 帳號"
+
+#: validators.py:1179
+msgid "An email address must contain a single @"
+msgstr "email 帳號必須包含一個 @ 符號"
+
+#: validators.py:1180
+msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
+msgstr "Email 地址的使用者帳號錯誤 (email 帳號中 @ 符號之前的部份: %(username)s)"
+
+#: validators.py:1181
+#: validators.py:1294
+msgid "An error occured when trying to connect to the server: %(error)s"
+msgstr "連線至伺服器時出現錯誤訊息: %(error)s"
+
+#: validators.py:1182
+msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
+msgstr "Email 地址的網域不正確 (email 帳號中 @ 符號之後的部份: %(domain)s)"
+
+#: validators.py:1183
+msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
+msgstr "Email 地址的網域不存在 (email 帳號中 @ 符號之後的部份: %(domain)s)"
+
+#: validators.py:1291
+msgid "You must start your URL with http://, https://, etc"
+msgstr " URL 必須以 http://, https://, 等作為開頭"
+
+#: validators.py:1292
+msgid "That is not a valid URL"
+msgstr "不正確的 URL"
+
+#: validators.py:1293
+msgid "An error occurred when trying to access the URL: %(error)s"
+msgstr "嘗試存取 URL 發生錯誤: %(error)s"
+
+#: validators.py:1295
+msgid "The server responded that the page could not be found"
+msgstr "伺服器回應 頁面不存在"
+
+#: validators.py:1296
+msgid "The server responded with a bad status code (%(status)s)"
+msgstr "伺服器回應 壞的狀態碼(%(status)s)"
+
+#: validators.py:1399
+msgid "Please enter a state code"
+msgstr "請輸入一個狀態碼"
+
+#: validators.py:1400
+msgid "Please enter a state code with TWO letters"
+msgstr "請輸入兩個字元的狀態碼"
+
+#: validators.py:1401
+msgid "That is not a valid state code"
+msgstr "不正確的狀態碼"
+
+#: validators.py:1452
+msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
+msgstr "請輸入一個包含區域碼的數字, 格式為 ###-###-####, 可加上 \"ext.####\" 表示轉接"
+
+#: validators.py:1614
+#: validators.py:1622
+msgid "Please enter the date in the form %(format)s"
+msgstr "請以 %(format)s 的格式輸入日期"
+
+#: validators.py:1615
+msgid "Please enter a month from 1 to 12"
+msgstr "請輸入 1~12 間的月份"
+
+#: validators.py:1616
+msgid "Please enter a valid day"
+msgstr "請輸入一個正確的天數"
+
+#: validators.py:1617
+msgid "That month only has %(days)i days"
+msgstr "這個月份只包含 %(days)i 天"
+
+#: validators.py:1618
+msgid "That is not a valid day (%(exception)s)"
+msgstr "不正確的天數 (%(exception)s)"
+
+#: validators.py:1619
+msgid "Unknown month name: %(month)s"
+msgstr "未知的月份名稱：%(month)s"
+
+#: validators.py:1620
+msgid "Please enter a number for the year"
+msgstr "請輸入一個年份數字"
+
+#: validators.py:1621
+msgid "Please enter a four-digit year"
+msgstr "請輸入一個四位元的年份"
+
+#: validators.py:1800
+msgid "You must indicate AM or PM"
+msgstr "您必須指定 AM 或 PM"
+
+#: validators.py:1801
+msgid "There are too many :'s"
+msgstr "太多 :'s"
+
+#: validators.py:1802
+msgid "You may not enter seconds"
+msgstr "請您不要輸入秒數"
+
+#: validators.py:1803
+msgid "You must enter seconds"
+msgstr "請輸入秒數"
+
+#: validators.py:1804
+msgid "You must enter minutes (after a :)"
+msgstr "請在冒號 : 之後輸入分鐘"
+
+#: validators.py:1805
+msgid "The %(part)s value you gave is not a number: %(number)r"
+msgstr "您提供的值 %(part)s 並非數字: %(number)r"
+
+#: validators.py:1806
+msgid "You must enter an hour in the range %(range)s"
+msgstr "您必須輸入小於 %(range)s 的小時數"
+
+#: validators.py:1807
+msgid "You must enter a minute in the range 0-59"
+msgstr "您必須輸入介於 0-59 間的分鐘數"
+
+#: validators.py:1808
+msgid "You must enter a second in the range 0-59"
+msgstr "您必須輸入介於 0-59 間的秒數"
+
+#: validators.py:1962
+msgid "Please enter a zip code (5 digits)"
+msgstr "請輸入區碼(zip code, 5 位元)"
+
+#: validators.py:1986
+msgid "The name %(name)s is missing"
+msgstr "未填寫名稱 %(name)s "
+
+#: validators.py:2027
+msgid "Value should be %(true)r or %(false)r"
+msgstr "值必須為 %(true)r 或 %(false)r"
+
+#: validators.py:2062
+msgid "Value does not contain a signature"
+msgstr "值未包含符號"
+
+#: validators.py:2063
+msgid "Signature is not correct"
+msgstr "符號不正確"
+
+#: validators.py:2185
+msgid "Fields do not match (should be %(match)s)"
+msgstr "欄位不符合 (應該是 %(match)s)"
+
+#: validators.py:2186
+msgid "Fields do not match"
+msgstr "欄位不符合"
+
+#: validators.py:2248
+msgid "Please enter only the number, no other characters"
+msgstr "請輸入數字, 不包含字元"
+
+#: validators.py:2249
+msgid "You did not enter a valid number of digits"
+msgstr "不正確的數字或字元"
+
+#: validators.py:2250
+msgid "That number is not valid"
+msgstr "數字不正確"
+
+#: validators.py:2365
+msgid "Please enter numbers only for month and year"
+msgstr "請輸入月份或年份的數字"
+
+#: validators.py:2366
+msgid "Invalid Expiration Date"
+msgstr "到期日不正確"
+
+#: validators.py:2435
+msgid "Please enter numbers only for credit card security code"
+msgstr "請輸入信用卡安全碼數字"
+
+#: validators.py:2436
+msgid "Invalid credit card security code length"
+msgstr "不正確的信用卡安全碼長度"
+

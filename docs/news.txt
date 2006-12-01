@@ -6,6 +6,8 @@ News
 svn trunk
 ---------
 
+* gettext-enabled branch merged in
+
 * Fixes `#1457145: Fails on URLs with port numbers
   <http://sourceforge.net/tracker/index.php?func=detail&aid=1457145&group_id=91231&atid=596416>`_
 

@@ -291,7 +291,7 @@ def format_compound_error(v, indent=0):
     if isinstance(v, Exception):
         try:
             return str(v)
-        except UnicodeDecodeError:
+        except (UnicodeDecodeError, UnicodeEncodeError):
             # There doesn't seem to be a better way to get a str()
             # version if possible, and unicode() if necessary, because
             # testing for the presence of a __unicode__ method isn't

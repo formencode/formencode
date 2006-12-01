@@ -44,6 +44,12 @@ import fieldstorage
 
 True, False = (1==1), (0==1)
 
+def _(s): return s # dummy translation function, nothing is translated here.
+                   # Instead this is actually done in api.message.
+                   # The surrounding _("string") of the strings is only for extracting
+                   # the strings automatically
+                   # if you run pygettext with this source comment this function out temporarly 
+
 ############################################################
 ## Utility methods
 ############################################################
@@ -151,10 +157,10 @@ class ConfirmType(FancyValidator):
     type = None
 
     messages = {
-        'subclass': "%(object)r is not a subclass of %(subclass)s",
-        'inSubclass': "%(object)r is not a subclass of one of the types %(subclassList)s",
-        'inType': "%(object)r must be one of the types %(typeList)s",
-        'type': "%(object)r must be of the type %(type)s",
+        'subclass': _("%(object)r is not a subclass of %(subclass)s"),
+        'inSubclass': _("%(object)r is not a subclass of one of the types %(subclassList)s"),
+        'inType': _("%(object)r must be one of the types %(typeList)s"),
+        'type': _("%(object)r must be of the type %(type)s"),
         }
 
     def __init__(self, *args, **kw):
@@ -335,8 +341,8 @@ class MaxLength(FancyValidator):
 
     __unpackargs__ = ('maxLength',)
     messages = {
-        'tooLong': "Enter a value less than %(maxLength)i characters long",
-        'invalid': "Invalid value (value with length expected)",
+        'tooLong': _("Enter a value less than %(maxLength)i characters long"),
+        'invalid': _("Invalid value (value with length expected)"),
         }
 
     def validate_python(self, value, state):
@@ -389,8 +395,8 @@ class MinLength(FancyValidator):
     __unpackargs__ = ('minLength',)
 
     messages = {
-        'tooShort': "Enter a value at least %(minLength)i characters long",
-        'invalid': "Invalid value (value with length expected)",
+        'tooShort': _("Enter a value at least %(minLength)i characters long"),
+        'invalid': _("Invalid value (value with length expected)"),
         }
 
     def validate_python(self, value, state):
@@ -424,7 +430,7 @@ class NotEmpty(FancyValidator):
     not_empty = True
 
     messages = {
-        'empty': "Please enter a value",
+        'empty': _("Please enter a value"),
         }
 
     def validate_python(self, value, state):
@@ -449,7 +455,7 @@ class Empty(FancyValidator):
     """
 
     messages = {
-        'notEmpty': "You cannot enter a value here",
+        'notEmpty': _("You cannot enter a value here"),
         }
 
     def validate_python(self, value, state):
@@ -500,7 +506,7 @@ class Regex(FancyValidator):
     __unpackargs__ = ('regex',)
 
     messages = {
-        'invalid': "The input is not valid",
+        'invalid': _("The input is not valid"),
         }
     
     def __init__(self, *args, **kw):
@@ -555,7 +561,7 @@ class PlainText(Regex):
     regex = r"^[a-zA-Z_\-0-9]*$"
 
     messages = {
-        'invalid': 'Enter only letters, numbers, or _ (underscore)',
+        'invalid': _('Enter only letters, numbers, or _ (underscore)'),
         }
 
 class OneOf(FancyValidator):
@@ -594,8 +600,8 @@ class OneOf(FancyValidator):
     __unpackargs__ = ('list',)
 
     messages = {
-        'invalid': "Invalid value",
-        'notIn': "Value must be one of: %(items)s (not %(value)r)",
+        'invalid': _("Invalid value"),
+        'notIn': _("Value must be one of: %(items)s (not %(value)r)"),
         }
     
     def validate_python(self, value, state):
@@ -658,10 +664,10 @@ class DictConverter(FancyValidator):
     __unpackargs__ = ('dict',)
 
     messages = {
-        'keyNotFound': "Choose something",
-        'chooseKey': "Enter a value from: %(items)s",
-        'valueNotFound': "That value is not known",
-        'chooseValue': "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s",
+        'keyNotFound': _("Choose something"),
+        'chooseKey': _("Enter a value from: %(items)s"),
+        'valueNotFound': _("That value is not known"),
+        'chooseValue': _("Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"),
         }
     
     def _to_python(self, value, state):
@@ -722,9 +728,9 @@ class IndexListConverter(FancyValidator):
     __unpackargs__ = ('list',)
 
     messages = {
-        'integer': "Must be an integer index",
-        'outOfRange': "Index out of range",
-        'notFound': "Item %(value)s was not found in the list",
+        'integer': _("Must be an integer index"),
+        'outOfRange': _("Index out of range"),
+        'notFound': _("Item %(value)s was not found in the list"),
         }
     
     def _to_python(self, value, state):
@@ -799,11 +805,11 @@ class DateValidator(FancyValidator):
     datetime_module = None
 
     messages = {
-        'after': "Date must be after %(date)s",
-        'before': "Date must be before %(date)s",
+        'after': _("Date must be after %(date)s"),
+        'before': _("Date must be before %(date)s"),
         # Double %'s, because this will be substituted twice:
-        'date_format': "%%A, %%d %%B %%Y",
-        'future': "The date must be sometime in the future",
+        'date_format': _("%%A, %%d %%B %%Y"),
+        'future': _("The date must be sometime in the future"),
         }
 
     def validate_python(self, value, state):
@@ -903,7 +909,7 @@ class Int(FancyValidator):
     """
 
     messages = {
-        'integer': "Please enter an integer value",
+        'integer': _("Please enter an integer value"),
         }
 
     def _to_python(self, value, state):
@@ -935,7 +941,7 @@ class Number(FancyValidator):
     """
     
     messages = {
-        'number': "Please enter a number",
+        'number': _("Please enter a number"),
         }
     
     def _to_python(self, value, state):
@@ -988,8 +994,8 @@ class String(FancyValidator):
     not_empty = None
 
     messages = {
-        'tooLong': "Enter a value less than %(max)i characters long",
-        'tooShort': "Enter a value %(min)i characters long or more",
+        'tooLong': _("Enter a value less than %(max)i characters long"),
+        'tooShort': _("Enter a value %(min)i characters long or more"),
         }
 
     def __initargs__(self, new_attrs):
@@ -1040,7 +1046,7 @@ class UnicodeString(String):
     """
     encoding = 'utf-8'
     messages = {
-        'badEncoding' : "Invalid data or incorrect encoding",
+        'badEncoding' : _("Invalid data or incorrect encoding"),
     }
     
     def __init__(self, inputEncoding=None, outputEncoding=None, **kw):
@@ -1170,12 +1176,12 @@ class Email(FancyValidator):
     domainRE = re.compile(r"^[a-z0-9][a-z0-9\.\-_]*\.[a-z]+$", re.I)
 
     messages = {
-        'empty': 'Please enter an email address',
-        'noAt': 'An email address must contain a single @',
-        'badUsername': 'The username portion of the email address is invalid (the portion before the @: %(username)s)',
-        'socketError': 'An error occured when trying to connect to the server: %(error)s',
-        'badDomain': 'The domain portion of the email address is invalid (the portion after the @: %(domain)s)',
-        'domainDoesNotExist': 'The domain of the email address does not exist (the portion after the @: %(domain)s)',
+        'empty': _('Please enter an email address'),
+        'noAt': _('An email address must contain a single @'),
+        'badUsername': _('The username portion of the email address is invalid (the portion before the @: %(username)s)'),
+        'socketError': _('An error occured when trying to connect to the server: %(error)s'),
+        'badDomain': _('The domain portion of the email address is invalid (the portion after the @: %(domain)s)'),
+        'domainDoesNotExist': _('The domain of the email address does not exist (the portion after the @: %(domain)s)'),
         }
     
     def __init__(self, *args, **kw):
@@ -1283,12 +1289,12 @@ class URL(FancyValidator):
     scheme_re = re.compile(r'^[a-zA-Z]+:')
 
     messages = {
-        'noScheme': 'You must start your URL with http://, https://, etc',
-        'badURL': 'That is not a valid URL',
-        'httpError': 'An error occurred when trying to access the URL: %(error)s',
-        'socketError': 'An error occured when trying to connect to the server: %(error)s',
-        'notFound': 'The server responded that the page could not be found',
-        'status': 'The server responded with a bad status code (%(status)s)',
+        'noScheme': _('You must start your URL with http://, https://, etc'),
+        'badURL': _('That is not a valid URL'),
+        'httpError': _('An error occurred when trying to access the URL: %(error)s'),
+        'socketError': _('An error occured when trying to connect to the server: %(error)s'),
+        'notFound': _('The server responded that the page could not be found'),
+        'status': _('The server responded with a bad status code (%(status)s)'),
         }
 
     def _to_python(self, value, state):
@@ -1391,9 +1397,9 @@ class StateProvince(FancyValidator):
     __unpackargs__ = ('extra_states',)
 
     messages = {
-        'empty': 'Please enter a state code',
-        'wrongLength': 'Please enter a state code with TWO letters',
-        'invalid': 'That is not a valid state code',
+        'empty': _('Please enter a state code'),
+        'wrongLength': _('Please enter a state code with TWO letters'),
+        'invalid': _('That is not a valid state code'),
         }
 
     def validate_python(self, value, state):
@@ -1444,7 +1450,7 @@ class PhoneNumber(FancyValidator):
     _phoneRE = re.compile(r'^\s*(?:1-)?(\d\d\d)[\- \.]?(\d\d\d)[\- \.]?(\d\d\d\d)(?:\s*ext\.?\s*(\d+))?\s*$', re.I)
 
     messages = {
-        'phoneFormat': 'Please enter a number, with area code, in the form ###-###-####, optionally with "ext.####"',
+        'phoneFormat': _('Please enter a number, with area code, in the form ###-###-####, optionally with "ext.####"'),
         }
         
     def _to_python(self, value, state):
@@ -1608,15 +1614,15 @@ class DateConverter(FancyValidator):
         9: 30, 10: 31, 11: 30, 12: 31}
 
     messages = {
-        'badFormat': 'Please enter the date in the form %(format)s',
-        'monthRange': 'Please enter a month from 1 to 12',
-        'invalidDay': 'Please enter a valid day',
-        'dayRange': 'That month only has %(days)i days',
-        'invalidDate': 'That is not a valid day (%(exception)s)',
-        'unknownMonthName': "Unknown month name: %(month)s",
-        'invalidYear': 'Please enter a number for the year',
-        'fourDigitYear': 'Please enter a four-digit year',
-        'wrongFormat': 'Please enter the date in the form %(format)s',
+        'badFormat': _('Please enter the date in the form %(format)s'),
+        'monthRange': _('Please enter a month from 1 to 12'),
+        'invalidDay': _('Please enter a valid day'),
+        'dayRange': _('That month only has %(days)i days'),
+        'invalidDate': _('That is not a valid day (%(exception)s)'),
+        'unknownMonthName': _("Unknown month name: %(month)s"),
+        'invalidYear': _('Please enter a number for the year'),
+        'fourDigitYear': _('Please enter a four-digit year'),
+        'wrongFormat': _('Please enter the date in the form %(format)s'),
         }
 
     def _to_python(self, value, state):
@@ -1794,15 +1800,15 @@ class TimeConverter(FancyValidator):
     datetime_module = None
 
     messages = {
-        'noAMPM': 'You must indicate AM or PM',
-        'tooManyColon': 'There are too many :\'s',
-        'noSeconds': 'You may not enter seconds',
-        'secondsRequired': 'You must enter seconds',
-        'minutesRequired': 'You must enter minutes (after a :)',
-        'badNumber': 'The %(part)s value you gave is not a number: %(number)r',
-        'badHour': 'You must enter an hour in the range %(range)s',
-        'badMinute': 'You must enter a minute in the range 0-59',
-        'badSecond': 'You must enter a second in the range 0-59',
+        'noAMPM': _('You must indicate AM or PM'),
+        'tooManyColon': _('There are too many :\'s'),
+        'noSeconds': _('You may not enter seconds'),
+        'secondsRequired': _('You must enter seconds'),
+        'minutesRequired': _('You must enter minutes (after a :)'),
+        'badNumber': _('The %(part)s value you gave is not a number: %(number)r'),
+        'badHour': _('You must enter an hour in the range %(range)s'),
+        'badMinute': _('You must enter a minute in the range 0-59'),
+        'badSecond': _('You must enter a second in the range 0-59'),
         }
 
     def _to_python(self, value, state):
@@ -1956,7 +1962,7 @@ class PostalCode(Regex):
     strip = True
 
     messages = {
-        'invalid': 'Please enter a zip code (5 digits)',
+        'invalid': _('Please enter a zip code (5 digits)'),
         }
 
 class StripField(FancyValidator):
@@ -1980,7 +1986,7 @@ class StripField(FancyValidator):
     __unpackargs__ = ('name',)
 
     messages = {
-        'missing': 'The name %(name)s is missing',
+        'missing': _('The name %(name)s is missing'),
         }
 
     def _to_python(self, valueDict, state):
@@ -2021,7 +2027,7 @@ class StringBool(FancyValidator):
     true_values = ['true', 't', 'yes', 'y', 'on', '1']
     false_values = ['false', 'f', 'no', 'n', 'off', '0']
 
-    messages = { "string" : "Value should be %(true)r or %(false)r" }
+    messages = { "string" : _("Value should be %(true)r or %(false)r") }
     
     def _to_python(self, value, state):
         if isinstance(value, (str, unicode)):
@@ -2056,8 +2062,8 @@ class SignedString(FancyValidator):
     """
 
     messages = {
-        'malformed': 'Value does not contain a signature',
-        'badsig': 'Signature is not correct',
+        'malformed': _('Value does not contain a signature'),
+        'badsig': _('Signature is not correct'),
         }
 
     secret = None
@@ -2179,8 +2185,8 @@ class FieldsMatch(FormValidator):
     __unpackargs__ = ('*', 'field_names')
 
     messages = {
-        'invalid': "Fields do not match (should be %(match)s)",
-        'invalidNoMatch': "Fields do not match",
+        'invalid': _("Fields do not match (should be %(match)s)"),
+        'invalidNoMatch': _("Fields do not match"),
         }
     
     def validate_partial(self, field_dict, state):
@@ -2242,9 +2248,9 @@ class CreditCardValidator(FormValidator):
     __unpackargs__ = ('cc_type_field', 'cc_number_field')
 
     messages = {
-        'notANumber': "Please enter only the number, no other characters",
-        'badLength': "You did not enter a valid number of digits",
-        'invalidNumber': "That number is not valid",
+        'notANumber': _("Please enter only the number, no other characters"),
+        'badLength': _("You did not enter a valid number of digits"),
+        'invalidNumber': _("That number is not valid"),
         }
 
     def validate_partial(self, field_dict, state):
@@ -2359,8 +2365,8 @@ class CreditCardExpires(FormValidator):
     datetime_module = None
 
     messages = {
-        'notANumber': "Please enter numbers only for month and year",
-        'invalidNumber': "Invalid Expiration Date",
+        'notANumber': _("Please enter numbers only for month and year"),
+        'invalidNumber': _("Invalid Expiration Date"),
         }
 
     def validate_partial(self, field_dict, state):
@@ -2429,8 +2435,8 @@ class CreditCardSecurityCode(FormValidator):
     __unpackargs__ = ('cc_type_field', 'cc_code_field')
 
     messages = {
-        'notANumber': "Please enter numbers only for credit card security code",
-        'badLength': "Invalid credit card security code length",
+        'notANumber': _("Please enter numbers only for credit card security code"),
+        'badLength': _("Invalid credit card security code length"),
         }
 
     def validate_partial(self, field_dict, state):

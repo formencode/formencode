@@ -1,0 +1,329 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: FormEncode 0.6\n"
+"POT-Creation-Date: 2006-10-02 20:59+CEST\n"
+"PO-Revision-Date: 2006-10-31 11:59+0200\n"
+"Last-Translator: Oleg Deribas <thisaddressisnotmine+tg@td.selfip.net>\n"
+"Language-Team: RUSSIAN <RU@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+#: api.py:335
+#: validators.py:433
+msgid "Please enter a value"
+msgstr "Необходимо ввести значение"
+
+#: api.py:336
+msgid "The input must be a string (not a %(type)s: %(value)r)"
+msgstr "Необходимо ввести строку (а не %(type)s: %(value)r)"
+
+#: api.py:337
+msgid "The input must be a string (not None)"
+msgstr "Необходимо ввести строку (не None)"
+
+#: validators.py:160
+msgid "%(object)r is not a subclass of %(subclass)s"
+msgstr "%(object)r не является подклассом %(subclass)s"
+
+#: validators.py:161
+msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
+msgstr "%(object)r не является подклассом одного из типов %(subclassList)s"
+
+#: validators.py:162
+msgid "%(object)r must be one of the types %(typeList)s"
+msgstr "%(object)r должен быть одним из типов %(typeList)s"
+
+#: validators.py:163
+msgid "%(object)r must be of the type %(type)s"
+msgstr "%(object)r должен быть типа %(type)s"
+
+#: validators.py:344
+msgid "Enter a value less than %(maxLength)i characters long"
+msgstr "Введите значение меньшее чем %(maxLength)i символов"
+
+#: validators.py:345
+#: validators.py:399
+msgid "Invalid value (value with length expected)"
+msgstr "Неправильное значение (ожидается значение с длиной)"
+
+#: validators.py:398
+msgid "Enter a value at least %(minLength)i characters long"
+msgstr "Длина значения должна быть не меньше чем %(minLength)i"
+
+#: validators.py:458
+msgid "You cannot enter a value here"
+msgstr "Сюда значение вводить нельзя"
+
+#: validators.py:509
+msgid "The input is not valid"
+msgstr "Неправильный ввод"
+
+#: validators.py:565
+msgid "Enter only letters, numbers, or _ (underscore)"
+msgstr "Допускается ввод только букв, чисел или _ (знаков подчеркивания)"
+
+#: validators.py:604
+msgid "Invalid value"
+msgstr "Неправильное значение"
+
+#: validators.py:605
+msgid "Value must be one of: %(items)s (not %(value)r)"
+msgstr "Значение должно быть одним из: %(items)s (но не %(value)r)"
+
+#: validators.py:668
+msgid "Choose something"
+msgstr "Выберите что-нибудь"
+
+#: validators.py:669
+msgid "Enter a value from: %(items)s"
+msgstr "Введите одно из следующих значений: %(items)s"
+
+#: validators.py:670
+msgid "That value is not known"
+msgstr "Неизвестное значение"
+
+#: validators.py:671
+msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
+msgstr "В моем словаре нет совпадений с значением %(value)s. Выберите одно из: %(items)s"
+
+#: validators.py:732
+msgid "Must be an integer index"
+msgstr "Индекс должен быть числовым значением"
+
+#: validators.py:733
+msgid "Index out of range"
+msgstr "Неправильный индекс "
+
+#: validators.py:734
+msgid "Item %(value)s was not found in the list"
+msgstr "Пункт %(value)s отсутствуетв списке"
+
+#: validators.py:809
+msgid "Date must be after %(date)s"
+msgstr "Дата должна быть позже чем %(date)s"
+
+#: validators.py:810
+msgid "Date must be before %(date)s"
+msgstr "Дата должна быть раньше чем %(date)s"
+
+#: validators.py:812
+#, fuzzy
+msgid "%%A, %%d %%B %%Y"
+msgstr ""
+
+#: validators.py:813
+msgid "The date must be sometime in the future"
+msgstr "Дата должна быть в будущем"
+
+#: validators.py:913
+msgid "Please enter an integer value"
+msgstr "Введите числовое значение"
+
+#: validators.py:945
+msgid "Please enter a number"
+msgstr "Введите число"
+
+#: validators.py:998
+msgid "Enter a value less than %(max)i characters long"
+msgstr "Введите значение длиной меньше чем %(max)i символов"
+
+#: validators.py:999
+msgid "Enter a value %(min)i characters long or more"
+msgstr "Введите значение длиной %(min)i или более символов"
+
+#: validators.py:1050
+msgid "Invalid data or incorrect encoding"
+msgstr "Неправильные данные или неверная кодировка"
+
+#: validators.py:1178
+msgid "Please enter an email address"
+msgstr "Введите email адрес"
+
+#: validators.py:1179
+msgid "An email address must contain a single @"
+msgstr "email адрес должен содержать один символ @"
+
+#: validators.py:1180
+msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
+msgstr "Неправильное имя пользователя в email адресе (часть адреса до символа @: %(username)s)"
+
+#: validators.py:1181
+#: validators.py:1294
+msgid "An error occured when trying to connect to the server: %(error)s"
+msgstr "При подключении к серверу произошла ошибка: %(error)s"
+
+#: validators.py:1182
+msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
+msgstr "Неверная доменная часть email адреса (часть после символа @: %(domain)s)"
+
+#: validators.py:1183
+msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
+msgstr "Домен email адреса не существует (часть после символа @: %(domain)s)"
+
+#: validators.py:1291
+msgid "You must start your URL with http://, https://, etc"
+msgstr "Сетевой адрес (URL) должен начинаться с http://, https://, и т. д."
+
+#: validators.py:1292
+msgid "That is not a valid URL"
+msgstr "Неправильный сетевой адрес (URL)"
+
+#: validators.py:1293
+msgid "An error occurred when trying to access the URL: %(error)s"
+msgstr "Ошибка доступа по адресу: %(error)s"
+
+#: validators.py:1295
+msgid "The server responded that the page could not be found"
+msgstr "Сервер сообщает что страница не найдена"
+
+#: validators.py:1296
+msgid "The server responded with a bad status code (%(status)s)"
+msgstr "Неправильный статусный код ответа сервера: (%(status)s)"
+
+#: validators.py:1399
+msgid "Please enter a state code"
+msgstr "Введите код штата"
+
+#: validators.py:1400
+msgid "Please enter a state code with TWO letters"
+msgstr "Введите код штата из ДВУХ букв"
+
+#: validators.py:1401
+msgid "That is not a valid state code"
+msgstr "Неправильный код штата"
+
+#: validators.py:1452
+msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
+msgstr "Введите номер с кодом города в виде ###-###-####, возможно с дополнением \"ext.####\""
+
+#: validators.py:1614
+#: validators.py:1622
+msgid "Please enter the date in the form %(format)s"
+msgstr "Введите дату в виде %(format)s"
+
+#: validators.py:1615
+msgid "Please enter a month from 1 to 12"
+msgstr "ведите номер месяца от 1 до 12"
+
+#: validators.py:1616
+msgid "Please enter a valid day"
+msgstr "Введите правильный день"
+
+#: validators.py:1617
+msgid "That month only has %(days)i days"
+msgstr "Этот месяц содержит только %(days)i дней"
+
+#: validators.py:1618
+msgid "That is not a valid day (%(exception)s)"
+msgstr "Неправильный день (%(exception)s)"
+
+#: validators.py:1619
+msgid "Unknown month name: %(month)s"
+msgstr "Неизвестное имя месяца: %(month)s"
+
+#: validators.py:1620
+msgid "Please enter a number for the year"
+msgstr "Введите числовое значение для года"
+
+#: validators.py:1621
+msgid "Please enter a four-digit year"
+msgstr "Введите четырехзначный год"
+
+#: validators.py:1800
+msgid "You must indicate AM or PM"
+msgstr "Необходимо указать AM или PM"
+
+#: validators.py:1801
+msgid "There are too many :'s"
+msgstr "Слишком много :'s"
+
+#: validators.py:1802
+msgid "You may not enter seconds"
+msgstr "Секунды можно не вводить"
+
+#: validators.py:1803
+msgid "You must enter seconds"
+msgstr "Необходимо ввести секунды"
+
+#: validators.py:1804
+msgid "You must enter minutes (after a :)"
+msgstr "Необходимо ввести минуты (после :)"
+
+#: validators.py:1805
+msgid "The %(part)s value you gave is not a number: %(number)r"
+msgstr "Вы ввели значение %(part)s которое не является числом: %(number)r"
+
+#: validators.py:1806
+msgid "You must enter an hour in the range %(range)s"
+msgstr "Значение часов должно быть в диапазоне %(range)s"
+
+#: validators.py:1807
+msgid "You must enter a minute in the range 0-59"
+msgstr "Необходимо ввести минуты в диапазоне от 0 до 59"
+
+#: validators.py:1808
+msgid "You must enter a second in the range 0-59"
+msgstr "Необходимо ввести секунды в диапазоне от 0 до 59"
+
+#: validators.py:1962
+msgid "Please enter a zip code (5 digits)"
+msgstr "Введите zip-код (5 цифр)"
+
+#: validators.py:1986
+msgid "The name %(name)s is missing"
+msgstr "Отсутствует имя %(name)s"
+
+#: validators.py:2027
+msgid "Value should be %(true)r or %(false)r"
+msgstr "Значение должно быть %(true)r или %(false)r"
+
+#: validators.py:2062
+msgid "Value does not contain a signature"
+msgstr "Значение не содержит подписи"
+
+#: validators.py:2063
+msgid "Signature is not correct"
+msgstr "Неверная подпись"
+
+#: validators.py:2185
+msgid "Fields do not match (should be %(match)s)"
+msgstr "Поля не совпадают (должно быть %(match)s)"
+
+#: validators.py:2186
+msgid "Fields do not match"
+msgstr "Поля не совпадают"
+
+#: validators.py:2248
+msgid "Please enter only the number, no other characters"
+msgstr "Введите только номер, без прочих символов"
+
+#: validators.py:2249
+msgid "You did not enter a valid number of digits"
+msgstr "Вы ввели неправильное количество цифр"
+
+#: validators.py:2250
+msgid "That number is not valid"
+msgstr "Неверный номер "
+
+#: validators.py:2365
+msgid "Please enter numbers only for month and year"
+msgstr "Введите числа только для месяца и года"
+
+#: validators.py:2366
+msgid "Invalid Expiration Date"
+msgstr "Неправильная дата окончания периода обслуживания"
+
+#: validators.py:2435
+msgid "Please enter numbers only for credit card security code"
+msgstr "Введите числа только для кода кредитной карты"
+
+#: validators.py:2436
+msgid "Invalid credit card security code length"
+msgstr "Неправильная длина кода кредитной карты"
+

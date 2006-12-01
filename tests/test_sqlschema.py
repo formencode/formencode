@@ -3,6 +3,22 @@ from formencode.sqlschema import *
 from formencode import validators
 from datetime import datetime, date
 
+def setup_module(module):
+    """Disable i18n translation
+    """
+    def notranslation(s): return s
+    import __builtin__
+    __builtin__._ = notranslation
+
+    
+
+def teardown_module(module):
+    """Remove translation function
+    """
+    import __builtin__
+    del __builtin__._
+
+
 sqlhub.processConnection = connectionForURI('sqlite:/:memory:')
 
 class EventObject(SQLObject):

@@ -1,0 +1,325 @@
+# Slovene translation for FormEncode.
+# Copyright (C) 2006 Matej Barič
+# Matej Barič <matej.baric@gmail.com>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: FormEncode 0.6\n"
+"POT-Creation-Date: 2006-10-02 20:59+CEST\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Matej Barič <matej.baric@gmail.com>\n"
+"Language-Team: Matej Barič <matej.baric@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: utf-8\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: api.py:335 validators.py:433
+msgid "Please enter a value"
+msgstr "Prosim, izpolnite polje"
+
+#: api.py:336
+msgid "The input must be a string (not a %(type)s: %(value)r)"
+msgstr "Vsebina polja mora biti niz (ne %(type)s: %(value)r)"
+
+#: api.py:337
+msgid "The input must be a string (not None)"
+msgstr "Vsebina polja mora biti niz (ne None)"
+
+#: validators.py:160
+msgid "%(object)r is not a subclass of %(subclass)s"
+msgstr "%(object)r ni podrazred razreda %(subclass)s"
+
+#: validators.py:161
+msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
+msgstr "%(object)r ni podrazred enega izmed razredov %(subclassList)s"
+
+#: validators.py:162
+msgid "%(object)r must be one of the types %(typeList)s"
+msgstr "%(object)r mora biti eden izmed razredov %(typeList)s"
+
+#: validators.py:163
+msgid "%(object)r must be of the type %(type)s"
+msgstr "%(object)r mora biti izvod razreda %(type)s"
+
+#: validators.py:344
+msgid "Enter a value less than %(maxLength)i characters long"
+msgstr "Vnesite vrednost, krajšo od %(maxLength)i znakov"
+
+#: validators.py:345 validators.py:399
+msgid "Invalid value (value with length expected)"
+msgstr "Neveljavna vrednost (pričakovana je bila vrednost z dolžino)"
+
+#: validators.py:398
+msgid "Enter a value at least %(minLength)i characters long"
+msgstr "Vnesite vrednost, dolgo najmanj %(minLength)i znakov"
+
+#: validators.py:458
+msgid "You cannot enter a value here"
+msgstr "Tukaj ne morete vnesti vrednosti"
+
+#: validators.py:509
+msgid "The input is not valid"
+msgstr "Vrednost je neveljavna"
+
+#: validators.py:565
+msgid "Enter only letters, numbers, or _ (underscore)"
+msgstr "Vnašajte samo črke, številke ali _ (podčrtaj)"
+
+#: validators.py:604
+msgid "Invalid value"
+msgstr "Neveljaven vnos"
+
+#: validators.py:605
+msgid "Value must be one of: %(items)s (not %(value)r)"
+msgstr "Vrednost mora biti ena izmed: (%items)s (ne %(value)r)"
+
+#: validators.py:668
+msgid "Choose something"
+msgstr "Izberite nekaj"
+
+#: validators.py:669
+msgid "Enter a value from: %(items)s"
+msgstr "Vnesite eno izmed vrednosti: %(items)s"
+
+#: validators.py:670
+msgid "That value is not known"
+msgstr "Ta vrednost ni znana"
+
+#: validators.py:671
+msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
+msgstr "Slovar ne vsebuje vrednosti %(value)s. Izberite eno izmed: %(items)s"
+
+#: validators.py:732
+msgid "Must be an integer index"
+msgstr "Biti mora celoštevilčni indeks"
+
+#: validators.py:733
+msgid "Index out of range"
+msgstr "Indeks je izven veljavnega območja"
+
+#: validators.py:734
+msgid "Item %(value)s was not found in the list"
+msgstr "Element %(value)s ni bil najden v seznamu"
+
+#: validators.py:809
+msgid "Date must be after %(date)s"
+msgstr "Datum mora biti poznejši od %(date)s"
+
+#: validators.py:810
+msgid "Date must be before %(date)s"
+msgstr "Datum mora biti pred %(date)s"
+
+#: validators.py:812
+msgid "%%A, %%d %%B %%Y"
+msgstr "%%A, %%d. %%B %%Y"
+
+#: validators.py:813
+msgid "The date must be sometime in the future"
+msgstr "Datum mora biti v prihodnosti"
+
+#: validators.py:913
+msgid "Please enter an integer value"
+msgstr "Prosim, vnesite celoštevilčno vrednost"
+
+#: validators.py:945
+msgid "Please enter a number"
+msgstr "Prosim, vnesite številko"
+
+#: validators.py:998
+msgid "Enter a value less than %(max)i characters long"
+msgstr "Vnesite vrednost, krajšo od %(max)i znakov"
+
+#: validators.py:999
+msgid "Enter a value %(min)i characters long or more"
+msgstr "Vnesite vrednost, dolgo najmanj %(min)i znakov"
+
+#: validators.py:1050
+msgid "Invalid data or incorrect encoding"
+msgstr "Neveljaven podatek ali nepravilen encoding"
+
+#: validators.py:1178
+msgid "Please enter an email address"
+msgstr "Prosim, vnesite e-poštni naslov"
+
+#: validators.py:1179
+msgid "An email address must contain a single @"
+msgstr "E-poštni naslov mora vsebovati en sam znak @"
+
+#: validators.py:1180
+msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
+msgstr "Prvi del e-poštnega naslova je neveljaven: %(username)s)"
+
+#: validators.py:1181 validators.py:1294
+msgid "An error occured when trying to connect to the server: %(error)s"
+msgstr "Pojavila se je napaka pri povezovanju na strežnik: %(error)s"
+
+#: validators.py:1182
+msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
+msgstr "Domenski del e-poštnega naslova je neveljaven: %(domain)s"
+
+#: validators.py:1183
+msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
+msgstr "Domena e-poštnega naslova ne obstaja: %(domain)s"
+
+#: validators.py:1291
+msgid "You must start your URL with http://, https://, etc"
+msgstr "URL naslov se mora začeti s http://, https://, itd"
+
+#: validators.py:1292
+msgid "That is not a valid URL"
+msgstr "URL naslov je neveljaven"
+
+#: validators.py:1293
+msgid "An error occurred when trying to access the URL: %(error)s"
+msgstr "Pojavila se je napaka pri doseganju URL naslova: %(error)s"
+
+#: validators.py:1295
+msgid "The server responded that the page could not be found"
+msgstr "Strežnik je sporočil, da stran ni bila najdena"
+
+#: validators.py:1296
+msgid "The server responded with a bad status code (%(status)s)"
+msgstr ""
+
+#: validators.py:1399
+msgid "Please enter a state code"
+msgstr ""
+
+#: validators.py:1400
+msgid "Please enter a state code with TWO letters"
+msgstr ""
+
+#: validators.py:1401
+msgid "That is not a valid state code"
+msgstr ""
+
+#: validators.py:1452
+msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
+msgstr ""
+
+#: validators.py:1614 validators.py:1622
+msgid "Please enter the date in the form %(format)s"
+msgstr "Prosim, vnesite datum v obliki %(format)s"
+
+#: validators.py:1615
+msgid "Please enter a month from 1 to 12"
+msgstr "Prosim, vnesite mesec od 1 do 12"
+
+#: validators.py:1616
+msgid "Please enter a valid day"
+msgstr "Prosim, vnesite veljaven dan"
+
+#: validators.py:1617
+msgid "That month only has %(days)i days"
+msgstr "Ta mesec ima samo %(days)i dni"
+
+#: validators.py:1618
+msgid "That is not a valid day (%(exception)s)"
+msgstr "Dan ni veljaven (%(exception)s)"
+
+#: validators.py:1619
+msgid "Unknown month name: %(month)s"
+msgstr "Neznano ime meseca: %(month)s"
+
+#: validators.py:1620
+msgid "Please enter a number for the year"
+msgstr "Prosim, vnesite leto"
+
+#: validators.py:1621
+msgid "Please enter a four-digit year"
+msgstr "Prosim, vnesite štirimestno leto"
+
+#: validators.py:1800
+msgid "You must indicate AM or PM"
+msgstr "Določiti morate AM ali PM"
+
+#: validators.py:1801
+msgid "There are too many :'s"
+msgstr "Preveč dvopičij"
+
+#: validators.py:1802
+msgid "You may not enter seconds"
+msgstr "Ne morete vnesti sekund"
+
+#: validators.py:1803
+msgid "You must enter seconds"
+msgstr "Vnesti morate sekunde"
+
+#: validators.py:1804
+msgid "You must enter minutes (after a :)"
+msgstr "Vnesti morate minute (za dvopičjem)"
+
+#: validators.py:1805
+msgid "The %(part)s value you gave is not a number: %(number)r"
+msgstr "%(part)s vrednost ni število: %(number)r"
+
+#: validators.py:1806
+msgid "You must enter an hour in the range %(range)s"
+msgstr "Vnesti morate uro v območju %(range)s"
+
+#: validators.py:1807
+msgid "You must enter a minute in the range 0-59"
+msgstr "Vnesti morate minute v območju 0-59"
+
+#: validators.py:1808
+msgid "You must enter a second in the range 0-59"
+msgstr "Vnesti morate sekunde v območju 0-59"
+
+#: validators.py:1962
+msgid "Please enter a zip code (5 digits)"
+msgstr ""
+
+#: validators.py:1986
+msgid "The name %(name)s is missing"
+msgstr "Ime %(name)s manjka"
+
+#: validators.py:2027
+msgid "Value should be %(true)r or %(false)r"
+msgstr "Vrednost je lahko %(true)r ali %(false)r"
+
+#: validators.py:2062
+msgid "Value does not contain a signature"
+msgstr "Vrednost ne vsebuje podpisa"
+
+#: validators.py:2063
+msgid "Signature is not correct"
+msgstr "Podpis je nepravilen"
+
+#: validators.py:2185
+msgid "Fields do not match (should be %(match)s)"
+msgstr "Polja se ne ujemajo (biti mora %(match)s)"
+
+#: validators.py:2186
+msgid "Fields do not match"
+msgstr "Polja se ne ujemajo"
+
+#: validators.py:2248
+msgid "Please enter only the number, no other characters"
+msgstr "Prosim, vnesite samo število brez drugih znakov"
+
+#: validators.py:2249
+msgid "You did not enter a valid number of digits"
+msgstr "Niste vnesli veljavnega števila cifer"
+
+#: validators.py:2250
+msgid "That number is not valid"
+msgstr "Ta številka je neveljavna"
+
+#: validators.py:2365
+msgid "Please enter numbers only for month and year"
+msgstr "Prosim, vnesite samo števila za mesec in leto"
+
+#: validators.py:2366
+msgid "Invalid Expiration Date"
+msgstr "Neveljaven datum poteka veljavnosti"
+
+#: validators.py:2435
+msgid "Please enter numbers only for credit card security code"
+msgstr "Prosim, vnesite številke samo za varnostno kodo kartice"
+
+#: validators.py:2436
+msgid "Invalid credit card security code length"
+msgstr "Neveljavna dolžina varnostne kode kartice"
+

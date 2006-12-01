@@ -5,9 +5,33 @@ Core classes for validation.
 import declarative
 import textwrap
 import re
+import os
+from pkg_resources import resource_filename
 
 __all__ = ['NoDefault', 'Invalid', 'Validator', 'Identity',
            'FancyValidator', 'is_validator']
+
+import gettext
+
+def get_localedir():
+    return resource_filename(__name__, "/i18n")
+
+def set_stdtranslation(domain="FormEncode", languages=None, \
+                       localedir = get_localedir()):
+    
+    t = gettext.translation(domain=domain, \
+                            languages=languages, \
+                            localedir=localedir, fallback=True)
+    global _stdtrans
+    _stdtrans = t.ugettext
+
+set_stdtranslation()
+
+def _(s): return s # dummy i18n translation function, nothing is translated here.
+                   # Instead this is actually done in api.Validator.message.
+                   # The surrounding _("string") of the strings is only for extracting
+                   # the strings automatically
+                   # if you run pygettext with this source comment this function out temporarly 
 
 class NoDefault:
     pass
@@ -117,7 +141,10 @@ class Validator(declarative.Declarative):
     if_missing = NoDefault
     repeating = False
     compound = False
-
+    gettextargs = {}
+    use_builtins_gettext = True #In case you dont want to use __builtins__._
+                                #altough it may be definied, set this to False
+    
     __singletonmethods__ = ('to_python', 'from_python')
 
     def __classinit__(cls, new_attrs):
@@ -141,8 +168,27 @@ class Validator(declarative.Declarative):
         return value
 
     def message(self, msgName, state, **kw):
+        #determine translation function
         try:
-            return self._messages[msgName] % kw
+            trans = state._
+        except AttributeError:
+            try:
+                if self.use_builtins_gettext:
+                    import __builtin__
+                    trans = __builtin__._
+                    
+                else:
+                    trans = _stdtrans
+ 
+            except AttributeError:
+                trans = _stdtrans
+ 
+        if not callable(trans):
+            trans = _stdtrans
+
+
+        try:
+            return trans(self._messages[msgName], **self.gettextargs) % kw
         except KeyError, e:
             raise KeyError(
                 "Key not found (%s) for %r=%r %% %r (from: %s)"
@@ -294,9 +340,9 @@ class FancyValidator(Validator):
     strip = False
 
     messages = {
-        'empty': "Please enter a value",
-        'badType': "The input must be a string (not a %(type)s: %(value)r)",
-        'noneType': "The input must be a string (not None)",
+        'empty': _("Please enter a value"),
+        'badType': _("The input must be a string (not a %(type)s: %(value)r)"),
+        'noneType': _("The input must be a string (not None)"),
         }
 
     def to_python(self, value, state=None):
