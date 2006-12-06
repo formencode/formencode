@@ -362,6 +362,13 @@ own validators, if you subclass from `FancyValidator
       ``.validate_other()`` will not be called when
       ``.from_python()`` is used.
 
+``if_missing``:
+      Typically when a field is missing the schema will raise an
+      error.  In that case no validation is run -- so things like
+      ``if_invalid`` won't be triggered.  This special attribute (if
+      set) will be used when the field is missing, and no error will
+      occur.  (``None`` or ``()`` are common values)
+
 State
 -----
 
