@@ -119,6 +119,9 @@ class Invalid(Exception):
                 result = variabledecode.variable_encode(result, add_repetitions=False,
                                                         dict_char=dict_char,
                                                         list_char=list_char)
+                for key in result.keys():
+                    if not result[key]:
+                        del result[key]
             return result
         else:
             assert not encode_variables, (

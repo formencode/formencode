@@ -17,6 +17,10 @@ svn trunk
 * ``from formencode.validators import *`` will import the ``Invalid``
   exception now.
 
+* ``Invalid().unpack_errors(encode_variables=True)`` now filters out
+  None values (which ``ForEach`` can produce even for keys with no
+  errors).
+
 0.6
 ---
 
