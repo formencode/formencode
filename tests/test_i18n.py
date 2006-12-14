@@ -75,7 +75,9 @@ def test_sk():
 def test_ru():
   _test_lang("ru",u"Необходимо ввести значение")
 
-
 def test_sl():
   _test_lang("sl",u"Prosim, izpolnite polje")
 
+def test_pt_PT():
+  _test_lang("pt_PT", u"Por favor insira um valor")
+  
