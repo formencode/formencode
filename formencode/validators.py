@@ -1283,7 +1283,7 @@ class URL(FancyValidator):
     add_http = True
 
     url_re = re.compile(r'^(http|https)://'
-                        r'[a-z0-9][a-z0-9\-\._]*\.[a-z]+'
+                        r'(?:[a-z0-9\-]+|[a-z0-9][a-z0-9\-\.\_]*\.[a-z]+)'
                         r'(?::[0-9]+)?'
                         r'(?:/.*)?$', re.I) 
     scheme_re = re.compile(r'^[a-zA-Z]+:')
