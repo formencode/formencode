@@ -23,7 +23,7 @@ for filling and generating forms.
       url="http://formencode.org",
       license="PSF",
       packages=["formencode", "formencode.util"],
-      package_data={'formencode': ['javascript/*']},
+      include_package_data=True,
       extras_require={'testing': ['elementtree']},
       )
 
