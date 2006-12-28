@@ -1551,9 +1551,10 @@ class FileUploadKeeper(FancyValidator):
 class DateConverter(FancyValidator):
 
     """
-    Validates and converts a textual date, like mm/yy, dd/mm/yy,
-    dd-mm-yy, etc, always assumes month comes second value is the
-    month.
+    Validates and converts a string date, like mm/yy, dd/mm/yy,
+    dd-mm-yy, etc.  Using ``month_style`` you can support
+    ``'mm/dd/yyyy'`` or ``'dd/mm/yyyy'``.  Only these two general
+    styles are supported.
 
     Accepts English month names, also abbreviated.  Returns value as a
     datetime object (you can get mx.DateTime objects if you use
