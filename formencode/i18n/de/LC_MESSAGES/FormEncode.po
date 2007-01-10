@@ -197,7 +197,7 @@ msgstr "Das ist kein gültiges Landeskürzel"
 
 #: validators.py:1452
 msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
-msgstr "Bitte geben Sie eine Nummer mit Gebietskode in der Form ###-###-####, alternativ mit \"ext.####\ ein"
+msgstr "Bitte geben Sie eine Nummer mit Gebietskode in der Form ###-###-####, alternativ mit \"ext.####\" ein"
 
 #: validators.py:1614 validators.py:1622
 msgid "Please enter the date in the form %(format)s"
