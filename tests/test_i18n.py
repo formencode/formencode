@@ -80,4 +80,6 @@ def test_sl():
 
 def test_pt_PT():
   _test_lang("pt_PT", u"Por favor insira um valor")
-  
+
+def test_fr():
+  _test_lang("fr", u"Veuillez entrer une valeur")

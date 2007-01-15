@@ -1,115 +1,112 @@
-# German strings for FormEncode
-# Copyright (C) 2006 Gregor Horvath, licence: LGPL V2.0
-# Gregor Horvath <gh@gregor-horvath.com>, 2006.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: FormEncode 0.5.1\n"
-"POT-Creation-Date: 2006-09-26 07:57+CEST\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Gregor Horvath <gh@gregor-horvath.com>\n"
-"Language-Team: Gregor Horvath <gh@gregor-horvath.com>\n"
+"Project-Id-Version: FormEncode 0.6\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2007-01-14 18:19+0100\n"
+"Last-Translator: Arnaud Fontaine <arnaud@andesi.org>\n"
+"Language-Team: Arnaud Fontaine <arnaud@andesi.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: pygettext.py 1.5\n"
+"X-Poedit-Language: French\n"
 
-
-#: api.py:319 validators.py:433
+#: api.py:335
+#: validators.py:433
 msgid "Please enter a value"
-msgstr "Bitte einen Wert eingeben"
+msgstr "Veuillez entrer une valeur"
 
-#: api.py:320
+#: api.py:336
 msgid "The input must be a string (not a %(type)s: %(value)r)"
-msgstr "Die Eingabe muß eine Zeichenfolge sein (nicht ein %(type)s: %(value)r)"
+msgstr "La valeur entrée doit être une chaîne (et non une %(type)s: %(value)r)"
 
-#: api.py:321
+#: api.py:337
 msgid "The input must be a string (not None)"
-msgstr "Die Eingabe muß eine Zeichenfolge sein (nicht Nichts)"
+msgstr "La valeur entrée doit être une chaîne (et non None)"
 
 #: validators.py:160
 msgid "%(object)r is not a subclass of %(subclass)s"
-msgstr "%(object)r ist keine Unterklasse von %(subclass)s"
+msgstr "%(object)r n'est pas une sous-classe de %(subclass)s"
 
 #: validators.py:161
 msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
-msgstr "%(object)r ist keine Unterklasse von einer der Klassen %(subclassList)s"
+msgstr "%(object)r n'est pas une sous-classe d'un des types %(subclassList)s"
 
 #: validators.py:162
 msgid "%(object)r must be one of the types %(typeList)s"
-msgstr "%(object)r Typ muß von eine von diesen sein: %(typeList)s"
+msgstr "%(object)r doit être d'un des types %(typeList)s"
 
 #: validators.py:163
 msgid "%(object)r must be of the type %(type)s"
-msgstr "%(object)r muß vom Typ %(type)s sein"
+msgstr "%(object)r doit être de type %(type)s"
 
 #: validators.py:344
 msgid "Enter a value less than %(maxLength)i characters long"
-msgstr "Geben Sie einen Wert kürzer als %(maxLength)i Zeichen ein."
+msgstr "Entrer une valeur dont la taille est inférieure à %(maxLength)i caractères"
 
-#: validators.py:345 validators.py:399
+#: validators.py:345
+#: validators.py:399
 msgid "Invalid value (value with length expected)"
-msgstr "Ungültiger Wert (Wert mit Länge erwartet)"
+msgstr "Valeur invalide (valeur d'une certaine taille attendue)"
 
 #: validators.py:398
 msgid "Enter a value at least %(minLength)i characters long"
-msgstr "Geben Sie einen Wert mit mindestens %(minLength)i Zeichen ein."
+msgstr "Entrer une valeur d'au moins %(minLength)i caractères"
 
 #: validators.py:458
 msgid "You cannot enter a value here"
-msgstr "Sie können hier keinen Wert eingeben"
+msgstr "Vous ne pouvez pas entrer une valeur ici"
 
 #: validators.py:509
 msgid "The input is not valid"
-msgstr "Die Eingabe ist ungültig"
+msgstr "L'entrée est incorrecte"
 
 #: validators.py:565
 msgid "Enter only letters, numbers, or _ (underscore)"
-msgstr "Geben Sie nur Buchstaben, Nummern oder _ (Unterstriche) ein."
+msgstr "Entrer seulement des lettres, nombres ou _ (underscore)"
 
 #: validators.py:604
 msgid "Invalid value"
-msgstr "Ungültiger Wert"
+msgstr "Valeur invalide"
 
 #: validators.py:605
 msgid "Value must be one of: %(items)s (not %(value)r)"
-msgstr "Wert muß einer von diesen sein: %(items)s (nicht %(value)r) "
+msgstr "La valeur doit être une des suivantes : %(items)s (et non %(value)r)"
 
 #: validators.py:668
 msgid "Choose something"
-msgstr "Etwas auswählen"
+msgstr "Choississez quelque chose"
 
 #: validators.py:669
 msgid "Enter a value from: %(items)s"
-msgstr "Geben Sie einen Wert aus %(items)s ein."
+msgstr "Entrer une valeur contenue dans : %(items)s"
 
 #: validators.py:670
 msgid "That value is not known"
-msgstr "Dieser Wert ist unbekannt"
+msgstr "Cette valeur est inconnue"
 
 #: validators.py:671
 msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
-msgstr "Mein Wörterbuch enthält nicht den Wert: %(value)s. Wähle einen Wert aus: %(items)s"
+msgstr "La valeur entrée ne correspond à aucune dans mon dictionnaire %(value)s. Choississez l'une des suivantes: %(items)s"
 
 #: validators.py:732
 msgid "Must be an integer index"
-msgstr "Muß ein Ganzahlindex sein."
+msgstr "L'index doit être un entier"
 
 #: validators.py:733
 msgid "Index out of range"
-msgstr "Index ausserhalb des Bereiches"
+msgstr "Index en dehors de l'intervalle"
 
 #: validators.py:734
 msgid "Item %(value)s was not found in the list"
-msgstr "Wert %(value)s wurde in der Liste nicht gefunden"
+msgstr "L'élément %(value)s n'a pas été trouvé dans la liste"
 
 #: validators.py:809
 msgid "Date must be after %(date)s"
-msgstr "Datum muß nach %(date)s sein"
+msgstr "La date doit se situer après %(date)s"
 
 #: validators.py:810
 msgid "Date must be before %(date)s"
-msgstr "Datum muß vor %(date)s sein"
+msgstr "La date doit se situer avant %(date)s"
 
 #: validators.py:812
 msgid "%%A, %%d %%B %%Y"
@@ -117,209 +114,211 @@ msgstr "%%A, %%d %%B %%Y"
 
 #: validators.py:813
 msgid "The date must be sometime in the future"
-msgstr "Das Datum muß in der Zukunft liegen"
+msgstr "La date doit être dans le future"
 
 #: validators.py:913
 msgid "Please enter an integer value"
-msgstr "Bitte einen Ganzzahlwert eingeben"
+msgstr "Veuillez entrer une valeur entière"
 
 #: validators.py:945
 msgid "Please enter a number"
-msgstr "Bitte eine Zahl eingeben"
+msgstr "Veuillez entrer un nombre"
 
 #: validators.py:998
 msgid "Enter a value less than %(max)i characters long"
-msgstr "Bitte einen Wert kürzer als %(max)i Zeichen eingeben."
+msgstr "Entrer une valeur dont la taille est inférieure à %(max)i caractères"
 
 #: validators.py:999
 msgid "Enter a value %(min)i characters long or more"
-msgstr "Bitte einen Wert mit %(min)i oder mehr Zeichen eingeben"
+msgstr "Entrer une valeur d'au moins %(min)i caractères"
 
 #: validators.py:1050
 msgid "Invalid data or incorrect encoding"
-msgstr "Ungültige Daten oder falsche Kodierung"
+msgstr "Donnée invalide ou encodage incorrect"
 
 #: validators.py:1178
 msgid "Please enter an email address"
-msgstr "Bitte eine E-mail Adresse eingeben"
+msgstr "Veuillez entrer une adresse email"
 
 #: validators.py:1179
 msgid "An email address must contain a single @"
-msgstr "Eine E-mail Adresse muß ein einzelnes @ Zeichen enthalten"
+msgstr "Une adresse email ne doit contenir qu'un seul @"
 
 #: validators.py:1180
 msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
-msgstr "Der Benutzer Teil der E-mail Adresse is ungültig (Der Teil vor dem @: %(username)s)"
+msgstr "Le nom d'utilisateur de l'adresse email est incorrect (partie après le @ : %(username)s)"
 
-#: validators.py:1181 validators.py:1294
+#: validators.py:1181
+#: validators.py:1294
 msgid "An error occured when trying to connect to the server: %(error)s"
-msgstr "Ein Fehler ist beim Verbindungsversuch mit dem Server aufgetreten: %(error)s"
+msgstr "Une erreur est survenue lors de la tentative de connexion au serveur: %(error)s"
 
 #: validators.py:1182
 msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
-msgstr "Der Domain Teil der E-mail Adresse ist ungültig (Der Teil nach dem @: %(domain)s)"
+msgstr "Le nom de domaine de l'adresse email est incorrecte (la partie après le @ : %(domain)s)"
 
 #: validators.py:1183
 msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
-msgstr "Die Domaine der E-mail Adresse existiert nicht (Der Teil nach dem @: %(domain)s)"
+msgstr "Le nom de domaine de l'adresse email n'existe pas (la partie après le @: %(domain)s)"
 
 #: validators.py:1291
 msgid "You must start your URL with http://, https://, etc"
-msgstr "Die URL muß mit http://, https://, etc beginnen"
+msgstr "L'adresse doit commencer par http://, https://, etc."
 
 #: validators.py:1292
 msgid "That is not a valid URL"
-msgstr "Das ist eine ungültige URL"
+msgstr "Ceci n'est pas une adresse valide"
 
 #: validators.py:1293
 msgid "An error occurred when trying to access the URL: %(error)s"
-msgstr "Beim Versuch die URL zu erreichen ist ein Fehler aufgetreten: %(error)s"
+msgstr "Une erreur est survenue lors de la tentative d'accès à l'adresse : %(error)s"
 
 #: validators.py:1295
 msgid "The server responded that the page could not be found"
-msgstr "Der Server hat geantwortet, dass die Seite nicht gefunden werden konnte"
+msgstr "Le serveur a répondu que la page n'a pu être trouvée"
 
 #: validators.py:1296
 msgid "The server responded with a bad status code (%(status)s)"
-msgstr "Der Server antwortete mit einem schlechten Statuskode (%(status)s)"
+msgstr "Le serveur a répondu avec un code de retour incorrect (%(status)s)"
 
 #: validators.py:1399
 msgid "Please enter a state code"
-msgstr "Bitte eine Landeskürzel eingeben"
+msgstr "Veuillez entrer un code pour l'État"
 
 #: validators.py:1400
 msgid "Please enter a state code with TWO letters"
-msgstr "Bitte ein Landeskürzel mit 2 Buchstaben eingeben"
+msgstr "Veuillez entrer un code d'État composé de DEUX lettres"
 
 #: validators.py:1401
 msgid "That is not a valid state code"
-msgstr "Das ist kein gültiges Landeskürzel"
+msgstr "Ceci n'est pas un code d'État valide"
 
 #: validators.py:1452
 msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
-msgstr "Bitte geben Sie eine Nummer mit Gebietskode in der Form ###-###-####, alternativ mit \"ext.####\" ein"
+msgstr "Veuillez entrer un nombre, avec un code de zone, sous la forme ###-###-####, éventuellement sous la forme \"ext.####\""
 
-#: validators.py:1614 validators.py:1622
+#: validators.py:1614
+#: validators.py:1622
 msgid "Please enter the date in the form %(format)s"
-msgstr "Bitte geben Sie das Datum in der Form %(format)s ein."
+msgstr "Veuillez entrer la date sous la forme %(format)s"
 
 #: validators.py:1615
 msgid "Please enter a month from 1 to 12"
-msgstr "Bitte ein Monat von 1 bis 12 eingeben."
+msgstr "Veuillez entrer un mois compris entre 1 et 12"
 
 #: validators.py:1616
 msgid "Please enter a valid day"
-msgstr "Bitte einen gültigen Tag eingeben"
+msgstr "Veuillez entrer un jour valide"
 
 #: validators.py:1617
 msgid "That month only has %(days)i days"
-msgstr "Dieser Monat hat nur %(days)i Tage"
+msgstr "Ce mois a seulement %(days)i jours"
 
 #: validators.py:1618
 msgid "That is not a valid day (%(exception)s)"
-msgstr "Das ist kein gültiger Tag (%(exception)s)"
+msgstr "Ceci n'est pas un jour correct (%(exception)s)"
 
 #: validators.py:1619
 msgid "Unknown month name: %(month)s"
-msgstr "Unbekannter Monatsname: %(month)s"
+msgstr "Nom de mois inconnu : %(month)s"
 
 #: validators.py:1620
 msgid "Please enter a number for the year"
-msgstr "Bitte eine Zahl für das Jahr eingeben"
+msgstr "Veuillez entrer un nombre pour l'année"
 
 #: validators.py:1621
 msgid "Please enter a four-digit year"
-msgstr "Bitte eine vierstellige Jahreszahl eingeben."
+msgstr "Veuillez entrer une année composée de quatre chiffres"
 
 #: validators.py:1800
 msgid "You must indicate AM or PM"
-msgstr "Sie müssen AM oder PM angeben"
+msgstr "Vous devez préciser AM ou PM"
 
 #: validators.py:1801
 msgid "There are too many :'s"
-msgstr "Hier sind zu viele :'s"
+msgstr "Il y a trop de :'s"
 
 #: validators.py:1802
 msgid "You may not enter seconds"
-msgstr "Keine Sekunden eingeben"
+msgstr "Vous ne pouvez pas entrer de secondes"
 
 #: validators.py:1803
 msgid "You must enter seconds"
-msgstr "Sie müssen Sekunden eingeben"
+msgstr "Vous devez entrer des secondes"
 
 #: validators.py:1804
 msgid "You must enter minutes (after a :)"
-msgstr "Sie müssen Minuten eingeben (nach a :)"
+msgstr "Vous devez entrer des minutes (après un :)"
 
 #: validators.py:1805
 msgid "The %(part)s value you gave is not a number: %(number)r"
-msgstr "Der %(part)s Wert den Sie angaben ist keine Nummer: %(number)r"
+msgstr "La valeur %(part)s entrée n'est pas un nombre : %(number)r"
 
 #: validators.py:1806
 msgid "You must enter an hour in the range %(range)s"
-msgstr "Sie müssen eine Stunde im Bereich %(range)s eingeben."
+msgstr "Vous devez entrer une heure dans l'intervalle %(range)s"
 
 #: validators.py:1807
 msgid "You must enter a minute in the range 0-59"
-msgstr "Sie müssen eine Minute im Bereich 0-59 eingeben."
+msgstr "Vous devez entrer une minute comprise entre 0 et 59"
 
 #: validators.py:1808
 msgid "You must enter a second in the range 0-59"
-msgstr "Sie müssen eine Sekunde im Bereicg 0-59 eingeben."
+msgstr "Vous devez entrer une seconde comprise entre 0 et 59"
 
 #: validators.py:1962
 msgid "Please enter a zip code (5 digits)"
-msgstr "Bitte eine Postleitzahl eingeben (5 Stellen)"
+msgstr "Veuillez entrer un code postal (5 chiffres)"
 
 #: validators.py:1986
 msgid "The name %(name)s is missing"
-msgstr "Der Name %(name)s fehlt"
+msgstr "Le nom %(name)s est manquant"
 
 #: validators.py:2027
 msgid "Value should be %(true)r or %(false)r"
-msgstr "Wert sollte %(true)r oder %(false)r sein"
+msgstr "La valeur doit être %(true)r ou %(false)r"
 
 #: validators.py:2062
 msgid "Value does not contain a signature"
-msgstr "Wert enthält keine Signatur"
+msgstr "Le nom %(name)s est manquant"
 
 #: validators.py:2063
 msgid "Signature is not correct"
-msgstr "Signatur ist nicht korrekt"
+msgstr "La signature est incorrecte"
 
 #: validators.py:2185
 msgid "Fields do not match (should be %(match)s)"
-msgstr "Felder stimmen nicht überein (sollten sein %(match)s)"
+msgstr "Les champs ne correspondent pas (devrait être %(match)s)"
 
 #: validators.py:2186
 msgid "Fields do not match"
-msgstr "Felder stimmen nicht überein"
+msgstr "Les champs ne correspondent pas"
 
 #: validators.py:2248
 msgid "Please enter only the number, no other characters"
-msgstr "Bitte nur die Nummer, keine anderen Zeichen eingeben."
+msgstr "Veuillez seulement entrer un chiffre, pas d'autres caractères"
 
 #: validators.py:2249
 msgid "You did not enter a valid number of digits"
-msgstr "Sie haben keine gültige Zahl aus Ziffern eingegeben"
+msgstr "Vous n'avez pas entrer un nombre correct de chiffres"
 
 #: validators.py:2250
 msgid "That number is not valid"
-msgstr "Diese Nummer ist ungültig"
+msgstr "Ce nombre n'est pas valide"
 
 #: validators.py:2365
 msgid "Please enter numbers only for month and year"
-msgstr "Bitte Nummern nur für das Monat und Jahr eingeben"
+msgstr "Veuillez entrer seulement des nombres pour le mois et l'année"
 
 #: validators.py:2366
 msgid "Invalid Expiration Date"
-msgstr "Ungültiges Ablaufdatum"
+msgstr "Date d'expiration invalide"
 
 #: validators.py:2435
 msgid "Please enter numbers only for credit card security code"
-msgstr "Bitte Nummern nur für den Kreditkarten Sicherheitskode eingeben."
+msgstr "Veuillez seulement entrer des chiffres pour le code de la carte bancaire"
 
 #: validators.py:2436
 msgid "Invalid credit card security code length"
-msgstr "Ungültige Kreditkartensicherheitscodelänge"
+msgstr "Taille du code de la carte bancaire invalide"
 
