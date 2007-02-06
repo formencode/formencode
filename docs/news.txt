@@ -6,6 +6,11 @@ News
 svn trunk
 ---------
 
+* **Backward compatibility issue**: Due to the addition of i18n
+  (internationalization) to FormEncode, Invalid exceptions now have
+  unicode messages.  You may encounter unicode-related errors if you
+  are mixing these messages with non-ASCII ``str`` strings.
+
 * gettext-enabled branch merged in
 
 * Fixes `#1457145: Fails on URLs with port numbers
