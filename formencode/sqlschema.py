@@ -7,6 +7,11 @@ import validators
 from api import Invalid
 from declarative import classinstancemethod
 
+import warnings
+warnings.warn("formencode.sqlschema is deprecated with no replacement; "
+              "if you are using it please maintain your own copy of this "
+              "file", DeprecationWarning, 2)
+
 class SQLSchema(schema.Schema):
 
     """

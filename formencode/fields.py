@@ -24,6 +24,11 @@ Fields for use with Forms.  The Field class gives the basic interface,
 and then there's bunches of classes for the specific kinds of fields.
 """
 
+import warnings
+warnings.warn("formencode.fields is deprecated with no replacement; "
+              "if you are using it please maintain your own copy of this "
+              "file", DeprecationWarning, 2)
+
 import urllib
 PILImage = None
 import os

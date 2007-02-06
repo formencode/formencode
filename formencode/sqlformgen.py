@@ -1,5 +1,10 @@
 # @@: This is experimental
 
+import warnings
+warnings.warn("formencode.sqlformgen is deprecated with no replacement; "
+              "if you are using it please maintain your own copy of this "
+              "file", DeprecationWarning, 2)
+
 import fields
 import validators
 import schema
