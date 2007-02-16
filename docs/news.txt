@@ -3,8 +3,8 @@ News
 
 .. contents::
 
-svn trunk
----------
+0.7
+---
 
 * **Backward compatibility issue**: Due to the addition of i18n
   (internationalization) to FormEncode, Invalid exceptions now have
