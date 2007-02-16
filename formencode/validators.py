@@ -1138,7 +1138,7 @@ class Email(FancyValidator):
 
     If you pass ``resolve_domain=True``, then it will try to resolve
     the domain name to make sure it's valid.  This takes longer, of
-    course.  You must have the `pyDNS <http://pydns.sf.net>`_ modules
+    course.  You must have the `pyDNS <http://pydns.sf.net>`__ modules
     installed to look up MX records.
 
     ::
