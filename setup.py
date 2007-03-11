@@ -11,6 +11,10 @@ setup(name="FormEncode",
 FormEncode validates and converts nested structures.  It allows for
 a declarative form of defining the validation, and decoupled processes
 for filling and generating forms.
+
+It has a `subversion repository
+<http://svn.formencode.org/FormEncode/trunk#egg=FormEncode-dev>`_ that
+you can install from with ``easy_install FormEncode==dev``
 """,
       classifiers=["Development Status :: 4 - Beta",
                    "Intended Audience :: Developers",
