@@ -133,7 +133,7 @@ msgstr "Introuduzca un valor de menos de %(max)i caracteres"
 
 #: validators.py:999
 msgid "Enter a value %(min)i characters long or more"
-msgstr "Introduzca un valor de %(max)i caracteres o más"
+msgstr "Introduzca un valor de %(min)i caracteres o más"
 
 #: validators.py:1050
 msgid "Invalid data or incorrect encoding"
@@ -213,11 +213,11 @@ msgstr "Por favor introduzca un día válido"
 
 #: validators.py:1617
 msgid "That month only has %(days)i days"
-msgstr "Ese mes sólo tiene %(day)i días"
+msgstr "Ese mes sólo tiene %(days)i días"
 
 #: validators.py:1618
 msgid "That is not a valid day (%(exception)s)"
-msgstr "Ése no es un mes válido (%(exceptions)s)"
+msgstr "Ése no es un mes válido (%(exception)s)"
 
 #: validators.py:1619
 msgid "Unknown month name: %(month)s"
@@ -317,7 +317,7 @@ msgstr "La fecha de expiración no es válida"
 
 #: validators.py:2435
 msgid "Please enter numbers only for credit card security code"
-msgstr "Por favor introuce sólo los números de la tarjeta de crédito y el código de seguridad"
+msgstr "Por favor introduce sólo los números de la tarjeta de crédito y el código de seguridad"
 
 #: validators.py:2436
 msgid "Invalid credit card security code length"
