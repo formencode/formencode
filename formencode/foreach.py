@@ -88,7 +88,7 @@ class ForEach(CompoundValidator):
                 return new_list
             else:
                 raise Invalid(
-                    'Errors:\n%s' % '\n'.join([str(e) for e in errors if e]),
+                    'Errors:\n%s' % '\n'.join([unicode(e) for e in errors if e]),
                     value,
                     state,
                     error_list=errors)
