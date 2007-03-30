@@ -3,6 +3,12 @@ News
 
 .. contents::
 
+svn trunk
+---------
+
+* Set ``if_missing=()`` on ``validators.Set``, as a missing value
+  usually means empty for this value.
+
 0.7
 ---
 

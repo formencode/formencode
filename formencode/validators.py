@@ -1104,6 +1104,8 @@ class Set(FancyValidator):
 
     use_set = False
 
+    if_missing = ()
+
     def _to_python(self, value, state):
         if self.use_set:
             if isinstance(value, sets.Set):
