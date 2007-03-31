@@ -25,11 +25,9 @@ Validator/Converters for use with FormEncode.
 
 import re
 DateTime = None
-mxlookup = None
 httplib = None
 urlparse = None
-socket = None
-DNSError = None
+import socket
 from interfaces import *
 from api import *
 sha = random = None
@@ -41,6 +39,13 @@ except ImportError:
 import cgi
 
 import fieldstorage
+
+try:
+    import DNS
+    DNS.ParseResolvConf()
+    have_dns=True
+except ImportError:
+    have_dns=False
 
 True, False = (1==1), (0==1)
 
@@ -1141,7 +1146,7 @@ class Email(FancyValidator):
     If you pass ``resolve_domain=True``, then it will try to resolve
     the domain name to make sure it's valid.  This takes longer, of
     course.  You must have the `pyDNS <http://pydns.sf.net>`__ modules
-    installed to look up MX records.
+    installed to look up DNS (MX and A) records.
 
     ::
 
@@ -1163,6 +1168,8 @@ class Email(FancyValidator):
         True
         >>> e.to_python('doesnotexist@colorstudy.com')
         'doesnotexist@colorstudy.com'
+        >>> e.to_python('test@forums.nyu.edu')
+        'test@forums.nyu.edu'
         >>> e.to_python('test@thisdomaindoesnotexistithinkforsure.com')
         Traceback (most recent call last):
             ...
@@ -1187,21 +1194,15 @@ class Email(FancyValidator):
         }
     
     def __init__(self, *args, **kw):
-        global mxlookup
         FancyValidator.__init__(self, *args, **kw)
         if self.resolve_domain:
-            if mxlookup is None:
-                try:
-                    import DNS.Base
-                    DNS.Base.ParseResolvConf()
-                    from DNS.lazy import mxlookup
-                except ImportError:
-                    import warnings
-                    warnings.warn(
-                        "pyDNS <http://pydns.sf.net> is not installed on "
-                        "your system (or the DNS package cannot be found).  "
-                        "I cannot resolve domain names in addresses")
-                    raise
+            if not have_dns:
+                import warnings
+                warnings.warn(
+                    "pyDNS <http://pydns.sf.net> is not installed on "
+                    "your system (or the DNS package cannot be found).  "
+                    "I cannot resolve domain names in addresses")
+                raise ImportError, "no module named DNS"
 
     def validate_python(self, value, state):
         if not value:
@@ -1210,38 +1211,35 @@ class Email(FancyValidator):
                 value, state)
         value = value.strip()
         splitted = value.split('@', 1)
-        if not len(splitted) == 2:
+        try:
+            username, domain=splitted
+        except ValueError:
             raise Invalid(
                 self.message('noAt', state),
                 value, state)
-        if not self.usernameRE.search(splitted[0]):
+        if not self.usernameRE.search(username):
             raise Invalid(
                 self.message('badUsername', state,
-                             username=splitted[0]),
+                             username=username),
                 value, state)
-        if not self.domainRE.search(splitted[1]):
+        if not self.domainRE.search(domain):
             raise Invalid(
                 self.message('badDomain', state,
-                             domain=splitted[1]),
+                             domain=domain),
                 value, state)
         if self.resolve_domain:
-	    global socket, DNSError
-	    if socket is None:
-        	import socket
-
-	    if DNSError is None:
-		from DNS.Base import DNSError
-
+            assert have_dns, "pyDNS should be available"
 	    try:
-                domains = mxlookup(splitted[1])
-	    except (socket.error, DNSError), e:
+                a=DNS.DnsRequest(domain).req().answers
+                dnsdomains=[x['data'] for x in a if x['typename'] in ('A', 'MX')]
+	    except (socket.error, DNS.DNSError), e:
 		raise Invalid(
 		    self.message('socketError', state, error=e),
 		    value, state)
-            if not domains:
+            if not dnsdomains:
                 raise Invalid(
                     self.message('domainDoesNotExist', state,
-                                 domain=splitted[1]),
+                                 domain=domain),
                     value, state)
 
     def _to_python(self, value, state):

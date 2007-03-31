@@ -9,6 +9,9 @@ svn trunk
 * Set ``if_missing=()`` on ``validators.Set``, as a missing value
   usually means empty for this value.
 
+* Fix for ``Email`` validator that searches A records in addition to
+  MX records (from Jacob Smullyan).
+
 0.7
 ---
 
