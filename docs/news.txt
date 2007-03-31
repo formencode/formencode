@@ -3,14 +3,16 @@ News
 
 .. contents::
 
-svn trunk
----------
+0.7.1
+-----
 
 * Set ``if_missing=()`` on ``validators.Set``, as a missing value
   usually means empty for this value.
 
 * Fix for ``Email`` validator that searches A records in addition to
   MX records (from Jacob Smullyan).
+
+* Fixes for the ``es`` locale.
 
 0.7
 ---
