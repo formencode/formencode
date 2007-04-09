@@ -1,6 +1,8 @@
 FormEncode Internationalization (gettext)
 +++++++++++++++++++++++++++++++++++++++++
 
+:author: Gregor Horvath <gh at gregor-horvath dot com> 2006
+
 There are different translation options available:
 
 Domain "FormEncode" 
@@ -31,4 +33,3 @@ Without translation
 If no translation mechanism is found a fallback returns the plain string.
 
 
-Gregor Horvath, 2006 gh@gregor-horvath.com

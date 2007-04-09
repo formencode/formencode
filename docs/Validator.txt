@@ -458,6 +458,82 @@ use the ``message`` function, like::
         raise Invalid(self.message('key', substitution='apples'),
                       value, state)
 
+Localization of Error Messages (i18n)
+-------------------------------------
+
+When a failed validation accurs FormEncode tries to output the error
+message in the appropirate language. For this it uses the standard
+`gettext <http://python.org/doc/current/lib/module-gettext.html>`_
+mechanism of python. To translate the message in the appropirate
+message FormEncode has to find a gettext function that translates the
+string. The language to be translated into and the used domain is
+determined by the found gettext function. To serve a standard
+translation mechanism and to enable custom translations it looks in
+the following order to find a gettext (``_``) function:
+
+1. method of the ``state`` object
+
+2. function ``__builtin__._``.  This function is only used when::
+
+       Validator.use_builtin_gettext == True #True is default
+
+3. formencode builtin ``_stdtrans`` function
+
+   for standalone use of FormEncode. The language to use is determined
+   out of the local system (see gettext documentation). Optionally you
+   can also set the language or the domain explicitly with the
+   function::
+
+       formencode.api.set_stdtranslation(domain="FormEncode", languages=["de"])
+
+   Formencode comes with a Domain ``FormEncode`` and the corresponding
+   messages in the directory
+   ``localedir/language/LC_MESSAGES/FormEncode.mo``
+
+4. Custom gettext function and addtional parameters
+
+   If you use a custom gettext function and you want FormEncode to
+   call your function with additional parameters you can set the
+   dictionary::
+
+       Validators.gettextargs
+
+Available languages
+~~~~~~~~~~~~~~~~~~~
+
+All available languages are distributed with the code. You can see the
+currently available languages in the source under the directory
+``formencode/i18n``.
+
+If your's is not present yet, please consider contributing a
+translation (where ``<lang>`` is you language code)::
+
+    $ svn co http://svn.formencode.org/FormEncode/trunk/``
+    $ cd formencode/i18n
+    $ mkdir <lang>/LC_MESSAGES
+    $ cp FormEncode.pot <lang>/LC_MESSAGES/FormEncode.po
+    $ emacs <lang>/LC_MESSAGES/FormEncode.po # or whatever editor you prefer
+      # make the translation
+    $ python msgfmt.py <lang>/LC_MESSAGES/FormEncode.po
+
+Then test, and send the PO and MO files to g...@gregor-horvath.com.
+
+See also `the Python internationalization documents
+<http://docs.python.org/lib/node738.html>`_.
+
+Optionally you can also add a test of your language to
+``tests/test_i18n.py``.  An Example of a language test::
+
+    ne = formencode.validators.NotEmpty()
+    [...]
+    def test_de():
+        _test_lang("de", u"Bitte einen Wert eingeben")
+
+And the test for your language::
+
+    def test_<lang>():
+        _test_lang("<lang>", u"<translation of Not Empty Text in the language <lang>") 
+
 HTTP/HTML Form Input
 --------------------
 
