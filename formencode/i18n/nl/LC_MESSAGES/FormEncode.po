@@ -1,0 +1,324 @@
+# Dutch translation for formencode messages
+# Copyright (C) 2007, The Health Agency
+# Jan-Wijbrand Kolman <jkolman@thehealthagency.com>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: r2591\n"
+"POT-Creation-Date: 2006-10-02 20:59+CEST\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Jan-Wijbrand Kolman <jkolman@thehealthagency.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: api.py:335 validators.py:433
+msgid "Please enter a value"
+msgstr "Voer een waarde in"
+
+#: api.py:336
+msgid "The input must be a string (not a %(type)s: %(value)r)"
+msgstr "De ingevoerde waarde moet een \"string\" zijn (niet een \"%(type)s\": %(value)r)"
+
+#: api.py:337
+msgid "The input must be a string (not None)"
+msgstr "De ingevoerde waarde moet een \"string\" zijn (niet \"None\")"
+
+#: validators.py:160
+msgid "%(object)r is not a subclass of %(subclass)s"
+msgstr "%(object)r is geen subclass van \"%(subclass)s\""
+
+#: validators.py:161
+msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
+msgstr "%(object)r is geen subclass van één van de types: %(subclassList)s"
+
+#: validators.py:162
+msgid "%(object)r must be one of the types %(typeList)s"
+msgstr "%(object)r moet van één van de types %(typeList)s zijn"
+
+#: validators.py:163
+msgid "%(object)r must be of the type %(type)s"
+msgstr "%(object)r moet van het type \"%(type)s\" zijn"
+
+#: validators.py:344
+msgid "Enter a value less than %(maxLength)i characters long"
+msgstr "Voer een waarde in korter dan %(maxLength)i tekens"
+
+#: validators.py:345 validators.py:399
+msgid "Invalid value (value with length expected)"
+msgstr "Ongeldige waarde (waarde met een zekere lengte verwacht)"
+
+#: validators.py:398
+msgid "Enter a value at least %(minLength)i characters long"
+msgstr "Voer een waarde in van minimaal %(minLength)i tekens"
+
+#: validators.py:458
+msgid "You cannot enter a value here"
+msgstr "Er kan hier geen waarde worden ingevoerd"
+
+#: validators.py:509
+msgid "The input is not valid"
+msgstr "De ingevoerde waarde is incorrect"
+
+#: validators.py:565
+msgid "Enter only letters, numbers, or _ (underscore)"
+msgstr "De waarde kan alleen bestaan uit letters, cijfers of _ (\"underscore\")"
+
+#: validators.py:604
+msgid "Invalid value"
+msgstr "Ongeldige waarde"
+
+#: validators.py:605
+msgid "Value must be one of: %(items)s (not %(value)r)"
+msgstr "Waarde moet één van %(items)s zijn (niet %(value)r)"
+
+#: validators.py:668
+msgid "Choose something"
+msgstr "Kies één van de opties"
+
+#: validators.py:669
+msgid "Enter a value from: %(items)s"
+msgstr "Voer één van de volgende waarden in: %(items)s"
+
+#: validators.py:670
+msgid "That value is not known"
+msgstr "Waarde onbekend"
+
+#: validators.py:671
+msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
+msgstr "%(value)s komt niet voor. Kies één uit %(items)s"
+
+#: validators.py:732
+msgid "Must be an integer index"
+msgstr "Waarde moet een \"integer index\" zijn"
+
+#: validators.py:733
+msgid "Index out of range"
+msgstr "Waarde valt buiten het bereik"
+
+#: validators.py:734
+msgid "Item %(value)s was not found in the list"
+msgstr "%(value)s is niet gevonden in de lijst"
+
+#: validators.py:809
+msgid "Date must be after %(date)s"
+msgstr "Datum moet later dan %(date)s zijn"
+
+#: validators.py:810
+msgid "Date must be before %(date)s"
+msgstr "Datum moet vroeger dan %(date)s zijn"
+
+#: validators.py:812
+msgid "%%A, %%d %%B %%Y"
+msgstr "%%A, %%d %%B %%Y"
+
+#: validators.py:813
+msgid "The date must be sometime in the future"
+msgstr "De datum moet in de toekomst liggen"
+
+#: validators.py:913
+msgid "Please enter an integer value"
+msgstr "Voer een integer waarde in"
+
+#: validators.py:945
+msgid "Please enter a number"
+msgstr "Voer een getal in"
+
+#: validators.py:998
+msgid "Enter a value less than %(max)i characters long"
+msgstr "Maximaal %(max)i tekens"
+
+#: validators.py:999
+msgid "Enter a value %(min)i characters long or more"
+msgstr "Minimaal %(min)i tekens"
+
+#: validators.py:1050
+msgid "Invalid data or incorrect encoding"
+msgstr "Ongeldige waarde of incorrecte \"encoding\""
+
+#: validators.py:1178
+msgid "Please enter an email address"
+msgstr "Voer een geldig emailadres in"
+
+#: validators.py:1179
+msgid "An email address must contain a single @"
+msgstr "Ongeldig emailadres: een emailadres kan slechts één \"@\" teken bevatten"
+
+#: validators.py:1180
+msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
+msgstr "Ongeldig emailadres: het deel vóór de \"@\" is incorrect"
+
+#: validators.py:1181 validators.py:1294
+msgid "An error occured when trying to connect to the server: %(error)s"
+msgstr "Fout bij het benaderen van server: %(error)s"
+
+#: validators.py:1182
+msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
+msgstr "Ongeldig emailadres: het \"domain\" (het deel achter de \"@\") is incorrect"
+
+#: validators.py:1183
+msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
+msgstr "Ongeldig emailadres: het \"domain\" (het deel achter de \"@\") bestaat niet"
+
+#: validators.py:1291
+msgid "You must start your URL with http://, https://, etc"
+msgstr "Een URL moet beginnen met \"http://\", \"https://\", \"mailto:\", etc."
+
+#: validators.py:1292
+msgid "That is not a valid URL"
+msgstr "Ongeldige URL"
+
+#: validators.py:1293
+msgid "An error occurred when trying to access the URL: %(error)s"
+msgstr "Er treedt eem fout op bij het opvragen van de URL: %(error)s"
+
+#: validators.py:1295
+msgid "The server responded that the page could not be found"
+msgstr "De server meldt dat de pagina niet gevonden kan worden"
+
+#: validators.py:1296
+msgid "The server responded with a bad status code (%(status)s)"
+msgstr "De server geeft een foutmelding (%(status)s)"
+
+#: validators.py:1399
+msgid "Please enter a state code"
+msgstr "Voer een \"state code\" in"
+
+#: validators.py:1400
+msgid "Please enter a state code with TWO letters"
+msgstr "Voer een \"state code\" in met TWEE letters"
+
+#: validators.py:1401
+msgid "That is not a valid state code"
+msgstr "Geen correct \"state code\""
+
+#: validators.py:1452
+msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
+msgstr "Voer een getal in, met \"area code\", in het formaat ###-###-####, optioneel met \"ext.####\""
+
+#: validators.py:1614 validators.py:1622
+msgid "Please enter the date in the form %(format)s"
+msgstr "Voer de datum in volgens het formaat: %(format)s"
+
+#: validators.py:1615
+msgid "Please enter a month from 1 to 12"
+msgstr "Voer een maand in met een getal van 1 tot en met 12"
+
+#: validators.py:1616
+msgid "Please enter a valid day"
+msgstr "Ongeldige dag"
+
+#: validators.py:1617
+msgid "That month only has %(days)i days"
+msgstr "Deze maand heeft slechts %(days)i dagen"
+
+#: validators.py:1618
+msgid "That is not a valid day (%(exception)s)"
+msgstr "Ongeldige datum"
+
+#: validators.py:1619
+msgid "Unknown month name: %(month)s"
+msgstr "Onbekende maandnaam: %(month)s"
+
+#: validators.py:1620
+msgid "Please enter a number for the year"
+msgstr "Ongeldig jaartal"
+
+#: validators.py:1621
+msgid "Please enter a four-digit year"
+msgstr "Voer een vier-cijferig jaartal in"
+
+#: validators.py:1800
+msgid "You must indicate AM or PM"
+msgstr "Het is verplicht \"AM\" danwel \"PM\" aan te geven"
+
+#: validators.py:1801
+msgid "There are too many :'s"
+msgstr "Teveel dubbele punten \":\""
+
+#: validators.py:1802
+msgid "You may not enter seconds"
+msgstr "Seconden zijn niet toegestaan in de invoer"
+
+#: validators.py:1803
+msgid "You must enter seconds"
+msgstr "Seconden zijn verplicht"
+
+#: validators.py:1804
+msgid "You must enter minutes (after a :)"
+msgstr "Minuten zijn verplicht (na een \":\")"
+
+#: validators.py:1805
+msgid "The %(part)s value you gave is not a number: %(number)r"
+msgstr "Eén van de waarden is geen getal"
+
+#: validators.py:1806
+msgid "You must enter an hour in the range %(range)s"
+msgstr "Het uur in ongeldig"
+
+#: validators.py:1807
+msgid "You must enter a minute in the range 0-59"
+msgstr "Het aantal minuten is ongeldig"
+
+#: validators.py:1808
+msgid "You must enter a second in the range 0-59"
+msgstr "Het aantal seconden is ongeldig"
+
+#: validators.py:1962
+msgid "Please enter a zip code (5 digits)"
+msgstr "Voer een geldige postcode in"
+
+#: validators.py:1986
+msgid "The name %(name)s is missing"
+msgstr "De waarde %(name)s mist"
+
+#: validators.py:2027
+msgid "Value should be %(true)r or %(false)r"
+msgstr "De waarde moet %(true)r danwel %(false)r zijn"
+
+#: validators.py:2062
+msgid "Value does not contain a signature"
+msgstr "Waarde bevat geen signatuur"
+
+#: validators.py:2063
+msgid "Signature is not correct"
+msgstr "Signatuur is incorrect"
+
+#: validators.py:2185
+msgid "Fields do not match (should be %(match)s)"
+msgstr "Waarden komen niet overeen (zou moeten zijn: %(match)s)"
+
+#: validators.py:2186
+msgid "Fields do not match"
+msgstr "Waarden komen niet overeen"
+
+#: validators.py:2248
+msgid "Please enter only the number, no other characters"
+msgstr "Voer alleen een getal in, geen andere tekens"
+
+#: validators.py:2249
+msgid "You did not enter a valid number of digits"
+msgstr "U heeft niet het juiste aantal cijfers ingevoerd"
+
+#: validators.py:2250
+msgid "That number is not valid"
+msgstr "Ongeldig nummer"
+
+#: validators.py:2365
+msgid "Please enter numbers only for month and year"
+msgstr "Voer alleen cijfers in voor maand en jaar"
+
+#: validators.py:2366
+msgid "Invalid Expiration Date"
+msgstr "Ongeldige vervaldatum"
+
+#: validators.py:2435
+msgid "Please enter numbers only for credit card security code"
+msgstr "Voer alleen de cijfers in van de \"credit card security code\""
+
+#: validators.py:2436
+msgid "Invalid credit card security code length"
+msgstr "Incorrecte \"credit card security code\"-lengte"

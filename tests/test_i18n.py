@@ -83,3 +83,6 @@ def test_pt_PT():
 
 def test_fr():
   _test_lang("fr", u"Veuillez entrer une valeur")
+
+def test_nl():
+  _test_lang("nl", u"Voer een waarde in")
