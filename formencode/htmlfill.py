@@ -14,7 +14,7 @@ __all__ = ['render', 'htmlliteral', 'default_formatter',
 def render(form, defaults=None, errors=None, use_all_keys=False,
            error_formatters=None, add_attributes=None,
            auto_insert_errors=True, auto_error_formatter=None,
-           text_as_default=False, listener=None):
+           text_as_default=False, listener=None, encoding=None):
     """
     Render the ``form`` (which should be a string) given the defaults
     and errors.  Defaults are the values that go in the input fields
@@ -52,6 +52,9 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
 
     ``listener`` can be an object that watches fields pass; the only
     one currently is in ``htmlfill_schemabuilder.SchemaBuilder``
+    
+    ``encoding`` specifies an encoding to assume when mixing str and 
+    unicode text in the template.
     """
     if defaults is None:
         defaults = {}
@@ -64,7 +67,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
         add_attributes=add_attributes,
         auto_error_formatter=auto_error_formatter,
         text_as_default=text_as_default,
-        listener=listener,
+        listener=listener, encoding=encoding,
         )
     p.feed(form)
     p.close()
@@ -166,7 +169,7 @@ class FillingParser(HTMLParser.HTMLParser):
                  error_formatters=None, error_class='error',
                  add_attributes=None, listener=None,
                  auto_error_formatter=None,
-                 text_as_default=False):
+                 text_as_default=False, encoding=None):
         HTMLParser.HTMLParser.__init__(self)
         self._content = []
         self.source = None
@@ -193,6 +196,7 @@ class FillingParser(HTMLParser.HTMLParser):
         self.listener = listener
         self.auto_error_formatter = auto_error_formatter
         self.text_as_default = text_as_default
+        self.encoding = encoding
 
     def feed(self, data):
         self.data_is_str = isinstance(data, str)
@@ -231,6 +235,13 @@ class FillingParser(HTMLParser.HTMLParser):
                 assert False, (
                     "These errors were not used in the form: %s" % 
                     ', '.join(error_text))
+        if self.encoding is not None:
+            new_content = []
+            for item in self._content:
+                if isinstance(item, str):
+                    item = item.decode(self.encoding)
+                new_content.append(item)
+            self._content = new_content
         try:
             self._text = ''.join([
                 t for t in self._content if not isinstance(t, tuple)])

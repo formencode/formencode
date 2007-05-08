@@ -3,6 +3,12 @@ News
 
 .. contents::
 
+svn trunk
+---------
+
+* Added encoding parameter to htmlfill, which will handle cases when mixed
+  str and unicode objects are used (turning all str objects into unicode)
+
 0.7.1
 -----
 
