@@ -6,6 +6,11 @@ News
 svn trunk
 ---------
 
+* Added support for Paste's MultiDict dictionary as input to
+  Schema.to_python, by converting it to a normal dict via MultiDict.mixed.
+  Previously MultiDicts wouldn't work with CompoundValidators (like
+  ForEach)
+
 * Added encoding parameter to htmlfill, which will handle cases when mixed
   str and unicode objects are used (turning all str objects into unicode)
 

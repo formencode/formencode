@@ -192,11 +192,11 @@ And here's a schema::
 
 Like any other validator, a ``Registration`` instance will have the
 ``to_python`` and ``from_python`` methods.  The input should be a
-dictionary, with keys like ``"first_name"``, ``"password"``, etc.  The
-validators you give as attributes will be applied to each of the
-values of the dictionary.  *All* the values will be validated, so if
-there are multiple invalid fields you will get information about all
-of them.
+dictionary (or a Paste MultiDict), with keys like ``"first_name"``,
+``"password"``, etc.  The validators you give as attributes will be
+applied to each of the values of the dictionary.  *All* the values
+will be validated, so if there are multiple invalid fields you will
+get information about all of them.
 
 Most validators (anything that subclasses
 ``formencode.FancyValidator``) will take a certain standard set of

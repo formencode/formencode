@@ -352,6 +352,9 @@ class FancyValidator(Validator):
         try:
             if self.strip and isinstance(value, (str, unicode)):
                 value = value.strip()
+            elif hasattr(value, 'mixed'):
+                # Support Paste's MultiDict
+                value = value.mixed()
             if self.is_empty(value):
                 if self.not_empty:
                     raise Invalid(self.message('empty', state), value, state)
