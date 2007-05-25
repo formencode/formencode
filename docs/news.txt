@@ -23,6 +23,8 @@ svn trunk
 * Fix problem with HTMLParser's default unescaping routing, which only
   understood a very limited number of entities in attribute values.
 
+* Fix problem with looking up A records for email addresses.
+
 0.7.1
 -----
 
