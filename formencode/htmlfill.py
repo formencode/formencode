@@ -264,8 +264,8 @@ class FillingParser(HTMLParser.HTMLParser):
     def add_key(self, key):
         self.used_keys[key] = 1
 
-    _entityref_re = re.compile('&([a-zA-Z][-.a-zA-Z0-9]*);')
-    _charref_re = re.compile('&#(?:[0-9]+|[xX][0-9a-fA-F]+);')
+    _entityref_re = re.compile('&([a-zA-Z][-.a-zA-Z\d]*);')
+    _charref_re = re.compile('&#(\d+|[xX][a-fA-F\d]+);')
 
     def unescape(self, s):
         s = self._entityref_re.sub(self._sub_entityref, s)
@@ -282,8 +282,8 @@ class FillingParser(HTMLParser.HTMLParser):
 
     def _sub_charref(self, match):
         num = match.group(1)
-        if num.lower().startswith('0x'):
-            num = int(num, 16)
+        if num.lower().startswith('x'):
+            num = int(num[1:], 16)
         else:
             num = int(num)
         return unichr(num)
@@ -368,7 +368,6 @@ class FillingParser(HTMLParser.HTMLParser):
         self.used_errors[name] = 1
 
     def handle_input(self, attrs, startend):
-        print 'attrs', attrs
         t = (self.get_attr(attrs, 'type') or 'text').lower()
         name = self.get_attr(attrs, 'name')
         self.write_marker(name)
@@ -428,7 +427,6 @@ class FillingParser(HTMLParser.HTMLParser):
             self.skip_next = True
             self.add_key(name)
         elif t == 'submit' or t == 'reset' or t == 'button':
-            print 'set_attr', repr(value or self.get_attr(attrs, 'value', ''))
             self.set_attr(attrs, 'value', value or
                           self.get_attr(attrs, 'value', ''))
             self.write_tag('input', attrs, startend)

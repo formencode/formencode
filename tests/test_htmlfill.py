@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import os
 import re
@@ -82,3 +83,7 @@ def test_escape_defaults():
             == '<input type="submit" value="next&gt;%s">' % rarr)
     assert (htmlfill.render('<input type="submit" value="1&amp;2">', {}, {})
             == '<input type="submit" value="1&amp;2">')
+    assert (htmlfill.render('<input type="submit" value="Japan - &#x65E5;&#x672C; Nihon" />',
+                            {}, {}) ==
+            u'<input type="submit" value="Japan - 日本 Nihon" />')
+    
