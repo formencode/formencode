@@ -20,6 +20,9 @@ svn trunk
 * Fixed bug in htmlfill when a document ends with no trailing text
   after the last tag.
 
+* Fix problem with HTMLParser's default unescaping routing, which only
+  understood a very limited number of entities in attribute values.
+
 0.7.1
 -----
 

@@ -1,6 +1,7 @@
 import sys
 import os
 import re
+from htmlentitydefs import name2codepoint
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__))))
@@ -72,4 +73,12 @@ def run_filename(filename):
     checker(p, listener.schema())
 
 def test_no_trailing_newline():
-    assert htmlfill.render('<html><body></body></html>',{},{}) == '<html><body></body></html>'
+    assert (htmlfill.render('<html><body></body></html>', {}, {})
+            == '<html><body></body></html>')
+
+def test_escape_defaults():
+    rarr = unichr(name2codepoint['rarr'])
+    assert (htmlfill.render('<input type="submit" value="next&gt;&rarr;">', {}, {})
+            == '<input type="submit" value="next&gt;%s">' % rarr)
+    assert (htmlfill.render('<input type="submit" value="1&amp;2">', {}, {})
+            == '<input type="submit" value="1&amp;2">')

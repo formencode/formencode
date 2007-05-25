@@ -6,6 +6,7 @@ Parser for HTML forms, that fills in defaults and errors.  See
 import HTMLParser
 import cgi
 import re
+from htmlentitydefs import name2codepoint
 
 __all__ = ['render', 'htmlliteral', 'default_formatter',
            'none_formatter', 'escape_formatter',
@@ -263,6 +264,30 @@ class FillingParser(HTMLParser.HTMLParser):
     def add_key(self, key):
         self.used_keys[key] = 1
 
+    _entityref_re = re.compile('&([a-zA-Z][-.a-zA-Z0-9]*);')
+    _charref_re = re.compile('&#(?:[0-9]+|[xX][0-9a-fA-F]+);')
+
+    def unescape(self, s):
+        s = self._entityref_re.sub(self._sub_entityref, s)
+        s = self._charref_re.sub(self._sub_charref, s)
+        return s
+
+    def _sub_entityref(self, match):
+        name = match.group(1)
+        if name not in name2codepoint:
+            # If we don't recognize it, pass it through as though it
+            # wasn't an entity ref at all
+            return match.group(0)
+        return unichr(name2codepoint[name])
+
+    def _sub_charref(self, match):
+        num = match.group(1)
+        if num.lower().startswith('0x'):
+            num = int(num, 16)
+        else:
+            num = int(num)
+        return unichr(num)
+
     def handle_starttag(self, tag, attrs, startend=False):
         self.write_pos()
         if tag == 'input':
@@ -343,6 +368,7 @@ class FillingParser(HTMLParser.HTMLParser):
         self.used_errors[name] = 1
 
     def handle_input(self, attrs, startend):
+        print 'attrs', attrs
         t = (self.get_attr(attrs, 'type') or 'text').lower()
         name = self.get_attr(attrs, 'name')
         self.write_marker(name)
@@ -402,6 +428,7 @@ class FillingParser(HTMLParser.HTMLParser):
             self.skip_next = True
             self.add_key(name)
         elif t == 'submit' or t == 'reset' or t == 'button':
+            print 'set_attr', repr(value or self.get_attr(attrs, 'value', ''))
             self.set_attr(attrs, 'value', value or
                           self.get_attr(attrs, 'value', ''))
             self.write_tag('input', attrs, startend)
