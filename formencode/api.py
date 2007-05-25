@@ -6,7 +6,10 @@ import declarative
 import textwrap
 import re
 import os
-from pkg_resources import resource_filename
+try:
+    from pkg_resources import resource_filename
+except ImportError:
+    resource_filename = None
 
 __all__ = ['NoDefault', 'Invalid', 'Validator', 'Identity',
            'FancyValidator', 'is_validator']
@@ -14,7 +17,13 @@ __all__ = ['NoDefault', 'Invalid', 'Validator', 'Identity',
 import gettext
 
 def get_localedir():
-    return resource_filename(__name__, "/i18n")
+    if resource_filename is not None:
+        try:
+            return resource_filename(__name__, "/i18n")
+        except NotImplementedError:
+            # resource_filename doesn't work with non-egg zip files
+            pass
+    return os.path.join(os.path.dirname(__file__), 'i18n')
 
 def set_stdtranslation(domain="FormEncode", languages=None, \
                        localedir = get_localedir()):
