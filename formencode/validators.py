@@ -1426,10 +1426,9 @@ class StateProvince(FancyValidator):
 class PhoneNumber(FancyValidator):
 
     """
-    Validates, and converts to ###-###-####, optionally with
-    extension (as ext.##...)
-    
-    @@: should add international phone number support
+    Validates, and converts to ###-###-####, optionally with extension
+    (as ext.##...).  Only support US phone numbers.  See
+    InternationalPhoneNumber for support for that kind of phone number.
 
     ::
 
@@ -1474,6 +1473,108 @@ class PhoneNumber(FancyValidator):
         if match.group(4):
             result = result + " ext.%s" % match.group(4)
         return result
+
+# from dbmanager.intl_util.validators@r313[208:303]
+class IPhoneNumberValidator(FancyValidator):
+
+    """
+    Validates, and converts phone numbers to +##-###-#######.
+    Adapted from RFC 3966
+
+    ::
+
+        >>> p = IPhoneNumberValidator()
+        >>> p.to_python('333-3333')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a number, with area code, in the form +##-###-#######.
+        >>> p.to_python('0555/4860-300')
+        '+49-555-4860-300'
+        >>> p.to_python('0555-49924-51')
+        '+49-555-49924-51'
+        >>> p.to_python('0555/8114100')
+        '+49-555-8114100'
+        >>> p.to_python('0555 8114100')
+        '+49-555-8114100'
+        >>> p.to_python(' +49 (0)555 350 60 0')
+        '+49-555-35060-0'
+        >>> p.to_python('+49 555 350600')
+        '+49-555-350600'
+        >>> p.to_python('0049/ 555/ 871 82 96')
+        '+49-555-87182-96'
+        >>> p.to_python('0555-2 50-30')
+        '+49-555-250-30'
+        >>> p.to_python('(05 55)4 94 33 47')
+        '+49-555-49433-47'
+        >>> p.to_python('+973-555431')
+        '+973-555431'
+        >>> p.to_python('1-393-555-3939')
+        '+1-393-555-3939'
+        >>> p.to_python('+43 (1) 55528/0')
+        '+43-1-55528-0'
+        >>> p.to_python('+43 5555 429 62-0')
+        '+43-5555-42962-0'
+        >>> p.to_python('00 218 55 33 50 317 321')
+        '+218-55-3350317-321'
+        >>> p.to_python('+218 (0)55-3636639/38')
+        '+218-55-3636639-38'
+    """
+
+    strip = True
+    # Use if there's a default country code you want to use:
+    default_cc = None
+    _mark_chars_re = re.compile(r"[_.!~*'/]")
+    _preTransformations = [
+        (re.compile(r'^\((\d+)\s*(\d+)\)(.+)$'), '%s%s-%s'),
+        (re.compile(r'^(?:1-)(\d+.+)$'), '+1-%s'),
+        (re.compile(r'^00\s*(\d+.+)$'), '+%s'),
+        (re.compile(r'^(\+\d+)\s+\(0\)\s*(\d+.+)$'), '%s-%s'),
+        (re.compile(r'^(0\d+)\s(\d+)$'), '%s-%s'),
+        ]
+    _ccIncluder = [
+        (re.compile(r'^0([1-9]\d*)\-(\d+.*)$'), '+%d-%s-%s'),
+        ]
+    _postTransformations = [
+        (re.compile(r'^(\+\d+)[-\s]\(?(\d+)\)?[-\s](\d+.+)$'), '%s-%s-%s'),
+        (re.compile(r'^(.+)\s(\d+)$'), '%s-%s'),
+        ]
+    _phoneIsSane = re.compile(r'^(\+[1-9]\d*)-([\d\-]+)$')
+
+    messages = {
+        'phoneFormat': _('Please enter a number, with area code, in the form +##-###-#######.'),
+        }
+
+    def _perform_rex_transformation(self, value, transformations):
+        for rex, trf in transformations:
+            match = rex.search(value)
+            if match:
+                value = trf % match.groups()
+        return value
+
+    def _prepend_country_code(self, value, transformations, country_code):
+        for rex, trf in transformations:
+            match = rex.search(value)
+            if match:
+                return trf % ((country_code,)+match.groups())
+        return value
+
+    def _to_python(self, value, state):
+        self.assert_string(value, state)
+        value = self._perform_rex_transformation(value, self._preTransformations)
+        value = self._mark_chars_re.sub('-', value)
+        if self.default_cc:
+            value = self._prepend_country_code(value, self._ccIncluder, self.default_cc)
+        for f, t in [('  ', ' '), ('--', '-'), (' - ', '-'), ('- ', '-'), (' -', '-')]:
+            value = value.replace(f, t)
+        value = self._perform_rex_transformation(value, self._postTransformations)
+        value = value.replace(' ', '')
+        # did we successfully transform that phone number? Thus, is it valid?
+        if not self._phoneIsSane.search(value):
+            raise Invalid(self.message('phoneFormat', state), value, state)
+        return value
+
+
+
 
 class FieldStorageUploadConverter(FancyValidator):
     """

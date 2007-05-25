@@ -25,6 +25,9 @@ svn trunk
 
 * Fix problem with looking up A records for email addresses.
 
+* Include ``formencode.validators.InternationalPhoneNumber`` from
+  W-Mark Kubacki.
+
 0.7.1
 -----
 
