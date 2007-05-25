@@ -17,6 +17,9 @@ svn trunk
 * Be friendlier when loaded from a zip file (as with py2exe);
   previously only egg zip files would work.
 
+* Fixed bug in htmlfill when a document ends with no trailing text
+  after the last tag.
+
 0.7.1
 -----
 

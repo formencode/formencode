@@ -208,6 +208,7 @@ class FillingParser(HTMLParser.HTMLParser):
         HTMLParser.HTMLParser.feed(self, data)
 
     def close(self):
+        self.handle_misc(None)
         HTMLParser.HTMLParser.close(self)
         unused_errors = self.errors.copy()
         for key in self.used_errors.keys():

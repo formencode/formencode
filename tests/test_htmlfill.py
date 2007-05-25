@@ -70,3 +70,6 @@ def run_filename(filename):
         print expected
         assert 0
     checker(p, listener.schema())
+
+def test_no_trailing_newline():
+    assert htmlfill.render('<html><body></body></html>',{},{}) == '<html><body></body></html>'
