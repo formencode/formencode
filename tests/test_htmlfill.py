@@ -8,8 +8,6 @@ base_dir = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__))))
 if base_dir not in sys.path:
     sys.path.insert(0, base_dir)
-import formencode
-print '>>>>', formencode.__file__
 from formencode import htmlfill
 from formencode.doctest_xml_compare import xml_compare
 from elementtree import ElementTree as et
