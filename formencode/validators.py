@@ -1607,6 +1607,20 @@ class FileUploadKeeper(FancyValidator):
     there may be extra values ``'original_filename'`` and
     ``'original_content'``, which may want to use in your form to show
     the user you still have their content around.
+
+    To use this, make sure you are using variabledecode, then use
+    something like::
+
+      <input type="file" name="myfield.upload">
+      <input type="hidden" name="myfield.static">
+
+    Then in your scheme::
+
+      class MyScheme(Scheme):
+          myfield = FileUploadKeeper()
+
+    Note that big file uploads mean big hidden fields, and lots of
+    bytes passed back and forth in the case of an error.
     """
 
     upload_key = 'upload'
