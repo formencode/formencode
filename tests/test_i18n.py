@@ -86,3 +86,7 @@ def test_fr():
 
 def test_nl():
   _test_lang("nl", u"Voer een waarde in")
+
+def test_pl():
+  _test_lang("pl", u"Proszę podać wartość")
+
