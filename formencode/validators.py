@@ -42,7 +42,7 @@ import fieldstorage
 
 try:
     import DNS
-    DNS.ParseResolvConf()
+    DNS.DiscoverNameServers()
     have_dns=True
 except ImportError:
     have_dns=False
