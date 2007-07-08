@@ -90,3 +90,6 @@ def test_nl():
 def test_pl():
   _test_lang("pl", u"Proszę podać wartość")
 
+def test_el():
+  _test_lang("el", u"Παρακαλούμε εισάγετε μια τιμή")
+
