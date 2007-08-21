@@ -96,3 +96,6 @@ def test_el():
 def test_zh_CN():
   _test_lang("zh_CN", u"请输入一个值")
 
+def test_cs():
+  _test_lang("cs", u"Prosím zadejte hodnotu")
+

@@ -1,0 +1,323 @@
+# Martin Šenkeřík <martinsenkerik@email.cz>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1\n"
+"POT-Creation-Date: 2006-10-02 20:59+CEST\n"
+"PO-Revision-Date: 2007-06-04 15:40+PRAG\n"
+"Last-Translator: Martin Šenkeřík <martinsenkerik@email.cz>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: api.py:335 validators.py:433
+msgid "Please enter a value"
+msgstr "Prosím zadejte hodnotu"
+
+#: api.py:336
+msgid "The input must be a string (not a %(type)s: %(value)r)"
+msgstr "Vstupem musí být řetězec (ne %(type)s: %(value)r)"
+
+#: api.py:337
+msgid "The input must be a string (not None)"
+msgstr "Vstupem musí být String (ne None)"
+
+#: validators.py:160
+msgid "%(object)r is not a subclass of %(subclass)s"
+msgstr "%(object)r není potřídou %(subclass)s"
+
+#: validators.py:161
+msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
+msgstr "%(object)r není podřídou žádné z: %(subclassList)s"
+
+#: validators.py:162
+msgid "%(object)r must be one of the types %(typeList)s"
+msgstr "%(object)r musí být jeden z následujících typů: %(typeList)s"
+
+#: validators.py:163
+msgid "%(object)r must be of the type %(type)s"
+msgstr "%(object)r musí být typu %(type)s"
+
+#: validators.py:344
+msgid "Enter a value less than %(maxLength)i characters long"
+msgstr "Vložte hodnodtu kratší než %(maxLength)i dlouhou"
+
+#: validators.py:345 validators.py:399
+msgid "Invalid value (value with length expected)"
+msgstr "Nesprávná hodnota (byla očekávána hodnota s délkou)"
+
+#: validators.py:398
+msgid "Enter a value at least %(minLength)i characters long"
+msgstr "Vložte hodnotu nejméně %(minLength)i znaků dlouhou"
+
+#: validators.py:458
+msgid "You cannot enter a value here"
+msgstr "Sem nemůžete zadat hodnotu"
+
+#: validators.py:509
+msgid "The input is not valid"
+msgstr "Vstup není platný"
+
+#: validators.py:565
+msgid "Enter only letters, numbers, or _ (underscore)"
+msgstr "Vložte pouze písmena, číslice nebo _ (podtržítko)"
+
+#: validators.py:604
+msgid "Invalid value"
+msgstr "Nesprávná hodnota"
+
+#: validators.py:605
+msgid "Value must be one of: %(items)s (not %(value)r)"
+msgstr "Hodnota musí být jedna z: %(items)s (ne však %(value)r)"
+
+#: validators.py:668
+msgid "Choose something"
+msgstr "Musíte něco vybrat"
+
+#: validators.py:669
+msgid "Enter a value from: %(items)s"
+msgstr "Zadejte jednu z těchto hodnot: %(items)s"
+
+#: validators.py:670
+msgid "That value is not known"
+msgstr "Zadaná hodnota není známa"
+
+#: validators.py:671
+msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
+msgstr "Nic v mém slovníku neodpovídá %(value)s. Vyberte jednu hodnotu z: %(items)s"
+
+#: validators.py:732
+msgid "Must be an integer index"
+msgstr "Index musí být číselný"
+
+#: validators.py:733
+msgid "Index out of range"
+msgstr "Index je mimo rozsah"
+
+#: validators.py:734
+msgid "Item %(value)s was not found in the list"
+msgstr "Hodnota %(value)s nebyla nalezena v seznamu"
+
+#: validators.py:809
+msgid "Date must be after %(date)s"
+msgstr "Datum musí být po %(date)s"
+
+#: validators.py:810
+msgid "Date must be before %(date)s"
+msgstr "Datum musí být před %(date)s"
+
+#: validators.py:812
+msgid "%%A, %%d %%B %%Y"
+msgstr "%%A, %%d %%B %%y"
+
+#: validators.py:813
+msgid "The date must be sometime in the future"
+msgstr "Zadané datum musí být v budoucnosti"
+
+#: validators.py:913
+msgid "Please enter an integer value"
+msgstr "Prosím vložte číselnou hodnotu"
+
+#: validators.py:945
+msgid "Please enter a number"
+msgstr "Prosím vložte číslo"
+
+#: validators.py:998
+msgid "Enter a value less than %(max)i characters long"
+msgstr "Zadejte hodnotu kratší než %(max)i znaků"
+
+#: validators.py:999
+msgid "Enter a value %(min)i characters long or more"
+msgstr "Zadejte hodnotu nejméně %(min)i znaků dlouhou"
+
+#: validators.py:1050
+msgid "Invalid data or incorrect encoding"
+msgstr "Neplatná data nebo chybné kódování znaků"
+
+#: validators.py:1178
+msgid "Please enter an email address"
+msgstr "Prosím zadejte emailovou adresu"
+
+#: validators.py:1179
+msgid "An email address must contain a single @"
+msgstr "Emailová adresa musí obsahovat jeden znak @"
+
+#: validators.py:1180
+msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
+msgstr "Uživatelské jméno v zadané adrese není platné (část před @: %(username)s)"
+
+#: validators.py:1181 validators.py:1294
+msgid "An error occured when trying to connect to the server: %(error)s"
+msgstr "Nastala chyba při snaze o připojení na server: %(error)s"
+
+#: validators.py:1182
+msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
+msgstr "Doména zadaná v emailové adrese není platná (část za @: %(domain)s)"
+
+#: validators.py:1183
+msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
+msgstr "Doména zadaná v emailové adrese neexistuje (část za @: %(domain)s)"
+
+#: validators.py:1291
+msgid "You must start your URL with http://, https://, etc"
+msgstr "Adresa musí začínat protokolem (http://, https://. atd)"
+
+#: validators.py:1292
+msgid "That is not a valid URL"
+msgstr "Tohle není platná URL adresa"
+
+#: validators.py:1293
+msgid "An error occurred when trying to access the URL: %(error)s"
+msgstr "Nastala chyba při pokusu otevřít stránku z URL adresy: %(error)s"
+
+#: validators.py:1295
+msgid "The server responded that the page could not be found"
+msgstr "Server oznámil, že požadovanou stránku nenalezl"
+
+#: validators.py:1296
+msgid "The server responded with a bad status code (%(status)s)"
+msgstr "Server odpověděl špatným kódem: %(status)s"
+
+#: validators.py:1399
+msgid "Please enter a state code"
+msgstr "Zadejte prosím zkratku státu"
+
+#: validators.py:1400
+msgid "Please enter a state code with TWO letters"
+msgstr "Prosím zadejte dvoupísmennou zkratku státu"
+
+#: validators.py:1401
+msgid "That is not a valid state code"
+msgstr "Tohle není správná zkratka státu"
+
+#: validators.py:1452
+msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
+msgstr ""
+
+#: validators.py:1614 validators.py:1622
+msgid "Please enter the date in the form %(format)s"
+msgstr "Zadejte prosím datum ve formátu %(format)s"
+
+#: validators.py:1615
+msgid "Please enter a month from 1 to 12"
+msgstr "Zadejte prosím měsíc v rozmezí 1-12"
+
+#: validators.py:1616
+msgid "Please enter a valid day"
+msgstr "Prosím zadejte správný den"
+
+#: validators.py:1617
+msgid "That month only has %(days)i days"
+msgstr "Tento měsíc má jenom %(days)i dnů"
+
+#: validators.py:1618
+msgid "That is not a valid day (%(exception)s)"
+msgstr "Tohle není platný den v týdnu: (%(exception)s)"
+
+#: validators.py:1619
+msgid "Unknown month name: %(month)s"
+msgstr "Neznámý název měsíce: %(month)s"
+
+#: validators.py:1620
+msgid "Please enter a number for the year"
+msgstr "Prosím zadejte rok"
+
+#: validators.py:1621
+msgid "Please enter a four-digit year"
+msgstr "Zadejte prosím celý rok"
+
+#: validators.py:1800
+msgid "You must indicate AM or PM"
+msgstr "Musíte zadat AM nebo PM"
+
+#: validators.py:1801
+msgid "There are too many :'s"
+msgstr "Je zde příliš : (dvojteček)"
+
+#: validators.py:1802
+msgid "You may not enter seconds"
+msgstr "Nezadávejte sekundy"
+
+#: validators.py:1803
+msgid "You must enter seconds"
+msgstr "Musíte zadat sekundy"
+
+#: validators.py:1804
+msgid "You must enter minutes (after a :)"
+msgstr "Musíte zadat minuty (za :)"
+
+#: validators.py:1805
+msgid "The %(part)s value you gave is not a number: %(number)r"
+msgstr "Hodnota %(part)s kterou jste zadali není číslo: %(number)r"
+
+#: validators.py:1806
+msgid "You must enter an hour in the range %(range)s"
+msgstr "Musíte zadat hodinu v rozmezí %(range)s"
+
+#: validators.py:1807
+msgid "You must enter a minute in the range 0-59"
+msgstr "Musíte zadat minuty v rozmezí 0-59"
+
+#: validators.py:1808
+msgid "You must enter a second in the range 0-59"
+msgstr "Musíte zadat sekundy v rozmezí 0-59"
+
+#: validators.py:1962
+msgid "Please enter a zip code (5 digits)"
+msgstr "Prosím zadejte PSČ"
+
+#: validators.py:1986
+msgid "The name %(name)s is missing"
+msgstr "Jméno %(name)s chybí"
+
+#: validators.py:2027
+msgid "Value should be %(true)r or %(false)r"
+msgstr "Hodnota může být pouze %(true)r nebo %(false)r"
+
+#: validators.py:2062
+msgid "Value does not contain a signature"
+msgstr "Hodnota neobsahuje podpis"
+
+#: validators.py:2063
+msgid "Signature is not correct"
+msgstr "Podpis není správně"
+
+#: validators.py:2185
+msgid "Fields do not match (should be %(match)s)"
+msgstr "Položky nesouhlasí, správně by mělo být %(match)s"
+
+#: validators.py:2186
+msgid "Fields do not match"
+msgstr "Položky nesouhlasí"
+
+#: validators.py:2248
+msgid "Please enter only the number, no other characters"
+msgstr "Prosím vkládejte pouze číslice, nikoliv písmena."
+
+#: validators.py:2249
+msgid "You did not enter a valid number of digits"
+msgstr "Nevložil jste číslo správné délky"
+
+#: validators.py:2250
+msgid "That number is not valid"
+msgstr "Zadané číslo není platné"
+
+#: validators.py:2365
+msgid "Please enter numbers only for month and year"
+msgstr "Prosím vložte pouze čístlice pro měsíc a rok"
+
+#: validators.py:2366
+msgid "Invalid Expiration Date"
+msgstr "Špatná hodnota data expirace"
+
+#: validators.py:2435
+msgid "Please enter numbers only for credit card security code"
+msgstr "Prosím vložte pouze číslice z bezpečnostního kódu karty"
+
+#: validators.py:2436
+msgid "Invalid credit card security code length"
+msgstr "Nesprávná délka bezpečnostního kódu karty"
+
