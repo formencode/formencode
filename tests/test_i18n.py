@@ -93,3 +93,6 @@ def test_pl():
 def test_el():
   _test_lang("el", u"Παρακαλούμε εισάγετε μια τιμή")
 
+def test_zh_CN():
+  _test_lang("zh_CN", u"请输入一个值")
+
