@@ -1,4 +1,4 @@
-from formencode.validators import String, Invalid
+from formencode.validators import String, UnicodeString, Invalid
 
 def validate(validator, value):
     try:
@@ -38,3 +38,8 @@ def test_sv_string_conversion():
     assert sv.from_python(2) == "2"
     assert sv.from_python([]) == ""
 
+def test_unicode():
+    un = UnicodeString()
+    assert un.to_python(12) == u'12'
+    assert type(un.to_python(12)) is unicode
+    

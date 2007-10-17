@@ -1088,23 +1088,32 @@ class UnicodeString(String):
         self.outputEncoding = outputEncoding or self.encoding
     
     def _to_python(self, value, state):
-        if value:
-            if isinstance(value, unicode):
-                return value
+        if not value:
+            return u''
+        if isinstance(value, unicode):
+            return value
+        if not isinstance(value, unicode):
             if hasattr(value, '__unicode__'):
-                return unicode(value)
-            try:
-                return unicode(value, self.inputEncoding)
-            except UnicodeDecodeError:
-                raise Invalid(self.message('badEncoding', state), value, state)
-        return u''
+                value = unicode(value)
+                return value
+            else:
+                value = str(value)
+        try:
+            return unicode(value, self.inputEncoding)
+        except UnicodeDecodeError:
+            raise Invalid(self.message('badEncoding', state), value, state)
+        except TypeError:
+            raise Invalid(self.message('badType', state, type=type(value), value=value), value, state)
     
     def _from_python(self, value, state):
-        if hasattr(value, '__unicode__'):
-            value = unicode(value)
+        if not isinstance(value, unicode):
+            if hasattr(value, '__unicode__'):
+                value = unicode(value)
+            else:
+                value = str(value)
         if isinstance(value, unicode):
-            return value.encode(self.outputEncoding)
-        return str(value)
+            value = value.encode(self.outputEncoding)
+        return value
 
 class Set(FancyValidator):
 

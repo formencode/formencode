@@ -35,6 +35,8 @@ svn trunk
   unicode if an ``encoding`` parameter is given.  Empty values are
   handled better.
 
+* ``validators.UnicodeString`` properly handles non-Unicode inputs.
+
 0.7.1
 -----
 
