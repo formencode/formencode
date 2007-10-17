@@ -304,9 +304,8 @@ class Schema(FancyValidator):
         result.extend(self.fields.values())
         return result
 
-    def is_empty(self, value):
-        # Generally nothing is 'empty' for a schema
-        return False
+    def empty_value(self, value):
+        return {}
 
 def format_compound_error(v, indent=0):
     if isinstance(v, Exception):
