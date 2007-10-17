@@ -406,7 +406,7 @@ class FancyValidator(Validator):
                 if fp:
                     value = fp(value, state)
                 vo = self.validate_other
-                if vo and co is not self._validate_noop:
+                if vo and vo is not self._validate_noop:
                     vo(value, state)
                 return value
             else:
@@ -424,7 +424,8 @@ class FancyValidator(Validator):
 
     def is_empty(self, value):
         # None and '' are "empty"
-        return value is None or value == ''
+        return value is None or value == '' or (
+            isinstance(value, (list, tuple, dict)) and not value)
 
     def empty_value(self, value):
         return None
