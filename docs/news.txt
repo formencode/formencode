@@ -28,6 +28,13 @@ svn trunk
 * Include ``formencode.validators.InternationalPhoneNumber`` from
   W-Mark Kubacki.
 
+* Treat empty lists/tuples/dicts as "empty".
+
+* ``validators.String`` now always returns strings.  It also converts
+  lists to comma-separated strings (no ``[...]``), and can encode
+  unicode if an ``encoding`` parameter is given.  Empty values are
+  handled better.
+
 0.7.1
 -----
 

@@ -967,6 +967,10 @@ class String(FancyValidator):
     Also takes a `max` and `min` argument, and the string length must
     fall in that range.
 
+    Also you may give an `encoding` argument, which will encode any
+    unicode that is found.  Lists and tuples are joined with
+    `list_joiner` (default ``', '``) in ``from_python``.
+
     ::
 
         >>> String(min=2).to_python('a')
@@ -997,6 +1001,8 @@ class String(FancyValidator):
     min = None
     max = None
     not_empty = None
+    encoding = None
+    list_joiner = ', '
 
     messages = {
         'tooLong': _("Enter a value less than %(max)i characters long"),
@@ -1006,8 +1012,37 @@ class String(FancyValidator):
     def __initargs__(self, new_attrs):
         if self.not_empty is None and self.min:
             self.not_empty = True
+
+    def _to_python(self, value, state):
+        if not value:
+            value = ''
+        if not isinstance(value, basestring):
+            try:
+                value = str(value)
+            except UnicodeEncodeError:
+                value = unicode(value)
+        if self.encoding is not None and isinstance(value, unicode):
+            value = value.encode(self.encoding)
+        return value
+
+    def _from_python(self, value, state):
+        if not value and value != 0:
+            value = ''
+        if not isinstance(value, basestring):
+            if isinstance(value, (list, tuple)):
+                value = self.list_joiner.join([
+                    self._from_python(v, state) for v in value])
+            try:
+                value = str(value)
+            except UnicodeEncodeError:
+                value = unicode(value)
+        if self.encoding is not None and isinstance(value, unicode):
+            value = value.encode(self.encoding)
+        if self.strip:
+            value = value.strip()
+        return value
     
-    def validate_python(self, value, state):
+    def validate_other(self, value, state):
         if (self.max is not None and value is not None
             and len(value) > self.max):
             raise Invalid(self.message('tooLong', state,
@@ -1018,13 +1053,6 @@ class String(FancyValidator):
             raise Invalid(self.message('tooShort', state,
                                        min=self.min),
                           value, state)
-
-    def _from_python(self, value, state):
-        if value:
-            return str(value)
-        if value == 0:
-            return str(value)
-        return ""
 
     def empty_value(self, value):
         return ''
