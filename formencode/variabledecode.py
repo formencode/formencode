@@ -143,3 +143,5 @@ class NestedVariables(api.FancyValidator):
     def _from_python(self, value, state):
         return variable_encode(value)
 
+    def empty_value(self, value):
+        return {}

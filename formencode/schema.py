@@ -1,5 +1,6 @@
 from interfaces import *
 from api import *
+from api import _
 import declarative
 
 __all__ = ['Schema']
@@ -52,8 +53,9 @@ class Schema(FancyValidator):
     order = []
 
     messages = {
-        'notExpected': 'The input field %(name)s was not expected.',
-        'missingValue': "Missing value",
+        'notExpected': _('The input field %(name)s was not expected.'),
+        'missingValue': _("Missing value"),
+        'badDictType': _("The input must be dict-like (not a %(type)s: %(value)r)"),
         }
 
     __mutableattributes__ = ('fields', 'chained_validators',
@@ -98,12 +100,26 @@ class Schema(FancyValidator):
         for name, value in self.fields.items():
             self.add_field(name, value)
     
+    def assert_dict(self, value, state):
+        """
+        Helper to assure we have proper input
+        """
+        if not hasattr(value, 'items'):
+            # Not a dict or dict-like object
+            raise Invalid(self.message('badDictType', state, type=type(value), value=value),
+                          value, state)
+            
     def _to_python(self, value_dict, state):
-        if not value_dict and self.if_empty is not NoDefault:
-            return self.if_empty
+        if not value_dict:
+            if self.if_empty is not NoDefault:
+                return self.if_empty
+            else:
+                value_dict = {}
 
         for validator in self.pre_validators:
             value_dict = validator.to_python(value_dict, state)
+
+        self.assert_dict(value_dict, state)
         
         new = {}
         errors = {}
@@ -192,6 +208,7 @@ class Schema(FancyValidator):
             __traceback_info__ = 'for_python chained_validator %s (finished %s)' % (validator, ', '.join(map(repr, finished)) or 'none')
             finished.append(validator)
             value_dict = validator.from_python(value_dict, state)
+        self.assert_dict(value_dict, state)
         new = {}
         errors = {}
         unused = self.fields.keys()
@@ -286,6 +303,10 @@ class Schema(FancyValidator):
         result.extend(self.chained_validators)
         result.extend(self.fields.values())
         return result
+
+    def is_empty(self, value):
+        # Generally nothing is 'empty' for a schema
+        return False
 
 def format_compound_error(v, indent=0):
     if isinstance(v, Exception):

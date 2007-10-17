@@ -52,9 +52,10 @@ class DecodeCase(object):
         all_cases.append(self)
 
     def test(self):
-        print self.raw_input
+        print 'input', repr(self.input)
         actual = self.schema.to_python(self.input)
-        assert actual == self.output        
+        print 'output', repr(actual)
+        assert actual == self.output
 
 class BadCase(DecodeCase):
 
@@ -66,9 +67,9 @@ class BadCase(DecodeCase):
             self.output = self.output['text']
 
     def test(self):
-        print self.raw_input
+        print repr(self.raw_input)
         try:
-            self.schema.to_python(self.input)
+            print repr(self.schema.to_python(self.input))
         except Invalid, e:
             actual = e.unpack_errors()
             assert actual == self.output
