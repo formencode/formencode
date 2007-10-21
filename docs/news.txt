@@ -40,6 +40,9 @@ svn trunk
 * ``validators.Int`` takes ``min`` and ``max`` options (from Felix
   Schwarz).
 
+* Make ``validators.DateConverter`` serialize dates properly (from
+  James Gardner).
+
 0.7.1
 -----
 

@@ -1799,7 +1799,7 @@ class DateConverter(FancyValidator):
         'invalidDate': _('That is not a valid day (%(exception)s)'),
         'unknownMonthName': _("Unknown month name: %(month)s"),
         'invalidYear': _('Please enter a number for the year'),
-        'fourDigitYear': _('Please enter a four-digit year'),
+        'fourDigitYear': _('Please enter a four-digit year after 1899'),
         'wrongFormat': _('Please enter the date in the form %(format)s'),
         }
 
@@ -1865,7 +1865,7 @@ class DateConverter(FancyValidator):
             year = year + 2000
         if year >= 50 and year < 100:
             year = year + 1900
-        if year > 20 and year < 50:
+        if (year > 20 and year < 50) or (year>99 and year<1900):
             raise Invalid(self.message('fourDigitYear', state),
                           year, state)
         return year
@@ -1894,8 +1894,11 @@ class DateConverter(FancyValidator):
 
     def unconvert_day(self, value, state):
         # @@ ib: double-check, improve
-        return value.strftime("%m/%d/%Y")
-        
+        if self.month_style == 'mm/dd/yyyy':
+            return value.strftime("%m/%d/%Y")
+        else:
+            return value.strftime("%d/%m/%Y")
+
     def unconvert_month(self, value, state):
         # @@ ib: double-check, improve
         return value.strftime("%m/%Y")
