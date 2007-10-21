@@ -43,6 +43,9 @@ svn trunk
 * Make ``validators.DateConverter`` serialize dates properly (from
   James Gardner).
 
+* Minor fix to setup.py to make FormEncode more friendly with
+  zc.buildout.
+
 0.7.1
 -----
 

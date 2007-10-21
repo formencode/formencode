@@ -1,6 +1,9 @@
-from ez_setup import use_setuptools
-use_setuptools()
-from setuptools import setup
+try:
+    from setuptools import setup
+except ImportError:
+    from ez_setup import use_setuptools
+    use_setuptools()
+    from setuptools import setup
 
 version = '0.7.2'
 
