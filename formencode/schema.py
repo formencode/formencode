@@ -159,9 +159,11 @@ class Schema(FancyValidator):
                     if self.ignore_key_missing:
                         continue
                     if self.if_key_missing is NoDefault:
-                        errors[name] = Invalid(
-                            self.message('missingValue', state),
-                            None, state)
+                        try:
+                            message = validator.message('missing', state)
+                        except KeyError:
+                            message = self.message('missingValue', state)
+                        errors[name] = Invalid(message, None, state)
                     else:
                         try:
                             new[name] = validator.to_python(self.if_key_missing, state)
