@@ -21,7 +21,7 @@ This is in contrast to a transactional system, where you just start
 applying the data and if there's a problem you raise an exception.
 Someplace else you catch the exception and roll back the transaction.
 Of course FormEncode works fine with such a system, but because
-nothing is done until everything validators, you can use this without
+nothing is done until everything validates, you can use this without
 transactions.
 
 FormEncode generally works on primitive types (though you could extend
