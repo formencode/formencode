@@ -37,6 +37,9 @@ svn trunk
 
 * ``validators.UnicodeString`` properly handles non-Unicode inputs.
 
+* ``validators.Int`` takes ``min`` and ``max`` options (from Felix
+  Schwarz).
+
 0.7.1
 -----
 

@@ -915,7 +915,19 @@ class Int(FancyValidator):
 
     messages = {
         'integer': _("Please enter an integer value"),
+        'tooLow': _("Please enter an integer above %(min)i"),
+        'tooHigh': _("Please enter an integer below %(max)i"),
         }
+
+    min = None
+    max = None
+    
+    def __initargs__(self, args):
+        if self.min != None:
+            self.min = int(self.min)
+        if self.max != None:
+            self.max = int(self.max)
+
 
     def _to_python(self, value, state):
         try:
@@ -923,6 +935,14 @@ class Int(FancyValidator):
         except (ValueError, TypeError):
             raise Invalid(self.message('integer', state),
                           value, state)
+
+    def validate_python(self, value, state):
+        if self.min != None and value < self.min:
+            msg = self.message("tooLow", state, min=self.min)
+            raise Invalid(msg, value, state)
+        if self.max != None and value > self.max:
+            msg = self.message("tooHigh", state, max=self.max)
+            raise Invalid(msg, value, state)
 
     _from_python = _to_python
 
@@ -1114,6 +1134,9 @@ class UnicodeString(String):
         if isinstance(value, unicode):
             value = value.encode(self.outputEncoding)
         return value
+
+    def empty_value(self, value):
+        return u''
 
 class Set(FancyValidator):
 
