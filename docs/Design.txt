@@ -95,7 +95,7 @@ FormEncode is a toolkit for bridging those two areas in a sensible and
 secure way.  The specific way we bridge this depends on the nature of
 the user interface.  An XML-RPC interface can make some assumptions
 that a GUI cannot make.  An HTML interface can typically make even
-less assumptions, including the basic integrity of the input data.  It
+fewer assumptions, including the basic integrity of the input data.  It
 isn't reasonable that the object should know about all means of
 inputs, and the varying UI requirements of those inputs; user
 interfaces are volatile, and more art than science, but domain objects

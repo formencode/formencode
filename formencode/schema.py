@@ -306,6 +306,10 @@ class Schema(FancyValidator):
         result.extend(self.fields.values())
         return result
 
+    def is_empty(self, value):
+        ## Generally nothing is empty for us
+        return False
+
     def empty_value(self, value):
         return {}
 

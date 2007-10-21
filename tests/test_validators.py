@@ -1,4 +1,10 @@
 from formencode.validators import String, UnicodeString, Invalid, Int
+from formencode.validators import DateConverter
+from formencode.variabledecode import NestedVariables
+from formencode.schema import Schema
+from formencode.foreach import ForEach
+import datetime
+from formencode.api import NoDefault
 
 def validate(validator, value):
     try:
@@ -80,5 +86,44 @@ def test_int_minmax_optional():
     assert validate(iv, "1") == messages('tooLow', None, min=5)
     assert validate(iv, "15") == messages('tooHigh', None, max=10)
 
+def test_month_style():
+    date = DateConverter(month_style='dd/mm/yyy')
+    d = datetime.date(2007,12,20)
+    assert date.to_python('20/12/2007') == d
+    assert date.from_python(d) == '20/12/2007'
 
+def test_date():
+    date = DateConverter(month_style='dd/mm/yyy')
+    try:
+        date.to_python('20/12/150')
+    except Invalid, e:
+        assert 'Please enter a four-digit year after 1899' in str(e)
+
+
+def test_foreach_if_missing():
+
+    class SubSchema(Schema):
+        age = Int()
+        name = String(not_empty=True)
+
+    class MySchema(Schema):
+        pre_validators = [NestedVariables()]
+        people = ForEach(SubSchema(), if_missing=NoDefault, messages={'missing':'Please add a person'})
+
+    start_values = {}
+
+    class State:
+        pass
+
+    validator = MySchema()
+    assert validator.fields['people'].not_empty == False
+
+    state = State()
+
+    try:
+        values = validator.to_python(start_values, state)
+    except Invalid, e:
+        assert e.unpack_errors() == {'people': u'Please add a person'}
+    else:
+        raise Exception("Shouldn't be valid data", values, start_values)
 
