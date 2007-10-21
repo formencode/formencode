@@ -818,14 +818,22 @@ class DateValidator(FancyValidator):
         }
 
     def validate_python(self, value, state):
+        date_format = self.message('date_format', state)
+        if isinstance(date_format, unicode):
+            # strftime doesn't like unicode
+            encoding = 'utf8'
+            date_format = date_format.encode(encoding)
+        else:
+            encoding = None
         if self.earliest_date:
             if callable(self.earliest_date):
                 earliest_date = self.earliest_date()
             else:
                 earliest_date = self.earliest_date
             if value < earliest_date:
-                date_formatted = earliest_date.strftime(
-                    self.message('date_format', state))
+                date_formatted = earliest_date.strftime(date_format)
+                if encoding:
+                    date_formatted = date_formatted.decode(encoding)
                 raise Invalid(
                     self.message('after', state,
                                  date=date_formatted),
@@ -836,8 +844,9 @@ class DateValidator(FancyValidator):
             else:
                 latest_date = self.latest_date
             if value > latest_date:
-                date_formatted = latest_date.strftime(
-                    self.message('date_format', state))
+                date_formatted = latest_date.strftime(date_format)
+                if encoding:
+                    date_formatted = date_formatted.decode(encoding)
                 raise Invalid(
                     self.message('before', state,
                                  date=date_formatted),
@@ -846,8 +855,9 @@ class DateValidator(FancyValidator):
             dt_mod = import_datetime(self.datetime_module)
             now = datetime_now(dt_mod)
             if value < now:
-                date_formatted = now.strftime(
-                    self.message('date_format', state))
+                date_formatted = now.strftime(date_format)
+                if encoding:
+                    date_formatted = date_formatted.decode(encoding)
                 raise Invalid(
                     self.message('future', state,
                                  date=date_formatted),
@@ -860,8 +870,9 @@ class DateValidator(FancyValidator):
             value_as_date = datetime_makedate(
                 dt_mod, value.year, value.month, value.day)
             if value_as_date < today:
-                date_formatted = now.strftime(
-                    self.message('date_format', state))
+                date_formatted = now.strftime(date_format)
+                if encoding:
+                    date_formatted = date_formatted.decode(encoding)
                 raise Invalid(
                     self.message('future', state,
                                  date=date_formatted),
@@ -1090,7 +1101,7 @@ class UnicodeString(String):
     ::
     
         >>> UnicodeString().to_python(None)
-        ''
+        u''
         >>> UnicodeString().to_python([])
         u''
         >>> UnicodeString(encoding='utf-7').to_python('Ni Ni Ni')
@@ -1322,9 +1333,7 @@ class URL(FancyValidator):
         >>> u.to_python('foo.com')
         'http://foo.com'
         >>> u.to_python('http://hahaha/bar.html')
-        Traceback (most recent call last):
-            ...
-        Invalid: That is not a valid URL
+        'http://hahaha/bar.html'
         >>> u.to_python('https://test.com')
         'https://test.com'
         >>> u = URL(add_http=False, check_exists=True)
@@ -2181,6 +2190,9 @@ class StripField(FancyValidator):
                           valueDict, state)
         return field, v
 
+    def is_empty(self, value):
+        ## Empty dictionaries don't really apply here
+        return False
 
 class StringBool(FancyValidator):
     # Originally from TurboGears
@@ -2290,6 +2302,109 @@ class SignedString(FancyValidator):
         return ''.join([
             chr(random.randrange(256))
             for i in range(self.nonce_length)])
+
+class CIDR(FancyValidator):
+    """
+    Formencode validator to check whether a string is in correct CIDR
+    notation (IP address, or IP address plus /mask)
+
+    Examples::
+
+        >>> cidr = CIDR()
+        >>> cidr.to_python('127.0.0.1')
+        '127.0.0.1'
+        >>> cidr.to_python('299.0.0.1')
+        Traceback (most recent call last):
+            ...
+        Invalid: The octets must be within the range of 0-255 (not '299')
+        >>> cidr.to_python('192.168.0.1/1')
+        Traceback (most recent call last):
+            ...
+        Invalid: The network size (bits) must be within the range of 8-32 (not '1')
+        >>> cidr.to_python('asdf')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a valid IP address (a.b.c.d) or IP network (a.b.c.d/e)
+    """
+    messages = {
+            'not_cidr_format' : u'Please enter a valid IP address (a.b.c.d) or IP network (a.b.c.d/e)',
+            'illegal_octets' : u'The octets must be within the range of 0-255 (not %(octet)r)',
+            'illegal_bits' : u'The network size (bits) must be within the range of 8-32 (not %(bits)r)',
+            }
+
+    def validate_python(self, value, state):
+        try:
+            # Split into octets and bits
+            if '/' in value: # a.b.c.d/e
+                addr, bits = value.split('/')
+            else: # a.b.c.d
+                addr, bits = value, 32
+                
+            octets = addr.split('.')
+
+            # Only 4 octets?
+            if len(octets) != 4:
+                raise Invalid(self.message("not_cidr_format", state, value=value), value, state)
+
+            # Correct octets?
+            for octet in octets:
+                if int(octet) < 0 or int(octet) > 255:
+                    raise Invalid(self.message("illegal_octets", state, octet=octet), value, state)
+
+            # Bits (netmask) correct?
+            if int(bits) < 8 or int(bits) > 32:
+                    raise Invalid(self.message("illegal_bits", state, bits=bits), value, state)
+
+        # Splitting faild: wrong syntax
+        except ValueError:
+            raise Invalid(self.message("not_cidr_format", state), value, state)
+
+class MACAddress(FancyValidator):
+    """
+    Formencode validator to check whether a string is a correct hardware
+    (MAC) address.
+
+    Examples::
+
+        >>> mac = MacAddress()
+        >>> mac.to_python('aa:bb:cc:dd:ee:ff')
+        'aabbccddeeff'
+        >>> mac.to_python('aa:bb:cc:dd:ee:ff:e')
+        Traceback (most recent call last):
+            ...
+        Invalid: A MAC address must contain 12 digits and A-F; the value you gave has 13 characters
+        >>> mac.to_python('aa:bb:cc:dd:ee:fx')
+        Traceback (most recent call last):
+            ...
+        Invalid: MAC addresses may only contain 0-9 and A-F (and optionally :), not 'x'
+        >>> MacAddress(add_colons=True).to_python('aabbccddeeff')
+        'aa:bb:cc:dd:ee:ff'
+    """
+
+    strip=True
+    valid_characters = '0123456789abcdefABCDEF'
+    add_colons = False
+    
+    messages = {
+        'bad_length': _(u'A MAC address must contain 12 digits and A-F; the value you gave has %(length)s characters'),
+        'bad_character': _(u'MAC addresses may only contain 0-9 and A-F (and optionally :), not %(char)r'),
+        }
+
+    def _to_python(self, value, state):
+        address = value.replace(':','') # remove colons
+        address = address.lower()
+        if len(address)!=12:
+            raise Invalid(self.message("bad_length", state, length=len(address)), address, state)
+        for char in address:
+            if char not in self.valid_characters:
+                raise Invalid(self.message("bad_character", state, char=char), address, state)
+        if self.add_colons:
+            address = '%s:%s:%s:%s:%s:%s' % (
+                address[0:2], address[2:4], address[4:6],
+                address[6:8], address[8:10], address[10:12])
+        return address
+
+    _from_python = _to_python
 
 class FormValidator(FancyValidator):
     """

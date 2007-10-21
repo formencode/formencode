@@ -50,6 +50,9 @@ svn trunk
 * Minor fix to setup.py to make FormEncode more friendly with
   zc.buildout.
 
+* Added ``validators.CADR`` (for IP addresses with an optional range)
+  and ``validators.MACAddress`` (from Christoph Haas).
+
 0.7.1
 -----
 
