@@ -28,6 +28,11 @@ class Schema(FancyValidator):
 
         class MySubSchema(MySchema):
             name = None
+
+    Note that missing fields are handled at the Schema level.  Missing
+    fields can have the 'missing' message set to specify the error
+    message, or if that does not exist the *schema* message
+    'missingValue' is used.
     """
 
     # These validators will be applied before this schema:
