@@ -5,7 +5,7 @@ except ImportError:
     use_setuptools()
     from setuptools import setup
 
-version = '0.7.2'
+version = '0.9.1'
 
 setup(name="FormEncode",
       version=version,
