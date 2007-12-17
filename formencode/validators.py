@@ -1552,7 +1552,7 @@ class IPhoneNumberValidator(FancyValidator):
 
     ::
 
-        >>> p = IPhoneNumberValidator()
+        >>> p = IPhoneNumberValidator(default_cc=49)
         >>> p.to_python('333-3333')
         Traceback (most recent call last):
             ...
@@ -2366,7 +2366,7 @@ class MACAddress(FancyValidator):
 
     Examples::
 
-        >>> mac = MacAddress()
+        >>> mac = MACAddress()
         >>> mac.to_python('aa:bb:cc:dd:ee:ff')
         'aabbccddeeff'
         >>> mac.to_python('aa:bb:cc:dd:ee:ff:e')
@@ -2377,7 +2377,7 @@ class MACAddress(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: MAC addresses may only contain 0-9 and A-F (and optionally :), not 'x'
-        >>> MacAddress(add_colons=True).to_python('aabbccddeeff')
+        >>> MACAddress(add_colons=True).to_python('aabbccddeeff')
         'aa:bb:cc:dd:ee:ff'
     """
 
