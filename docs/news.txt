@@ -3,6 +3,12 @@ News
 
 .. contents::
 
+svn trunk
+---------
+
+* Added ``formencode.schema.SimpleFormValidator``, which wraps a
+  simple function to make it a validator.
+
 0.9
 ---
 

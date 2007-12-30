@@ -382,3 +382,75 @@ def merge_lists(l1, l2):
             item = merge_values(l1item, l2item)
         result.append(item)
     return result
+
+class SimpleFormValidator(FancyValidator):
+    """
+    This validator wraps a simple function that validates the form.
+
+    The function looks something like this::
+
+      >>> def validate(form_values, state, validator):
+      ...     if form_values.get('country', 'US') == 'US':
+      ...         if not form_values.get('state'):
+      ...             return {'state': 'You must enter a state'}
+      ...     if not form_values.get('country'):
+      ...         form_values['country'] = 'US'
+
+    This tests that the field 'state' must be filled in if the country
+    is US, and defaults that country value to 'US'.  The ``validator``
+    argument is the SimpleFormValidator instance, which you can use to
+    format messages or keep configuration state in if you like (for
+    simple ad hoc validation you are unlikely to need it).
+
+    To create a validator from that function, you would do::
+
+      >>> from formencode.schema import SimpleFormValidator
+      >>> validator = SimpleFormValidator(validate)
+      >>> validator.to_python({'country': 'US', 'state': ''}, None)
+      Traceback (most recent call last):
+          ...
+      Invalid: state: You must enter a state
+      >>> validator.to_python({'state': 'IL'}, None)
+      {'country': 'US', 'state': 'IL'}
+
+    The validate function can either return a single error message
+    (that applies to the whole form), a dictionary that applies to the
+    fields, None which means the form is valid, or it can raise
+    Invalid.
+
+    Note that you may update the value_dict *in place*, but you cannot
+    return a new value.
+
+    Another way to instantiate a validator is like this::
+
+      >>> @SimpleFormValidator.decorate()
+      ... def MyValidator(value_dict, state):
+      ...     return None # or some more useful validation
+
+    After this ``MyValidator`` will be a ``SimpleFormValidator``
+    instance (it won't be your function).
+    """
+
+    __unpackargs__ = ('func',)
+
+    def to_python(self, value_dict, state):
+        errors = self.func(value_dict, state, self)
+        if not errors:
+            return value_dict
+        if isinstance(errors, basestring):
+            raise Invalid(errors, value_dict, state)
+        elif isinstance(errors, dict):
+            raise Invalid(format_compound_error(errors),
+                          value_dict, state, error_dict=errors)
+        elif isinstance(errors, Invalid):
+            raise errors
+        else:
+            raise TypeError(
+                "Invalid error value: %r" % errors)
+
+    def decorate(cls, **kw):
+        def decorator(func):
+            return cls(func, **kw)
+        return decorator
+
+    decorate = classmethod(decorate)

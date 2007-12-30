@@ -21,7 +21,8 @@ text_files = [
     ]
 
 from formencode import validators
-modules = [validators]
+from formencode import schema
+modules = [validators, schema]
 
 if __name__ == '__main__':
     import sys
