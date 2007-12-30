@@ -228,6 +228,35 @@ Since a `Schema <class-formencode.schema.Schema.html>`_ is just
 another kind of validator, you can nest these indefinitely, validating
 dictionaries of dictionaries.
 
+.. _SimpleFormValidator:
+
+Another way to do simple validation of a complete form is with
+``formencode.schema.SimpleFormValidator``.  This class wraps a simple
+function that you write.  For example::
+
+    >>> from formencode.schema import SimpleFormValidator
+    >>> def validate_state(value_dict, state, validator):
+    ...     if value_dict.get('country', 'US') == 'US':
+    ...         if not value_dict.get('state'):
+    ...             return {'state': 'You must enter a state'}
+    >>> ValidateState = SimpleFormValidator(validate_state)
+    >>> ValidateState.to_python({'country': 'US'}, None)
+
+The ``validate_state`` function (or any validation function) returns
+any errors in the form (or it may raise Invalid directly).  It can
+also modify the ``value_dict`` dictionary directly.  When it returns
+None this indicates that everything is valid.  You can use this with a
+``Schema`` by putting ``ValidateState`` in ``pre_validators`` (all
+validation will be done before the schema's validation, and if there's
+an error the schema won't be run).  Or you can put it in
+``chained_validators`` and it will be run *after* the schema.  If the
+schema fails (the values are invalid) then ``ValidateState`` will not
+be run, unless you set ``validate_partial_form`` to True (like
+``ValidateState = SimpleFormValidator(validate_state,
+validate_partial_form=True).  If you validate a partial form you
+should be careful that you handle missing keys and other
+possibly-invalid values gracefully.
+
 .. _ForEach:
 
 You can also validate lists of items using `ForEach

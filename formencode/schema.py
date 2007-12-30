@@ -433,7 +433,12 @@ class SimpleFormValidator(FancyValidator):
 
     __unpackargs__ = ('func',)
 
+    validate_partial_form = False
+
     def to_python(self, value_dict, state):
+        # Since we aren't really supposed to modify things in-place,
+        # we'll give the validation function a copy:
+        value_dict = value_dict.copy()
         errors = self.func(value_dict, state, self)
         if not errors:
             return value_dict
