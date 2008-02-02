@@ -177,28 +177,24 @@ class Schema(FancyValidator):
                 else:
                     new[name] = validator.if_missing
 
-            if errors:
-                for validator in self.chained_validators:
-                    if (not hasattr(validator, 'validate_partial')
-                        or not getattr(validator, 'validate_partial_form', False)):
+            for validator in self.chained_validators:
+                if (not hasattr(validator, 'validate_partial')
+                    or not getattr(validator, 'validate_partial_form', False)):
+                    continue
+                try:
+                    validator.validate_partial(value_dict, state)
+                except Invalid, e:
+                    sub_errors = e.unpack_errors()
+                    if not isinstance(sub_errors, dict):
+                        # Can't do anything here
                         continue
-                    try:
-                        validator.validate_partial(value_dict, state)
-                    except Invalid, e:
-                        sub_errors = e.unpack_errors()
-                        if not isinstance(sub_errors, dict):
-                            # Can't do anything here
-                            continue
-                        merge_dicts(errors, sub_errors)
+                    merge_dicts(errors, sub_errors)
 
             if errors:
                 raise Invalid(
                     format_compound_error(errors),
                     value_dict, state,
                     error_dict=errors)
-
-            for validator in self.chained_validators:
-                new = validator.to_python(new, state)
 
             return new
 

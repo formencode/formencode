@@ -149,4 +149,19 @@ def test_merge():
             == dict(a=['a1\naa1', 'a2'], b=['b\nbb', 'bbb'],
                     c=['c']))
 
+class ChainedTest(Schema):
+    a = validators.String()
+    a_confirm = validators.String()
 
+    b = validators.String()
+    b_confirm = validators.String()
+
+    chained_validators = [validators.FieldsMatch('a', 'a_confirm'),
+                            validators.FieldsMatch('b', 'b_confirm')]
+
+def test_multiple_chained_validators_errors():
+    try:
+        s = ChainedTest()
+        s.to_python({'a':'1', 'a_confirm':'2', 'b':'3', 'b_confirm':'4'})
+    except Invalid, e:
+        assert(e.error_dict.has_key('a_confirm') and e.error_dict.has_key('b_confirm'))
