@@ -1,0 +1,324 @@
+# Norsk oversettelse av FormEncode
+# Dag Brattli <dag@obexcode.com>, 2008.
+# Copyright (C) 2008 ObexCode
+
+msgid ""
+msgstr ""
+"Project-Id-Version: FormEncode 0.9\n"
+"POT-Creation-Date: 2006-10-02 20:59+0100\n"
+"PO-Revision-Date: 2008-01-01 20:21+0100\n"
+"Last-Translator: Dag Brattli <dag@obexcode.com>\n"
+"Language-Team: Dag Brattli <dag@obexcode.com>, Frank Ronny Larsen <frank@obexcode.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding:  8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: api.py:335 validators.py:433
+msgid "Please enter a value"
+msgstr "Venligst fyll inn en verdi"
+
+#: api.py:336
+msgid "The input must be a string (not a %(type)s: %(value)r)"
+msgstr "Det du fylte inn må være tekst (ikke %(type)s: %(value)r))"
+
+#: api.py:337
+msgid "The input must be a string (not None)"
+msgstr "Det du fyller inn være tekst (ikke tomt)"
+
+#: validators.py:160
+msgid "%(object)r is not a subclass of %(subclass)s"
+msgstr "%(object)r er ikke en subklasse av %(subclass)s"
+
+#: validators.py:161
+msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
+msgstr "%(object)r er ikke en subklasse av en av typene %(subclassList)s"
+
+#: validators.py:162
+msgid "%(object)r must be one of the types %(typeList)s"
+msgstr "%(object)r må være en av typene %(typeList)s"
+
+#: validators.py:163
+msgid "%(object)r must be of the type %(type)s"
+msgstr "%(object)r må være av type %(type)s"
+
+#: validators.py:344
+msgid "Enter a value less than %(maxLength)i characters long"
+msgstr "Skriv inn en verdi som er mindre enn %(maxLength)i tegn"
+
+#: validators.py:345 validators.py:399
+msgid "Invalid value (value with length expected)"
+msgstr "Ugyldig verdi (forventet en verdi med lengde)"
+
+#: validators.py:398
+msgid "Enter a value at least %(minLength)i characters long"
+msgstr "Skriv inn en verdi som er på minst %(minLength)i tegn"
+
+#: validators.py:458
+msgid "You cannot enter a value here"
+msgstr "Du kan ikke skrive en verdi her"
+
+#: validators.py:509
+msgid "The input is not valid"
+msgstr "Verdien er ikke gyldig"
+
+#: validators.py:565
+msgid "Enter only letters, numbers, or _ (underscore)"
+msgstr "Bare skriv inn tegn, tall, eller _ (understreking)"
+
+#: validators.py:604
+msgid "Invalid value"
+msgstr "Ugyldig verdi"
+
+#: validators.py:605
+msgid "Value must be one of: %(items)s (not %(value)r)"
+msgstr "Verdien må være en av: %(items)s (ikke %(value)r)"
+
+#: validators.py:668
+msgid "Choose something"
+msgstr "Velg noe"
+
+#: validators.py:669
+msgid "Enter a value from: %(items)s"
+msgstr "Velg en verdi fra: %(items)s"
+
+#: validators.py:670
+msgid "That value is not known"
+msgstr "Den verdien er ikke kjent"
+
+#: validators.py:671
+msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
+msgstr "Ingenting i min ordliste har verdien %(value)s.  Velg en av: %(items)s"
+
+#: validators.py:732
+msgid "Must be an integer index"
+msgstr "Må være en heltallsindeks"
+
+#: validators.py:733
+msgid "Index out of range"
+msgstr "Indeks er utenfor grensene"
+
+#: validators.py:734
+msgid "Item %(value)s was not found in the list"
+msgstr "Oppføringen %(value)s ble ikke funnet i listen"
+
+#: validators.py:809
+msgid "Date must be after %(date)s"
+msgstr "Datoen må være etter %(date)s"
+
+#: validators.py:810
+msgid "Date must be before %(date)s"
+msgstr "Datoen må være før %(date)s"
+
+#: validators.py:812
+msgid "%%A, %%d %%B %%Y"
+msgstr "%%A, %%d. %%B %%Y"
+
+#: validators.py:813
+msgid "The date must be sometime in the future"
+msgstr "Datoen må være i fremtiden"
+
+#: validators.py:913
+msgid "Please enter an integer value"
+msgstr "Vennligst skriv inn en heltallsverdi"
+
+#: validators.py:945
+msgid "Please enter a number"
+msgstr "Vennligst skriv inn et nummer"
+
+#: validators.py:998
+msgid "Enter a value less than %(max)i characters long"
+msgstr "Skriv inn en verdi som er mindre enn %(max)i tegn"
+
+#: validators.py:999
+msgid "Enter a value %(min)i characters long or more"
+msgstr "Skriv inn en verdi som er %(min)i tegn eller mer"
+
+#: validators.py:1050
+msgid "Invalid data or incorrect encoding"
+msgstr "Ugyldig data eller feil koding"
+
+#: validators.py:1178
+msgid "Please enter an email address"
+msgstr "Vennligst skriv inn en epostadresse"
+
+#: validators.py:1179
+msgid "An email address must contain a single @"
+msgstr "En epostadresse må inneholde en @"
+
+#: validators.py:1180
+msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
+msgstr "Brukernavnet i epostadressen er ugyldig (den delen før @: %(username)s)"
+
+#: validators.py:1181 validators.py:1294
+msgid "An error occured when trying to connect to the server: %(error)s"
+msgstr "En feil oppstod ved oppkobling til tjeneren: %(error)s"
+
+#: validators.py:1182
+msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
+msgstr "Domenet i epostadressen er ugyldig (den delen etter @: %(domain)s)"
+
+#: validators.py:1183
+msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
+msgstr "Domenet i epostadressen eksister ikke (den delen etter @: %(domain)s)"
+
+#: validators.py:1291
+msgid "You must start your URL with http://, https://, etc"
+msgstr "Du må starte din URL med http://, https://, o.l."
+
+#: validators.py:1292
+msgid "That is not a valid URL"
+msgstr "Det er ikke en gyldig URL"
+
+#: validators.py:1293
+msgid "An error occurred when trying to access the URL: %(error)s"
+msgstr "En feil oppstod ved tilgang til URL'en: %(error)s"
+
+#: validators.py:1295
+msgid "The server responded that the page could not be found"
+msgstr "Tjeneren ga tilbakemelding om at siden ikke kunne finnes"
+
+#: validators.py:1296
+msgid "The server responded with a bad status code (%(status)s)"
+msgstr "Tjeneren ga tilbakemelding med feilkode (%(status)s)"
+
+#: validators.py:1399
+msgid "Please enter a state code"
+msgstr "Vennligst skriv inn statskoden"
+
+#: validators.py:1400
+msgid "Please enter a state code with TWO letters"
+msgstr "Vennligst skriv inn en statskode med TO bokstaver"
+
+#: validators.py:1401
+msgid "That is not a valid state code"
+msgstr "Det er ikke en gyldig statskode"
+
+#: validators.py:1452
+msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
+msgstr "Vennligst skriv inn et nummer, med retningsummer, på formen ###-###-####, eller med \"ext.####\""
+
+#: validators.py:1614 validators.py:1622
+msgid "Please enter the date in the form %(format)s"
+msgstr "Vennligst skriv inn datoen på formen %(format)s"
+
+#: validators.py:1615
+msgid "Please enter a month from 1 to 12"
+msgstr "Vennligst skriv inn en måned fra 1 til 12"
+
+#: validators.py:1616
+msgid "Please enter a valid day"
+msgstr "Vennligst skriv inn en gyldig dag"
+
+#: validators.py:1617
+msgid "That month only has %(days)i days"
+msgstr "Den måneden har bare %(days)i dager"
+
+#: validators.py:1618
+msgid "That is not a valid day (%(exception)s)"
+msgstr "Det er ikke en gyldig dag (%(exception)s)"
+
+#: validators.py:1619
+msgid "Unknown month name: %(month)s"
+msgstr "Ukjent navn på måned: %(month)s"
+
+#: validators.py:1620
+msgid "Please enter a number for the year"
+msgstr "Vennligst skriv inn et tall for året"
+
+#: validators.py:1621
+msgid "Please enter a four-digit year"
+msgstr "Vennligst skriv inn et firesifferet årstall"
+
+#: validators.py:1800
+msgid "You must indicate AM or PM"
+msgstr "Du må indikere AM eller PM"
+
+#: validators.py:1801
+msgid "There are too many :'s"
+msgstr "Det er for mange :'er"
+
+#: validators.py:1802
+msgid "You may not enter seconds"
+msgstr "Du kan ikke skrive inn sekunder"
+
+#: validators.py:1803
+msgid "You must enter seconds"
+msgstr "Du må skrive inn sekunder"
+
+#: validators.py:1804
+msgid "You must enter minutes (after a :)"
+msgstr "Du må skrive minutter (etter en :)"
+
+#: validators.py:1805
+msgid "The %(part)s value you gave is not a number: %(number)r"
+msgstr "Den %(part)s verdien du ga er ikke et tall: %(number)r"
+
+#: validators.py:1806
+msgid "You must enter an hour in the range %(range)s"
+msgstr "Du må skrive inn en time mellom %(range)s"
+
+#: validators.py:1807
+msgid "You must enter a minute in the range 0-59"
+msgstr "Du må skrive inn minuttet mellom 0-59"
+
+#: validators.py:1808
+msgid "You must enter a second in the range 0-59"
+msgstr "Du må skrive inn sekunder i området 0-59"
+
+#: validators.py:1962
+msgid "Please enter a zip code (5 digits)"
+msgstr "Vennligst skriv inn en zipkode (5 siffer)"
+
+#: validators.py:1986
+msgid "The name %(name)s is missing"
+msgstr "Navnet %(name)s mangler"
+
+#: validators.py:2027
+msgid "Value should be %(true)r or %(false)r"
+msgstr "Verdien skal være %(true)r eller %(false)r"
+
+#: validators.py:2062
+msgid "Value does not contain a signature"
+msgstr "Verdien inneholder ikke en signatur"
+
+#: validators.py:2063
+msgid "Signature is not correct"
+msgstr "Signaturen er ikke riktig"
+
+#: validators.py:2185
+msgid "Fields do not match (should be %(match)s)"
+msgstr "Feltene er ikke like (skal være %(match)s)"
+
+#: validators.py:2186
+msgid "Fields do not match"
+msgstr "Feltene er ikke like"
+
+#: validators.py:2248
+msgid "Please enter only the number, no other characters"
+msgstr "Vennligst bare skriv inn tallet, og ingen andre tegn"
+
+#: validators.py:2249
+msgid "You did not enter a valid number of digits"
+msgstr "Du skrev ikke inn et gyldig antall siffer"
+
+#: validators.py:2250
+msgid "That number is not valid"
+msgstr "Det nummeret er ikke gyldig"
+
+#: validators.py:2365
+msgid "Please enter numbers only for month and year"
+msgstr "Vennligst bare skriv inn nummerene for måned og år"
+
+#: validators.py:2366
+msgid "Invalid Expiration Date"
+msgstr "Ugyldig utløpsdato"
+
+#: validators.py:2435
+msgid "Please enter numbers only for credit card security code"
+msgstr "Vennligst bare skriv inn tall for kredittkort og sikkerhetskode"
+
+#: validators.py:2436
+msgid "Invalid credit card security code length"
+msgstr "Ugyldig lengde på sikkerhetskoden til kredittkortet"

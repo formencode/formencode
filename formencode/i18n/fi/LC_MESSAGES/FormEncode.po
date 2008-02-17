@@ -1,0 +1,325 @@
+# Finnish strings for FormEncode
+# Copyright (C) 2007 Multimediastudio, licence: LGPL V2.0
+# Marko Manninen <mmstud@gmail.com>, 2007
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: FormEncode 0.7.1\n"
+"POT-Creation-Date: 2006-10-02 20:59+CEST\n"
+"PO-Revision-Date: 2007-11-07 10:45+ZONE\n"
+"Last-Translator: Marko Manninen <mmstud@gmail.com>\n"
+"Language-Team: FINNISH <FI@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: api.py:335 validators.py:433
+msgid "Please enter a value"
+msgstr "Anna arvo"
+
+#: api.py:336
+msgid "The input must be a string (not a %(type)s: %(value)r)"
+msgstr "Syötteen täytyy olla merkkijono (ei %(type)s: %(value)r)"
+
+#: api.py:337
+msgid "The input must be a string (not None)"
+msgstr "Syötteen täytyy olla merkkijono (ei None)"
+
+#: validators.py:160
+msgid "%(object)r is not a subclass of %(subclass)s"
+msgstr "%(object)r ei ole %(subclass)s :n aliluokka"
+
+#: validators.py:161
+msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
+msgstr "%(object)r ei ole listan %(subclassList)s aliluokkatyyppi"
+
+#: validators.py:162
+msgid "%(object)r must be one of the types %(typeList)s"
+msgstr "%(object)r täytyy olla joku tyypeistä: %(typeList)s"
+
+#: validators.py:163
+msgid "%(object)r must be of the type %(type)s"
+msgstr "%(object)r täytyy olla tyyppiä: %(type)s"
+
+#: validators.py:344
+msgid "Enter a value less than %(maxLength)i characters long"
+msgstr "Anna pienempi kuin %(maxLength)i merkkiä pitkä arvo"
+
+#: validators.py:345 validators.py:399
+msgid "Invalid value (value with length expected)"
+msgstr "Väärä arvo (odotettiin pituusarvoa)"
+
+#: validators.py:398
+msgid "Enter a value at least %(minLength)i characters long"
+msgstr "Anna vähintään %(minLength)i merkkiä pitkä arvo"
+
+#: validators.py:458
+msgid "You cannot enter a value here"
+msgstr "Ei voida antaa arvoa tähän"
+
+#: validators.py:509
+msgid "The input is not valid"
+msgstr "Syöte ei kelpaa"
+
+#: validators.py:565
+msgid "Enter only letters, numbers, or _ (underscore)"
+msgstr "Vain kirjaimia, numeroita tai _ (alaviiva)"
+
+#: validators.py:604
+msgid "Invalid value"
+msgstr "Kelpaamaton arvo"
+
+#: validators.py:605
+msgid "Value must be one of: %(items)s (not %(value)r)"
+msgstr "Arvon täytyy olla jokin näistä: %(items)s (ei %(value)r)"
+
+#: validators.py:668
+msgid "Choose something"
+msgstr "Valitse jokin"
+
+#: validators.py:669
+msgid "Enter a value from: %(items)s"
+msgstr "Anna jokin arvoista: %(items)s"
+
+#: validators.py:670
+msgid "That value is not known"
+msgstr "Arvoa ei tunneta"
+
+#: validators.py:671
+msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
+msgstr "Mikään kirjastosta ei käy arvoon: %(value)s. Valitse jokin näistä: %(items)s"
+
+#: validators.py:732
+msgid "Must be an integer index"
+msgstr "Indeksin täytyy olla kokonaisluku"
+
+#: validators.py:733
+msgid "Index out of range"
+msgstr "Indeksi yli rajan"
+
+#: validators.py:734
+msgid "Item %(value)s was not found in the list"
+msgstr "%(value)s ei löytynyt listasta"
+
+#: validators.py:809
+msgid "Date must be after %(date)s"
+msgstr "Päivämäärän täytyy olla %(date)s jälkeen"
+
+#: validators.py:810
+msgid "Date must be before %(date)s"
+msgstr "Päivämäärän täytyy olla ennen %(date)s"
+
+#: validators.py:812
+msgid "%%A, %%d %%B %%Y"
+msgstr ""
+
+#: validators.py:813
+msgid "The date must be sometime in the future"
+msgstr "Päivämäärä täytyy olla tulevaisuudessa"
+
+#: validators.py:913
+msgid "Please enter an integer value"
+msgstr "Anna kokonaisluku"
+
+#: validators.py:945
+msgid "Please enter a number"
+msgstr "Anna numero"
+
+#: validators.py:998
+msgid "Enter a value less than %(max)i characters long"
+msgstr "Anna maksimissaan %(max)i merkkiä pitkä arvo"
+
+#: validators.py:999
+msgid "Enter a value %(min)i characters long or more"
+msgstr "Anna vähintään %(min)i merkkiä pitkä arvo"
+
+#: validators.py:1050
+msgid "Invalid data or incorrect encoding"
+msgstr "Kelpaamaton data tai väärä merkistökoodaus"
+
+#: validators.py:1178
+msgid "Please enter an email address"
+msgstr "Anna e-mail osoite"
+
+#: validators.py:1179
+msgid "An email address must contain a single @"
+msgstr "Email osoitteen täytyy sisältää yksi @ -merkki"
+
+#: validators.py:1180
+msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
+msgstr "Käyttäjätunnusosa sähköpostiosoitteesta on virheellinen (osa ennen @: %(username)s)"
+
+#: validators.py:1181 validators.py:1294
+msgid "An error occured when trying to connect to the server: %(error)s"
+msgstr "Tapahtui virhe yritettäessä yhdistää palvelimeen: %(error)s"
+
+#: validators.py:1182
+msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
+msgstr "Domain osa sähköpostiosoitteesta on virheellinen (osa jälkeen @: %(domain)s)"
+
+#: validators.py:1183
+msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
+msgstr "Sähköpostiosoitteessa olevaa domainia ei ole olemassa (osa jälkeen @: %(domain)s)"
+
+#: validators.py:1291
+msgid "You must start your URL with http://, https://, etc"
+msgstr "Aloita URL http://, https://, jne."
+
+#: validators.py:1292
+msgid "That is not a valid URL"
+msgstr "URL ei kelpaa"
+
+#: validators.py:1293
+msgid "An error occurred when trying to access the URL: %(error)s"
+msgstr "Tapahtui virhe URL osoitetta tavoitettaessa: %(error)s"
+
+#: validators.py:1295
+msgid "The server responded that the page could not be found"
+msgstr "Palvelin vastasi, että sivua ei löytynyt"
+
+#: validators.py:1296
+msgid "The server responded with a bad status code (%(status)s)"
+msgstr "Palvelin vastasi virhe -statuksella (%(status)s)"
+
+#: validators.py:1399
+msgid "Please enter a state code"
+msgstr "Anna osavaltiokoodi"
+
+#: validators.py:1400
+msgid "Please enter a state code with TWO letters"
+msgstr "Anna KAKSI kirjaiminen osavaltiokoodi"
+
+#: validators.py:1401
+msgid "That is not a valid state code"
+msgstr "Ei ole pätevä osavaltiokoodi"
+
+#: validators.py:1452
+msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
+msgstr "Anna numero aluekoodilla muodossa ###-###-####, vaihtoehtoisesti \"ext.####\""
+
+#: validators.py:1614 validators.py:1622
+msgid "Please enter the date in the form %(format)s"
+msgstr "Anna päivämäärä muodossa: %(format)s"
+
+#: validators.py:1615
+msgid "Please enter a month from 1 to 12"
+msgstr "Anna kuukausi välillä 1-12"
+
+#: validators.py:1616
+msgid "Please enter a valid day"
+msgstr "Anna pätevä päivä"
+
+#: validators.py:1617
+msgid "That month only has %(days)i days"
+msgstr "Tässä kuukaudessa on %(days)i päivää"
+
+#: validators.py:1618
+msgid "That is not a valid day (%(exception)s)"
+msgstr "Ei ole pätevä päivä (%(exception)s)"
+
+#: validators.py:1619
+msgid "Unknown month name: %(month)s"
+msgstr "Tuntematon kuukauden nimi: %(month)s"
+
+#: validators.py:1620
+msgid "Please enter a number for the year"
+msgstr "Anna vuosiluku"
+
+#: validators.py:1621
+msgid "Please enter a four-digit year"
+msgstr "Anna nelinumeroinen vuosiluku"
+
+#: validators.py:1800
+msgid "You must indicate AM or PM"
+msgstr "Merkitse AM tai PM"
+
+#: validators.py:1801
+msgid "There are too many :'s"
+msgstr "Liian monta :'s"
+
+#: validators.py:1802
+msgid "You may not enter seconds"
+msgstr "Et voi antaa sekuntteja"
+
+#: validators.py:1803
+msgid "You must enter seconds"
+msgstr "Anna sekunnit"
+
+#: validators.py:1804
+msgid "You must enter minutes (after a :)"
+msgstr "Anna minuutit (jälkeen :)"
+
+#: validators.py:1805
+msgid "The %(part)s value you gave is not a number: %(number)r"
+msgstr "Annettu %(part)s arvo ei ole numero: %(number)r"
+
+#: validators.py:1806
+msgid "You must enter an hour in the range %(range)s"
+msgstr "Anna tunti välillä: %(range)s"
+
+#: validators.py:1807
+msgid "You must enter a minute in the range 0-59"
+msgstr "Anna minuutit välillä: 0-59"
+
+#: validators.py:1808
+msgid "You must enter a second in the range 0-59"
+msgstr "Anna sekunnit välillä 0-59"
+
+#: validators.py:1962
+msgid "Please enter a zip code (5 digits)"
+msgstr "Anna ZIP koodi (5 numeroa)"
+
+#: validators.py:1986
+msgid "The name %(name)s is missing"
+msgstr "Nimi %(name)s puuttuu"
+
+#: validators.py:2027
+msgid "Value should be %(true)r or %(false)r"
+msgstr "Arvon täytyy olla %(true)r tai %(false)r"
+
+#: validators.py:2062
+msgid "Value does not contain a signature"
+msgstr "Arvo ei sisällä allekirjoitusta"
+
+#: validators.py:2063
+msgid "Signature is not correct"
+msgstr "Allekirjoitus ei ole oikein"
+
+#: validators.py:2185
+msgid "Fields do not match (should be %(match)s)"
+msgstr "Kentät eivät täsmää (pitäisi olla %(match)s)"
+
+#: validators.py:2186
+msgid "Fields do not match"
+msgstr "Kentät eivät täsmää"
+
+#: validators.py:2248
+msgid "Please enter only the number, no other characters"
+msgstr "Anna vain numeroita, ei muita kirjaimia."
+
+#: validators.py:2249
+msgid "You did not enter a valid number of digits"
+msgstr "Et antanut pätevää numeroarvoa"
+
+#: validators.py:2250
+msgid "That number is not valid"
+msgstr "Numero ei ole pätevä"
+
+#: validators.py:2365
+msgid "Please enter numbers only for month and year"
+msgstr "Anna numerot vain kuukaudelle ja vuodelle"
+
+#: validators.py:2366
+msgid "Invalid Expiration Date"
+msgstr "Päättymispäivä ei ole pätevä"
+
+#: validators.py:2435
+msgid "Please enter numbers only for credit card security code"
+msgstr "Anna vain luottokortin varmistusnumero"
+
+#: validators.py:2436
+msgid "Invalid credit card security code length"
+msgstr "Kelpaamaton luottokortin varmistusnumeron pituus"
+

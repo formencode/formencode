@@ -99,3 +99,12 @@ def test_zh_CN():
 def test_cs():
   _test_lang("cs", u"Prosím zadejte hodnotu")
 
+def test_fi():
+  _test_lang("fi", u"Anna arvo")
+
+def test_nb_NO():
+  _test_lang("nb_NO", u"Venligst fyll inn en verdi")
+
+def test_it():
+  _test_lang("it", u"Inserire un dato")
+
