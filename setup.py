@@ -1,3 +1,4 @@
+import sys
 try:
     from setuptools import setup
 except ImportError:
@@ -6,6 +7,10 @@ except ImportError:
     from setuptools import setup
 
 version = '0.9.1'
+
+tests_require = ['nose']
+if sys.version < '2.5':
+    tests_require.append('elementtree')
 
 setup(name="FormEncode",
       version=version,
@@ -31,7 +36,8 @@ you can install from with ``easy_install FormEncode==dev``
       license="PSF",
       packages=["formencode", "formencode.util"],
       include_package_data=True,
-      extras_require={'testing': ['elementtree']},
+      test_suite='nose.collector',
+      tests_require=tests_require
       )
 
 # Send announce to:

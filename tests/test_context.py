@@ -1,5 +1,5 @@
 from formencode.context import Context, ContextRestoreError
-from py.test import raises
+from nose.tools import assert_raises
 
 c1 = Context(default=None)
 c2 = Context()
@@ -29,7 +29,7 @@ def test_fail():
     c3 = Context()
     res1 = c3.set(a=1)
     res2 = c3.set(b=2)
-    raises(ContextRestoreError, 'res1.restore()')
+    assert_raises(ContextRestoreError, res1.restore)
     assert c3.b==2
     assert c3.a==1
     res2.restore()

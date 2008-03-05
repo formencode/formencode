@@ -134,7 +134,7 @@ BadCase(AddressesForm,
 def test_this():
 
     for case in all_cases:
-        yield case.test
+        yield (case.test,)
 
 
 def test_merge():
