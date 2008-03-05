@@ -2,8 +2,8 @@ import formencode.doctest_xml_compare as dxml
 from formencode.htmlgen import html
 import sys
 
-XML = dxml.et.XML
-tostring = dxml.et.tostring
+XML = dxml.ET.XML
+tostring = dxml.ET.tostring
 
 def test_xml_compare():
     t1 = XML('<test />')

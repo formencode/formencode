@@ -59,7 +59,10 @@ Examples::
 from __future__ import generators
 
 from cgi import escape
-import elementtree.ElementTree as et
+try:
+    import xml.etree.ElementTree as ET
+except ImportError:
+    import elementtree.ElementTree as ET
 
 default_encoding = 'utf-8'
 
@@ -74,7 +77,7 @@ class _HTML:
         if attr.find('__') != -1:
             attr = attr.replace('__', ':')
         if attr == 'comment':
-            return Element(et.Comment, {})
+            return Element(ET.Comment, {})
         else:
             return Element(attr, {})
         
@@ -102,7 +105,7 @@ class _HTML:
 
 html = _HTML()
 
-class Element(et._ElementInterface):
+class Element(ET._ElementInterface):
 
     def __call__(self, *args, **kw):
         el = self.__class__(self.tag, self.attrib)
@@ -136,7 +139,7 @@ class Element(et._ElementInterface):
         for arg in flatten(args):
             if arg is None:
                 continue
-            if not et.iselement(arg):
+            if not ET.iselement(arg):
                 if last is None:
                     if el.text is None:
                         el.text = unicode(arg)
@@ -153,7 +156,7 @@ class Element(et._ElementInterface):
         return el
 
     def __str__(self):
-        return et.tostring(self, default_encoding)
+        return ET.tostring(self, default_encoding)
 
     def __unicode__(self):
         # This is lame!

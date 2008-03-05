@@ -10,9 +10,12 @@ if base_dir not in sys.path:
     sys.path.insert(0, base_dir)
 from formencode import htmlfill
 from formencode.doctest_xml_compare import xml_compare
-from elementtree import ElementTree as et
 from xml.parsers.expat import ExpatError
 from formencode import htmlfill_schemabuilder
+try:
+    import xml.etree.ElementTree as ET
+except ImportError:
+    import elementtree.ElementTree as ET
 
 def test_inputoutput():
     data_dir = os.path.join(os.path.dirname(__file__), 'htmlfill_data')
@@ -57,8 +60,8 @@ def run_filename(filename):
     def reporter(v):
         print v
     try:
-        output_xml = et.XML(output)
-        expected_xml = et.XML(expected)
+        output_xml = ET.XML(output)
+        expected_xml = ET.XML(expected)
     except ExpatError:
         comp = output.strip() == expected.strip()
     else:

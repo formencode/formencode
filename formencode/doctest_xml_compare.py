@@ -3,7 +3,10 @@ try:
     doctest.OutputChecker
 except AttributeError:
     import util.doctest24 as doctest
-import elementtree.ElementTree as et
+try:
+    import xml.etree.ElementTree as ET
+except ImportError:
+    import elementtree.ElementTree as ET
 from xml.parsers.expat import ExpatError as XMLParseError
 
 RealOutputChecker = doctest.OutputChecker
@@ -111,12 +114,12 @@ def text_compare(t1, t2):
     return (t1 or '').strip() == (t2 or '').strip()
 
 def make_xml(s):
-    return et.XML('<xml>%s</xml>' % s)
+    return ET.XML('<xml>%s</xml>' % s)
 
 def make_string(xml):
     if isinstance(xml, (str, unicode)):
         xml = make_xml(xml)
-    s = et.tostring(xml)
+    s = ET.tostring(xml)
     if s == '<xml />':
         return ''
     assert s.startswith('<xml>') and s.endswith('</xml>'), repr(s)
