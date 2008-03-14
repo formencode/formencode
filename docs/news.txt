@@ -13,6 +13,9 @@ svn trunk
   chained validators get run even when there are previous errors (to
   detect all the errors).
 
+* While something like ``Int.to_python()`` worked, other methods like 
+  ``Int.message(...)`` didn't work.  Now it does.
+
 0.9
 ---
 

@@ -157,7 +157,8 @@ class Validator(declarative.Declarative):
     use_builtins_gettext = True #In case you dont want to use __builtins__._
                                 #altough it may be definied, set this to False
     
-    __singletonmethods__ = ('to_python', 'from_python')
+    __singletonmethods__ = ('to_python', 'from_python', 'message', 'all_messages',
+                            'subvalidators')
 
     def __classinit__(cls, new_attrs):
         if new_attrs.has_key('messages'):
