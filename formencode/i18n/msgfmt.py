@@ -1,4 +1,4 @@
-#! /usr/bin/python2.4
+#! /usr/bin/python
 # -*- coding: iso-8859-1 -*-
 # Written by Martin v. Löwis <loewis@informatik.hu-berlin.de>
 
