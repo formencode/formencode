@@ -3,6 +3,12 @@ News
 
 .. contents::
 
+svn trunk
+---------
+
+* ``chained_validators`` were removed from Schema somehow; now
+  replaced and working.
+
 1.0
 ---
 
