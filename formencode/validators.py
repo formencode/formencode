@@ -1241,6 +1241,7 @@ class Email(FancyValidator):
         'doesnotexist@colorstudy.com'
         >>> e.to_python('test@forums.nyu.edu')
         'test@forums.nyu.edu'
+        >>> # NOTE: If you do not have PyDNS installed this example won't work:
         >>> e.to_python('test@thisdomaindoesnotexistithinkforsure.com')
         Traceback (most recent call last):
             ...
