@@ -574,7 +574,7 @@ class OneOf(FancyValidator):
     """
     Tests that the value is one of the members of a given list.
 
-    If ``testValueLists=True``, then if the input value is a list or
+    If ``testValueList=True``, then if the input value is a list or
     tuple, all the members of the sequence will be checked (i.e., the
     input must be a subset of the allowed values).
 
