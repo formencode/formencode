@@ -9,6 +9,10 @@ svn trunk
 * ``chained_validators`` were removed from Schema somehow; now
   replaced and working.
 
+* Put in missing ``htmlfill.render(error_class=...)`` parameter (was
+  documented and implemented, but ``render()`` did not pass it
+  through).
+
 1.0
 ---
 

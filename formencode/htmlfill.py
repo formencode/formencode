@@ -15,7 +15,8 @@ __all__ = ['render', 'htmlliteral', 'default_formatter',
 def render(form, defaults=None, errors=None, use_all_keys=False,
            error_formatters=None, add_attributes=None,
            auto_insert_errors=True, auto_error_formatter=None,
-           text_as_default=False, listener=None, encoding=None):
+           text_as_default=False, listener=None, encoding=None,
+           error_class='error'):
     """
     Render the ``form`` (which should be a string) given the defaults
     and errors.  Defaults are the values that go in the input fields
@@ -69,6 +70,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
         auto_error_formatter=auto_error_formatter,
         text_as_default=text_as_default,
         listener=listener, encoding=encoding,
+        error_class=error_class,
         )
     p.feed(form)
     p.close()
