@@ -88,3 +88,8 @@ def test_escape_defaults():
                             {}, {}) ==
             u'<input type="submit" value="Japan - 日本 Nihon" />')
     
+def test_xhtml():
+    result = htmlfill.render('<form:error name="code"/>', errors={'code': 'an error'})
+    print result
+    assert 0
+    

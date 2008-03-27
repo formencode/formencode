@@ -1,0 +1,16 @@
+Form Generation with FormEncode and htmlfill
+++++++++++++++++++++++++++++++++++++++++++++
+
+.. contents::
+
+Introduction
+============
+
+This is a tutorial to teach you how to do form generation using FormEncode for `validation <Validation.html>`_, and `htmlfill <htmlfill.html>`_ for filling the forms, together with your own ad hoc code to generate the HTML.
+
+This tutorial does not use a framework, as several frameworks that use FormEncode have their own wrappers for invoking validation.  These wrappers are typically closely bound to the framework and cover up some of the steps.  While this is fine and those wrappers are useful, they could be distracting in this example.  A very simple framework using `WebOb <http://pythonpaste.org/webob/>`_ is used in these examples.  For templating `Tempita <http://pythonpaste.org/tempita/>`_ will be used.
+
+The example itself is a simple CRUD framework that wraps arbitrary objects that have had some annotation added to the class.  These annotations will be read to do the validation and form generation.  In a way this tutorial is showing how to create a simple framework for form generation.
+
+The example code used here is available in its finished form in `form-generation-example/ <form-generation-example/>`_.
+
