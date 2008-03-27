@@ -6,7 +6,7 @@ except ImportError:
     use_setuptools()
     from setuptools import setup
 
-version = '1.0.1'
+version = '1.0.2'
 
 tests_require = ['nose']
 if sys.version < '2.5':
