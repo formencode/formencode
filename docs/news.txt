@@ -26,6 +26,8 @@ News
 * While something like ``Int.to_python()`` worked, other methods like 
   ``Int.message(...)`` didn't work.  Now it does.
 
+* Added Italian, Finnish, and Norwegian translations.
+
 0.9
 ---
 
