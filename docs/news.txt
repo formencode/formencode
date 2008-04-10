@@ -3,6 +3,13 @@ News
 
 .. contents::
 
+svn trunk
+---------
+
+* Added a parameter to ``htmlfill.render()``: ``prefix_error``.  If
+  this parameter is true (the default) then errors automatically go
+  before the input field; if false then they go after the input field.
+
 1.0.1
 -----
 

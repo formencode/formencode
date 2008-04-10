@@ -16,7 +16,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
            error_formatters=None, add_attributes=None,
            auto_insert_errors=True, auto_error_formatter=None,
            text_as_default=False, listener=None, encoding=None,
-           error_class='error'):
+           error_class='error', prefix_error=True):
     """
     Render the ``form`` (which should be a string) given the defaults
     and errors.  Defaults are the values that go in the input fields
@@ -57,6 +57,9 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     
     ``encoding`` specifies an encoding to assume when mixing str and 
     unicode text in the template.
+    
+    ``prefix_error`` specifies if the HTML created by auto_error_formatter is
+    put before the input control (default) or after the control.
     """
     if defaults is None:
         defaults = {}
@@ -70,6 +73,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
         auto_error_formatter=auto_error_formatter,
         text_as_default=text_as_default,
         listener=listener, encoding=encoding,
+        prefix_error=prefix_error,
         error_class=error_class,
         )
     p.feed(form)
@@ -172,7 +176,7 @@ class FillingParser(HTMLParser.HTMLParser):
                  error_formatters=None, error_class='error',
                  add_attributes=None, listener=None,
                  auto_error_formatter=None,
-                 text_as_default=False, encoding=None):
+                 text_as_default=False, encoding=None, prefix_error=True):
         HTMLParser.HTMLParser.__init__(self)
         self._content = []
         self.source = None
@@ -200,6 +204,10 @@ class FillingParser(HTMLParser.HTMLParser):
         self.auto_error_formatter = auto_error_formatter
         self.text_as_default = text_as_default
         self.encoding = encoding
+        if prefix_error:
+            self._marker_offset = 0
+        else:
+            self._marker_offset = 2
 
     def feed(self, data):
         self.data_is_str = isinstance(data, str)
@@ -519,9 +527,10 @@ class FillingParser(HTMLParser.HTMLParser):
         self._content.append((marker,))
 
     def insert_at_marker(self, marker, text):
+         
         for i, item in enumerate(self._content):
             if item == (marker,):
-                self._content.insert(i, text)
+                self._content.insert(i  + self._marker_offset, text)
                 break
         else:
             self._content.insert(0, text)
