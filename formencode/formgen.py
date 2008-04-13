@@ -15,7 +15,7 @@ try:
     import pkg_resources
     pkg_resources.require('RuleDispatch')
     import dispatch
-except ImportError:
+except (ImportError, pkg_resources.DistributionNotFound):
     pass
 
 if dispatch:
