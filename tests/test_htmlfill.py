@@ -2,6 +2,7 @@
 import sys
 import os
 import re
+import __builtin__
 from htmlentitydefs import name2codepoint
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(
@@ -50,7 +51,7 @@ def run_filename(filename):
         def checker(p, s):
             pass
     for name in data.keys():
-        if name.startswith('_') or hasattr(__builtins__, name):
+        if name.startswith('_') or hasattr(__builtin__, name):
             del data[name]
     listener = htmlfill_schemabuilder.SchemaBuilder()
     p = htmlfill.FillingParser(listener=listener, **data)
@@ -91,5 +92,4 @@ def test_escape_defaults():
 def test_xhtml():
     result = htmlfill.render('<form:error name="code"/>', errors={'code': 'an error'})
     print result
-    assert 0
     
