@@ -489,8 +489,10 @@ class FillingParser(HTMLParser.HTMLParser):
         self.add_key(self.in_select)
 
     def handle_end_select(self):
+        self.write_text('</select>')
+        self.skip_next = True
         if not self.prefix_error and self.in_select:
-            self.write_marker(name)
+            self.write_marker(self.in_select)
         self.in_select = None
 
     def handle_option(self, attrs):

@@ -99,4 +99,6 @@ def test_trailing_error():
     assert (htmlfill.render('<textarea name="content"></textarea>', errors={'content': 'error'},
                             prefix_error=False)
             == '<textarea name="content" class="error"></textarea><!-- for: content -->\n<span class="error-message">error</span><br />\n')
-    
+    assert (htmlfill.render('<select name="type"><option value="foo">foo</option></select>', errors={'type': 'error'},
+                            prefix_error=False)
+            == '<select name="type" class="error"><option value="foo">foo</option></select><!-- for: type -->\n<span class="error-message">error</span><br />\n')
