@@ -184,6 +184,7 @@ class FillingParser(HTMLParser.HTMLParser):
         self.source_pos = None
         self.defaults = defaults
         self.in_textarea = None
+        self.last_textarea_name = None
         self.in_select = None
         self.skip_next = False        
         self.errors = errors or {}
@@ -204,10 +205,7 @@ class FillingParser(HTMLParser.HTMLParser):
         self.auto_error_formatter = auto_error_formatter
         self.text_as_default = text_as_default
         self.encoding = encoding
-        if prefix_error:
-            self._marker_offset = 0
-        else:
-            self._marker_offset = 2
+        self.prefix_error = prefix_error
 
     def feed(self, data):
         self.data_is_str = isinstance(data, str)
@@ -380,7 +378,8 @@ class FillingParser(HTMLParser.HTMLParser):
     def handle_input(self, attrs, startend):
         t = (self.get_attr(attrs, 'type') or 'text').lower()
         name = self.get_attr(attrs, 'name')
-        self.write_marker(name)
+        if self.prefix_error:
+            self.write_marker(name)
         value = self.defaults.get(name)
         if self.add_attributes.has_key(name):
             for attr_name, attr_value in self.add_attributes[name].items():
@@ -452,10 +451,13 @@ class FillingParser(HTMLParser.HTMLParser):
         else:
             assert 0, "I don't know about this kind of <input>: %s (pos: %s)" \
                    % (t, self.getpos())
+        if not self.prefix_error:
+            self.write_marker(name)
 
     def handle_textarea(self, attrs):
         name = self.get_attr(attrs, 'name')
-        self.write_marker(name)
+        if self.prefix_error:
+            self.write_marker(name)
         if (self.error_class
             and self.errors.get(name)):
             self.add_class(attrs, self.error_class)
@@ -464,15 +466,19 @@ class FillingParser(HTMLParser.HTMLParser):
         self.write_text(html_quote(value))
         self.write_text('</textarea>')
         self.in_textarea = True
+        self.last_textarea_name = name
         self.add_key(name)
 
     def handle_end_textarea(self):
         self.in_textarea = False
         self.skip_next = True
+        if not self.prefix_error:
+            self.write_marker(self.last_textarea_name)
+        self.last_textarea_name = None
 
     def handle_select(self, attrs):
         name = self.get_attr(attrs, 'name', False)
-        if name:
+        if name and self.prefix_error:
             self.write_marker(name)
         if (self.error_class
             and self.errors.get(name)):
@@ -483,6 +489,8 @@ class FillingParser(HTMLParser.HTMLParser):
         self.add_key(self.in_select)
 
     def handle_end_select(self):
+        if not self.prefix_error and self.in_select:
+            self.write_marker(name)
         self.in_select = None
 
     def handle_option(self, attrs):
@@ -527,10 +535,9 @@ class FillingParser(HTMLParser.HTMLParser):
         self._content.append((marker,))
 
     def insert_at_marker(self, marker, text):
-         
         for i, item in enumerate(self._content):
             if item == (marker,):
-                self._content.insert(i  + self._marker_offset, text)
+                self._content.insert(i, text)
                 break
         else:
             self._content.insert(0, text)

@@ -91,5 +91,12 @@ def test_escape_defaults():
     
 def test_xhtml():
     result = htmlfill.render('<form:error name="code"/>', errors={'code': 'an error'})
-    print result
+    
+def test_trailing_error():
+    assert (htmlfill.render('<input type="text" name="email">', errors={'email': 'error'},
+                            prefix_error=False)
+            == '<input type="text" name="email" class="error" value=""><!-- for: email -->\n<span class="error-message">error</span><br />\n')
+    assert (htmlfill.render('<textarea name="content"></textarea>', errors={'content': 'error'},
+                            prefix_error=False)
+            == '<textarea name="content" class="error"></textarea><!-- for: content -->\n<span class="error-message">error</span><br />\n')
     
