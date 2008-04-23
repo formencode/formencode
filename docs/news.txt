@@ -13,6 +13,8 @@ svn trunk
 * Remove deprecated modules: ``fields``, ``formgen``, ``htmlform``,
   ``sqlformgen``, and ``sqlschema``.
 
+* Added ``formencode.htmlrename``, which renames HTML inputs.
+
 1.0.1
 -----
 
