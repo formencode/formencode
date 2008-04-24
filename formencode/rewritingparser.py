@@ -65,7 +65,8 @@ class RewritingParser(HTMLParser.HTMLParser):
     handle_decl = handle_misc
     handle_pi = handle_misc
     unknown_decl = handle_misc
-
+    handle_endtag = handle_misc
+    
     def write_tag(self, tag, attrs, startend=False):
         attr_text = ''.join([' %s="%s"' % (n, html_quote(v))
                              for (n, v) in attrs
