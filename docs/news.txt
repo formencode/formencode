@@ -15,6 +15,9 @@ svn trunk
 
 * Added ``formencode.htmlrename``, which renames HTML inputs.
 
+* In ``formencode.htmlfill``, non-string values are compared usefully
+  (e.g., a select box with integer values).
+
 1.0.1
 -----
 

@@ -194,6 +194,24 @@ class FillingParser(RewritingParser):
         self.encoding = encoding
         self.prefix_error = prefix_error
 
+    def str_compare(self, str1, str2):
+        """
+        Compare the two objects as strings (coercing to strings if necessary).
+        Also uses encoding to compare the strings.
+        """
+        if not isinstance(str1, basestring):
+            if hasattr(str1, '__unicode__'):
+                str1 = unicode(str1)
+            else:
+                str1 = str(str1)
+        if type(str1) == type(str2):
+            return str1 == str2
+        if isinstance(str1, unicode):
+            str1 = str1.encode(self.encoding)
+        else:
+            str2 = str2.encode(self.encoding)
+        return str1 == str2
+
     def close(self):
         self.handle_misc(None)
         RewritingParser.close(self)
@@ -346,7 +364,7 @@ class FillingParser(RewritingParser):
             self.skip_next = True
             self.add_key(name)
         elif t == 'radio':
-            if str(value) == self.get_attr(attrs, 'value'):
+            if self.str_compare(value, self.get_attr(attrs, 'value')):
                 self.set_attr(attrs, 'checked', 'checked')
             else:
                 self.del_attr(attrs, 'checked')
@@ -458,9 +476,9 @@ class FillingParser(RewritingParser):
                 return True
         if hasattr(obj, '__iter__'):
             for inner in obj:
-                if str(inner) == value:
+                if self.str_compare(inner, value):
                     return True
-        return str(obj) == value
+        return self.str_compare(obj, value)
 
     def write_marker(self, marker):
         self._content.append((marker,))
