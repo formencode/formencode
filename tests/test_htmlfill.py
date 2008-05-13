@@ -102,3 +102,14 @@ def test_trailing_error():
     assert (htmlfill.render('<select name="type"><option value="foo">foo</option></select>', errors={'type': 'error'},
                             prefix_error=False)
             == '<select name="type" class="error"><option value="foo">foo</option></select><!-- for: type -->\n<span class="error-message">error</span><br />\n')
+
+def test_iferror():
+    assert (htmlfill.render('<form:iferror name="field1">an error</form:iferror>', errors={}, auto_insert_errors=False)
+            == '')
+    assert (htmlfill.render('<form:iferror name="field1">an error</form:iferror>', errors={'field1': 'foo'}, auto_insert_errors=False)
+            == 'an error')
+    assert (htmlfill.render('<form:iferror name="not field1">no errors</form:iferror>', errors={}, auto_insert_errors=False)
+            == 'no errors')
+    assert (htmlfill.render('<form:iferror name="not field1">no errors</form:iferror>', errors={'field1': 'foo'}, auto_insert_errors=False)
+            == '')
+    
