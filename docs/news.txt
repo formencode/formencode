@@ -18,6 +18,9 @@ svn trunk
 * In ``formencode.htmlfill``, non-string values are compared usefully
   (e.g., a select box with integer values).
 
+* The validators ``Int`` and ``Number`` both take min/max arguments
+  (from Shannon Behrens).
+
 1.0.1
 -----
 

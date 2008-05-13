@@ -909,10 +909,40 @@ class Bool(FancyValidator):
     def empty_value(self, value):
         return False
 
-class Int(FancyValidator):
+class RangeValidator(FancyValidator):
+
+    """This is an abstract base class for Int and Number.
+
+    It verifies that a value is within range.  It accepts min and max
+    values in the constructor.
+
+    (Since this is an abstract base class, the tests are in Int and
+    Number.)
 
     """
-    Convert a value to an integer.
+
+    messages = {
+        'tooLow': _("Please enter a number that is %(min)s or greater"),
+        'tooHigh': _("Please enter a number that is %(max)s or smaller"),
+    }
+
+    min = None
+    max = None
+
+    def validate_python(self, value, state):
+        if self.min is not None:
+            if value < self.min:
+                msg = self.message("tooLow", state, min=self.min)
+                raise Invalid(msg, value, state)
+        if self.max is not None:
+            if value > self.max:
+                msg = self.message("tooHigh", state, max=self.max)
+                raise Invalid(msg, value, state)
+
+
+class Int(RangeValidator):
+
+    """Convert a value to an integer.
 
     Example::
 
@@ -922,23 +952,18 @@ class Int(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: Please enter an integer value
+        >>> Int(min=5).to_python('6')
+        6
+        >>> Int(max=10).to_python('11')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a number that is 10 or smaller
+
     """
 
     messages = {
-        'integer': _("Please enter an integer value"),
-        'tooLow': _("Please enter an integer above %(min)i"),
-        'tooHigh': _("Please enter an integer below %(max)i"),
-        }
-
-    min = None
-    max = None
-    
-    def __initargs__(self, args):
-        if self.min != None:
-            self.min = int(self.min)
-        if self.max != None:
-            self.max = int(self.max)
-
+        'integer': _("Please enter an integer value")
+    }
 
     def _to_python(self, value, state):
         try:
@@ -947,23 +972,16 @@ class Int(FancyValidator):
             raise Invalid(self.message('integer', state),
                           value, state)
 
-    def validate_python(self, value, state):
-        if self.min != None and value < self.min:
-            msg = self.message("tooLow", state, min=self.min)
-            raise Invalid(msg, value, state)
-        if self.max != None and value > self.max:
-            msg = self.message("tooHigh", state, max=self.max)
-            raise Invalid(msg, value, state)
-
     _from_python = _to_python
 
-class Number(FancyValidator):
 
-    """
-    Convert a value to a float or integer.  Tries to convert it to
-    an integer if no information is lost.
+class Number(RangeValidator):
 
-    ::
+    """Convert a value to a float or integer.
+
+    Tries to convert it to an integer if no information is lost.
+
+    Example::
 
         >>> Number.to_python('10')
         10
@@ -973,13 +991,19 @@ class Number(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: Please enter a number
+        >>> Number(min=5).to_python('6.5')
+        6.5
+        >>> Number(max=10.5).to_python('11.5')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a number that is 10.5 or smaller
 
     """
-    
+
     messages = {
-        'number': _("Please enter a number"),
-        }
-    
+        'number': _("Please enter a number")
+    }
+
     def _to_python(self, value, state):
         try:
             value = float(value)
@@ -989,6 +1013,7 @@ class Number(FancyValidator):
         except ValueError:
             raise Invalid(self.message('number', state),
                           value, state)
+
 
 class String(FancyValidator):
     """
