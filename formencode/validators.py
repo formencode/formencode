@@ -2476,6 +2476,41 @@ class FormValidator(FancyValidator):
 
 class RequireIfMissing(FormValidator):
 
+    """
+    This requires one field based on another field being present or
+    missing.  This is applied to a form, not an individual field
+    (usually using a Schema's ``pre_validators`` or
+    ``chained_validators``).
+
+    If you provide a ``missing`` value (a string key name) then if
+    that field is missing the field must be entered.  This gives you
+    an either/or situation.
+
+    If you provide a ``present`` value (another string key name) then
+    if that field is present, the required field must also be present.
+
+    ::
+    
+        >>> from formencode import validators
+        >>> v = validators.RequireIfPresent('phone_type', 
+        ...                                 present='phone')
+        >>> v.to_python({'phone_type':'', 'phone':'510 420  4577'})
+        Traceback (most recent call last):
+            ...
+        Invalid: You must give a value for phone_type
+        >>> v.to_python({'phone': ''})
+        {'phone': ''}
+
+    Note that if you have a validator on the optionally-required
+    field, you should probably use ``if_missing=None``.  This way you
+    won't get an error from the Schema about a missing value.  For example::
+
+        class PhoneInput(Schema):
+            phone = PhoneNumber()
+            phone_type = String(if_missing=None)
+            chained_validators = [RequireifPresent('phone_type', present='phone')]
+    """
+
     # Field that potentially is required:
     required = None
     # If this field is missing, then it is required:
