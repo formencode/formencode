@@ -1379,10 +1379,26 @@ class URL(FancyValidator):
     check_exists = False
     add_http = True
 
-    url_re = re.compile(r'^(http|https)://'
-                        r'(?:[a-z0-9\-]+|[a-z0-9][a-z0-9\-\.\_]*\.[a-z]+)'
-                        r'(?::[0-9]+)?'
-                        r'(?:/.*)?$', re.I) 
+    url_re = re.compile(r'''
+        ^(http|https)://
+        (?:[%:\w]*@)?                   # authenticator
+        (?:[a-z0-9][a-z0-9\-]{1,62}\.)* # (sub)domain - alpha followed by 62max chars (63 total)
+        [a-z]+                          # TLD
+        (?:[0-9]+)?                     # port
+
+        # files/delims/etc
+        (?:/[
+            # rfc3986 valid chars
+            # unreserved
+            a-z0-9\-\._~
+            # delims - general
+            :/\?#\[\]@
+            # delims - sub
+            !\$&\'\(\)\*\+,;=
+        ]*)?
+        $
+    ''', re.I | re.VERBOSE)
+
     scheme_re = re.compile(r'^[a-zA-Z]+:')
 
     messages = {

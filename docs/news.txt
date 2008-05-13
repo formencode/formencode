@@ -21,6 +21,8 @@ svn trunk
 * The validators ``Int`` and ``Number`` both take min/max arguments
   (from Shannon Behrens).
 
+* Some adjustments to the URL validator.
+
 1.0.1
 -----
 
