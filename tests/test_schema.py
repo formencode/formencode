@@ -160,8 +160,14 @@ class ChainedTest(Schema):
                             validators.FieldsMatch('b', 'b_confirm')]
 
 def test_multiple_chained_validators_errors():
+    s = ChainedTest()
     try:
-        s = ChainedTest()
         s.to_python({'a':'1', 'a_confirm':'2', 'b':'3', 'b_confirm':'4'})
     except Invalid, e:
         assert(e.error_dict.has_key('a_confirm') and e.error_dict.has_key('b_confirm'))
+    try:
+        s.to_python({})
+    except Invalid, e:
+        pass
+    else:
+        assert 0
