@@ -265,7 +265,7 @@ an error the schema won't be run).  Or you can put it in
 schema fails (the values are invalid) then ``ValidateState`` will not
 be run, unless you set ``validate_partial_form`` to True (like
 ``ValidateState = SimpleFormValidator(validate_state,
-validate_partial_form=True).  If you validate a partial form you
+validate_partial_form=True)``.  If you validate a partial form you
 should be careful that you handle missing keys and other
 possibly-invalid values gracefully.
 
@@ -502,8 +502,8 @@ use the ``message`` function, like::
 Localization of Error Messages (i18n)
 -------------------------------------
 
-When a failed validation accurs FormEncode tries to output the error
-message in the appropirate language. For this it uses the standard
+When a failed validation occurs FormEncode tries to output the error
+message in the appropriate language. For this it uses the standard
 `gettext <http://python.org/doc/current/lib/module-gettext.html>`_
 mechanism of python. To translate the message in the appropirate
 message FormEncode has to find a gettext function that translates the
@@ -521,7 +521,7 @@ the following order to find a gettext (``_``) function:
 3. formencode builtin ``_stdtrans`` function
 
    for standalone use of FormEncode. The language to use is determined
-   out of the local system (see gettext documentation). Optionally you
+   out of the locale system (see gettext documentation). Optionally you
    can also set the language or the domain explicitly with the
    function::
 
@@ -546,7 +546,7 @@ All available languages are distributed with the code. You can see the
 currently available languages in the source under the directory
 ``formencode/i18n``.
 
-If your's is not present yet, please consider contributing a
+If your language is not present yet, please consider contributing a
 translation (where ``<lang>`` is you language code)::
 
     $ svn co http://svn.formencode.org/FormEncode/trunk/``
