@@ -496,7 +496,7 @@ use the ``message`` function, like::
         }
 
     def validate_python(self, value, state):
-        raise Invalid(self.message('key', substitution='apples'),
+        raise Invalid(self.message('key', state, substitution='apples'),
                       value, state)
 
 Localization of Error Messages (i18n)
