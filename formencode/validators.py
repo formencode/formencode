@@ -1808,6 +1808,15 @@ class DateConverter(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: Please enter a month from 1 to 12
+
+    If you change ``month_style`` you can get European-style dates::
+
+        >>> d = DateConverter(month_style='dd/mm/yyyy')
+        >>> date = d.to_python('12/3/09')
+        >>> date
+        datetime.date(2009, 3, 12)
+        >>> d.from_python(date)
+        '12/03/2009'
     """
     ## @@: accepts only US-style dates
 
