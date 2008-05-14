@@ -109,6 +109,9 @@ class ForEach(CompoundValidator):
                 else:
                     state.full_list = previous_full_list
 
+    def empty_value(self, value):
+        return []
+
     def _convert_to_list(self, value):
         if isinstance(value, (str, unicode)):
             return [value]
