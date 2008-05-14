@@ -1689,9 +1689,11 @@ class IPhoneNumberValidator(FancyValidator):
 
 class FieldStorageUploadConverter(FancyValidator):
     """
-    Converts a cgi.FieldStorage instance to
-    a value that FormEncode can use for file
-    uploads.
+    Handles cgi.FieldStorage instances that are file uploads.
+
+    This doesn't do any conversion, but it can detect empty upload
+    fields (which appear like normal fields, but have no filename when
+    no upload was given).
     """
     def _to_python(self, value, state=None):
         if isinstance(value, cgi.FieldStorage):
