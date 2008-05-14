@@ -1695,11 +1695,16 @@ class FieldStorageUploadConverter(FancyValidator):
     """
     def _to_python(self, value, state=None):
         if isinstance(value, cgi.FieldStorage):
-            if value.filename:
+            if getattr(value, 'filename', None):
                 return value
             raise Invalid('invalid', value, state)
         else:
             return value 
+
+    def is_empty(self, value):
+        if isinstance(value, cgi.FieldStorage):
+            return bool(getattr(value, 'filename', None))
+        return FancyValidator.is_empty(self, value)
 
 class FileUploadKeeper(FancyValidator):
     """
