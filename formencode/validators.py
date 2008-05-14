@@ -1815,6 +1815,11 @@ class DateConverter(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: Please enter a month from 1 to 12
+        >>> d.to_python('1/1/200')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a four-digit year after 1899
+
 
     If you change ``month_style`` you can get European-style dates::
 
