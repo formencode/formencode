@@ -2474,6 +2474,9 @@ class FormValidator(FancyValidator):
     validate_partial_python = None
     validate_partial_other = None
 
+    def is_empty(self, value):
+        return False
+
 class RequireIfMissing(FormValidator):
 
     """
@@ -2612,6 +2615,10 @@ class CreditCardValidator(FormValidator):
         Traceback (most recent call last):
             ...
         Invalid: ccNumber: You did not enter a valid number of digits
+        >>> cc().to_python({})
+        Traceback (most recent call last):
+            ...
+        Invalid: The field ccType is missing
     """
 
     validate_partial_form = True
@@ -2624,6 +2631,7 @@ class CreditCardValidator(FormValidator):
         'notANumber': _("Please enter only the number, no other characters"),
         'badLength': _("You did not enter a valid number of digits"),
         'invalidNumber': _("That number is not valid"),
+        'missing_key': _("The field %(key)s is missing"),
         }
 
     def validate_partial(self, field_dict, state):
@@ -2643,6 +2651,10 @@ class CreditCardValidator(FormValidator):
                 field_dict, state, error_dict=errors)
         
     def _validateReturn(self, field_dict, state):
+        for field in self.cc_type_field, self.cc_number_field:
+            if field not in field_dict:
+                raise Invalid(
+                    self.message('missing_key', state, key=field), value, state)
         ccType = field_dict[self.cc_type_field].lower().strip()
         number = field_dict[self.cc_number_field].strip()
         number = number.replace(' ', '')

@@ -21,6 +21,9 @@ svn trunk
 * The validators ``Int`` and ``Number`` both take min/max arguments
   (from Shannon Behrens).
 
+* Validators based on ``formencode.validators.FormValidator`` will not
+  treat ``{}`` as an empty (unvalidated) value.
+
 * Some adjustments to the URL validator.
 
 1.0.1
