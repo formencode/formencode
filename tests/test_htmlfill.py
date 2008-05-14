@@ -112,4 +112,10 @@ def test_iferror():
             == 'no errors')
     assert (htmlfill.render('<form:iferror name="not field1">no errors</form:iferror>', errors={'field1': 'foo'}, auto_insert_errors=False)
             == '')
-    
+    assert (htmlfill.render('<form:iferror name="field1">errors</form:iferror><form:iferror name="not field1">no errors</form:iferror>',
+                            errors={}, auto_insert_errors=False)
+            == 'no errors')
+    assert (htmlfill.render('<form:iferror name="field1">errors</form:iferror><form:iferror name="not field1">no errors</form:iferror>',
+                            errors={'field1': 'foo'}, auto_insert_errors=False)
+            == 'errors')
+
