@@ -11,8 +11,11 @@ def html_quote(v):
     elif isinstance(v, basestring):
         return cgi.escape(v, 1)
     else:
-        # @@: Should this be unicode(v) or str(v)?
-        return cgi.escape(str(v), 1)
+        if hasattr(v, '__unicode__'):
+            v = unicode(v)
+        else:
+            v = str(v)
+        return cgi.escape(v, 1)
 
 class RewritingParser(HTMLParser.HTMLParser):
 
