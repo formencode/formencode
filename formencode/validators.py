@@ -1253,6 +1253,10 @@ class Email(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: An email address must contain a single @
+        >>> e.to_python('test@foobar')
+        Traceback (most recent call last):
+            ...
+        Invalid: The domain portion of the email address is invalid (the portion after the @: foobar)
         >>> e.to_python('test@foobar.com.5')
         Traceback (most recent call last):
             ...
@@ -1265,10 +1269,6 @@ class Email(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: The domain portion of the email address is invalid (the portion after the @: .foo.bar.com)
-        >>> e.to_python('test@foo-.bar.com')
-        Traceback (most recent call last):
-            ...
-        Invalid: The domain portion of the email address is invalid (the portion after the @: foo-.bar.com)
         >>> e.to_python('nobody@xn--m7r7ml7t24h.com')
         'nobody@xn--m7r7ml7t24h.com'
         >>> e.to_python('o*reilly@test.com')
@@ -1293,7 +1293,10 @@ class Email(FancyValidator):
     resolve_domain = False
 
     usernameRE = re.compile(r"^[^ \t\n\r@<>()]+$", re.I)
-    domainRE = re.compile(r"^((?![.-])[a-z0-9_\-]{1,63}(?<!-)\.?)+((?<!\.)\.[a-z]{2,})$", re.I)
+    domainRE = re.compile(r'''
+        ^(?:[a-z0-9][a-z0-9\-]{1,62}\.)+ # (sub)domain - alpha followed by 62max chars (63 total)
+        [a-z]{2,}$                       # TLD
+    ''', re.I | re.VERBOSE)
 
     messages = {
         'empty': _('Please enter an email address'),
@@ -1372,12 +1375,16 @@ class URL(FancyValidator):
         >>> u = URL(add_http=True)
         >>> u.to_python('foo.com')
         'http://foo.com'
-        >>> u.to_python('http://hahaha/bar.html')
-        'http://hahaha/bar.html'
+        >>> u.to_python('http://hahaha.ha/bar.html')
+        'http://hahaha.ha/bar.html'
         >>> u.to_python('http://xn--m7r7ml7t24h.com')
         'http://xn--m7r7ml7t24h.com'
         >>> u.to_python('https://test.com')
         'https://test.com'
+        >>> u.to_python('http://test')
+        Traceback (most recent call last):
+            ...
+        Invalid: That is not a valid URL
         >>> u.to_python('http://test..com')
         Traceback (most recent call last):
             ...
@@ -1406,8 +1413,8 @@ class URL(FancyValidator):
     url_re = re.compile(r'''
         ^(http|https)://
         (?:[%:\w]*@)?                   # authenticator
-        (?:[a-z0-9][a-z0-9\-]{1,62}\.)* # (sub)domain - alpha followed by 62max chars (63 total)
-        [a-z]+                          # TLD
+        (?:[a-z0-9][a-z0-9\-]{1,62}\.)+ # (sub)domain - alpha followed by 62max chars (63 total)
+        [a-z]{2,}                       # TLD
         (?:[0-9]+)?                     # port
 
         # files/delims/etc
