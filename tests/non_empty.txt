@@ -53,7 +53,9 @@ Invalid: Please enter a value
 >>> from formencode.validators import Int
 >>> foreach = ForEach(Int())
 >>> foreach.to_python('')
+[]
 >>> foreach.to_python(None)
+[]
 >>> foreach.to_python('1')
 [1]
 >>> foreach.to_python('2')
