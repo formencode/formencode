@@ -1,0 +1,12 @@
+:mod:`formencode.variabledecode` -- Turn flat HTML form submissions into nested structures
+==========================================================================================
+
+.. automodule:: formencode.variabledecode
+
+Module Contents
+---------------
+
+.. autofunction:: variable_decode
+.. autofunction:: variable_encode
+.. autofunction:: NestedVariables
+

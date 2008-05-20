@@ -1,0 +1,11 @@
+:mod:`formencode.htmlgen` -- Convenient building of ElementTree nodes
+=====================================================================
+
+.. automodule:: formencode.htmlgen
+
+Module Contents
+---------------
+
+.. autoclass:: _HTML
+.. autoclass:: Element
+

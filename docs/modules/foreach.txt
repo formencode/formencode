@@ -1,0 +1,10 @@
+:mod:`formencode.foreach` -- Validate items in a list
+=====================================================
+
+.. automodule:: formencode.foreach
+
+Module Contents
+---------------
+
+.. autoclass:: ForEach
+

@@ -1,0 +1,10 @@
+:mod:`formencode.declarative` -- Base class for Validators
+==========================================================
+
+.. automodule:: formencode.declarative
+
+Module Contents
+---------------
+
+.. autoclass:: Declarative
+.. autofunction:: classinstancemethod

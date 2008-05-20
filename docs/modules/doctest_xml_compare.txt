@@ -1,0 +1,11 @@
+:mod:`formencode.doctest_xml_compare` -- XML-based comparison of Doctest output
+===============================================================================
+
+.. automodule:: formencode.doctest_xml_compare
+
+Module Contents
+---------------
+
+.. autofunction:: xml_compare
+.. autofunction:: install
+

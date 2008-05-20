@@ -1,0 +1,86 @@
+:mod:`formencode.validators` -- lots of useful validators
+====================================================================
+
+.. automodule:: formencode.validators
+
+.. contents::
+
+Module Contents
+---------------
+
+Basic Types
+~~~~~~~~~~~
+
+.. autoclass:: StringBool
+.. autoclass:: Bool
+.. autoclass:: Int
+.. autoclass:: Number
+.. autoclass:: UnicodeString
+.. autoclass:: Set
+.. autoclass:: String
+
+Basic Validator/Converters
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: ConfirmType
+.. autoclass:: Wrapper
+.. autoclass:: Constant
+.. autoclass:: StripField
+.. autoclass:: OneOf
+.. autoclass:: DictConverter
+.. autoclass:: IndexListConverter
+
+Simple Validators
+~~~~~~~~~~~~~~~~~
+
+.. autoclass:: MaxLength
+.. autoclass:: MinLength
+.. autoclass:: NotEmpty
+.. autoclass:: Empty
+.. autoclass:: Regex
+.. autoclass:: PlainText
+
+Dates and Times
+~~~~~~~~~~~~~~~
+
+.. autoclass:: DateValidator
+.. autoclass:: DateConverter
+.. autoclass:: TimeConverter
+
+
+Phones and Addresses
+~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: PhoneNumber
+.. autoclass:: IPhoneNumberValidator
+.. autoclass:: StateProvince
+.. autoclass:: PostalCode
+
+HTML Form Helpers
+~~~~~~~~~~~~~~~~~
+
+.. autoclass:: SignedString
+.. autoclass:: FieldStorageUploadConverter
+.. autoclass:: FileUploadKeeper
+
+URLs, Email, etc.
+~~~~~~~~~~~~~~~~~
+
+.. autoclass:: Email
+.. autoclass:: URL
+.. autoclass:: CIDR
+.. autoclass:: MACAddress
+
+Form-wide Validation
+~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: FormValidator
+.. autoclass:: RequireIfMissing
+.. autoclass:: FieldsMatch
+
+Credit Cards
+~~~~~~~~~~~~
+
+.. autoclass:: CreditCardValidator
+.. autoclass:: CreditCardExpires
+.. autoclass:: CreditCardSecurityCode

@@ -1,6 +1,20 @@
 FormEncode
 ==========
 
+Contents:
+
+.. toctree::
+   :maxdepth: 1
+
+   news
+   Validator
+   i18n
+   htmlfill
+   history
+   Design
+   download
+   community
+
 Introduction
 ------------
 
@@ -28,14 +42,6 @@ Other Links
 
 * `Community (mailing list, etc) <community.html>`_
 * `Download <download.html>`_
-
-Projects that use FormEncode:
-
-* `SQLObject <http://sqlobject.org>`_
-* `Subway <http://subway.python-hosting.com>`_
-* `TurboGears <http://turbogears.org>`_
-* `Pylons <http://pylons.groovie.org>`_
-* More? `Email me <ianb@colorstudy.com>`_
 
 .. image:: http://sourceforge.net/sflogo.php?group_id=91231&type=4
    :height: 37

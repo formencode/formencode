@@ -1,0 +1,10 @@
+:mod:`formencode.schema` -- Validate complete forms
+===================================================
+
+.. automodule:: formencode.schema
+
+Module Contents
+---------------
+
+.. autoclass:: Schema
+

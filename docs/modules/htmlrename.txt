@@ -1,0 +1,11 @@
+:mod:`formencode.htmlrename` -- Rename fields in an HTML form
+=============================================================
+
+.. automodule:: formencode.htmlrename
+
+Module Contents
+---------------
+
+.. autofunction:: rename
+.. autofunction:: add_prefix
+
