@@ -1384,7 +1384,7 @@ class URL(FancyValidator):
         >>> u.to_python('http://test')
         Traceback (most recent call last):
             ...
-        Invalid: That is not a valid URL
+        Invalid: You must provide a full domain name (like test.com)
         >>> u.to_python('http://test..com')
         Traceback (most recent call last):
             ...
@@ -1404,18 +1404,24 @@ class URL(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: An error occured when trying to connect to the server: ...
+
+    If you want to allow addresses without a TLD (e.g., ``localhost``) you can do::
+
+        >>> URL(require_tld=False).to_python('http://localhost')
+        'http://localhost'
         
     """
 
     check_exists = False
     add_http = True
+    require_tld = True
 
     url_re = re.compile(r'''
         ^(http|https)://
-        (?:[%:\w]*@)?                   # authenticator
-        (?:[a-z0-9][a-z0-9\-]{1,62}\.)+ # (sub)domain - alpha followed by 62max chars (63 total)
-        [a-z]{2,}                       # TLD
-        (?:[0-9]+)?                     # port
+        (?:[%:\w]*@)?                           # authenticator
+        (?P<domain>[a-z0-9][a-z0-9\-]{1,62}\.)* # (sub)domain - alpha followed by 62max chars (63 total)
+        (?P<tld>[a-z]{2,})                      # TLD
+        (?:[0-9]+)?                             # port
 
         # files/delims/etc
         (?:/[
@@ -1439,6 +1445,7 @@ class URL(FancyValidator):
         'socketError': _('An error occured when trying to connect to the server: %(error)s'),
         'notFound': _('The server responded that the page could not be found'),
         'status': _('The server responded with a bad status code (%(status)s)'),
+        'noTLD': _('You must provide a full domain name (like %(domain)s.com)'),
         }
 
     def _to_python(self, value, state):
@@ -1452,9 +1459,14 @@ class URL(FancyValidator):
                 self.message('noScheme', state),
                 value, state)
         value = match.group(0).lower() + value[len(match.group(0)):]
-        if not self.url_re.search(value):
+        match = self.url_re.search(value)
+        if not match:
             raise Invalid(
                 self.message('badURL', state),
+                value, state)
+        if self.require_tld and not match.group('domain'):
+            raise Invalid(
+                self.message('noTLD', state, domain=match.group('tld')),
                 value, state)
         if self.check_exists and (value.startswith('http://')
                                   or value.startswith('https://')):
