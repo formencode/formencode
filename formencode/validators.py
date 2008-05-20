@@ -1374,11 +1374,21 @@ class URL(FancyValidator):
         'http://foo.com'
         >>> u.to_python('http://hahaha/bar.html')
         'http://hahaha/bar.html'
+        >>> u.to_python('http://xn--m7r7ml7t24h.com')
+        'http://xn--m7r7ml7t24h.com'
         >>> u.to_python('https://test.com')
         'https://test.com'
+        >>> u.to_python('http://test..com')
+        Traceback (most recent call last):
+            ...
+        Invalid: That is not a valid URL
         >>> u = URL(add_http=False, check_exists=True)
         >>> u.to_python('http://google.com')
         'http://google.com'
+        >>> u.to_python('google.com')
+        Traceback (most recent call last):
+            ...
+        Invalid: You must start your URL with http://, https://, etc
         >>> u.to_python('http://colorstudy.com/doesnotexist.html')
         Traceback (most recent call last):
             ...
