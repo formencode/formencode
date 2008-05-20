@@ -1257,6 +1257,20 @@ class Email(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: The domain portion of the email address is invalid (the portion after the @: foobar.com.5)
+        >>> e.to_python('test@foo..bar.com')
+        Traceback (most recent call last):
+            ...
+        Invalid: The domain portion of the email address is invalid (the portion after the @: foo..bar.com)
+        >>> e.to_python('test@.foo.bar.com')
+        Traceback (most recent call last):
+            ...
+        Invalid: The domain portion of the email address is invalid (the portion after the @: .foo.bar.com)
+        >>> e.to_python('test@foo-.bar.com')
+        Traceback (most recent call last):
+            ...
+        Invalid: The domain portion of the email address is invalid (the portion after the @: foo-.bar.com)
+        >>> e.to_python('nobody@xn--m7r7ml7t24h.com')
+        'nobody@xn--m7r7ml7t24h.com'
         >>> e.to_python('o*reilly@test.com')
         'o*reilly@test.com'
         >>> e = Email(resolve_domain=True)
@@ -1279,7 +1293,7 @@ class Email(FancyValidator):
     resolve_domain = False
 
     usernameRE = re.compile(r"^[^ \t\n\r@<>()]+$", re.I)
-    domainRE = re.compile(r"^[a-z0-9][a-z0-9\.\-_]*\.[a-z]+$", re.I)
+    domainRE = re.compile(r"^((?![.-])[a-z0-9_\-]{1,63}(?<!-)\.?)+((?<!\.)\.[a-z]{2,})$", re.I)
 
     messages = {
         'empty': _('Please enter an email address'),
