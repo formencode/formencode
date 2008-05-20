@@ -1585,7 +1585,7 @@ class PhoneNumber(FancyValidator):
             result = result + " ext.%s" % match.group(4)
         return result
 
-# from dbmanager.intl_util.validators@r313[208:303]
+# from dbmanager.util.i18n.validators@r313[302:417]
 class IPhoneNumberValidator(FancyValidator):
 
     """
@@ -1603,6 +1603,8 @@ class IPhoneNumberValidator(FancyValidator):
         '+49-555-4860-300'
         >>> p.to_python('0555-49924-51')
         '+49-555-49924-51'
+        >>> p.to_python('0555 / 8114100')
+        '+49-555-8114100'
         >>> p.to_python('0555/8114100')
         '+49-555-8114100'
         >>> p.to_python('0555 8114100')
@@ -1615,8 +1617,12 @@ class IPhoneNumberValidator(FancyValidator):
         '+49-555-87182-96'
         >>> p.to_python('0555-2 50-30')
         '+49-555-250-30'
+        >>> p.to_python('0555 43-1200')
+        '+49-555-43-1200'
         >>> p.to_python('(05 55)4 94 33 47')
         '+49-555-49433-47'
+        >>> p.to_python('(00 48-555)2 31 72 41')
+        '+48-555-23172-41'
         >>> p.to_python('+973-555431')
         '+973-555431'
         >>> p.to_python('1-393-555-3939')
@@ -1629,6 +1635,10 @@ class IPhoneNumberValidator(FancyValidator):
         '+218-55-3350317-321'
         >>> p.to_python('+218 (0)55-3636639/38')
         '+218-55-3636639-38'
+        >>> p.to_python('032 555555 367')
+        '+49-32-555555-367'
+        >>> p.to_python('(+86) 555 3876693')
+        '+86-555-3876693'
     """
 
     strip = True
@@ -1636,14 +1646,16 @@ class IPhoneNumberValidator(FancyValidator):
     default_cc = None
     _mark_chars_re = re.compile(r"[_.!~*'/]")
     _preTransformations = [
-        (re.compile(r'^\((\d+)\s*(\d+)\)(.+)$'), '%s%s-%s'),
+        (re.compile(r'^(\(?)(?:00\s*)(.+)$'), '%s+%s'),
+        (re.compile(r'^\(\s*(\+?\d+)\s*(\d+)\s*\)(.+)$'), '(%s%s)%s'),
+        (re.compile(r'^\((\+?[-\d]+)\)\s?(\d.+)$'), '%s-%s'),
         (re.compile(r'^(?:1-)(\d+.+)$'), '+1-%s'),
-        (re.compile(r'^00\s*(\d+.+)$'), '+%s'),
         (re.compile(r'^(\+\d+)\s+\(0\)\s*(\d+.+)$'), '%s-%s'),
-        (re.compile(r'^(0\d+)\s(\d+)$'), '%s-%s'),
+        (re.compile(r'^([0+]\d+)[-\s](\d+)$'), '%s-%s'),
+        (re.compile(r'^([0+]\d+)[-\s](\d+)[-\s](\d+)$'), '%s-%s-%s'),
         ]
     _ccIncluder = [
-        (re.compile(r'^0([1-9]\d*)\-(\d+.*)$'), '+%d-%s-%s'),
+        (re.compile(r'^\(?0([1-9]\d*)[-)](\d.*)$'), '+%d-%s-%s'),
         ]
     _postTransformations = [
         (re.compile(r'^(\+\d+)[-\s]\(?(\d+)\)?[-\s](\d+.+)$'), '%s-%s-%s'),
@@ -1671,21 +1683,22 @@ class IPhoneNumberValidator(FancyValidator):
 
     def _to_python(self, value, state):
         self.assert_string(value, state)
-        value = self._perform_rex_transformation(value, self._preTransformations)
+        try:
+            value = value.encode('ascii', 'replace')
+        except:
+            raise Invalid(self.message('phoneFormat', state), value, state)
         value = self._mark_chars_re.sub('-', value)
-        if self.default_cc:
-            value = self._prepend_country_code(value, self._ccIncluder, self.default_cc)
         for f, t in [('  ', ' '), ('--', '-'), (' - ', '-'), ('- ', '-'), (' -', '-')]:
             value = value.replace(f, t)
+        value = self._perform_rex_transformation(value, self._preTransformations)
+        if self.default_cc:
+            value = self._prepend_country_code(value, self._ccIncluder, self.default_cc)
         value = self._perform_rex_transformation(value, self._postTransformations)
         value = value.replace(' ', '')
         # did we successfully transform that phone number? Thus, is it valid?
         if not self._phoneIsSane.search(value):
             raise Invalid(self.message('phoneFormat', state), value, state)
         return value
-
-
-
 
 class FieldStorageUploadConverter(FancyValidator):
     """
