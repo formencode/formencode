@@ -124,7 +124,7 @@ DecodeCase(AddressesForm,
 
 BadCase(AddressesForm,
         'addresses-1.name.fname=&addresses-1.name.lname=x&'
-        'addresses-1.email=x@x.com',
+        'addresses-1.email=x@domain.com',
         addresses=[d(name=d(fname="Please enter a value"))])
         
 BadCase(AddressesForm,
