@@ -26,6 +26,9 @@ svn trunk
 
 * Some adjustments to the URL validator.
 
+* :class:`formencode.compound.All` does not handle empty values,
+  instead relying on sub-validators to check for emptiness.
+
 1.0.1
 -----
 

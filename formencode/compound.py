@@ -165,3 +165,7 @@ class All(CompoundValidator):
             not_empty = not_empty or getattr(validator, 'not_empty', False)
         return not_empty
     not_empty = property(not_empty__get)
+
+    def is_empty(self, value):
+        # sub-validators should handle emptiness.
+        return False
