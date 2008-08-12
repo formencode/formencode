@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FormEncode 1.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2008-06-24 15:00+0200\n"
+"PO-Revision-Date: 2008-08-12 16:38+0200\n"
 "Last-Translator: Stéphane Raimbault <stephane.raimbault@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -51,7 +51,7 @@ msgstr "Saisissez une chaîne dont la longueur est inférieure à %(maxLength)i 
 #: validators.py:345
 #: validators.py:399
 msgid "Invalid value (value with length expected)"
-msgstr "Valeur non valide (valeur d'une certaine taille attendue)"
+msgstr "Valeur non valide (valeur d'une certaine longueur attendue)"
 
 #: validators.py:398
 msgid "Enter a value at least %(minLength)i characters long"
@@ -131,7 +131,7 @@ msgstr "Saisissez un nombre"
 
 #: validators.py:998
 msgid "Enter a value less than %(max)i characters long"
-msgstr "Saisissez une valeur dont la taille est inférieure à %(max)i caractères"
+msgstr "Saisissez une valeur dont la longueur est inférieure à %(max)i caractères"
 
 #: validators.py:999
 msgid "Enter a value %(min)i characters long or more"
