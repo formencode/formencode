@@ -5,7 +5,7 @@ Validators for applying validations in sequence.
 from api import *
 
 # @@ ianb 2005-05: should CompoundValidator be included?
-__all__ = ['Any', 'All']
+__all__ = ['Any', 'All', 'Pipe']
 
 ############################################################
 ## Compound Validators
@@ -169,3 +169,46 @@ class All(CompoundValidator):
     def is_empty(self, value):
         # sub-validators should handle emptiness.
         return False
+
+class Pipe(All):
+    """
+    This class works like 'All', all validators muss pass, but the result
+    of one validation pass is handled over to the next validator. A behaviour
+    known to Unix and GNU users as 'pipe'.
+
+    ::
+
+        >>> from validators import DictConverter
+        >>> pv = Pipe(validators=[DictConverter({1: 2}), DictConverter({2: 3}), DictConverter({3: 4})])
+        >>> pv.to_python(1)
+        4
+        >>> pv.to_python(1)
+        4
+        >>> pv.from_python(4)
+        1
+        >>> pv.from_python(4)
+        1
+        >>> pv.to_python(1)
+        4
+
+    """
+
+    def __repr__(self):
+        return '<Pipe %s>' % self.validators
+
+    def attempt_convert(self, value, state, validate):
+        # To preserve the order of the transformations, we do them
+        # differently when we are converting to and from python.
+        if validate is from_python:
+            validators = list(self.validators)
+            validators.reverse()
+        else:
+            validators = self.validators
+        try:
+            for validator in validators:
+                value = validate(validator, value, state)
+            return value
+        except Invalid:
+            if self.if_invalid is NoDefault:
+                raise
+            return self.if_invalid
