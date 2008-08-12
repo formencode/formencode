@@ -3,7 +3,7 @@ import string
 from api import FancyValidator, _
 from validators import Regex, Invalid, PostalCode
 
-# @todo     utilize pycountry
+# @todo     utilize pycountry or http://opencountrycodes.appspot.com/python/
 from dbmanager.util.i18n import get_country, get_countries
 
 class GermanPostalCode(Regex):
@@ -187,6 +187,26 @@ class UKPostalCode(Regex):
         return match.group(1).upper()
 
 class CountryValidator(FancyValidator):
+    """
+    Will convert a country's name into its ISO-3166 abbreviation for unified
+    storage in databases etc. and return a localized country name in the
+    reverse step.
+
+    @See http://www.iso.org/iso/country_codes/iso_3166_code_lists.htm
+
+    ::
+
+        >>> CountryValidator.to_python('Germany')
+        'DE'
+        >>> CountryValidator.to_python('Finland')
+        'FR'
+        >>> CountryValidator.to_python('UNITED STATES')
+        'US'
+        >>> CountryValidator.to_python('Krakovia')
+        Traceback (most recent call last):
+            ...
+        Invalid: That country is not listed in ISO-3166
+    """
 
     key_ok = True
 
