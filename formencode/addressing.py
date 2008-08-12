@@ -3,7 +3,11 @@ import string
 from api import FancyValidator
 from validators import Regex, Invalid, PostalCode, _
 
-# @todo     utilize pycountry or http://opencountrycodes.appspot.com/python/
+try:
+    import pycountry
+    has_pycountry = True
+except:
+    has_pycountry = False
 try:
     from turbogears.i18n import format as tgformat
     has_turbogears = True
@@ -13,11 +17,11 @@ except:
 ############################################################
 ## country lists and functions
 ############################################################
-country_additions = {
-    'BY': _("Belarus"),
-    'ME': _("Montenegro"),
-    'AU': _("Tasmania"),
-}
+country_additions = [
+    ('BY', _("Belarus")),
+    ('ME', _("Montenegro")),
+    ('AU', _("Tasmania")),
+]
 fuzzy_countrynames = [
     ('US', 'U.S.A'),
     ('US', 'USA'),
@@ -26,12 +30,20 @@ fuzzy_countrynames = [
     ('CI', _("Cote de Ivoire")),
 ]
 
-if has_turbogears:
+if has_pycountry:
+    def get_countries():
+        c1 = [(e.alpha2, e.name) for e in pycountry.countries]
+        ret = country_additions + c1 + fuzzy_countrynames
+        return ret
+
+    def get_country(code):
+        return pycountry.countries.get(alpha2=code).name
+elif has_turbogears:
     def get_countries():
         c1 = tgformat.get_countries('en')
         c2 = tgformat.get_countries()
         if len(c1) > len(c2):
-            d = country_additions.copy()
+            d = dict(country_additions)
             d.update(dict(c1))
             d.update(dict(c2))
         else:
@@ -42,7 +54,7 @@ if has_turbogears:
 
     def get_country(code):
         return dict(get_countries())[code]
-#endif has_turbogears
+#endif
 
 ############################################################
 ## Postal Code validators
