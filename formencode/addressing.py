@@ -54,6 +54,9 @@ elif has_turbogears:
 
     def get_country(code):
         return dict(get_countries())[code]
+else:
+    from warnings import warn
+    warn('Please easy_install pycountry or validators handling country names will not work.', DeprecationWarning)
 #endif
 
 ############################################################
