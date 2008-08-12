@@ -1,329 +1,326 @@
-# French translation of FormEncode
-# Copyright (C) 2007-2008 Free Software Foundation, Inc.
-#
-# Arnaud Fontaine <arnaud@andesi.org>, 2007
-# Stéphane Raimbault <stephane.raimbault@gmail.com>, 2008
+# Lithuanian translation for FormEncode
+# Copyright (C) YEAR ORGANIZATION
+# Dalius Dobravolskas <dalius@sandbox.lt>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: FormEncode 1.0\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2008-06-24 15:00+0200\n"
-"Last-Translator: Stéphane Raimbault <stephane.raimbault@gmail.com>\n"
-"Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
+"Project-Id-Version: FormEncode 0.6\n"
+"POT-Creation-Date: 2008-04-16 20:59+CEST\n"
+"PO-Revision-Date: 2008-04-16 21:53+CEST\n"
+"Last-Translator: Dalius Dobravolskas <dalius@sandbox.lt>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"(n%100<10 || n%100>=20) ? 1 : 2)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
 
-#: api.py:335
-#: validators.py:433
+
+#: api.py:335 validators.py:433
 msgid "Please enter a value"
-msgstr "Saisissez une valeur"
+msgstr "Prašome įvesti reikšmę"
 
 #: api.py:336
 msgid "The input must be a string (not a %(type)s: %(value)r)"
-msgstr "La valeur saisie doit être une chaîne (et non une %(type)s : %(value)r)"
+msgstr "Turi būti įvesta eilutė (ne %(type)s: %(value)r)"
 
 #: api.py:337
 msgid "The input must be a string (not None)"
-msgstr "La valeur saisie doit être une chaîne (et non « None »)"
+msgstr "Turi būti įvesta eilutė, o ne None"
 
 #: validators.py:160
 msgid "%(object)r is not a subclass of %(subclass)s"
-msgstr "%(object)r n'est pas une sous-classe de %(subclass)s"
+msgstr "%(object)r nėra paveldėta iš klasės %(subclass)s"
 
 #: validators.py:161
 msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
-msgstr "%(object)r n'est pas une sous-classe d'un des types %(subclassList)s"
+msgstr "%(object)r nėra paveldėtas iš vieno iš šių tipų: %(subclassList)s"
 
 #: validators.py:162
 msgid "%(object)r must be one of the types %(typeList)s"
-msgstr "%(object)r doit être d'un des types %(typeList)s"
+msgstr "%(object)r privalo būti vieno iš šių tipų: %(typeList)s"
 
 #: validators.py:163
 msgid "%(object)r must be of the type %(type)s"
-msgstr "%(object)r doit être de type %(type)s"
+msgstr "%(object)r privalo būti %(type)s tipo"
 
 #: validators.py:344
-msgid "Enter a value less than %(maxLength)i characters long"
-msgstr "Saisissez une chaîne dont la longueur est inférieure à %(maxLength)i caractères"
+msgid "Enter a value less than %(maxLength)i character long"
+msgstr "Įveskite reikšmę, kuri turi mažiau negu %(maxLength)i simbolį(-ių,-ius)"
 
-#: validators.py:345
-#: validators.py:399
+#: validators.py:345 validators.py:399
 msgid "Invalid value (value with length expected)"
-msgstr "Valeur non valide (valeur d'une certaine taille attendue)"
+msgstr "Neteisinga reikšmė (tikimasi reikšmės turinčios ilgį)"
 
 #: validators.py:398
 msgid "Enter a value at least %(minLength)i characters long"
-msgstr "Saisissez une valeur d'au moins %(minLength)i caractères"
+msgstr "Įveskite reikšmę, kurios ilgis bent jau %(minLength)i simbolis(-iai,-ių)"
 
 #: validators.py:458
 msgid "You cannot enter a value here"
-msgstr "Vous ne pouvez pas saisir une valeur ici"
+msgstr "Jūs negalite čia įvesti reikšmės"
 
 #: validators.py:509
 msgid "The input is not valid"
-msgstr "La valeur saisie est non valide"
+msgstr "Įvesta reikšmė nėra tinkama"
 
 #: validators.py:565
 msgid "Enter only letters, numbers, or _ (underscore)"
-msgstr "Saisissez seulement des lettres, nombres ou « _ » (underscore)"
+msgstr "Įveskite tik raides, skaičius arba _ (pabraukimą)"
 
 #: validators.py:604
 msgid "Invalid value"
-msgstr "Valeur non valide"
+msgstr "Netinkama reikšmė"
 
 #: validators.py:605
 msgid "Value must be one of: %(items)s (not %(value)r)"
-msgstr "La valeur doit être une des suivantes : %(items)s (et non %(value)r)"
+msgstr "Reikšmė privalo būti viena iš: %(items)s (ne %(value)r)"
 
 #: validators.py:668
 msgid "Choose something"
-msgstr "Choississez quelque chose"
+msgstr "Išsirinkite, ką nors"
 
 #: validators.py:669
 msgid "Enter a value from: %(items)s"
-msgstr "Saisissez une valeur parmi : %(items)s"
+msgstr "Įveskite vieną iš šių reikšmių: %(items)s"
 
 #: validators.py:670
 msgid "That value is not known"
-msgstr "Cette valeur est inconnue"
+msgstr "Nežinoma reikšmė"
 
 #: validators.py:671
 msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
-msgstr "La valeur saisie n'a pas correspondance dans le dictionnaire %(value)s. Choississez l'une des suivantes : %(items)s"
+msgstr "Niekas iš mano žodyno neturi reikšmės %(value)s. Išsirinkite vieną iš šių: %(items)s"
 
 #: validators.py:732
 msgid "Must be an integer index"
-msgstr "L'index doit être un entier"
+msgstr "Privalo būti skaitinis indeksas"
 
 #: validators.py:733
 msgid "Index out of range"
-msgstr "Index en dehors de l'intervalle"
+msgstr "Indeksas už ribos"
 
 #: validators.py:734
 msgid "Item %(value)s was not found in the list"
-msgstr "L'élément %(value)s n'a pas été trouvé dans la liste"
+msgstr "Reikšmė %(value)s nebuvo rasta sąraše"
 
 #: validators.py:809
 msgid "Date must be after %(date)s"
-msgstr "La date doit se situer après %(date)s"
+msgstr "Data privalo būti vėlesne negu %(date)s"
 
 #: validators.py:810
 msgid "Date must be before %(date)s"
-msgstr "La date doit se situer avant %(date)s"
+msgstr "Data privalo būti ankstesnė negu %(date)s"
 
 #: validators.py:812
 msgid "%%A, %%d %%B %%Y"
-msgstr "%%A %%d %%B %%Y"
+msgstr ""
 
 #: validators.py:813
 msgid "The date must be sometime in the future"
-msgstr "La date doit être dans le futur"
+msgstr "Data privalo būti ateityje"
 
 #: validators.py:913
 msgid "Please enter an integer value"
-msgstr "Saisissez une valeur entière"
+msgstr "Prašome įvesti skaitinę reikšmę"
 
 #: validators.py:945
 msgid "Please enter a number"
-msgstr "Saisissez un nombre"
+msgstr "Prašome įvesti skaičių"
 
 #: validators.py:998
 msgid "Enter a value less than %(max)i characters long"
-msgstr "Saisissez une valeur dont la taille est inférieure à %(max)i caractères"
+msgstr "Įveskite reikšmę trumpesnę negu %(max)i simbolis(-iai,-ių)"
 
 #: validators.py:999
 msgid "Enter a value %(min)i characters long or more"
-msgstr "Saisissez une valeur d'au moins %(min)i caractères"
+msgstr "Įveskite reikšmę lygią arba ilgesnę negu %(min)i simbolis(-iai,-ių)"
 
 #: validators.py:1050
 msgid "Invalid data or incorrect encoding"
-msgstr "Donnée non valide ou codage incorrect"
+msgstr "Neteisingi duomenys arba neteisingas koduotė"
 
 #: validators.py:1178
 msgid "Please enter an email address"
-msgstr "Saisissez une adresse électronique"
+msgstr "Prašomę įvesti el. pašto adresą"
 
 #: validators.py:1179
 msgid "An email address must contain a single @"
-msgstr "Une adresse électronique ne doit contenir qu'un seul « @ »"
+msgstr "El.pašto adresas privalo turėti vieną @"
 
 #: validators.py:1180
 msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
-msgstr "Le nom d'utilisateur de l'adresse électronique n'est pas valide (partie avant le « @ » : %(username)s)"
+msgstr "Vartotojo dalis el.pašte nėra teisinga (dalis prieš @: %(username)s)"
 
-#: validators.py:1181
-#: validators.py:1294
+#: validators.py:1181 validators.py:1294
 msgid "An error occured when trying to connect to the server: %(error)s"
-msgstr "Une erreur est survenue lors de la tentative de connexion au serveur : %(error)s"
+msgstr "Įvyko klaida bandant jungtis prie serverio: %(error)s"
 
 #: validators.py:1182
 msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
-msgstr "Le nom de domaine de l'adresse électronique n'est pas valide (la partie après le « @ » : %(domain)s)"
+msgstr "Domeno dalis el.pašto adrese nėra tinkama (dalis po @: %(domain)s)"
 
 #: validators.py:1183
 msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
-msgstr "Le nom de domaine de l'adresse électronique n'existe pas (la partie après le « @ » : %(domain)s)"
+msgstr "El.pašto adreso domenas neegzistuoja (dalis po @: %(domain)s)"
 
 #: validators.py:1291
 msgid "You must start your URL with http://, https://, etc"
-msgstr "L'adresse doit commencer par http://, https://, etc."
+msgstr "Jūs privalote pradėti savo URL su http://, https:// ir t.t."
 
 #: validators.py:1292
 msgid "That is not a valid URL"
-msgstr "Ceci n'est pas une adresse valide"
+msgstr "Tai nėra teisingas URL"
 
 #: validators.py:1293
 msgid "An error occurred when trying to access the URL: %(error)s"
-msgstr "Une erreur est survenue lors de la tentative d'accès à l'adresse : %(error)s"
+msgstr "Įvyko klaida bandant pasiekti URL: %(error)s"
 
 #: validators.py:1295
 msgid "The server responded that the page could not be found"
-msgstr "Le serveur a répondu que la page n'a pu être trouvée"
+msgstr "Serveris atsakė, kad puslapis negali būti rastas"
 
 #: validators.py:1296
 msgid "The server responded with a bad status code (%(status)s)"
-msgstr "Le serveur a répondu avec un code de retour incorrect (%(status)s)"
+msgstr "Serveris atsakė blogo statuso kodu (%(status)s)"
 
 #: validators.py:1399
 msgid "Please enter a state code"
-msgstr "Saisissez un code d'état"
+msgstr "Prašome įvesti būsenos kodą"
 
 #: validators.py:1400
 msgid "Please enter a state code with TWO letters"
-msgstr "Saisissez un code d'état composé de DEUX lettres"
+msgstr "Prašome įvesti valstijos kodą naudodami dvi raides"
 
 #: validators.py:1401
 msgid "That is not a valid state code"
-msgstr "Ceci n'est pas un code d'état valide"
+msgstr "Tai nėra tinkamas valstijos kodas"
 
 #: validators.py:1452
 msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
-msgstr "Saisissez un nombre, avec un code de zone, sous la forme ###-###-####, éventuellement sous la forme « ext.#### »"
+msgstr "Prašome įvesti numerį (su vietovės kodu) naudodami formatą ###-###-####, papildomai galima naudoti su \"ext.####\""
 
-#: validators.py:1614
-#: validators.py:1622
+#: validators.py:1614 validators.py:1622
 msgid "Please enter the date in the form %(format)s"
-msgstr "Saisissez la date sous la forme %(format)s"
+msgstr "Prašome įvesti datą naudodami tokį formatą: %(format)s"
 
 #: validators.py:1615
 msgid "Please enter a month from 1 to 12"
-msgstr "Saisissez un mois compris entre 1 et 12"
+msgstr "Prašome įvesti mėnesį nuo 1 iki 12"
 
 #: validators.py:1616
 msgid "Please enter a valid day"
-msgstr "Saisissez un jour valide"
+msgstr "Prašome įvesti teisingą dieną"
 
 #: validators.py:1617
 msgid "That month only has %(days)i days"
-msgstr "Ce mois a seulement %(days)i jours"
+msgstr "Šis mėnuo turi tik %(days)i dieną(-as,-ų)"
 
 #: validators.py:1618
 msgid "That is not a valid day (%(exception)s)"
-msgstr "Ceci n'est pas un jour valide (%(exception)s)"
+msgstr "Tai nėra teisinga diena (%(exception)s)"
 
 #: validators.py:1619
 msgid "Unknown month name: %(month)s"
-msgstr "Nom de mois inconnu : %(month)s"
+msgstr "Nežinomas mėnesio pavadinimas: %(month)s"
 
 #: validators.py:1620
 msgid "Please enter a number for the year"
-msgstr "Saisissez un nombre pour l'année"
+msgstr "Prašome įvesti skaičių metams"
 
 #: validators.py:1621
 msgid "Please enter a four-digit year"
-msgstr "Saisissez une année composée de quatre chiffres"
+msgstr "Prašome įvesti keturių skaitmenų metus"
 
 #: validators.py:1800
 msgid "You must indicate AM or PM"
-msgstr "Vous devez préciser AM ou PM"
+msgstr "Turite nurodyti AM arba PM"
 
 #: validators.py:1801
 msgid "There are too many :'s"
-msgstr "Il y a trop de « ' »"
+msgstr "Per daug 's"
 
 #: validators.py:1802
 msgid "You may not enter seconds"
-msgstr "Vous ne pouvez pas saisir de secondes"
+msgstr "Jūs negalite įvesti sekundžių"
 
 #: validators.py:1803
 msgid "You must enter seconds"
-msgstr "Vous devez saisir des secondes"
+msgstr "Jūs privalote įvesti sekundes"
 
 #: validators.py:1804
 msgid "You must enter minutes (after a :)"
-msgstr "Vous devez saisir des minutes (après un « : »)"
+msgstr "Jūs privalote įvesti minutes (po :)"
 
 #: validators.py:1805
 msgid "The %(part)s value you gave is not a number: %(number)r"
-msgstr "La valeur %(part)s n'est pas un nombre : %(number)r"
+msgstr "%(part)s reikšmė, kurią jūs įvedėte nėra skaičius: %(number)r"
 
 #: validators.py:1806
 msgid "You must enter an hour in the range %(range)s"
-msgstr "Vous devez saisir une heure dans l'intervalle %(range)s"
+msgstr "Jūs privalote įvesti valandą iš diapazono %(range)s"
 
 #: validators.py:1807
 msgid "You must enter a minute in the range 0-59"
-msgstr "Vous devez saisir une minute comprise entre 0 et 59"
+msgstr "Jūs privalote įvesti minutes iš diapazono 0-59"
 
 #: validators.py:1808
 msgid "You must enter a second in the range 0-59"
-msgstr "Vous devez saisir une seconde comprise entre 0 et 59"
+msgstr "Jūs privalote įvesti sekundes iš diapazono 0-59"
 
 #: validators.py:1962
 msgid "Please enter a zip code (5 digits)"
-msgstr "Saisissez un code postal (5 chiffres)"
+msgstr "Prašome įvesti ZIP kodą (5 skaitmenys)"
 
 #: validators.py:1986
 msgid "The name %(name)s is missing"
-msgstr "Le nom %(name)s est manquant"
+msgstr "Trūksta vardo %(name)s"
 
 #: validators.py:2027
 msgid "Value should be %(true)r or %(false)r"
-msgstr "La valeur doit être %(true)r ou %(false)r"
+msgstr "Reikšmė turi būti %(true)r arba %(false)r"
 
 #: validators.py:2062
 msgid "Value does not contain a signature"
-msgstr "Le nom %(name)s est manquant"
+msgstr "Reikšmėje nėra parašo"
 
 #: validators.py:2063
 msgid "Signature is not correct"
-msgstr "La signature est incorrecte"
+msgstr "Neteisingas parašas"
 
 #: validators.py:2185
 msgid "Fields do not match (should be %(match)s)"
-msgstr "Les champs ne correspondent pas (devrait être %(match)s)"
+msgstr "Laukai nesutampa (turi būti %(match)s)"
 
 #: validators.py:2186
 msgid "Fields do not match"
-msgstr "Les champs ne correspondent pas"
+msgstr "Laukai nesutampa"
 
 #: validators.py:2248
 msgid "Please enter only the number, no other characters"
-msgstr "Veuillez seulement saisir un chiffre, pas d'autres caractères"
+msgstr "Prašome įvesti skaičius (nenaudokite kitų simbolių)"
 
 #: validators.py:2249
 msgid "You did not enter a valid number of digits"
-msgstr "Le nombre de chiffres saisis n'est pas valide"
+msgstr "Jūs neįvedėte teisingo skaitmenų skaičiaus"
 
 #: validators.py:2250
 msgid "That number is not valid"
-msgstr "Ce nombre n'est pas valide"
+msgstr "Tas numeris nėra teisingas"
 
 #: validators.py:2365
 msgid "Please enter numbers only for month and year"
-msgstr "Saisissez seulement des nombres pour le mois et l'année"
+msgstr "Prašome įvesti skaičius tik mėnesiui ir metams"
 
 #: validators.py:2366
 msgid "Invalid Expiration Date"
-msgstr "Date d'expiration non valide"
+msgstr "Neteisinga galiojimo pabaigos data"
 
 #: validators.py:2435
 msgid "Please enter numbers only for credit card security code"
-msgstr "Saisissez uniquement des chiffres pour le code de la carte bancaire"
+msgstr "Prašome įvesti skaičius tik kreditinės kortelės saugumo kodui"
 
 #: validators.py:2436
 msgid "Invalid credit card security code length"
-msgstr "La longueur du code de la carte bancaire est non valide"
+msgstr "Neteisingas kreditinės kortelės saugos kodo ilgis"
 

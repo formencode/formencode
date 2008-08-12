@@ -82,7 +82,7 @@ def test_pt_PT():
   _test_lang("pt_PT", u"Por favor insira um valor")
 
 def test_fr():
-  _test_lang("fr", u"Veuillez entrer une valeur")
+  _test_lang("fr", u"Saisissez une valeur")
 
 def test_nl():
   _test_lang("nl", u"Voer een waarde in")
@@ -107,4 +107,10 @@ def test_nb_NO():
 
 def test_it():
   _test_lang("it", u"Inserire un dato")
+
+def test_et():
+  _test_lang("et", u"Palun sisestada väärtus")
+
+def test_lt():
+  _test_lang("lt", u"Prašome įvesti reikšmę")
 
