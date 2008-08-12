@@ -1,10 +1,52 @@
 import re
 import string
-from api import FancyValidator, _
-from validators import Regex, Invalid, PostalCode
+from api import FancyValidator
+from validators import Regex, Invalid, PostalCode, _
 
 # @todo     utilize pycountry or http://opencountrycodes.appspot.com/python/
-from dbmanager.util.i18n import get_country, get_countries
+try:
+    from turbogears.i18n import format as tgformat
+    has_turbogears = True
+except:
+    has_turbogears = False
+
+############################################################
+## country lists and functions
+############################################################
+country_additions = {
+    'BY': _("Belarus"),
+    'ME': _("Montenegro"),
+    'AU': _("Tasmania"),
+}
+fuzzy_countrynames = [
+    ('US', 'U.S.A'),
+    ('US', 'USA'),
+    ('GB', _("Britain")),
+    ('GB', _("Great Britain")),
+    ('CI', _("Cote de Ivoire")),
+]
+
+if has_turbogears:
+    def get_countries():
+        c1 = tgformat.get_countries('en')
+        c2 = tgformat.get_countries()
+        if len(c1) > len(c2):
+            d = country_additions.copy()
+            d.update(dict(c1))
+            d.update(dict(c2))
+        else:
+            d = country_additions.copy()
+            d.update(dict(c2))
+        ret = d.items() + fuzzy_countrynames
+        return ret
+
+    def get_country(code):
+        return dict(get_countries())[code]
+#endif has_turbogears
+
+############################################################
+## Postal Code validators
+############################################################
 
 class GermanPostalCode(Regex):
 
@@ -97,7 +139,7 @@ class ArgentinianPostalCode(Regex):
         >>> ArgentinianPostalCode.to_python('5555')
         Traceback (most recent call last):
             ...
-        Invalid: Please enter a valid postal code (CNNNNCCC)
+        Invalid: Please enter a zip code (CNNNNCCC)
     """
 
     regex = re.compile(r'^([a-zA-Z]{1})\s*(\d{4})\s*([a-zA-Z]{3})$')
@@ -132,7 +174,7 @@ class CanadianPostalCode(Regex):
         >>> CanadianPostalCode.to_python('5555')
         Traceback (most recent call last):
             ...
-        Invalid: Please enter a valid postal code (CNC NCN)
+        Invalid: Please enter a zip code (CNC NCN)
     """
 
     regex = re.compile(r'^([a-zA-Z]\d[a-zA-Z])\s?(\d[a-zA-Z]\d)$')
@@ -170,7 +212,7 @@ class UKPostalCode(Regex):
         Invalid: Please enter a valid postal code (for format see BS 7666)
     """
 
-    regex = re.compile(r'^((ASCN|BBND|BIQQ|FIQQ|PCRN|SIQQ|STHL|TDCU|TKCA) 1ZZ|BFPO (c\/o )?[1-9]{1,4}|GIR 0AA|[A-PR-UWYZ]([0-9]{1,2}|([A-HK-Y][0-9]|[A-HK-Y][0-9]([0-9]|[ABEHMNPRV-Y]))|[0-9][A-HJKS-UW]) [0-9][ABD-HJLNP-UW-Z]{2})$')
+    regex = re.compile(r'^((ASCN|BBND|BIQQ|FIQQ|PCRN|SIQQ|STHL|TDCU|TKCA) 1ZZ|BFPO (c\/o )?[1-9]{1,4}|GIR 0AA|[A-PR-UWYZ]([0-9]{1,2}|([A-HK-Y][0-9]|[A-HK-Y][0-9]([0-9]|[ABEHMNPRV-Y]))|[0-9][A-HJKS-UW]) [0-9][ABD-HJLNP-UW-Z]{2})$', re.I)
     strip = True
 
     messages = {
@@ -199,13 +241,17 @@ class CountryValidator(FancyValidator):
         >>> CountryValidator.to_python('Germany')
         'DE'
         >>> CountryValidator.to_python('Finland')
-        'FR'
+        'FI'
         >>> CountryValidator.to_python('UNITED STATES')
         'US'
         >>> CountryValidator.to_python('Krakovia')
         Traceback (most recent call last):
             ...
         Invalid: That country is not listed in ISO-3166
+        >>> CountryValidator.from_python('DE')
+        'Germany'
+        >>> CountryValidator.from_python('FI')
+        'Finland'
     """
 
     key_ok = True
