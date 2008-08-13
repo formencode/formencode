@@ -183,14 +183,14 @@ class ArgentinianPostalCode(Regex):
         >>> ArgentinianPostalCode.to_python('5555')
         Traceback (most recent call last):
             ...
-        Invalid: Please enter a zip code (CNNNNCCC)
+        Invalid: Please enter a zip code (LnnnnLLL)
     """
 
     regex = re.compile(r'^([a-zA-Z]{1})\s*(\d{4})\s*([a-zA-Z]{3})$')
     strip = True
 
     messages = {
-        'invalid': _("Please enter a zip code (%s)") % _("CNNNNCCC"),
+        'invalid': _("Please enter a zip code (%s)") % _("LnnnnLLL"),
         }
 
     def _to_python(self, value, state):
@@ -218,14 +218,14 @@ class CanadianPostalCode(Regex):
         >>> CanadianPostalCode.to_python('5555')
         Traceback (most recent call last):
             ...
-        Invalid: Please enter a zip code (CNC NCN)
+        Invalid: Please enter a zip code (LnL nLn)
     """
 
     regex = re.compile(r'^([a-zA-Z]\d[a-zA-Z])\s?(\d[a-zA-Z]\d)$')
     strip = True
 
     messages = {
-        'invalid': _("Please enter a zip code (%s)") % _("CNC NCN"),
+        'invalid': _("Please enter a zip code (%s)") % _("LnL nLn"),
         }
 
     def _to_python(self, value, state):
