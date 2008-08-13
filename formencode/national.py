@@ -46,11 +46,29 @@ if has_turbogears:
 
     def get_country(code):
         return dict(get_countries())[code]
+
+    def get_languages():
+        c1 = tgformat.get_languages('en')
+        c2 = tgformat.get_languages()
+        if len(c1) > len(c2):
+            d = dict(c1)
+            d.update(dict(c2))
+            return d.items()
+        else:
+            return c2
+
+    def get_language(code):
+        try:
+            return tgformat.get_language(code)
+        except KeyError:
+            return tgformat.get_language(code, 'en')
 elif has_pycountry:
     # @@ mark: interestingly, common gettext notation does not work here
     import gettext
     gettext.bindtextdomain('iso3166', pycountry.LOCALES_DIR)
     _c = lambda t: gettext.dgettext('iso3166', t)
+    gettext.bindtextdomain('iso639', pycountry.LOCALES_DIR)
+    _l = lambda t: gettext.dgettext('iso639', t)
 
     def get_countries():
         c1 = set([(e.alpha2, _c(e.name)) for e in pycountry.countries])
@@ -59,9 +77,15 @@ elif has_pycountry:
 
     def get_country(code):
         return _c(pycountry.countries.get(alpha2=code).name)
+
+    def get_languages():
+        return [(e.alpha2, _l(e.name)) for e in pycountry.languages]
+
+    def get_language(code):
+        return _l(pycountry.languages.get(alpha2=code).name)
 else:
     from warnings import warn
-    warn('Please easy_install pycountry or validators handling country names will not work.', DeprecationWarning)
+    warn('Please easy_install pycountry or validators handling country names and/or languages will not work.', DeprecationWarning)
 #endif
 
 ############################################################
@@ -620,3 +644,63 @@ class InternationalPhoneNumber(FancyValidator):
         if not self._phoneIsSane.search(value):
             raise Invalid(self.message('phoneFormat', state), value, state)
         return value
+
+############################################################
+## language validators
+############################################################
+
+class LanguageValidator(FancyValidator):
+
+    """
+    Converts a given language into its ISO 639 alpha 2 code, if there is any.
+    Returns the language's full name in the reverse.
+
+    Warning: ISO 639 neither differentiates between languages such as Cantonese
+    and Mandarin nor does it contain all spoken languages. E.g., Lechitic
+    languages are missing.
+    Warning: ISO 639 is a smaller subset of ISO 639-2
+
+    @param  key_ok      accept the language's code instead of its name for input
+                        defaults to True
+
+    ::
+
+        >>> l = LanguageValidator()
+        >>> l.to_python('German')
+        'de'
+        >>> l.to_python('Chinese')
+        'zh'
+        >>> l.to_python('Klingonian')
+        Traceback (most recent call last):
+            ...
+        Invalid: That language is not listed in ISO-639-2
+        >>> l.from_python('de')
+        'German'
+        >>> l.from_python('zh')
+        'Chinese'
+    """
+
+    key_ok = True
+
+    messages = {
+        'valueNotFound': _("That language is not listed in ISO-639-2"),
+        }
+
+    def _to_python(self, value, state):
+        upval = value.upper()
+        if self.key_ok:
+            try:
+                c = get_language(value)
+                return value
+            except:
+                pass
+        for k, v in get_languages():
+            if v.upper() == upval:
+                return k
+        raise Invalid(self.message('valueNotFound', state), value, state)
+
+    def _from_python(self, value, state):
+        try:
+            return get_language(value.lower())
+        except KeyError:
+            return value
