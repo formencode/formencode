@@ -73,8 +73,8 @@ class DelimitedDigitsPostalCode(Regex):
 
     """
     Abstraction of common postal code formats, such as 55555, 55-555 etc.
-    With constant amount of digits. You can set the right block to 0 to
-    obtain a trivial 'x digits' postal code validator.
+    With constant amount of digits. By providing a single digit as partition you
+    can obtain a trivial 'x digits' postal code validator.
 
     ::
 
@@ -85,7 +85,7 @@ class DelimitedDigitsPostalCode(Regex):
         Traceback (most recent call last):
             ...
         Invalid: Please enter a zip code (5 digits)
-        >>> polish = DelimitedDigitsPostalCode(2, '-', 3)
+        >>> polish = DelimitedDigitsPostalCode([2, 3], '-')
         >>> polish.to_python('55555')
         '55-555'
         >>> polish.to_python('55-555')
@@ -94,20 +94,39 @@ class DelimitedDigitsPostalCode(Regex):
         Traceback (most recent call last):
             ...
         Invalid: Please enter a zip code (nn-nnn)
+        >>> nicaragua = DelimitedDigitsPostalCode([3, 3, 1], '-')
+        >>> nicaragua.to_python('5554443')
+        '555-444-3'
+        >>> nicaragua.to_python('555-4443')
+        '555-444-3'
+        >>> nicaragua.to_python('5555')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a zip code (nnn-nnn-n)
     """
 
     strip = True
 
-    def __init__(self, length_left_block, delimiter = None, length_right_block = 0, \
-                 *args, **kw):
-        (self.length_left_block, self.delimiter, self.length_right_block) \
-          = (length_left_block, delimiter, length_right_block)
-        if length_right_block > 0:
-            self.format = delimiter.join(['n'*length_left_block, 'n'*length_right_block])
-            self.regex = r'^(\d{%d})\%s?(\d{%d})$' % (length_left_block, delimiter, length_right_block)
+    def assembly_formatstring(self, partition_lengths, delimiter):
+        if len(partition_lengths) == 1:
+            return _("%d digits") % partition_lengths[0]
         else:
-            self.format = _("%d digits") % length_left_block
-            self.regex = r'^(\d{%d})$' % length_left_block
+            return delimiter.join(['n'*l for l in partition_lengths])
+
+    def assembly_regex(self, partition_lengths, delimiter):
+        mg = [r"(\d{%d})" % l for l in partition_lengths]
+        rd = r"\%s?" % delimiter
+        return rd.join(mg)
+
+    def __init__(self, partition_lengths, delimiter = None, \
+                 *args, **kw):
+        if type(partition_lengths) == type(1):
+            partition_lengths = [partition_lengths]
+        if not delimiter:
+            delimiter = ''
+        self.format = self.assembly_formatstring(partition_lengths, delimiter)
+        self.regex = self.assembly_regex(partition_lengths, delimiter)
+        (self.partition_lengths, self.delimiter) = (partition_lengths, delimiter)
         Regex.__init__(self, *args, **kw)
 
     messages = {
@@ -120,10 +139,7 @@ class DelimitedDigitsPostalCode(Regex):
         if not match:
             raise Invalid(
                 self.message('invalid', state) % self.format, value, state)
-        if self.delimiter:
-            return ''.join([match.group(1), self.delimiter, match.group(2)])
-        else:
-            return match.group(1)
+        return self.delimiter.join(match.groups())
 
 def USPostalCode(*args, **kw):
     """
@@ -141,17 +157,17 @@ def USPostalCode(*args, **kw):
             ...
         Invalid: Please enter a zip code (5 digits)
     """
-    return Any(DelimitedDigitsPostalCode(5, None, 0, *args, **kw),
-               DelimitedDigitsPostalCode(5, '-', 4, *args, **kw))
+    return Any(DelimitedDigitsPostalCode(5, None, *args, **kw),
+               DelimitedDigitsPostalCode([5, 4], '-', *args, **kw))
 
 def GermanPostalCode(*args, **kw):
-    return DelimitedDigitsPostalCode(5, None, 0, *args, **kw)
+    return DelimitedDigitsPostalCode(5, None, *args, **kw)
 
 def FourDigitsPostalCode(*args, **kw):
-    return DelimitedDigitsPostalCode(4, None, 0, *args, **kw)
+    return DelimitedDigitsPostalCode(4, None, *args, **kw)
 
 def PolishPostalCode(*args, **kw):
-    return DelimitedDigitsPostalCode(2, '-', 3, *args, **kw)
+    return DelimitedDigitsPostalCode([2, 3], '-', *args, **kw)
 
 class ArgentinianPostalCode(Regex):
 
@@ -319,18 +335,38 @@ class PostalCodeInCountryFormat(FancyValidator):
         'AR': ArgentinianPostalCode,
         'AT': FourDigitsPostalCode,
         'BE': FourDigitsPostalCode,
+        'BG': FourDigitsPostalCode,
         'CA': CanadianPostalCode,
         'CL': lambda: DelimitedDigitsPostalCode(7),
+        'CN': lambda: DelimitedDigitsPostalCode(6),
         'CR': FourDigitsPostalCode,
         'DE': GermanPostalCode,
         'DK': FourDigitsPostalCode,
         'DO': lambda: DelimitedDigitsPostalCode(5),
+        'ES': lambda: DelimitedDigitsPostalCode(5),
+        'FI': lambda: DelimitedDigitsPostalCode(5),
+        'FR': lambda: DelimitedDigitsPostalCode(5),
         'GB': UKPostalCode,
         'GF': lambda: DelimitedDigitsPostalCode(5),
-        'HT': FourDigitsPostalCode,
+        'GR': lambda: DelimitedDigitsPostalCode([2, 3], ' '),
         'HN': lambda: DelimitedDigitsPostalCode(5),
+        'HT': FourDigitsPostalCode,
+        'HU': FourDigitsPostalCode,
+        'IS': lambda: DelimitedDigitsPostalCode(3),
+        'IT': lambda: DelimitedDigitsPostalCode(5),
+        'JP': lambda: DelimitedDigitsPostalCode([3, 4], '-'),
+        'KR': lambda: DelimitedDigitsPostalCode([3, 3], '-'),
+        'LI': FourDigitsPostalCode,
+        'LU': FourDigitsPostalCode,
+        'MC': lambda: DelimitedDigitsPostalCode(5),
+        'NI': lambda: DelimitedDigitsPostalCode([3, 3, 1], '-'),
+        'NO': FourDigitsPostalCode,
         'PL': PolishPostalCode,
+        'PT': lambda: DelimitedDigitsPostalCode([4, 3], '-'),
         'PY': FourDigitsPostalCode,
+        'RO': lambda: DelimitedDigitsPostalCode(6),
+        'SE': lambda: DelimitedDigitsPostalCode([3, 2], ' '),
+        'SG': lambda: DelimitedDigitsPostalCode(6),
         'US': USPostalCode,
         'UY': lambda: DelimitedDigitsPostalCode(5),
     }
