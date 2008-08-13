@@ -1,6 +1,7 @@
 import re
 import string
 from api import FancyValidator
+from compound import Any
 from validators import Regex, Invalid, _
 
 try:
@@ -68,96 +69,49 @@ else:
 ## country, state and postal code validators
 ############################################################
 
-class USPostalCode(Regex):
+class DelimitedDigitsPostalCode(Regex):
 
     """
-    US Postal codes (aka Zip Codes).
+    Abstraction of common postal code formats, such as 55555, 55-555 etc.
+    With constant amount of digits. You can set the right block to 0 to
+    obtain a trivial 'x digits' postal code validator.
 
     ::
 
-        >>> USPostalCode.to_python('55555')
+        >>> german = DelimitedDigitsPostalCode(5)
+        >>> german.to_python('55555')
         '55555'
-        >>> USPostalCode.to_python('55555-5555')
-        '55555-5555'
-        >>> USPostalCode.to_python('5555')
+        >>> german.to_python('5555')
         Traceback (most recent call last):
             ...
         Invalid: Please enter a zip code (5 digits)
-    """
-
-    regex = r'^\d\d\d\d\d(?:-\d\d\d\d)?$'
-    strip = True
-
-    messages = {
-        'invalid': _('Please enter a zip code (5 digits)'),
-        }
-
-class GermanPostalCode(Regex):
-
-    """
-    German Postal codes (aka Zip Codes).
-
-    ::
-
-        >>> GermanPostalCode.to_python('55555')
-        '55555'
-        >>> GermanPostalCode.to_python('5555')
-        Traceback (most recent call last):
-            ...
-        Invalid: Please enter a zip code (5 digits)
-    """
-
-    regex = r'^\d\d\d\d\d$'
-    strip = True
-
-    messages = {
-        'invalid': _("Please enter a zip code (%s)") % _("5 digits"),
-        }
-
-class FourDigitsPostalCode(Regex):
-
-    """
-    Postal codes consisting of 4 digits.
-
-    ::
-
-        >>> FourDigitsPostalCode.to_python('5555')
-        '5555'
-        >>> FourDigitsPostalCode.to_python('56655')
-        Traceback (most recent call last):
-            ...
-        Invalid: Please enter a zip code (4 digits)
-    """
-
-    regex = r'^\d\d\d\d$'
-    strip = True
-
-    messages = {
-        'invalid': _("Please enter a zip code (%s)") % _("4 digits"),
-        }
-
-class PolishPostalCode(Regex):
-
-    """
-    Polish Postal codes (aka Zip Codes).
-
-    ::
-
-        >>> PolishPostalCode.to_python('55555')
+        >>> polish = DelimitedDigitsPostalCode(2, '-', 3)
+        >>> polish.to_python('55555')
         '55-555'
-        >>> PolishPostalCode.to_python('55-555')
+        >>> polish.to_python('55-555')
         '55-555'
-        >>> PolishPostalCode.to_python('5555')
+        >>> polish.to_python('5555')
         Traceback (most recent call last):
             ...
-        Invalid: Please enter a zip code (5 digits)
+        Invalid: Please enter a zip code (nn-nnn)
     """
 
-    regex = re.compile(r'^(\d\d)\-?(\d\d\d)$')
     strip = True
 
+    def __init__(self, length_left_block, delimiter = None, length_right_block = 0, \
+                 *args, **kw):
+        (self.length_left_block, self.delimiter, self.length_right_block) \
+          = (length_left_block, delimiter, length_right_block)
+        if length_right_block > 0:
+            self.format = delimiter.join(['n'*length_left_block, 'n'*length_right_block])
+            self.regex = r'^(\d{%d})\%s?(\d{%d})$' % (length_left_block, delimiter, length_right_block)
+        else:
+            self.format = _("%d digits") % length_left_block
+            self.regex = r'^(\d{%d})$' % length_left_block
+        Regex.__init__(self, *args, **kw)
+
     messages = {
-        'invalid': _("Please enter a zip code (%s)") % _("5 digits"),
+        'invalid': _('Please enter a zip code (%s)'),
         }
 
     def _to_python(self, value, state):
@@ -165,9 +119,39 @@ class PolishPostalCode(Regex):
         match = self.regex.search(value)
         if not match:
             raise Invalid(
-                self.message('invalid', state),
-                value, state)
-        return '%s-%s' % (match.group(1), match.group(2))
+                self.message('invalid', state) % self.format, value, state)
+        if self.delimiter:
+            return ''.join([match.group(1), self.delimiter, match.group(2)])
+        else:
+            return match.group(1)
+
+def USPostalCode(*args, **kw):
+    """
+    US Postal codes (aka Zip Codes).
+
+    ::
+
+        >>> uspc = USPostalCode()
+        >>> uspc.to_python('55555')
+        '55555'
+        >>> uspc.to_python('55555-5555')
+        '55555-5555'
+        >>> uspc.to_python('5555')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a zip code (5 digits)
+    """
+    return Any(DelimitedDigitsPostalCode(5, None, 0, *args, **kw),
+               DelimitedDigitsPostalCode(5, '-', 4, *args, **kw))
+
+def GermanPostalCode(*args, **kw):
+    return DelimitedDigitsPostalCode(5, None, 0, *args, **kw)
+
+def FourDigitsPostalCode(*args, **kw):
+    return DelimitedDigitsPostalCode(4, None, 0, *args, **kw)
+
+def PolishPostalCode(*args, **kw):
+    return DelimitedDigitsPostalCode(2, '-', 3, *args, **kw)
 
 class ArgentinianPostalCode(Regex):
 
@@ -332,21 +316,30 @@ class PostalCodeInCountryFormat(FancyValidator):
         'badFormat': _("Given postal code does not match the country's format."),
         }
     _vd = {
-        'DE': GermanPostalCode,
+        'AR': ArgentinianPostalCode,
         'AT': FourDigitsPostalCode,
         'BE': FourDigitsPostalCode,
-        'DK': FourDigitsPostalCode,
-        'PL': PolishPostalCode,
-        'US': USPostalCode,
         'CA': CanadianPostalCode,
-        'AR': ArgentinianPostalCode,
+        'CL': lambda: DelimitedDigitsPostalCode(7),
+        'CR': FourDigitsPostalCode,
+        'DE': GermanPostalCode,
+        'DK': FourDigitsPostalCode,
+        'DO': lambda: DelimitedDigitsPostalCode(5),
         'GB': UKPostalCode,
+        'GF': lambda: DelimitedDigitsPostalCode(5),
+        'HT': FourDigitsPostalCode,
+        'HN': lambda: DelimitedDigitsPostalCode(5),
+        'PL': PolishPostalCode,
+        'PY': FourDigitsPostalCode,
+        'US': USPostalCode,
+        'UY': lambda: DelimitedDigitsPostalCode(5),
     }
 
     def validate_python(self, fields_dict, state):
         if fields_dict['country'] in self._vd:
             try:
-                fields_dict['zip'] = self._vd[fields_dict['country']].to_python(fields_dict['zip'])
+                zip_validator = self._vd[fields_dict['country']]()
+                fields_dict['zip'] = zip_validator.to_python(fields_dict['zip'])
             except Invalid, e:
                 message = self.message('badFormat', state)
                 raise Invalid(message, fields_dict, state,
