@@ -504,8 +504,14 @@ class InternationalPhoneNumber(FancyValidator):
     Validates, and converts phone numbers to +##-###-#######.
     Adapted from RFC 3966
 
+    @param  default_cc      country code for prepending if none is provided
+                            can be a paramerless callable
+
     ::
 
+        >>> c = InternationalPhoneNumber(default_cc=lambda: 49)
+        >>> c.to_python('0555/8114100')
+        '+49-555-8114100'
         >>> p = InternationalPhoneNumber(default_cc=49)
         >>> p.to_python('333-3333')
         Traceback (most recent call last):
@@ -604,7 +610,11 @@ class InternationalPhoneNumber(FancyValidator):
             value = value.replace(f, t)
         value = self._perform_rex_transformation(value, self._preTransformations)
         if self.default_cc:
-            value = self._prepend_country_code(value, self._ccIncluder, self.default_cc)
+            if callable(self.default_cc):
+                cc = self.default_cc()
+            else:
+                cc = self.default_cc
+            value = self._prepend_country_code(value, self._ccIncluder, cc)
         value = self._perform_rex_transformation(value, self._postTransformations)
         value = value.replace(' ', '')
         # did we successfully transform that phone number? Thus, is it valid?
