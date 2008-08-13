@@ -31,13 +31,19 @@ fuzzy_countrynames = [
 ]
 
 if has_pycountry:
+    # @@ mark: interestingly, common gettext notation does not work here
+    import gettext
+    gettext.bindtextdomain('iso3166', pycountry.LOCALES_DIR)
+    _c = lambda t: gettext.dgettext('iso3166', t)
+
     def get_countries():
-        c1 = [(e.alpha2, e.name) for e in pycountry.countries]
+        c1 = [(e.alpha2, _c(e.name)) for e in pycountry.countries]
+        c1 += [(e.alpha2, e.name) for e in pycountry.countries ]
         ret = country_additions + c1 + fuzzy_countrynames
         return ret
 
     def get_country(code):
-        return pycountry.countries.get(alpha2=code).name
+        return _c(pycountry.countries.get(alpha2=code).name)
 elif has_turbogears:
     def get_countries():
         c1 = tgformat.get_countries('en')
