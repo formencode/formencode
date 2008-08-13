@@ -30,21 +30,7 @@ fuzzy_countrynames = [
     ('CI', _("Cote de Ivoire")),
 ]
 
-if has_pycountry:
-    # @@ mark: interestingly, common gettext notation does not work here
-    import gettext
-    gettext.bindtextdomain('iso3166', pycountry.LOCALES_DIR)
-    _c = lambda t: gettext.dgettext('iso3166', t)
-
-    def get_countries():
-        c1 = set([(e.alpha2, _c(e.name)) for e in pycountry.countries])
-        ret = c1.union([(e.alpha2, e.name) for e in pycountry.countries ]
-                        + country_additions + fuzzy_countrynames)
-        return ret
-
-    def get_country(code):
-        return _c(pycountry.countries.get(alpha2=code).name)
-elif has_turbogears:
+if has_turbogears:
     def get_countries():
         c1 = tgformat.get_countries('en')
         c2 = tgformat.get_countries()
@@ -53,13 +39,26 @@ elif has_turbogears:
             d.update(dict(c1))
             d.update(dict(c2))
         else:
-            d = country_additions.copy()
+            d = dict(country_additions)
             d.update(dict(c2))
         ret = d.items() + fuzzy_countrynames
         return ret
 
     def get_country(code):
         return dict(get_countries())[code]
+elif has_pycountry:
+    # @@ mark: interestingly, common gettext notation does not work here
+    import gettext
+    gettext.bindtextdomain('iso3166', pycountry.LOCALES_DIR)
+    _c = lambda t: gettext.dgettext('iso3166', t)
+
+    def get_countries():
+        c1 = set([(e.alpha2, _c(e.name)) for e in pycountry.countries])
+        ret = c1.union(country_additions + fuzzy_countrynames)
+        return ret
+
+    def get_country(code):
+        return _c(pycountry.countries.get(alpha2=code).name)
 else:
     from warnings import warn
     warn('Please easy_install pycountry or validators handling country names will not work.', DeprecationWarning)
