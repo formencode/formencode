@@ -1,6 +1,6 @@
 ## FormEncode, a  Form processor
 ## Copyright (C) 2003, Ian Bicking <ianb@colorstudy.com>
-##  
+##
 ## This library is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU Lesser General Public
 ## License as published by the Free Software Foundation; either
@@ -23,6 +23,7 @@
 Validator/Converters for use with FormEncode.
 """
 
+import warnings
 import re
 DateTime = None
 httplib = None
@@ -53,7 +54,7 @@ def _(s): return s # dummy translation function, nothing is translated here.
                    # Instead this is actually done in api.message.
                    # The surrounding _("string") of the strings is only for extracting
                    # the strings automatically
-                   # if you run pygettext with this source comment this function out temporarly 
+                   # if you run pygettext with this source comment this function out temporarly
 
 ############################################################
 ## Utility methods
@@ -134,7 +135,7 @@ class ConfirmType(FancyValidator):
         the exact class or type.  Subclasses are not allowed.
 
     Examples::
-    
+
         >>> cint = ConfirmType(subclass=int)
         >>> cint.to_python(True)
         True
@@ -275,7 +276,7 @@ class Wrapper(FancyValidator):
             except Exception, e:
                 raise Invalid(str(e), {}, value, state)
         return result
- 
+
 class Constant(FancyValidator):
 
     """
@@ -289,7 +290,7 @@ class Constant(FancyValidator):
       fromEmailValidator = ValidateAny(
                                ValidEmailAddress(),
                                Constant('unknown@localhost'))
-                               
+
     In this case, the if the email is not valid
     ``'unknown@localhost'`` will be used instead.  Of course, you
     could use ``if_invalid`` instead.
@@ -394,7 +395,7 @@ class MinLength(FancyValidator):
         Traceback (most recent call last):
           ...
         Invalid: Invalid value (value with length expected)
-        
+
     """
 
     __unpackargs__ = ('minLength',)
@@ -487,7 +488,7 @@ class Regex(FancyValidator):
 
     Note that ``.from_python()`` calls (in general) do not validate
     the input::
-    
+
         >>> cap.from_python('abc')
         'abc'
         >>> cap(accept_python=False).from_python('abc')
@@ -513,7 +514,7 @@ class Regex(FancyValidator):
     messages = {
         'invalid': _("The input is not valid"),
         }
-    
+
     def __init__(self, *args, **kw):
         FancyValidator.__init__(self, *args, **kw)
         if isinstance(self.regex, basestring):
@@ -608,7 +609,7 @@ class OneOf(FancyValidator):
         'invalid': _("Invalid value"),
         'notIn': _("Value must be one of: %(items)s (not %(value)r)"),
         }
-    
+
     def validate_python(self, value, state):
         if self.testValueList and isinstance(value, (list, tuple)):
             for v in value:
@@ -674,7 +675,7 @@ class DictConverter(FancyValidator):
         'valueNotFound': _("That value is not known"),
         'chooseValue': _("Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"),
         }
-    
+
     def _to_python(self, value, state):
         try:
             return self.dict[value]
@@ -737,7 +738,7 @@ class IndexListConverter(FancyValidator):
         'outOfRange': _("Index out of range"),
         'notFound': _("Item %(value)s was not found in the list"),
         }
-    
+
     def _to_python(self, value, state):
         try:
             value = int(value)
@@ -756,7 +757,7 @@ class IndexListConverter(FancyValidator):
                 return i
         raise Invalid(self.message('notFound', state,
                                    value=repr(value)),
-                      value, state)        
+                      value, state)
 
 class DateValidator(FancyValidator):
 
@@ -796,7 +797,7 @@ class DateValidator(FancyValidator):
         >>> d = DateValidator(today_or_after=True)
         >>> d.to_python(now) == now
         True
-    
+
     """
 
     earliest_date = None
@@ -877,7 +878,7 @@ class DateValidator(FancyValidator):
                     self.message('future', state,
                                  date=date_formatted),
                     value, state)
-            
+
 
 class Bool(FancyValidator):
 
@@ -904,7 +905,7 @@ class Bool(FancyValidator):
 
     def _to_python(self, value, state):
         return bool(value)
-    _from_python = _to_python        
+    _from_python = _to_python
 
     def empty_value(self, value):
         return False
@@ -1051,7 +1052,7 @@ class String(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: Please enter a value
-    
+
     """
 
     min = None
@@ -1097,7 +1098,7 @@ class String(FancyValidator):
         if self.strip:
             value = value.strip()
         return value
-    
+
     def validate_other(self, value, state):
         if (self.max is not None and value is not None
             and len(value) > self.max):
@@ -1117,32 +1118,32 @@ class UnicodeString(String):
     """
     Converts things to unicode string, this is a specialization of
     the String class.
-    
+
     In addition to the String arguments, an encoding argument is also
     accepted. By default the encoding will be utf-8.
-    
+
     All converted strings are returned as Unicode strings.
-    
+
     ::
-    
+
         >>> UnicodeString().to_python(None)
         u''
         >>> UnicodeString().to_python([])
         u''
         >>> UnicodeString(encoding='utf-7').to_python('Ni Ni Ni')
         u'Ni Ni Ni'
-    
+
     """
     encoding = 'utf-8'
     messages = {
         'badEncoding' : _("Invalid data or incorrect encoding"),
     }
-    
+
     def __init__(self, inputEncoding=None, outputEncoding=None, **kw):
         String.__init__(self, **kw)
         self.inputEncoding = inputEncoding or self.encoding
         self.outputEncoding = outputEncoding or self.encoding
-    
+
     def _to_python(self, value, state):
         if not value:
             return u''
@@ -1160,7 +1161,7 @@ class UnicodeString(String):
             raise Invalid(self.message('badEncoding', state), value, state)
         except TypeError:
             raise Invalid(self.message('badType', state, type=type(value), value=value), value, state)
-    
+
     def _from_python(self, value, state):
         if not isinstance(value, unicode):
             if hasattr(value, '__unicode__'):
@@ -1287,8 +1288,8 @@ class Email(FancyValidator):
         Invalid: The domain of the email address does not exist (the portion after the @: thisdomaindoesnotexistithinkforsure.com)
         >>> e = Email(not_empty=False)
         >>> e.to_python('')
-        
-    """ 
+
+    """
 
     resolve_domain = False
 
@@ -1306,7 +1307,7 @@ class Email(FancyValidator):
         'badDomain': _('The domain portion of the email address is invalid (the portion after the @: %(domain)s)'),
         'domainDoesNotExist': _('The domain of the email address does not exist (the portion after the @: %(domain)s)'),
         }
-    
+
     def __init__(self, *args, **kw):
         FancyValidator.__init__(self, *args, **kw)
         if self.resolve_domain:
@@ -1409,7 +1410,7 @@ class URL(FancyValidator):
 
         >>> URL(require_tld=False).to_python('http://localhost')
         'http://localhost'
-        
+
     """
 
     check_exists = False
@@ -1513,235 +1514,21 @@ class URL(FancyValidator):
                 raise Invalid(
                     self.message('status', state, status=res.status),
                     state, url)
-        
-        
 
-class StateProvince(FancyValidator):
-    
-    """
-    Valid state or province code (two-letter).
+def StateProvince(*kw, **kwargs):
+    warnings.warn("please use formencode.national.USStateProvince", DeprecationWarning, stacklevel=2)
+    from formencode.national import USStateProvince
+    return USStateProvince(*kw, **kwargs)
 
-    Well, for now I don't know the province codes, but it does state
-    codes.  Give your own `states` list to validate other state-like
-    codes; give `extra_states` to add values without losing the
-    current state values.
+def PhoneNumber(*kw, **kwargs):
+    warnings.warn("please use formencode.national.USPhoneNumber", DeprecationWarning, stacklevel=2)
+    from formencode.national import USPhoneNumber
+    return USPhoneNumber(*kw, **kwargs)
 
-    ::
-
-        >>> s = StateProvince('XX')
-        >>> s.to_python('IL')
-        'IL'
-        >>> s.to_python('XX')
-        'XX'
-        >>> s.to_python('xx')
-        'XX'
-        >>> s.to_python('YY')
-        Traceback (most recent call last):
-            ...
-        Invalid: That is not a valid state code
-    """
-
-    states = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE',
-              'FL', 'GA', 'HI', 'IA', 'ID', 'IN', 'IL', 'KS', 'KY',
-              'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT',
-              'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH',
-              'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT',
-              'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
-
-    extra_states = []
-
-    __unpackargs__ = ('extra_states',)
-
-    messages = {
-        'empty': _('Please enter a state code'),
-        'wrongLength': _('Please enter a state code with TWO letters'),
-        'invalid': _('That is not a valid state code'),
-        }
-
-    def validate_python(self, value, state):
-        value = str(value).strip().upper()
-        if not value:
-            raise Invalid(
-                self.message('empty', state),
-                value, state)
-        if not value or len(value) != 2:
-            raise Invalid(
-                self.message('wrongLength', state),
-                value, state)
-        if value not in self.states \
-           and not (self.extra_states and value in self.extra_states):
-            raise Invalid(
-                self.message('invalid', state),
-                value, state)
-    
-    def _to_python(self, value, state):
-        return str(value).strip().upper()
-
-class PhoneNumber(FancyValidator):
-
-    """
-    Validates, and converts to ###-###-####, optionally with extension
-    (as ext.##...).  Only support US phone numbers.  See
-    InternationalPhoneNumber for support for that kind of phone number.
-
-    ::
-
-        >>> p = PhoneNumber()
-        >>> p.to_python('333-3333')
-        Traceback (most recent call last):
-            ...
-        Invalid: Please enter a number, with area code, in the form ###-###-####, optionally with "ext.####"
-        >>> p.to_python('555-555-5555')
-        '555-555-5555'
-        >>> p.to_python('1-393-555-3939')
-        '1-393-555-3939'
-        >>> p.to_python('321.555.4949')
-        '321.555.4949'
-        >>> p.to_python('3335550000')
-        '3335550000'
-    """
-    # for emacs: "
-
-    _phoneRE = re.compile(r'^\s*(?:1-)?(\d\d\d)[\- \.]?(\d\d\d)[\- \.]?(\d\d\d\d)(?:\s*ext\.?\s*(\d+))?\s*$', re.I)
-
-    messages = {
-        'phoneFormat': _('Please enter a number, with area code, in the form ###-###-####, optionally with "ext.####"'),
-        }
-        
-    def _to_python(self, value, state):
-        self.assert_string(value, state)
-        match = self._phoneRE.search(value)
-        if not match:
-            raise Invalid(
-                self.message('phoneFormat', state),
-                value, state)
-        return value
-
-    def _from_python(self, value, state):
-        self.assert_string(value, state)
-        match = self._phoneRE.search(value)
-        if not match:
-            raise Invalid(self.message('phoneFormat', state),
-                          value, state)
-        result = '%s-%s-%s' % (match.group(1), match.group(2), match.group(3))
-        if match.group(4):
-            result = result + " ext.%s" % match.group(4)
-        return result
-
-# from dbmanager.util.i18n.validators@r313[302:417]
-class IPhoneNumberValidator(FancyValidator):
-
-    """
-    Validates, and converts phone numbers to +##-###-#######.
-    Adapted from RFC 3966
-
-    ::
-
-        >>> p = IPhoneNumberValidator(default_cc=49)
-        >>> p.to_python('333-3333')
-        Traceback (most recent call last):
-            ...
-        Invalid: Please enter a number, with area code, in the form +##-###-#######.
-        >>> p.to_python('0555/4860-300')
-        '+49-555-4860-300'
-        >>> p.to_python('0555-49924-51')
-        '+49-555-49924-51'
-        >>> p.to_python('0555 / 8114100')
-        '+49-555-8114100'
-        >>> p.to_python('0555/8114100')
-        '+49-555-8114100'
-        >>> p.to_python('0555 8114100')
-        '+49-555-8114100'
-        >>> p.to_python(' +49 (0)555 350 60 0')
-        '+49-555-35060-0'
-        >>> p.to_python('+49 555 350600')
-        '+49-555-350600'
-        >>> p.to_python('0049/ 555/ 871 82 96')
-        '+49-555-87182-96'
-        >>> p.to_python('0555-2 50-30')
-        '+49-555-250-30'
-        >>> p.to_python('0555 43-1200')
-        '+49-555-43-1200'
-        >>> p.to_python('(05 55)4 94 33 47')
-        '+49-555-49433-47'
-        >>> p.to_python('(00 48-555)2 31 72 41')
-        '+48-555-23172-41'
-        >>> p.to_python('+973-555431')
-        '+973-555431'
-        >>> p.to_python('1-393-555-3939')
-        '+1-393-555-3939'
-        >>> p.to_python('+43 (1) 55528/0')
-        '+43-1-55528-0'
-        >>> p.to_python('+43 5555 429 62-0')
-        '+43-5555-42962-0'
-        >>> p.to_python('00 218 55 33 50 317 321')
-        '+218-55-3350317-321'
-        >>> p.to_python('+218 (0)55-3636639/38')
-        '+218-55-3636639-38'
-        >>> p.to_python('032 555555 367')
-        '+49-32-555555-367'
-        >>> p.to_python('(+86) 555 3876693')
-        '+86-555-3876693'
-    """
-
-    strip = True
-    # Use if there's a default country code you want to use:
-    default_cc = None
-    _mark_chars_re = re.compile(r"[_.!~*'/]")
-    _preTransformations = [
-        (re.compile(r'^(\(?)(?:00\s*)(.+)$'), '%s+%s'),
-        (re.compile(r'^\(\s*(\+?\d+)\s*(\d+)\s*\)(.+)$'), '(%s%s)%s'),
-        (re.compile(r'^\((\+?[-\d]+)\)\s?(\d.+)$'), '%s-%s'),
-        (re.compile(r'^(?:1-)(\d+.+)$'), '+1-%s'),
-        (re.compile(r'^(\+\d+)\s+\(0\)\s*(\d+.+)$'), '%s-%s'),
-        (re.compile(r'^([0+]\d+)[-\s](\d+)$'), '%s-%s'),
-        (re.compile(r'^([0+]\d+)[-\s](\d+)[-\s](\d+)$'), '%s-%s-%s'),
-        ]
-    _ccIncluder = [
-        (re.compile(r'^\(?0([1-9]\d*)[-)](\d.*)$'), '+%d-%s-%s'),
-        ]
-    _postTransformations = [
-        (re.compile(r'^(\+\d+)[-\s]\(?(\d+)\)?[-\s](\d+.+)$'), '%s-%s-%s'),
-        (re.compile(r'^(.+)\s(\d+)$'), '%s-%s'),
-        ]
-    _phoneIsSane = re.compile(r'^(\+[1-9]\d*)-([\d\-]+)$')
-
-    messages = {
-        'phoneFormat': _('Please enter a number, with area code, in the form +##-###-#######.'),
-        }
-
-    def _perform_rex_transformation(self, value, transformations):
-        for rex, trf in transformations:
-            match = rex.search(value)
-            if match:
-                value = trf % match.groups()
-        return value
-
-    def _prepend_country_code(self, value, transformations, country_code):
-        for rex, trf in transformations:
-            match = rex.search(value)
-            if match:
-                return trf % ((country_code,)+match.groups())
-        return value
-
-    def _to_python(self, value, state):
-        self.assert_string(value, state)
-        try:
-            value = value.encode('ascii', 'replace')
-        except:
-            raise Invalid(self.message('phoneFormat', state), value, state)
-        value = self._mark_chars_re.sub('-', value)
-        for f, t in [('  ', ' '), ('--', '-'), (' - ', '-'), ('- ', '-'), (' -', '-')]:
-            value = value.replace(f, t)
-        value = self._perform_rex_transformation(value, self._preTransformations)
-        if self.default_cc:
-            value = self._prepend_country_code(value, self._ccIncluder, self.default_cc)
-        value = self._perform_rex_transformation(value, self._postTransformations)
-        value = value.replace(' ', '')
-        # did we successfully transform that phone number? Thus, is it valid?
-        if not self._phoneIsSane.search(value):
-            raise Invalid(self.message('phoneFormat', state), value, state)
-        return value
+def IPhoneNumberValidator(*kw, **kwargs):
+    warnings.warn("please use formencode.national.InternationalPhoneNumber", DeprecationWarning, stacklevel=2)
+    from formencode.national import InternationalPhoneNumber
+    return InternationalPhoneNumber(*kw, **kwargs)
 
 class FieldStorageUploadConverter(FancyValidator):
     """
@@ -1757,7 +1544,7 @@ class FieldStorageUploadConverter(FancyValidator):
                 return value
             raise Invalid('invalid', value, state)
         else:
-            return value 
+            return value
 
     def is_empty(self, value):
         if isinstance(value, cgi.FieldStorage):
@@ -1970,7 +1757,7 @@ class DateConverter(FancyValidator):
             raise Invalid(self.message('invalidDate', state,
                                        exception=str(v)),
                           value, state)
-        
+
     def make_month(self, value, state):
         try:
             return int(value)
@@ -2250,29 +2037,10 @@ class TimeConverter(FancyValidator):
         else:
             return '%i:%02i%s' % (hour, minute, ampm)
 
-class PostalCode(Regex):
-
-    """
-    US Postal codes (aka Zip Codes).
-
-    ::
-
-        >>> PostalCode.to_python('55555')
-        '55555'
-        >>> PostalCode.to_python('55555-5555')
-        '55555-5555'
-        >>> PostalCode.to_python('5555')
-        Traceback (most recent call last):
-            ...
-        Invalid: Please enter a zip code (5 digits)
-    """
-
-    regex = r'^\d\d\d\d\d(?:-\d\d\d\d)?$'
-    strip = True
-
-    messages = {
-        'invalid': _('Please enter a zip code (5 digits)'),
-        }
+def PostalCode(*kw, **kwargs):
+    warnings.warn("please use formencode.national.USPostalCode", DeprecationWarning, stacklevel=2)
+    from formencode.national import USPostalCode
+    return USPostalCode(*kw, **kwargs)
 
 class StripField(FancyValidator):
 
@@ -2289,7 +2057,7 @@ class StripField(FancyValidator):
     Traceback (most recent call last):
         ...
     Invalid: The name 'test' is missing
-    
+
     """
 
     __unpackargs__ = ('name',)
@@ -2317,7 +2085,7 @@ class StringBool(FancyValidator):
     # Originally from TurboGears
     """
     Converts a string to a boolean.
-    
+
     Values like 'true' and 'false' are considered True and False,
     respectively; anything in ``true_values`` is true, anything in
     ``false_values`` is false, case-insensitive).  The first item of
@@ -2335,12 +2103,12 @@ class StringBool(FancyValidator):
             ...
         Invalid: Value should be 'true' or 'false'
     """
-    
+
     true_values = ['true', 't', 'yes', 'y', 'on', '1']
     false_values = ['false', 'f', 'no', 'n', 'off', '0']
 
     messages = { "string" : _("Value should be %(true)r or %(false)r") }
-    
+
     def _to_python(self, value, state):
         if isinstance(value, (str, unicode)):
             value = value.strip().lower()
@@ -2353,7 +2121,7 @@ class StringBool(FancyValidator):
                                        false=self.false_values[0]),
                           value, state)
         return bool(value)
-    
+
     def _from_python(self, value, state):
         if value:
             return self.true_values[0]
@@ -2458,7 +2226,7 @@ class CIDR(FancyValidator):
                 addr, bits = value.split('/')
             else: # a.b.c.d
                 addr, bits = value, 32
-                
+
             octets = addr.split('.')
 
             # Only 4 octets?
@@ -2503,7 +2271,7 @@ class MACAddress(FancyValidator):
     strip=True
     valid_characters = '0123456789abcdefABCDEF'
     add_colons = False
-    
+
     messages = {
         'bad_length': _(u'A MAC address must contain 12 digits and A-F; the value you gave has %(length)s characters'),
         'bad_character': _(u'MAC addresses may only contain 0-9 and A-F (and optionally :), not %(char)r'),
@@ -2528,7 +2296,7 @@ class MACAddress(FancyValidator):
 class FormValidator(FancyValidator):
     """
     A FormValidator is something that can be chained with a
-    Schema.  Unlike normal chaining the FormValidator can 
+    Schema.  Unlike normal chaining the FormValidator can
     validate forms that aren't entirely valid.
 
     The important method is .validate(), of course.  It gets passed a
@@ -2570,9 +2338,9 @@ class RequireIfMissing(FormValidator):
     if that field is present, the required field must also be present.
 
     ::
-    
+
         >>> from formencode import validators
-        >>> v = validators.RequireIfPresent('phone_type', 
+        >>> v = validators.RequireIfPresent('phone_type',
         ...                                 present='phone')
         >>> v.to_python({'phone_type':'', 'phone':'510 420  4577'})
         Traceback (most recent call last):
@@ -2641,7 +2409,7 @@ class FieldsMatch(FormValidator):
         'invalid': _("Fields do not match (should be %(match)s)"),
         'invalidNoMatch': _("Fields do not match"),
         }
-    
+
     def validate_partial(self, field_dict, state):
         for name in self.field_names:
             if not field_dict.has_key(name):
@@ -2726,7 +2494,7 @@ class CreditCardValidator(FormValidator):
                 '<br>\n'.join(["%s: %s" % (name, value)
                                for name, value in error_list]),
                 field_dict, state, error_dict=errors)
-        
+
     def _validateReturn(self, field_dict, state):
         for field in self.cc_type_field, self.cc_number_field:
             if field not in field_dict:
@@ -2748,7 +2516,7 @@ class CreditCardValidator(FormValidator):
         for prefix, length in self._cardInfo[ccType]:
             if len(number) == length:
                 validLength = True
-            if (len(number) == length 
+            if (len(number) == length
                 and number.startswith(prefix)):
                 foundValid = True
                 break
@@ -2799,12 +2567,12 @@ class CreditCardValidator(FormValidator):
 
 class CreditCardExpires(FormValidator):
     """
-    Checks that credit card expiration date is valid relative to 
+    Checks that credit card expiration date is valid relative to
     the current date.
 
     You pass in the name of the field that has the credit card
-    expiration month and the field with the credit card expiration 
-    year.  
+    expiration month and the field with the credit card expiration
+    year.
 
     ::
 
@@ -2846,7 +2614,7 @@ class CreditCardExpires(FormValidator):
                 '<br>\n'.join(["%s: %s" % (name, value)
                                for name, value in error_list]),
                 field_dict, state, error_dict=errors)
-        
+
     def _validateReturn(self, field_dict, state):
         ccExpiresMonth = str(field_dict[self.cc_expires_month_field]).strip()
         ccExpiresYear = str(field_dict[self.cc_expires_year_field]).strip()
