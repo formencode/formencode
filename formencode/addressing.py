@@ -37,9 +37,9 @@ if has_pycountry:
     _c = lambda t: gettext.dgettext('iso3166', t)
 
     def get_countries():
-        c1 = [(e.alpha2, _c(e.name)) for e in pycountry.countries]
-        c1 += [(e.alpha2, e.name) for e in pycountry.countries ]
-        ret = country_additions + c1 + fuzzy_countrynames
+        c1 = set([(e.alpha2, _c(e.name)) for e in pycountry.countries])
+        ret = c1.union([(e.alpha2, e.name) for e in pycountry.countries ]
+                        + country_additions + fuzzy_countrynames)
         return ret
 
     def get_country(code):
