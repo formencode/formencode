@@ -314,7 +314,7 @@ class CountryValidator(FancyValidator):
         >>> CountryValidator.to_python('Krakovia')
         Traceback (most recent call last):
             ...
-        Invalid: That country is not listed in ISO-3166
+        Invalid: That country is not listed in ISO 3166
         >>> CountryValidator.from_python('DE')
         'Germany'
         >>> CountryValidator.from_python('FI')
@@ -324,7 +324,7 @@ class CountryValidator(FancyValidator):
     key_ok = True
 
     messages = {
-        'valueNotFound': _("That country is not listed in ISO-3166"),
+        'valueNotFound': _("That country is not listed in ISO 3166"),
         }
 
     def _to_python(self, value, state):
@@ -348,9 +348,29 @@ class CountryValidator(FancyValidator):
 
 class PostalCodeInCountryFormat(FancyValidator):
     """
-    Makes sure the postal code is in the country's format.
+    Makes sure the postal code is in the country's format by chosing postal
+    code validator by provided country code. Does convert it into the preferred
+    format, too.
+
+    ::
+
+        >>> fs = PostalCodeInCountryFormat('country', 'zip')
+        >>> fs.to_python({'country': 'DE', 'zip': '30167'})
+        {'country': 'DE', 'zip': '30167'}
+        >>> fs.to_python({'country': 'DE', 'zip': '3008'})
+        Traceback (most recent call last):
+            ...
+        Invalid: Given postal code does not match the country's format.
+        >>> fs.to_python({'country': 'PL', 'zip': '34343'})
+        {'country': 'PL', 'zip': '34-343'}
+        >>> fs = PostalCodeInCountryFormat('staat', 'plz')
+        >>> fs.to_python({'staat': 'GB', 'plz': 'l1a 3gr'})
+        {'staat': 'GB', 'plz': 'L1A 3GR'}
     """
 
+    country_field = 'country'
+    zip_field = 'zip'
+    __unpackargs__ = ('country_field', 'zip_field')
     messages = {
         'badFormat': _("Given postal code does not match the country's format."),
         }
@@ -395,15 +415,15 @@ class PostalCodeInCountryFormat(FancyValidator):
     }
 
     def validate_python(self, fields_dict, state):
-        if fields_dict['country'] in self._vd:
+        if fields_dict[self.country_field] in self._vd:
             try:
-                zip_validator = self._vd[fields_dict['country']]()
-                fields_dict['zip'] = zip_validator.to_python(fields_dict['zip'])
+                zip_validator = self._vd[fields_dict[self.country_field]]()
+                fields_dict[self.zip_field] = zip_validator.to_python(fields_dict[self.zip_field])
             except Invalid, e:
                 message = self.message('badFormat', state)
                 raise Invalid(message, fields_dict, state,
-                              error_dict = {'zip' : e.message,
-                                            'country': message})
+                              error_dict = {self.zip_field: e.message,
+                                            self.country_field: message})
 
 class USStateProvince(FancyValidator):
 
@@ -673,7 +693,7 @@ class LanguageValidator(FancyValidator):
         >>> l.to_python('Klingonian')
         Traceback (most recent call last):
             ...
-        Invalid: That language is not listed in ISO-639-2
+        Invalid: That language is not listed in ISO 639
         >>> l.from_python('de')
         'German'
         >>> l.from_python('zh')
@@ -683,7 +703,7 @@ class LanguageValidator(FancyValidator):
     key_ok = True
 
     messages = {
-        'valueNotFound': _("That language is not listed in ISO-639-2"),
+        'valueNotFound': _("That language is not listed in ISO 639"),
         }
 
     def _to_python(self, value, state):
