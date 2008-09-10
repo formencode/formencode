@@ -42,7 +42,6 @@ class ForEach(CompoundValidator):
 
     convert_to_list = True
     if_empty = NoDefault
-    if_missing = []
     repeating = True
     
     def attempt_convert(self, value, state, validate):
@@ -110,6 +109,10 @@ class ForEach(CompoundValidator):
                     state.full_list = previous_full_list
 
     def empty_value(self, value):
+        return []
+
+    @property
+    def if_missing(self):
         return []
 
     def _convert_to_list(self, value):

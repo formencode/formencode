@@ -29,6 +29,11 @@ svn trunk
 * :class:`formencode.compound.All` does not handle empty values,
   instead relying on sub-validators to check for emptiness.
 
+* Fixed the ``if_missing`` attribute in
+  :class:`formencode.foreach.ForEach`; previously it would be the same
+  list instance, so if you modified it then it would effect future
+  ``if_missing`` values (reported by Felix Schwarz).
+
 1.0.1
 -----
 
