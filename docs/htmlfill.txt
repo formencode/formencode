@@ -66,6 +66,26 @@ the formatter returns::
 In addition to explicit error tags, any leftover errors will be placed
 immediately above the associated input field.
 
+The default formatters available to you:
+
+``default``:
+    HTML-quotes the error and wraps it in ``<span class="error-message">``
+
+``none``:
+    Puts the error message in with no quoting of any kind.  This
+    allows you to put HTML in the error message, but might also expose
+    you to cross-site scripting vulnerabilities.
+
+``escape``:
+    HTML-quotes the error, but doesn't wrap it in anything.
+
+``escapenl``:
+    HTML-quotes the error, and translates newlines to ``<br>``
+
+``ignore``:
+    Swallows the error, emitting nothing.  You can use this when you
+    never want an error for a field to display.
+
 Valid form templates
 --------------------
 

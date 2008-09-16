@@ -34,6 +34,10 @@ svn trunk
   list instance, so if you modified it then it would effect future
   ``if_missing`` values (reported by Felix Schwarz).
 
+* Added formatter to :mod:`formencode.htmlfill`, so you can use
+  ``<form:error name="field_name" formatter="ignore" />`` -- this will
+  cause the error to be swallowed, not shown to the user.
+
 1.0.1
 -----
 

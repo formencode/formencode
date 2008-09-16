@@ -128,6 +128,12 @@ def escapenl_formatter(error):
     error = error.replace('\n', '<br>\n')
     return error
 
+def ignore_formatter(error):
+    """
+    Formatter that emits nothing, regardless of the error.
+    """
+    return ''
+
 class FillingParser(RewritingParser):
     r"""
     Fills HTML with default values, as in a form.
@@ -495,4 +501,6 @@ class FillingParser(RewritingParser):
 default_formatter_dict = {'default': default_formatter,
                           'none': none_formatter,
                           'escape': escape_formatter,
-                          'escapenl': escapenl_formatter}
+                          'escapenl': escapenl_formatter,
+                          'ingore': ignore_formatter,
+                          }
