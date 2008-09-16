@@ -38,6 +38,9 @@ svn trunk
   ``<form:error name="field_name" formatter="ignore" />`` -- this will
   cause the error to be swallowed, not shown to the user.
 
+* Added :class:`formencode.validators.XRI` for validation i-names,
+  i-numbers, URLs, etc (as used in OpenID).
+
 1.0.1
 -----
 
