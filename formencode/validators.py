@@ -1515,6 +1515,214 @@ class URL(FancyValidator):
                     self.message('status', state, status=res.status),
                     state, url)
 
+    
+class XRI(FancyValidator):
+    r"""
+    Validator for XRIs.
+    
+    It supports both i-names and i-numbers, of the first version of the XRI
+    standard.
+    
+    ::
+        
+        >>> inames = XRI(xri_type="i-name")
+        >>> inames.to_python("   =John.Smith ")
+        '=John.Smith'
+        >>> inames.to_python("@Free.Software.Foundation")
+        '@Free.Software.Foundation'
+        >>> inames.to_python("Python.Software.Foundation")
+        Traceback (most recent call last):
+            ...
+        Invalid: The type of i-name is not defined; it may be either individual or organizational
+        >>> inames.to_python("http://example.org")
+        Traceback (most recent call last):
+            ...
+        Invalid: The type of i-name is not defined; it may be either individual or organizational
+        >>> inames.to_python("=!2C43.1A9F.B6F6.E8E6")
+        Traceback (most recent call last):
+            ...
+        Invalid: "!2C43.1A9F.B6F6.E8E6" is an invalid i-name
+        >>> iname_with_schema = XRI(True, xri_type="i-name")
+        >>> iname_with_schema.to_python("=Richard.Stallman")
+        'xri://=Richard.Stallman'
+        >>> inames.to_python("=John Smith")
+        Traceback (most recent call last):
+            ...
+        formencode.api.Invalid: "John Smith" is an invalid i-name
+        >>> inumbers = XRI(xri_type="i-number")
+        >>> inumbers.to_python("!!1000!de21.4536.2cb2.8074")
+        '!!1000!de21.4536.2cb2.8074'
+        >>> inumbers.to_python("@!1000.9554.fabd.129c!2847.df3c")
+        '@!1000.9554.fabd.129c!2847.df3c'
+    
+    """
+    
+    iname_valid_pattern = re.compile(r"""
+    ^
+    [\w]+                  # A global alphanumeric i-name
+    (\.[\w]+)*             # An i-name with dots
+    (\*[\w]+(\.[\w]+)*)*   # A community i-name
+    $
+    """, re.VERBOSE|re.UNICODE)
+    
+    
+    iname_invalid_start = re.compile(r"^[\d\.-]", re.UNICODE)
+    """@cvar: These characters must not be at the beggining of the i-name"""
+    
+    inumber_pattern = re.compile(r"""
+    ^
+    (
+    [=@]!       # It's a personal or organization i-number
+    |
+    !!          # It's a network i-number
+    )
+    [\dA-F]{1,4}(\.[\dA-F]{1,4}){0,3}       # A global i-number
+    (![\dA-F]{1,4}(\.[\dA-F]{1,4}){0,3})*   # Zero or more sub i-numbers
+    $
+    """, re.VERBOSE|re.IGNORECASE)
+    
+    messages = {
+        'noType': _("The type of i-name is not defined; it may be either individual or organizational"),
+        'repeatedChar': _("Dots and dashes may not be repeated consecutively"),
+        'badIname': _('"%(iname)s" is an invalid i-name'),
+        'badInameStart': _("i-names may not start with numbers nor punctuation "
+                           "marks"),
+        'badInumber': _('"%(inumber)s" is an invalid i-number'),
+        'badType': _("The XRI must be a string (not a %(type)s: %(value)r)"),
+        'badXri': _('"%(xri_type)s" is not a valid type of XRI')
+        }
+    
+    def __init__(self, add_xri=False, xri_type="i-name", **kwargs):
+        """Create an XRI validator.
+        
+        @param add_xri: Should the schema be added if not present? Officially
+            it's optional.
+        @type add_xri: C{bool}
+        @param xri_type: What type of XRI should be validated? Possible values:
+            C{i-name} or C{i-number}.
+        @type xri_type: C{str}
+        
+        """
+        self.add_xri = add_xri
+        assert xri_type in ('i-name', 'i-number'), \
+                           ('xri_type must be "i-name" or "i-number"')
+        self.xri_type = xri_type
+        super(XRI, self).__init__(**kwargs)
+    
+    def _to_python(self, value, state):
+        """Prepend the 'xri://' schema if necessary and then remove trailing
+        spaces"""
+        value = value.strip()
+        if self.add_xri and not value.startswith("xri://"):
+            value = "xri://" + value
+        return value
+    
+    def validate_python(self, value, state=None):
+        """Validate an XRI
+        
+        @raise Invalid: If at least one of the following conditions in met:
+            - C{value} is not a string.
+            - The XRI is not a personal, organizational or network one.
+            - The relevant validator (i-name or i-number) considers the XRI
+                is not valid.
+        
+        """
+        if not (isinstance(value, str) or isinstance(value, unicode)):
+            raise Invalid(self.message("badType", state, type=str(type(value)),
+                                       value=value),
+                          value, state)
+        
+        # Let's remove the schema, if any
+        if value.startswith("xri://"):
+            value = value[6:]
+        
+        if not value[0] in ('@', '=') and not (self.xri_type == "i-number" \
+        and value[0] == '!'):
+            raise Invalid(self.message("noType", state), value, state)
+        
+        if self.xri_type == "i-name":
+            self._validate_iname(value, state)
+        else:
+            self._validate_inumber(value, state)
+    
+    def _validate_iname(self, iname, state):
+        """Validate an i-name"""
+        # The type is not required here:
+        iname = iname[1:]
+        if ".." in iname or "--" in iname:
+            raise Invalid(self.message("repeatedChar", state), iname, state)
+        if self.iname_invalid_start.match(iname):
+            raise Invalid(self.message("badInameStart", state), iname, state)
+        if not self.iname_valid_pattern.match(iname) or "_" in iname:
+            raise Invalid(self.message("badIname", state, iname=iname), iname,
+                          state)
+    
+    def _validate_inumber(self, inumber, state):
+        """Validate an i-number"""
+        if not self.__class__.inumber_pattern.match(inumber):
+            raise Invalid(self.message("badInumber", state, inumber=inumber,
+                                       value=inumber),
+                          inumber, state)
+
+
+class OpenId(FancyValidator):
+    r"""
+    OpenId validator.
+    
+    ::
+        >>> v = OpenId(add_schema=True)
+        >>> v.to_python(' example.net ')
+        'http://example.net'
+        >>> v.to_python('@TurboGears')
+        'xri://@TurboGears'
+        >>> w = OpenId(add_schema=False)
+        >>> w.to_python(' example.net ')
+        Traceback (most recent call last):
+        ...
+        Invalid: "example.net" is not a valid OpenId (it is neither an URL nor an XRI)
+        >>> w.to_python('!!1000')
+        '!!1000'
+        >>> w.to_python('look@me.com')
+        Traceback (most recent call last):
+        ...
+        Invalid: "look@me.com" is not a valid OpenId (it is neither an URL nor an XRI)
+    
+    """
+    
+    messages = {
+        'badId': _('"%(id)s" is not a valid OpenId (it is neither an URL nor an XRI)')
+        }
+    
+    def __init__(self, add_schema=False, **kwargs):
+        """Create an OpenId validator.
+        
+        @param add_schema: Should the schema be added if not present?
+        @type add_schema: C{bool}
+        
+        """
+        self.url_validator = URL(add_http=add_schema)
+        self.iname_validator = XRI(add_schema, xri_type="i-name")
+        self.inumber_validator = XRI(add_schema, xri_type="i-number")
+    
+    def _to_python(self, value, state):
+        value = value.strip()
+        try:
+            return self.url_validator.to_python(value, state)
+        except Invalid:
+            try:
+                return self.iname_validator.to_python(value, state)
+            except Invalid:
+                try:
+                    return self.inumber_validator.to_python(value, state)
+                except Invalid:
+                    pass
+        # It's not an OpenId!
+        raise Invalid(self.message("badId", state, id=value), value, state)
+    
+    def validate_python(self, value, state):
+        self._to_python(value, state)
+
+
 def StateProvince(*kw, **kwargs):
     warnings.warn("please use formencode.national.USStateProvince", DeprecationWarning, stacklevel=2)
     from formencode.national import USStateProvince

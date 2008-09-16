@@ -1,4 +1,8 @@
-from formencode.validators import String, UnicodeString, Invalid, Int
+# -*- coding: utf-8 -*-
+import unittest
+
+from formencode.validators import String, UnicodeString, Invalid, Int, XRI, \
+                                  OpenId
 from formencode.validators import DateConverter
 from formencode.variabledecode import NestedVariables
 from formencode.schema import Schema
@@ -127,3 +131,171 @@ def test_foreach_if_missing():
     else:
         raise Exception("Shouldn't be valid data", values, start_values)
 
+
+
+
+
+class TestXRIValidator(unittest.TestCase):
+    """Generic tests for the XRI validator"""
+    
+    def test_creation_valid_params(self):
+        """The creation of an XRI validator with valid parameters must
+        succeed"""
+        XRI()
+        XRI(True, "i-name")
+        XRI(True, "i-number")
+        XRI(False, "i-name")
+        XRI(False, "i-number")
+    
+    def test_creation_invalid_xri(self):
+        """Only "i-name" and "i-number" are valid XRIs"""
+        self.assertRaises(AssertionError, XRI, True, 'i-something')
+    
+    def test_valid_simple_individual_iname_without_type(self):
+        """XRIs must start with either an equals sign or an at sign"""
+        validator = XRI(True, "i-name")
+        self.assertRaises(Invalid, validator.validate_python, 'Gustavo')
+    
+    def test_valid_iname_with_schema(self):
+        """XRIs may have their schema in the beggining"""
+        validator = XRI()
+        self.assertEqual(validator.to_python('xri://=Gustavo'),
+                         'xri://=Gustavo')
+    
+    def test_schema_is_added_if_asked(self):
+        """The schema must be added to an XRI if explicitly asked"""
+        validator = XRI(True)
+        self.assertEqual(validator.to_python('=Gustavo'),
+                         'xri://=Gustavo')
+    
+    def test_schema_not_added_if_not_asked(self):
+        """The schema must not be added to an XRI unless explicitly asked"""
+        validator = XRI()
+        self.assertEqual(validator.to_python('=Gustavo'), '=Gustavo')
+    
+    def test_spaces_are_trimmed(self):
+        """Spaces at the beggining or end of the XRI are removed"""
+        validator = XRI()
+        self.assertEqual(validator.to_python('    =Gustavo  '), '=Gustavo')
+
+
+class TestINameValidator(unittest.TestCase):
+    """Tests for the XRI i-names validator"""
+    
+    def setUp(self):
+        self.validator = XRI(xri_type="i-name")
+    
+    def test_valid_global_individual_iname(self):
+        """Global & valid individual i-names must pass validation"""
+        self.validator.validate_python('=Gustavo')
+    
+    def test_valid_global_organizational_iname(self):
+        """Global & valid organizational i-names must pass validation"""
+        self.validator.validate_python('@Canonical')
+    
+    def test_invalid_iname(self):
+        """Non-string i-names are rejected"""
+        self.assertRaises(Invalid, self.validator.validate_python, None)
+    
+    def test_exclamation_in_inames(self):
+        """Exclamation marks at the beggining of XRIs is something specific
+        to i-numbers and must be rejected in i-names"""
+        self.assertRaises(Invalid, self.validator.validate_python,
+                          "!!1000!de21.4536.2cb2.8074")
+    
+    def test_repeated_characters(self):
+        """Dots and dashes must not be consecutively repeated in i-names"""
+        self.assertRaises(Invalid, self.validator.validate_python,
+                          "=Gustavo--Narea")
+        self.assertRaises(Invalid, self.validator.validate_python,
+                          "=Gustavo..Narea")
+    
+    def test_punctuation_marks_at_beggining(self):
+        """Punctuation marks at the beggining of i-names are forbidden"""
+        self.assertRaises(Invalid, self.validator.validate_python,
+                          "=.Gustavo")
+        self.assertRaises(Invalid, self.validator.validate_python,
+                          "=-Gustavo.Narea")
+    
+    def test_numerals_at_beggining(self):
+        """Numerals at the beggining of i-names are forbidden"""
+        self.assertRaises(Invalid, self.validator.validate_python,
+                          "=1Gustavo")
+    
+    def test_non_english_inames(self):
+        """i-names with non-English characters are valid"""
+        self.validator.validate_python(u'=Gustavo.Narea.García')
+        self.validator.validate_python(u'@名前.例')
+    
+    def test_inames_plus_paths(self):
+        """i-names with paths are valid but not supported"""
+        self.assertRaises(Invalid, self.validator.validate_python,
+                          "=Gustavo/(+email)")
+    
+    def test_communities(self):
+        """i-names may have so-called 'communities'"""
+        self.validator.validate_python(u'=María*Yolanda*Liliana*Gustavo')
+        self.validator.validate_python(u'=Gustavo*Andreina')
+        self.validator.validate_python(u'@IBM*Lenovo')
+        
+        
+class TestINumberValidator(unittest.TestCase):
+    """Tests for the XRI i-number validator"""
+    
+    def setUp(self):
+        self.validator = XRI(xri_type="i-number")
+    
+    def test_valid_global_personal_inumber(self):
+        """Global & valid personal i-numbers must pass validation"""
+        self.validator.validate_python('=!1000.a1b2.93d2.8c73')
+    
+    def test_valid_global_organizational_inumber(self):
+        """Global & valid organizational i-numbers must pass validation"""
+        self.validator.validate_python('@!1000.a1b2.93d2.8c73')
+    
+    def test_valid_global_network_inumber(self):
+        """Global & valid network i-numbers must pass validation"""
+        self.validator.validate_python('!!1000')
+    
+    def test_valid_community_personal_inumbers(self):
+        """Community & valid personal i-numbers must pass validation"""
+        self.validator.validate_python('=!1000.a1b2.93d2.8c73!3ae2!1490')
+    
+    def test_valid_community_organizational_inumber(self):
+        """Community & valid organizational i-numbers must pass validation"""
+        self.validator.validate_python('@!1000.9554.fabd.129c!2847.df3c')
+    
+    def test_valid_community_network_inumber(self):
+        """Community & valid network i-numbers must pass validation"""
+        self.validator.validate_python('!!1000!de21.4536.2cb2.8074')
+
+
+class TestOpenIdValidator(unittest.TestCase):
+    """Tests for the OpenId validator"""
+    
+    def setUp(self):
+        self.validator = OpenId(add_schema=False)
+    
+    def test_url(self):
+        self.assertEqual(self.validator.to_python('http://example.org'),
+                         'http://example.org')
+    
+    def test_iname(self):
+        self.assertEqual(self.validator.to_python('=Gustavo'), '=Gustavo')
+    
+    def test_inumber(self):
+        self.assertEqual(self.validator.to_python('!!1000'), '!!1000')
+    
+    def test_email(self):
+        """Email addresses are not valid OpenIds!"""
+        self.assertRaises(Invalid, self.validator.to_python,
+                          "wait@busstop.com")
+    
+    def test_prepending_schema(self):
+        validator = OpenId(add_schema=True)
+        self.assertEqual(validator.to_python("example.org"),
+                         "http://example.org")
+        self.assertEqual(validator.to_python("=Gustavo"),
+                         "xri://=Gustavo")
+        self.assertEqual(validator.to_python("!!1000"),
+                         "xri://!!1000")

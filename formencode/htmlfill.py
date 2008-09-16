@@ -502,5 +502,5 @@ default_formatter_dict = {'default': default_formatter,
                           'none': none_formatter,
                           'escape': escape_formatter,
                           'escapenl': escapenl_formatter,
-                          'ingore': ignore_formatter,
+                          'ignore': ignore_formatter,
                           }
