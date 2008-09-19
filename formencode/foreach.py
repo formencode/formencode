@@ -43,7 +43,7 @@ class ForEach(CompoundValidator):
     convert_to_list = True
     if_empty = NoDefault
     repeating = True
-    _if_missing = NoDefault
+    _if_missing = ()
     
     def attempt_convert(self, value, state, validate):
         if self.convert_to_list:
@@ -112,18 +112,21 @@ class ForEach(CompoundValidator):
     def empty_value(self, value):
         return []
 
-    def _if_missing__get(self):
-        if self._if_missing is NoDefault:
-            return []
-        return self._if_missing
+    class _IfMissing(object):
+        def __get__(self, obj, type=None):
+            if obj is None:
+                return []
+            elif obj._if_missing is ForEach._if_missing:
+                return []
+            else:
+                return obj._if_missing
+        def __set__(self, obj, value):
+            obj._if_missing = value
+        def __delete__(self, obj):
+            obj._if_missing = NoDefault
 
-    def _if_missing__set(self, value):
-        self._if_missing = value
-
-    def _if_missing__del(self):
-        self._if_missing = NoDefault
-
-    if_missing = property(_if_missing__get, _if_missing__set, _if_missing__del)
+    if_missing = _IfMissing()
+    del _IfMissing
 
     def _convert_to_list(self, value):
         if isinstance(value, (str, unicode)):
