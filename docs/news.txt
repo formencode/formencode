@@ -41,6 +41,9 @@ svn trunk
 * Added :class:`formencode.validators.XRI` for validation i-names,
   i-numbers, URLs, etc (as used in OpenID).
 
+* Look in ``/usr/share/locale`` for locale files, in addition to the
+  normal locations.
+
 1.0.1
 -----
 

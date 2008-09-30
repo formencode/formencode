@@ -17,17 +17,36 @@ __all__ = ['NoDefault', 'Invalid', 'Validator', 'Identity',
 import gettext
 
 def get_localedir():
+    """
+    Retrieve the location of locales.
+
+    If we're built as an egg, we need to find the resource within the egg.
+    Otherwise, we need to look for the locales on the filesystem or in the
+    system message catalog.
+    """
+    locale_dir = ''
+    # Check the egg first
     if resource_filename is not None:
         try:
-            return resource_filename(__name__, "/i18n")
+            locale_dir = resource_filename(__name__, "/i18n")
         except NotImplementedError:
             # resource_filename doesn't work with non-egg zip files
             pass
-    return os.path.join(os.path.dirname(__file__), 'i18n')
+    if os.access(locale_dir, os.R_OK | os.X_OK):
+        # If the resource is present in the egg, use it
+        return locale_dir
+
+    # Otherwise, search the filesystem
+    locale_dir = os.path.join(os.path.dirname(__file__), 'i18n')
+    if not os.access(locale_dir, os.R_OK | os.X_OK):
+        # Fallback on the system catalog
+        locale_dir = os.path.normpath('/usr/share/locale')
+
+    return locale_dir
 
 def set_stdtranslation(domain="FormEncode", languages=None, \
                        localedir = get_localedir()):
-    
+
     t = gettext.translation(domain=domain, \
                             languages=languages, \
                             localedir=localedir, fallback=True)
