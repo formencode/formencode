@@ -31,7 +31,7 @@ urlparse = None
 import socket
 from interfaces import *
 from api import *
-sha = random = None
+sha1 = random = None
 try:
     import sets
 except ImportError:
@@ -2358,9 +2358,12 @@ class SignedString(FancyValidator):
     nonce_length = 4
 
     def _to_python(self, value, state):
-        global sha
-        if not sha:
-            import sha
+        global sha1
+        if not sha1:
+            try:
+                from hashlib import sha1
+            except ImportError:
+                from sha import sha as sha1
         assert self.secret is not None, (
             "You must give a secret")
         parts = value.split(None, 1)
@@ -2372,19 +2375,22 @@ class SignedString(FancyValidator):
         rest = rest.decode('base64')
         nonce = rest[:self.nonce_length]
         rest = rest[self.nonce_length:]
-        expected = sha.new(str(self.secret)+nonce+rest).digest()
+        expected = sha1(str(self.secret)+nonce+rest).digest()
         if expected != sig:
             raise Invalid(self.message('badsig', state),
                           value, state)
         return rest
 
     def _from_python(self, value, state):
-        global sha
-        if not sha:
-            import sha
+        global sha1
+        if not sha1:
+            try:
+                from hashlib import sha1
+            except ImportError:
+                from sha import sha as sha1
         nonce = self.make_nonce()
         value = str(value)
-        digest = sha.new(self.secret+nonce+value).digest()
+        digest = sha1(self.secret+nonce+value).digest()
         return self.encode(digest)+' '+self.encode(nonce+value)
 
     def encode(self, value):

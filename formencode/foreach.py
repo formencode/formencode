@@ -1,14 +1,13 @@
 """
 Validator for repeating items.
 """
+import warnings
+warnings.simplefilter('ignore', DeprecationWarning)
+from sets import Set
+warnings.resetwarnings()
 
 from api import NoDefault, Invalid
 from compound import CompoundValidator, to_python, from_python
-try:
-    from sets import Set
-except ImportError:
-    # We only use it for type information now:
-    Set = None
 
 __all__ = ['ForEach']
 
@@ -37,7 +36,7 @@ class ForEach(CompoundValidator):
     and a single Invalid exception will be raised at the end (with
     error_list set).
 
-    If the incoming value is a Set, then we return a Set.
+    If the incoming value is a set, then we return a set.
     """
 
     convert_to_list = True
@@ -59,7 +58,7 @@ class ForEach(CompoundValidator):
         new_list = []
         errors = []
         all_good = True
-        is_set = isinstance(value, Set)
+        is_set = isinstance(value, (set, Set))
         if state is not None:
             previous_index = getattr(state, 'index', NoDefault)
             previous_full_list = getattr(state, 'full_list', NoDefault)
@@ -84,7 +83,7 @@ class ForEach(CompoundValidator):
                 new_list.append(sub_value)
             if all_good:
                 if is_set:
-                    new_list = Set(new_list)
+                    new_list = set(new_list)
                 return new_list
             else:
                 raise Invalid(
