@@ -66,8 +66,8 @@ def test_es():
 def test_pt_BR():
   _test_lang("pt_BR", u"Por favor digite um valor")
 
-def test_big5():
-  _test_lang("big5", u"請輸入一個值")
+def test_tw():
+  _test_lang("tw", u"請輸入一個值")
 
 def test_sk():
   _test_lang("sk",u"Zadajte hodnotu, prosím")
