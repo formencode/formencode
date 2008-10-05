@@ -5,6 +5,10 @@ import warnings
 warnings.simplefilter('ignore', DeprecationWarning)
 from sets import Set
 warnings.resetwarnings()
+try:
+    set
+except NameError:
+    set = Set
 
 from api import NoDefault, Invalid
 from compound import CompoundValidator, to_python, from_python
