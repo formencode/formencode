@@ -44,6 +44,8 @@ svn trunk
 * Look in ``/usr/share/locale`` for locale files, in addition to the
   normal locations.
 
+* Quiet Python 2.6 deprecation warnings.
+
 1.0.1
 -----
 

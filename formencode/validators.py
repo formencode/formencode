@@ -32,10 +32,14 @@ import socket
 from interfaces import *
 from api import *
 sha1 = random = None
+
+warnings.simplefilter('ignore', DeprecationWarning)
+import sets
+warnings.resetwarnings()
 try:
-    import sets
-except ImportError:
-    sets = None
+    set
+except NameError:
+    set = sets.Set
 
 import cgi
 
@@ -1185,7 +1189,7 @@ class Set(FancyValidator):
     one result.  It's equivalent to ForEach(convertToList=True).
 
     If you give ``use_set=True``, then it will return an actual
-    ``sets.Set`` object.
+    ``set`` object.
 
     ::
 
@@ -1197,11 +1201,11 @@ class Set(FancyValidator):
        ['this', 'that']
        >>> s = Set(use_set=True)
        >>> s.to_python(None)
-       Set([])
+       set([])
        >>> s.to_python('this')
-       Set(['this'])
+       set(['this'])
        >>> s.to_python(('this',))
-       Set(['this'])
+       set(['this'])
     """
 
     use_set = False
@@ -1210,18 +1214,18 @@ class Set(FancyValidator):
 
     def _to_python(self, value, state):
         if self.use_set:
-            if isinstance(value, sets.Set):
+            if isinstance(value, (set, sets.Set)):
                 return value
             elif isinstance(value, (list, tuple)):
-                return sets.Set(value)
+                return set(value)
             elif value is None:
-                return sets.Set()
+                return set()
             else:
-                return sets.Set([value])
+                return set([value])
         else:
             if isinstance(value, list):
                 return value
-            elif sets and isinstance(value, sets.Set):
+            elif sets and isinstance(value, (set, sets.Set)):
                 return list(value)
             elif isinstance(value, tuple):
                 return list(value)
@@ -1232,7 +1236,7 @@ class Set(FancyValidator):
 
     def empty_value(self, value):
         if self.use_set:
-            return sets.Set([])
+            return set()
         else:
             return []
 
