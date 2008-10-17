@@ -46,6 +46,9 @@ svn trunk
 
 * Quiet Python 2.6 deprecation warnings.
 
+* Fix :class:`formencode.validators.URL`, which was accepting illegal
+  characters (like newlines) and did not accept http://domain:PORT/
+
 1.0.1
 -----
 

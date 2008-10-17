@@ -1384,6 +1384,12 @@ class URL(FancyValidator):
         'http://hahaha.ha/bar.html'
         >>> u.to_python('http://xn--m7r7ml7t24h.com')
         'http://xn--m7r7ml7t24h.com'
+        >>> u.to_python('http://foo.com:8000/test.html')
+        'http://foo.com:8000/test.html'
+        >>> u.to_python('http://foo.com/something\\nelse')
+        Traceback (most recent call last):
+            ...
+        Invalid: That is not a valid URL
         >>> u.to_python('https://test.com')
         'https://test.com'
         >>> u.to_python('http://test')
@@ -1426,18 +1432,10 @@ class URL(FancyValidator):
         (?:[%:\w]*@)?                           # authenticator
         (?P<domain>[a-z0-9][a-z0-9\-]{1,62}\.)* # (sub)domain - alpha followed by 62max chars (63 total)
         (?P<tld>[a-z]{2,})                      # TLD
-        (?:[0-9]+)?                             # port
+        (?::[0-9]+)?                             # port
 
         # files/delims/etc
-        (?:/[
-            # rfc3986 valid chars
-            # unreserved
-            a-z0-9\-\._~
-            # delims - general
-            :/\?#\[\]@
-            # delims - sub
-            !\$&\'\(\)\*\+,;=
-        ]*)?
+        (?P<path>/[a-z0-9\-\._~:/\?#\[\]@!\$&\'\(\)\*\+,;=]*)?
         $
     ''', re.I | re.VERBOSE)
 
