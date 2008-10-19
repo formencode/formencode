@@ -1384,6 +1384,10 @@ class URL(FancyValidator):
         'http://hahaha.ha/bar.html'
         >>> u.to_python('http://xn--m7r7ml7t24h.com')
         'http://xn--m7r7ml7t24h.com'
+        >>> u.to_python('http://foo.com/test?bar=baz&fleem=morx')
+        'http://foo.com/test?bar=baz&fleem=morx'
+        >>> u.to_python('http://foo.com/login?came_from=http%3A%2F%2Ffoo.com%2Ftest')
+        'http://foo.com/login?came_from=http%3A%2F%2Ffoo.com%2Ftest'
         >>> u.to_python('http://foo.com:8000/test.html')
         'http://foo.com:8000/test.html'
         >>> u.to_python('http://foo.com/something\\nelse')
@@ -1432,10 +1436,10 @@ class URL(FancyValidator):
         (?:[%:\w]*@)?                           # authenticator
         (?P<domain>[a-z0-9][a-z0-9\-]{1,62}\.)* # (sub)domain - alpha followed by 62max chars (63 total)
         (?P<tld>[a-z]{2,})                      # TLD
-        (?::[0-9]+)?                             # port
+        (?::[0-9]+)?                            # port
 
         # files/delims/etc
-        (?P<path>/[a-z0-9\-\._~:/\?#\[\]@!\$&\'\(\)\*\+,;=]*)?
+        (?P<path>/[a-z0-9\-\._~:/\?#\[\]@!%\$&\'\(\)\*\+,;=]*)?
         $
     ''', re.I | re.VERBOSE)
 
