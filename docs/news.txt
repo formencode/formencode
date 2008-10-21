@@ -6,6 +6,10 @@ News
 svn trunk
 ---------
 
+* Fixed the ``is_empty()`` method in
+  :class:`formencode.validators.FieldStorageUploadConverter`; 
+  previously it returned the opposite of the intended result.
+
 * Added a parameter to ``htmlfill.render()``: ``prefix_error``.  If
   this parameter is true (the default) then errors automatically go
   before the input field; if false then they go after the input field.

@@ -1762,7 +1762,7 @@ class FieldStorageUploadConverter(FancyValidator):
 
     def is_empty(self, value):
         if isinstance(value, cgi.FieldStorage):
-            return bool(getattr(value, 'filename', None))
+            return not bool(getattr(value, 'filename', None))
         return FancyValidator.is_empty(self, value)
 
 class FileUploadKeeper(FancyValidator):
