@@ -3,8 +3,8 @@ News
 
 .. contents::
 
-svn trunk
----------
+1.1
+---
 
 * Fixed the ``is_empty()`` method in
   :class:`formencode.validators.FieldStorageUploadConverter`; 
