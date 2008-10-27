@@ -1,7 +1,7 @@
 import sys
 from setuptools import setup
 
-version = '1.0.2'
+version = '1.1.1'
 
 tests_require = ['nose']
 if sys.version < '2.5':
