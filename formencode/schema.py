@@ -451,6 +451,9 @@ class SimpleFormValidator(FancyValidator):
         else:
             raise TypeError(
                 "Invalid error value: %r" % errors)
+        return value_dict
+
+    validate_partial = to_python
 
     def decorate(cls, **kw):
         def decorator(func):
