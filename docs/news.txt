@@ -3,6 +3,11 @@ News
 
 .. contents::
 
+svn trunk
+---------
+
+* Added :meth:`formencode.api.Invalid.__unicode__`
+
 1.1
 ---
 

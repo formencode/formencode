@@ -118,6 +118,9 @@ class Invalid(Exception):
         #    val += " (value: %s)" % repr(self.value)
         return val    
 
+    def __unicode__(self):
+        return self.msg
+
     def unpack_errors(self, encode_variables=False, dict_char='.',
                       list_char='-'):
         """
