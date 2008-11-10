@@ -34,7 +34,7 @@ def get_localedir():
             pass
     if not hasattr(os, 'access'):
         # This happens on Google App Engine
-        os.path.join(os.path.dirname(__file__), 'i18n')
+        return os.path.join(os.path.dirname(__file__), 'i18n')
     if os.access(locale_dir, os.R_OK | os.X_OK):
         # If the resource is present in the egg, use it
         return locale_dir
