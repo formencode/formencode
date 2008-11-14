@@ -15,7 +15,9 @@ svn trunk
   domain names (like x.com).
 
 * Make :class:`formencode.validators.FieldsMatch` give a normal
-  ``Invalid`` exception if you pass it a non-dictionary.
+  ``Invalid`` exception if you pass it a non-dictionary.  Also treat
+  all missing keys as the empty string (previously the first key was
+  required and would raise KeyError).
 
 1.1
 ---

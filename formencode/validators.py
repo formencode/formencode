@@ -2648,6 +2648,8 @@ class FieldsMatch(FormValidator):
         except TypeError:
             # Generally because field_dict isn't a dict
             raise Invalid(self.message('notDict', state), field_dict, state)
+        except KeyError:
+            ref = ''
         errors = {}
         for name in self.field_names[1:]:
             if field_dict.get(name, '') != ref:
