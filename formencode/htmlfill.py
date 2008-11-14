@@ -166,6 +166,8 @@ class FillingParser(RewritingParser):
         <input type="checkbox" name="nice_guy">
     """
 
+    default_encoding = 'utf8'
+
     def __init__(self, defaults, errors=None, use_all_keys=False,
                  error_formatters=None, error_class='error',
                  add_attributes=None, listener=None,
@@ -213,9 +215,9 @@ class FillingParser(RewritingParser):
         if type(str1) == type(str2):
             return str1 == str2
         if isinstance(str1, unicode):
-            str1 = str1.encode(self.encoding)
+            str1 = str1.encode(self.encoding or self.default_encoding)
         else:
-            str2 = str2.encode(self.encoding)
+            str2 = str2.encode(self.encoding or self.default_encoding)
         return str1 == str2
 
     def close(self):

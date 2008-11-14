@@ -8,6 +8,9 @@ svn trunk
 
 * Added :meth:`formencode.api.Invalid.__unicode__`
 
+* In :mod:`formencode.htmlfill` use a default encoding of utf8 when
+  handling mixed ``str``/``unicode`` content.
+
 1.1
 ---
 
