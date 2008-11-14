@@ -1298,6 +1298,8 @@ class Email(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: The domain of the email address does not exist (the portion after the @: thisdomaindoesnotexistithinkforsure.com)
+        >>> e.to_python(u'test@google.com')
+        u'test@google.com'
         >>> e = Email(not_empty=False)
         >>> e.to_python('')
 
