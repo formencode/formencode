@@ -96,7 +96,8 @@ class htmlliteral(object):
         return self.text
 
     def __repr__(self):
-        return '<%s html=%r text=%r>' % (self.html, self.text)
+        return '<%s html=%r text=%r>' % (
+            self.__class__.__name__, self.html, self.text)
 
     def __html__(self):
         return self.html

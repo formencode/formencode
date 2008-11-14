@@ -119,3 +119,7 @@ def test_iferror():
                             errors={'field1': 'foo'}, auto_insert_errors=False)
             == 'errors')
 
+def test_literal():
+    assert (htmlfill.render('<form:error name="foo" />',
+                            errors={'foo': htmlfill.htmlliteral('<test>')})
+            == '<span class="error-message"><test></span><br />\n')
