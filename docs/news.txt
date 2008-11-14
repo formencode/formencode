@@ -14,6 +14,9 @@ svn trunk
 * In :class:`formencode.validators.Email` allow single-character
   domain names (like x.com).
 
+* Make :class:`formencode.validators.FieldsMatch` give a normal
+  ``Invalid`` exception if you pass it a non-dictionary.
+
 1.1
 ---
 

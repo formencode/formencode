@@ -2628,7 +2628,13 @@ class FieldsMatch(FormValidator):
     messages = {
         'invalid': _("Fields do not match (should be %(match)s)"),
         'invalidNoMatch': _("Fields do not match"),
+        'notDict': _("Fields should be a dictionary"),
         }
+
+    def __init__(self, *args, **kw):
+        super(FormValidator, self).__init__(*args, **kw)
+        if len(self.field_names) < 2:
+            raise TypeError("FieldsMatch() requires at least two field names")
 
     def validate_partial(self, field_dict, state):
         for name in self.field_names:
@@ -2637,7 +2643,11 @@ class FieldsMatch(FormValidator):
         self.validate_python(field_dict, state)
 
     def validate_python(self, field_dict, state):
-        ref = field_dict[self.field_names[0]]
+        try:
+            ref = field_dict[self.field_names[0]]
+        except TypeError:
+            # Generally because field_dict isn't a dict
+            raise Invalid(self.message('notDict', state), field_dict, state)
         errors = {}
         for name in self.field_names[1:]:
             if field_dict.get(name, '') != ref:
