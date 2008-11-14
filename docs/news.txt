@@ -19,6 +19,9 @@ svn trunk
   all missing keys as the empty string (previously the first key was
   required and would raise KeyError).
 
+* :class:`formencode.validators.Number` works with ``inf`` float
+  values (before it would raise a OverflowError).
+
 1.1
 ---
 

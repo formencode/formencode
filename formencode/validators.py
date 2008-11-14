@@ -1002,6 +1002,8 @@ class Number(RangeValidator):
         Traceback (most recent call last):
             ...
         Invalid: Please enter a number that is 10.5 or smaller
+        >>> Number().to_python('infinity')
+        inf
 
     """
 
@@ -1012,8 +1014,12 @@ class Number(RangeValidator):
     def _to_python(self, value, state):
         try:
             value = float(value)
-            if value == int(value):
-                return int(value)
+            try:
+                int_value = int(value)
+            except OverflowError:
+                int_value = None
+            if value == int_value:
+                return int_value
             return value
         except ValueError:
             raise Invalid(self.message('number', state),
@@ -1411,11 +1417,11 @@ class URL(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: You must start your URL with http://, https://, etc
-        >>> u.to_python('http://colorstudy.com/doesnotexist.html')
+        >>> u.to_python('http://ianbicking.org/doesnotexist.html')
         Traceback (most recent call last):
             ...
         Invalid: The server responded that the page could not be found
-        >>> u.to_python('http://this.domain.does.not.exists.formencode.org/test.html')
+        >>> u.to_python('http://this.domain.does.not.exist.example.org/test.html')
         Traceback (most recent call last):
             ...
         Invalid: An error occured when trying to connect to the server: ...
@@ -1554,7 +1560,7 @@ class XRI(FancyValidator):
         >>> inames.to_python("=John Smith")
         Traceback (most recent call last):
             ...
-        formencode.api.Invalid: "John Smith" is an invalid i-name
+        Invalid: "John Smith" is an invalid i-name
         >>> inumbers = XRI(xri_type="i-number")
         >>> inumbers.to_python("!!1000!de21.4536.2cb2.8074")
         '!!1000!de21.4536.2cb2.8074'
