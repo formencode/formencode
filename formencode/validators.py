@@ -371,8 +371,10 @@ class MaxLength(FancyValidator):
 class MinLength(FancyValidator):
 
     """
-    Invalid if the value is shorter than `minlength`.  Uses len(),
-    so it can work for strings, lists, or anything with length.
+    Invalid if the value is shorter than `minlength`.  Uses len(), so
+    it can work for strings, lists, or anything with length.  Note
+    that you **must** use ``not_empty=True`` if you don't want to
+    accept empty values -- empty values are not tested for length.
 
     Examples::
 
