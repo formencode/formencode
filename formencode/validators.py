@@ -1358,14 +1358,14 @@ class Email(FancyValidator):
                 value, state)
         if self.resolve_domain:
             assert have_dns, "pyDNS should be available"
-	    try:
+            try:
                 a=DNS.DnsRequest(domain, qtype='mx').req().answers
                 if not a:
                     a=DNS.DnsRequest(domain, qtype='a').req().answers
                 dnsdomains=[x['data'] for x in a]
-	    except (socket.error, DNS.DNSError), e:
-		raise Invalid(
-		    self.message('socketError', state, error=e),
+            except (socket.error, DNS.DNSError), e:
+                raise Invalid(
+	            self.message('socketError', state, error=e),
 		    value, state)
             if not dnsdomains:
                 raise Invalid(
