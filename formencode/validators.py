@@ -1299,7 +1299,7 @@ class Email(FancyValidator):
 
     usernameRE = re.compile(r"^[^ \t\n\r@<>()]+$", re.I)
     domainRE = re.compile(r'''
-        ^(?:[a-z0-9][a-z0-9\-]{1,62}\.)+ # (sub)domain - alpha followed by 62max chars (63 total)
+        ^(?:[a-z0-9][a-z0-9\-]{0,62}\.)+ # (sub)domain - alpha followed by 62max chars (63 total)
         [a-z]{2,}$                       # TLD
     ''', re.I | re.VERBOSE)
 

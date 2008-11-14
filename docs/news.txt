@@ -11,6 +11,9 @@ svn trunk
 * In :mod:`formencode.htmlfill` use a default encoding of utf8 when
   handling mixed ``str``/``unicode`` content.
 
+* In :class:`formencode.validators.Email` allow single-character
+  domain names (like x.com).
+
 1.1
 ---
 
