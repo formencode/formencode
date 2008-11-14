@@ -68,6 +68,7 @@ URLs, Email, etc.
 
 .. autoclass:: Email
 .. autoclass:: URL
+.. autoclass:: IPAddress
 .. autoclass:: CIDR
 .. autoclass:: MACAddress
 

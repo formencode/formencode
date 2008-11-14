@@ -6,6 +6,9 @@ News
 svn trunk
 ---------
 
+* Added :class:`formencode.validators.IPAddress`, validating IP
+  addresses, from Leandro Lucarella.
+
 * Added :meth:`formencode.api.Invalid.__unicode__`
 
 * In :mod:`formencode.htmlfill` use a default encoding of utf8 when

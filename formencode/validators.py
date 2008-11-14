@@ -2424,7 +2424,51 @@ class SignedString(FancyValidator):
             chr(random.randrange(256))
             for i in range(self.nonce_length)])
 
-class CIDR(FancyValidator):
+class IPAddress(FancyValidator):
+    """
+    Formencode validator to check whether a string is a correct IP address
+
+    Examples::
+
+        >>> ip = IPAddress()
+        >>> ip.to_python('127.0.0.1')
+        '127.0.0.1'
+        >>> ip.to_python('299.0.0.1')
+        Traceback (most recent call last):
+            ...
+        Invalid: The octets must be within the range of 0-255 (not '299')
+        >>> ip.to_python('192.168.0.1/1')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a valid IP address (a.b.c.d)
+        >>> ip.to_python('asdf')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a valid IP address (a.b.c.d)
+    """
+    messages = {
+            'bad_format' : u'Please enter a valid IP address (a.b.c.d)',
+            'illegal_octets' : u'The octets must be within the range of 0-255 (not %(octet)r)',
+            }
+
+    def validate_python(self, value, state):
+        try:
+            octets = value.split('.')
+
+            # Only 4 octets?
+            if len(octets) != 4:
+                raise Invalid(self.message("bad_format", state, value=value), value, state)
+
+            # Correct octets?
+            for octet in octets:
+                if int(octet) < 0 or int(octet) > 255:
+                    raise Invalid(self.message("illegal_octets", state, octet=octet), value, state)
+
+        # Splitting faild: wrong syntax
+        except ValueError:
+            raise Invalid(self.message("bad_format", state), value, state)
+
+class CIDR(IPAddress):
     """
     Formencode validator to check whether a string is in correct CIDR
     notation (IP address, or IP address plus /mask)
@@ -2447,11 +2491,10 @@ class CIDR(FancyValidator):
             ...
         Invalid: Please enter a valid IP address (a.b.c.d) or IP network (a.b.c.d/e)
     """
-    messages = {
-            'not_cidr_format' : u'Please enter a valid IP address (a.b.c.d) or IP network (a.b.c.d/e)',
-            'illegal_octets' : u'The octets must be within the range of 0-255 (not %(octet)r)',
-            'illegal_bits' : u'The network size (bits) must be within the range of 8-32 (not %(bits)r)',
-            }
+    messages = dict(IPAddress._messages,
+            bad_format = u'Please enter a valid IP address (a.b.c.d) or IP network (a.b.c.d/e)',
+            illegal_bits = u'The network size (bits) must be within the range of 8-32 (not %(bits)r)',
+            )
 
     def validate_python(self, value, state):
         try:
@@ -2461,16 +2504,8 @@ class CIDR(FancyValidator):
             else: # a.b.c.d
                 addr, bits = value, 32
 
-            octets = addr.split('.')
-
-            # Only 4 octets?
-            if len(octets) != 4:
-                raise Invalid(self.message("not_cidr_format", state, value=value), value, state)
-
-            # Correct octets?
-            for octet in octets:
-                if int(octet) < 0 or int(octet) > 255:
-                    raise Invalid(self.message("illegal_octets", state, octet=octet), value, state)
+            # Use IPAddress validator to validate the IP part
+            IPAddress.validate_python(self, addr, state)
 
             # Bits (netmask) correct?
             if int(bits) < 8 or int(bits) > 32:
@@ -2478,7 +2513,7 @@ class CIDR(FancyValidator):
 
         # Splitting faild: wrong syntax
         except ValueError:
-            raise Invalid(self.message("not_cidr_format", state), value, state)
+            raise Invalid(self.message("bad_format", state), value, state)
 
 class MACAddress(FancyValidator):
     """
