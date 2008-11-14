@@ -1887,7 +1887,6 @@ class DateConverter(FancyValidator):
             ...
         Invalid: Please enter a four-digit year after 1899
 
-
     If you change ``month_style`` you can get European-style dates::
 
         >>> d = DateConverter(month_style='dd/mm/yyyy')
@@ -1941,6 +1940,11 @@ class DateConverter(FancyValidator):
         'fourDigitYear': _('Please enter a four-digit year after 1899'),
         'wrongFormat': _('Please enter the date in the form %(format)s'),
         }
+
+    def __init__(self, *args, **kw):
+        super(DateConverter, self).__init__(*args, **kw)
+        if not self.month_style in ('dd/mm/yyyy', 'mm/dd/yyyy'):
+            raise TypeError("Bad month_style: %r" % self.month_style)
 
     def _to_python(self, value, state):
         if self.accept_day:
