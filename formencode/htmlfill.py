@@ -389,8 +389,6 @@ class FillingParser(RewritingParser):
             self.skip_next = True
             self.add_key(name)
         elif t == 'image':
-            self.set_attr(attrs, 'src', value or
-                          self.get_attr(attrs, 'src', ''))
             self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)

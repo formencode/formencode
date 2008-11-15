@@ -12,7 +12,9 @@ svn trunk
 * Added :meth:`formencode.api.Invalid.__unicode__`
 
 * In :mod:`formencode.htmlfill` use a default encoding of utf8 when
-  handling mixed ``str``/``unicode`` content.
+  handling mixed ``str``/``unicode`` content.  Also do not modify
+  ``<input type="image">`` tags (previously ``src`` would be
+  overwritten, for no good reason).
 
 * In :class:`formencode.validators.Email` allow single-character
   domain names (like x.com).

@@ -123,3 +123,8 @@ def test_literal():
     assert (htmlfill.render('<form:error name="foo" />',
                             errors={'foo': htmlfill.htmlliteral('<test>')})
             == '<span class="error-message"><test></span><br />\n')
+
+def test_image_submit():
+    assert (htmlfill.render('<input name="image-submit" type="image" src="foo.jpg" value="bar">',
+                            defaults={'image-submit': 'blahblah'})
+            == '<input name="image-submit" type="image" src="foo.jpg" value="bar">')
