@@ -91,13 +91,13 @@ def test_int_minmax_optional():
     assert validate(iv, "15") == messages('tooHigh', None, max=10)
 
 def test_month_style():
-    date = DateConverter(month_style='dd/mm/yyy')
+    date = DateConverter(month_style='dd/mm/yyyy')
     d = datetime.date(2007,12,20)
     assert date.to_python('20/12/2007') == d
     assert date.from_python(d) == '20/12/2007'
 
 def test_date():
-    date = DateConverter(month_style='dd/mm/yyy')
+    date = DateConverter(month_style='dd/mm/yyyy')
     try:
         date.to_python('20/12/150')
     except Invalid, e:
