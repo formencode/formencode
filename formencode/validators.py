@@ -54,11 +54,12 @@ except ImportError:
 
 True, False = (1==1), (0==1)
 
-def _(s): return s # dummy translation function, nothing is translated here.
-                   # Instead this is actually done in api.message.
-                   # The surrounding _("string") of the strings is only for extracting
-                   # the strings automatically
-                   # if you run pygettext with this source comment this function out temporarly
+# dummy translation function, nothing is translated here.
+# Instead this is actually done in api.message.
+# The surrounding _("string") of the strings is only for extracting
+# the strings automatically
+# (Note: we can't use a def statement, because pygettext dislikes it)
+_ = lambda s: return s
 
 ############################################################
 ## Utility methods
