@@ -59,7 +59,7 @@ True, False = (1==1), (0==1)
 # The surrounding _("string") of the strings is only for extracting
 # the strings automatically
 # (Note: we can't use a def statement, because pygettext dislikes it)
-_ = lambda s: return s
+_ = lambda s: s
 
 ############################################################
 ## Utility methods
