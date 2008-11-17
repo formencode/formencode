@@ -550,12 +550,11 @@ If your language is not present yet, please consider contributing a
 translation (where ``<lang>`` is you language code)::
 
     $ svn co http://svn.formencode.org/FormEncode/trunk/``
-    $ cd formencode/i18n
-    $ mkdir <lang>/LC_MESSAGES
-    $ cp FormEncode.pot <lang>/LC_MESSAGES/FormEncode.po
-    $ emacs <lang>/LC_MESSAGES/FormEncode.po # or whatever editor you prefer
-      # make the translation
-    $ python msgfmt.py <lang>/LC_MESSAGES/FormEncode.po
+    $ easy_install Babel
+    $ python setup.py init_catalog -l <lang>
+    $ emacs formencode/i18n/<lang>/LC_MESSAGES/FormEncode.po # or whatever
+      # editor you prefer make the translation
+    $ python setup.py compile_catalog -l <lang>
 
 Then test, and send the PO and MO files to g...@gregor-horvath.com.
 
