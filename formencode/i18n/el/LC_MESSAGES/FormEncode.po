@@ -134,7 +134,7 @@ msgstr "Εισάγετε μία τιμή με μήκος μικρότερο απ
 
 #: validators.py:999
 msgid "Enter a value %(min)i characters long or more"
-msgstr "Εισάγετε μία τιμή με μήκος τουλάχιστον %(max)i χαρακτήρες"
+msgstr "Εισάγετε μία τιμή με μήκος τουλάχιστον %(min)i χαρακτήρες"
 
 #: validators.py:1050
 msgid "Invalid data or incorrect encoding"

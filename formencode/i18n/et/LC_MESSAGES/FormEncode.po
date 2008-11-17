@@ -126,7 +126,7 @@ msgstr "Palun sisestada arv"
 
 #: validators.py:998
 msgid "Enter a value less than %(max)i characters long"
-msgstr "Palun sisestada väärtus, mis on lühem kui %(maxLength)i sümbolit"
+msgstr "Palun sisestada väärtus, mis on lühem kui %(max)i sümbolit"
 
 #: validators.py:999
 msgid "Enter a value %(min)i characters long or more"

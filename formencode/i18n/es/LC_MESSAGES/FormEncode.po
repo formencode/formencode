@@ -292,7 +292,7 @@ msgstr "Has omitido el nombre %(name)s"
 
 #: validators.py:2027
 msgid "Value should be %(true)r or %(false)r"
-msgstr "El valor debe ser %(true)r o %(falso)r"
+msgstr "El valor debe ser %(true)r o %(false)r"
 
 #: validators.py:2062
 msgid "Value does not contain a signature"

@@ -73,7 +73,7 @@ msgstr "Neveljaven vnos"
 
 #: validators.py:605
 msgid "Value must be one of: %(items)s (not %(value)r)"
-msgstr "Vrednost mora biti ena izmed: (%items)s (ne %(value)r)"
+msgstr "Vrednost mora biti ena izmed: %(items)s (ne %(value)r)"
 
 #: validators.py:668
 msgid "Choose something"

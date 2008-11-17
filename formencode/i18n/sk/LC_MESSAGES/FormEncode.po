@@ -150,7 +150,7 @@ msgstr "E-mailová adresa musí raz obsahovať @"
 
 #: validators.py:1180
 msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
-msgstr "Doména z e-mailovej adresy neexistuje (časť po @: %(domain)s)"
+msgstr "Doména z e-mailovej adresy neexistuje (časť po @: %(username)s)"
 
 #: validators.py:1181
 #: validators.py:1294

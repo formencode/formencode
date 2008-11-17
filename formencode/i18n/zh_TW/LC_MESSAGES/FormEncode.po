@@ -41,7 +41,7 @@ msgstr "%(object)r 必須為 %(typeList)s 中的一個類型"
 
 #: validators.py:163
 msgid "%(object)r must be of the type %(type)s"
-msgstr "%(object)r 必須為 %(typeList)s 類型"
+msgstr "%(object)r 必須為 %(type)s 類型"
 
 #: validators.py:344
 msgid "Enter a value less than %(maxLength)i characters long"
