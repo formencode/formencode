@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FormEncode\n"
-"POT-Creation-Date: 2006-10-02 20:59+CEST\n"
+"POT-Creation-Date: 2006-10-02 20:59+0200\n"
 "PO-Revision-Date: 2007-07-07 01:59+0100\n"
 "Last-Translator: Dimitris Glezos <dimitris@glezos.com>\n"
 "Language-Team: Greek <fedora-trans-el@redhat.com>\n"

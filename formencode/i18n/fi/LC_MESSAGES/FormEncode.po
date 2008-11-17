@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FormEncode 0.7.1\n"
-"POT-Creation-Date: 2006-10-02 20:59+CEST\n"
+"POT-Creation-Date: 2006-10-02 20:59+0200\n"
 "PO-Revision-Date: 2007-11-07 10:45+ZONE\n"
 "Last-Translator: Marko Manninen <mmstud@gmail.com>\n"
 "Language-Team: FINNISH <FI@li.org>\n"

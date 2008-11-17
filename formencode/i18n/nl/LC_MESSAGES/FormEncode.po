@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: r2591\n"
-"POT-Creation-Date: 2006-10-02 20:59+CEST\n"
+"POT-Creation-Date: 2006-10-02 20:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Jan-Wijbrand Kolman <jkolman@thehealthagency.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FormEncode 0.51\n"
-"POT-Creation-Date: 2006-10-02 20:59+CEST\n"
+"POT-Creation-Date: 2006-10-02 20:59+0200\n"
 "PO-Revision-Date: 2006-10-03 08:59-0300\n"
 "Last-Translator: Jose Soares Da Silva <jose.soares@sferacarta.com>\n"
 "Language-Team: Jose Soares Da Silva <jose.soares@sferacarta.com>\n"
