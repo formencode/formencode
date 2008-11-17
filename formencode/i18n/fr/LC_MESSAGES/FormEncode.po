@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FormEncode 1.0\n"
-"POT-Creation-Date: 2008-11-05 12:01+CET\n"
+"POT-Creation-Date: 2008-11-05 12:01+0100\n"
 "PO-Revision-Date: 2008-10-16 12:46+0200\n"
 "Last-Translator: Stéphane Raimbault <stephane.raimbault@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
