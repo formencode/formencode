@@ -26,6 +26,8 @@ svn trunk
 
 * :class:`formencode.validators.Number` works with ``inf`` float
   values (before it would raise a OverflowError).
+  
+* The ``tw`` locale has been renamed to the more standard ``zh_TW``.
 
 1.1
 ---
