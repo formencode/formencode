@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version:  FormEncode\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2006-10-02 20:59+0200\n"
-"PO-Revision-Date: 2008-11-17 15:16-0800\n"
+"PO-Revision-Date: 2008-11-17 15:36-0800\n"
 "Last-Translator: Dimitris Glezos <dimitris@glezos.com>\n"
 "Language-Team: Greek <fedora-trans-el@redhat.com>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -60,10 +60,10 @@ msgstr ""
 
 #: formencode/national.py:156 formencode/national.py:216
 #: formencode/national.py:251
-#, fuzzy, python-format
+#, python-format
 #| msgid "Please enter a zip code (5 digits)"
 msgid "Please enter a zip code (%s)"
-msgstr "Παρακαλούμε εισάγετε έναν ταχυδρομικό κωδικό (5 ψηφία)"
+msgstr "Παρακαλούμε εισάγετε έναν ταχυδρομικό κωδικό (%s)"
 
 #: formencode/national.py:216
 msgid "LnnnnLLL"
@@ -517,10 +517,9 @@ msgid "That number is not valid"
 msgstr "Ο αριθμός δεν είναι έγκυρος"
 
 #: formencode/validators.py:2761
-#, fuzzy, python-format
-#| msgid "The name %(name)s is missing"
+#, python-format
 msgid "The field %(key)s is missing"
-msgstr "Το όνομα %(name)s λείπει"
+msgstr ""
 
 #: formencode/validators.py:2880
 msgid "Please enter numbers only for month and year"

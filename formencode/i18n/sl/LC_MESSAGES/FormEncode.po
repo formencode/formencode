@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: FormEncode 0.6\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2006-10-02 20:59+0200\n"
-"PO-Revision-Date: 2008-11-17 15:16-0800\n"
+"PO-Revision-Date: 2008-11-17 15:56-0800\n"
 "Last-Translator: Matej Barič <matej.baric@gmail.com>\n"
 "Language-Team: Matej Barič <matej.baric@gmail.com>\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 "
@@ -61,10 +61,9 @@ msgstr ""
 
 #: formencode/national.py:156 formencode/national.py:216
 #: formencode/national.py:251
-#, fuzzy, python-format
-#| msgid "Please enter a valid day"
+#, python-format
 msgid "Please enter a zip code (%s)"
-msgstr "Prosim, vnesite veljaven dan"
+msgstr "Prosim, vnesite veljaven dan (%s)"
 
 #: formencode/national.py:216
 msgid "LnnnnLLL"
@@ -503,10 +502,9 @@ msgid "That number is not valid"
 msgstr "Ta številka je neveljavna"
 
 #: formencode/validators.py:2761
-#, fuzzy, python-format
-#| msgid "The name %(name)s is missing"
+#, python-format
 msgid "The field %(key)s is missing"
-msgstr "Ime %(name)s manjka"
+msgstr ""
 
 #: formencode/validators.py:2880
 msgid "Please enter numbers only for month and year"

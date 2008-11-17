@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FormEncode 1.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2008-03-29 12:00+0100\n"
-"PO-Revision-Date: 2008-11-17 15:16-0800\n"
+"PO-Revision-Date: 2008-11-17 15:29-0800\n"
 "Last-Translator: Christoph Zwerschke <cito@online.de>\n"
 "Language-Team: Gregor Horvath <gh@gregor-horvath.com>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -61,10 +61,10 @@ msgstr ""
 
 #: formencode/national.py:156 formencode/national.py:216
 #: formencode/national.py:251
-#, fuzzy, python-format
+#, python-format
 #| msgid "Please enter a zip code (5 digits)"
 msgid "Please enter a zip code (%s)"
-msgstr "Bitte eine Postleitzahl eingeben (5 Ziffern)"
+msgstr "Bitte eine Postleitzahl eingeben (%s)"
 
 #: formencode/national.py:216
 msgid "LnnnnLLL"
@@ -516,10 +516,9 @@ msgid "That number is not valid"
 msgstr "Diese Nummer ist ungültig"
 
 #: formencode/validators.py:2761
-#, fuzzy, python-format
-#| msgid "The name %(name)s is missing"
+#, python-format
 msgid "The field %(key)s is missing"
-msgstr "Der Name %(name)s fehlt"
+msgstr ""
 
 #: formencode/validators.py:2880
 msgid "Please enter numbers only for month and year"

@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version:  0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2006-10-02 20:59+0200\n"
-"PO-Revision-Date: 2008-11-17 15:16-0800\n"
+"PO-Revision-Date: 2008-11-17 15:23-0800\n"
 "Last-Translator: Martin Šenkeřík <martinsenkerik@email.cz>\n"
 "Language-Team: \n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
@@ -59,10 +59,10 @@ msgstr ""
 
 #: formencode/national.py:156 formencode/national.py:216
 #: formencode/national.py:251
-#, fuzzy, python-format
+#, python-format
 #| msgid "Please enter a zip code (5 digits)"
 msgid "Please enter a zip code (%s)"
-msgstr "Prosím zadejte PSČ"
+msgstr "Prosím zadejte PSČ (%s)"
 
 #: formencode/national.py:216
 msgid "LnnnnLLL"
@@ -503,10 +503,10 @@ msgid "That number is not valid"
 msgstr "Zadané číslo není platné"
 
 #: formencode/validators.py:2761
-#, fuzzy, python-format
+#, python-format
 #| msgid "The name %(name)s is missing"
 msgid "The field %(key)s is missing"
-msgstr "Jméno %(name)s chybí"
+msgstr ""
 
 #: formencode/validators.py:2880
 msgid "Please enter numbers only for month and year"

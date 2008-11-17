@@ -57,10 +57,9 @@ msgstr ""
 
 #: formencode/national.py:156 formencode/national.py:216
 #: formencode/national.py:251
-#, fuzzy, python-format
-#| msgid "Please enter a zip code (5 digits)"
+#, python-format
 msgid "Please enter a zip code (%s)"
-msgstr "Palun sisestada postiindeks (5 numbrit)"
+msgstr "Palun sisestada postiindeks (%s)"
 
 #: formencode/national.py:216
 msgid "LnnnnLLL"
@@ -510,10 +509,9 @@ msgid "That number is not valid"
 msgstr "Selline arv ei kõlba"
 
 #: formencode/validators.py:2761
-#, fuzzy, python-format
-#| msgid "The name %(name)s is missing"
+#, python-format
 msgid "The field %(key)s is missing"
-msgstr "Nimi %(name)s puudub"
+msgstr ""
 
 #: formencode/validators.py:2880
 msgid "Please enter numbers only for month and year"

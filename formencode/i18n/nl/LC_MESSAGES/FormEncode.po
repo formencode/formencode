@@ -62,10 +62,9 @@ msgstr ""
 
 #: formencode/national.py:156 formencode/national.py:216
 #: formencode/national.py:251
-#, fuzzy, python-format
-#| msgid "Please enter a zip code (5 digits)"
+#, python-format
 msgid "Please enter a zip code (%s)"
-msgstr "Voer een geldige postcode in"
+msgstr "Voer een geldige postcode in (%s)"
 
 #: formencode/national.py:216
 msgid "LnnnnLLL"
@@ -520,9 +519,8 @@ msgstr "Ongeldig nummer"
 
 #: formencode/validators.py:2761
 #, fuzzy, python-format
-#| msgid "The name %(name)s is missing"
 msgid "The field %(key)s is missing"
-msgstr "De waarde %(name)s mist"
+msgstr ""
 
 #: formencode/validators.py:2880
 msgid "Please enter numbers only for month and year"

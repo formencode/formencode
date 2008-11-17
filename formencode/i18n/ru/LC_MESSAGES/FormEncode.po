@@ -61,10 +61,9 @@ msgstr ""
 
 #: formencode/national.py:156 formencode/national.py:216
 #: formencode/national.py:251
-#, fuzzy, python-format
-#| msgid "Please enter a zip code (5 digits)"
+#, python-format
 msgid "Please enter a zip code (%s)"
-msgstr "Введите zip-код (5 цифр)"
+msgstr "Введите zip-код (%s)"
 
 #: formencode/national.py:216
 msgid "LnnnnLLL"
@@ -514,10 +513,9 @@ msgid "That number is not valid"
 msgstr "Неверный номер "
 
 #: formencode/validators.py:2761
-#, fuzzy, python-format
-#| msgid "The name %(name)s is missing"
+#, python-format
 msgid "The field %(key)s is missing"
-msgstr "Отсутствует имя %(name)s"
+msgstr ""
 
 #: formencode/validators.py:2880
 msgid "Please enter numbers only for month and year"
