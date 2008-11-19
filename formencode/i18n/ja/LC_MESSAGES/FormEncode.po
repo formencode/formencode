@@ -57,10 +57,9 @@ msgstr ""
 
 #: formencode/national.py:156 formencode/national.py:216
 #: formencode/national.py:251
-#, fuzzy, python-format
-#| msgid "Please enter a zip code (5 digits)"
+#, python-format
 msgid "Please enter a zip code (%s)"
-msgstr "郵便コードを入力してください（5桁）"
+msgstr "郵便コードを入力してください（%s）"
 
 #: formencode/national.py:216
 msgid "LnnnnLLL"
@@ -502,10 +501,9 @@ msgid "That number is not valid"
 msgstr "番号が正しくありません"
 
 #: formencode/validators.py:2761
-#, fuzzy, python-format
-#| msgid "The name %(name)s is missing"
+#, python-format
 msgid "The field %(key)s is missing"
-msgstr "%(name)sは見付かりません"
+msgstr ""
 
 #: formencode/validators.py:2880
 msgid "Please enter numbers only for month and year"
