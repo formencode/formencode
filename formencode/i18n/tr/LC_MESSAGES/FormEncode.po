@@ -1,0 +1,357 @@
+# Turkish Translations of FormEncode Messages.
+# Copyright (C) 2008 Oktay Sancak
+# Oktay Sancak <oktaysancak@gmail.com>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0.1\n"
+"POT-Creation-Date: 2008-03-29 12:00+0200\n"
+"PO-Revision-Date: 2008-11-14 18:06+0200\n"
+"Last-Translator: Oktay Sancak <oktaysancak@gmail.com>\n"
+"Language-Team: Oktay Sancak <oktaysancak@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: utf-8\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: api.py:356 validators.py:438
+msgid "Please enter a value"
+msgstr "Lütfen bir değer giriniz"
+
+#: api.py:357
+msgid "The input must be a string (not a %(type)s: %(value)r)"
+msgstr "Girdi bir sayı olmalı (bir %(type)s değil: %(value)r)"
+
+#: api.py:358
+msgid "The input must be a string (not None)"
+msgstr "Girdi bir karakter dizisi olmalı (None değil)"
+
+#: schema.py:61
+msgid "The input field %(name)s was not expected."
+msgstr "Beklenmeyen girdi alanı: %(name)s"
+
+#: schema.py:62
+msgid "Missing value"
+msgstr "Eksik bilgi"
+
+#: schema.py:63
+msgid "The input must be dict-like (not a %(type)s: %(value)r)"
+msgstr "Girdi liste benzeri bir tipte olmalıydı (bir %(type)s değil: %(value)r)"
+
+#: validators.py:165
+msgid "%(object)r is not a subclass of %(subclass)s"
+msgstr "%(object)r bir %(subclass)s türevi değil"
+
+#: validators.py:166
+msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
+msgstr "%(object)r, %(subclassList)s tiplerinden herhangi birinin türevi değil"
+
+#: validators.py:167
+msgid "%(object)r must be one of the types %(typeList)s"
+msgstr "%(object)r, %(typeList)s tiplerinden birinin türevi olmalı"
+
+#: validators.py:168
+msgid "%(object)r must be of the type %(type)s"
+msgstr "%(object)r tipi %(type)s tiplerinden biri olmalı"
+
+#: validators.py:349
+msgid "Enter a value less than %(maxLength)i characters long"
+msgstr "%(maxLength)i karakterden kısa bir değer girin"
+
+#: validators.py:350 validators.py:404
+msgid "Invalid value (value with length expected)"
+msgstr "Geçersiz değer (değer ile birlikte uzunluk bekleniyordu)"
+
+#: validators.py:403
+msgid "Enter a value at least %(minLength)i characters long"
+msgstr "En az %(minLength)i karakter uzunluğunda bir değer girin"
+
+#: validators.py:463
+msgid "You cannot enter a value here"
+msgstr "Buraya bir değer giremezsiniz"
+
+#: validators.py:514
+msgid "The input is not valid"
+msgstr "Girilen değer geçersiz"
+
+#: validators.py:569
+msgid "Enter only letters, numbers, or _ (underscore)"
+msgstr "Sadece harf, rakam, yada _ (altçizgi) girin"
+
+#: validators.py:608
+msgid "Invalid value"
+msgstr "Geçersiz değer"
+
+#: validators.py:609
+msgid "Value must be one of: %(items)s (not %(value)r)"
+msgstr "Değer şunlardan biri olmalı: %(items)s (%(value)r değil)"
+
+#: validators.py:672
+msgid "Choose something"
+msgstr "Birşey seçin"
+
+#: validators.py:673
+msgid "Enter a value from: %(items)s"
+msgstr "%(items)s arasından bir değer seçin"
+
+#: validators.py:674
+msgid "That value is not known"
+msgstr "Bu değer bilinmiyor"
+
+#: validators.py:675
+msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
+msgstr "%(value)s listemdekilerden biri değil. %(items)s değerlerinden birini seçin"
+
+#: validators.py:736
+msgid "Must be an integer index"
+msgstr "İndeks tamsayı tipinde olmalı"
+
+#: validators.py:737
+msgid "Index out of range"
+msgstr "Kapsam dışı indeks"
+
+#: validators.py:738
+msgid "Item %(value)s was not found in the list"
+msgstr "%(value)s değeri listede bulunamadı"
+
+#: validators.py:813
+msgid "Date must be after %(date)s"
+msgstr "Tarih %(date)s sonrası olmalı"
+
+#: validators.py:814
+msgid "Date must be before %(date)s"
+msgstr "Tarih %(date)s öncesi olmalı"
+
+#: validators.py:816
+msgid "%%A, %%d %%B %%Y"
+msgstr ""
+
+#: validators.py:817
+msgid "The date must be sometime in the future"
+msgstr "Tarih gelecekte bir zaman olmalı"
+
+#: validators.py:928
+msgid "Please enter an integer value"
+msgstr "Lütfen sayısal bir değer giriniz"
+
+#: validators.py:929
+msgid "Please enter an integer above %(min)i"
+msgstr "Lütfen %(min)i üzerinde bir tamsayı giriniz"
+
+#: validators.py:930
+msgid "Please enter an integer below %(max)i"
+msgstr "Lütfen %(max)i altında bir tamsayı giriniz"
+
+#: validators.py:980
+msgid "Please enter a number"
+msgstr "Lütfen bir sayı giriniz"
+
+#: validators.py:1039
+msgid "Enter a value less than %(max)i characters long"
+msgstr "%(max)i karakterden kısa bir değer giriniz"
+
+#: validators.py:1040
+msgid "Enter a value %(min)i characters long or more"
+msgstr "En az %(min)i karakter uzunluğunda bir değer giriniz"
+
+#: validators.py:1113
+msgid "Invalid data or incorrect encoding"
+msgstr "Geçersiz veri yada hatalı dil kodlaması"
+
+#: validators.py:1260
+msgid "Please enter an email address"
+msgstr "Lütfen bir e-posta adresi giriniz"
+
+#: validators.py:1261
+msgid "An email address must contain a single @"
+msgstr "Bir e-posta adresi tek bir @ işareti bulundurmalıdır"
+
+#: validators.py:1262
+msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
+msgstr "E-posta adresinin kullanıcı adı kısmı geçersiz (@ işaretinden önceki bölüm: %(username)s)"
+
+#: validators.py:1263 validators.py:1367
+msgid "An error occured when trying to connect to the server: %(error)s"
+msgstr "Sunucuya bağlanmaya çalışılırken bir hata oluştu: %(error)s"
+
+#: validators.py:1264
+msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
+msgstr "E-posta adresinin alan adı kısmı geçersiz (@ işaretinden sonraki kısım: %(domain)s)"
+
+#: validators.py:1265
+msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
+msgstr "E-posta adresinin alan adı yok (@ işaretinden sonraki kısım: %(domain)s)"
+
+#: validators.py:1364
+msgid "You must start your URL with http://, https://, etc"
+msgstr "URL adresiniz http://, https://, vb. ile başlamalıdır"
+
+#: validators.py:1365
+msgid "That is not a valid URL"
+msgstr "Bu geçerli bir URL değil"
+
+#: validators.py:1366
+msgid "An error occurred when trying to access the URL: %(error)s"
+msgstr "Bu URL'ye bağlanmaya çalışılırken bir hata oluştu: %(error)s"
+
+#: validators.py:1368
+msgid "The server responded that the page could not be found"
+msgstr "Sunucu sayfanın bulunamadığını iletti"
+
+#: validators.py:1369
+msgid "The server responded with a bad status code (%(status)s)"
+msgstr "Sunucu hata kodu ile yanıt verdi (%(status)s)"
+
+#: validators.py:1472
+msgid "Please enter a state code"
+msgstr "Lütfen bir eyalet kodu giriniz"
+
+#: validators.py:1473
+msgid "Please enter a state code with TWO letters"
+msgstr "Lütfen İKİ harften oluşan bir eyalet kodu giriniz"
+
+#: validators.py:1474
+msgid "That is not a valid state code"
+msgstr "Bu geçerli bir eyalet kodu değil"
+
+#: validators.py:1524
+msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
+msgstr "Lütfen ###-###-#### formatında ve alan kodunu da içeren bir numara giriniz, opsiyonel olarak \"dahili.####\" ile"
+
+#: validators.py:1614
+msgid "Please enter a number, with area code, in the form +##-###-#######."
+msgstr "Lütfen alan kodu ile birlikte +##-###-####### formatında bir numara giriniz."
+
+#: validators.py:1805 validators.py:1813
+msgid "Please enter the date in the form %(format)s"
+msgstr "Lütfen tarihi %(format)s formatında giriniz"
+
+#: validators.py:1806
+msgid "Please enter a month from 1 to 12"
+msgstr "Lütfen 1 ile 12 arasında bir ay giriniz"
+
+#: validators.py:1807
+msgid "Please enter a valid day"
+msgstr "Lütfen geçerli bir gün giriniz"
+
+#: validators.py:1808
+msgid "That month only has %(days)i days"
+msgstr "Bu ay sadece %(days)i gün içeriyor"
+
+#: validators.py:1809
+msgid "That is not a valid day (%(exception)s)"
+msgstr "Bu geçerli bir gün değil (%(exception)s)"
+
+#: validators.py:1810
+msgid "Unknown month name: %(month)s"
+msgstr "Bilinmeyen ay ismi: %(month)s"
+
+#: validators.py:1811
+msgid "Please enter a number for the year"
+msgstr "Lütfen yıl için bir sayı giriniz"
+
+#: validators.py:1812
+msgid "Please enter a four-digit year after 1899"
+msgstr "Lütfen 1899'dan büyük dört rakamlı bir sayı giriniz"
+
+#: validators.py:1994
+msgid "You must indicate AM or PM"
+msgstr "AM yada PM olarak belirtmelisiniz"
+
+#: validators.py:1995
+msgid "There are too many :'s"
+msgstr "Çok fazla \":\" var"
+
+#: validators.py:1996
+msgid "You may not enter seconds"
+msgstr "Saniyeleri girmeyebilirsiniz"
+
+#: validators.py:1997
+msgid "You must enter seconds"
+msgstr "Saniyeleri girmelisiniz"
+
+#: validators.py:1998
+msgid "You must enter minutes (after a :)"
+msgstr "Dakikaları girmelisiniz (: işaretinden sonra)"
+
+#: validators.py:1999
+msgid "The %(part)s value you gave is not a number: %(number)r"
+msgstr "Vermiş olduğunuz %(part)s değeri bir tamsayı değil: %(number)r"
+
+#: validators.py:2000
+msgid "You must enter an hour in the range %(range)s"
+msgstr "%(range)s aralığında bir saat girmelisiniz"
+
+#: validators.py:2001
+msgid "You must enter a minute in the range 0-59"
+msgstr "0-59 aralığında bir dakika girmelisiniz"
+
+#: validators.py:2002
+msgid "You must enter a second in the range 0-59"
+msgstr "0-59 aralığında bir saniye girmelisiniz"
+
+#: validators.py:2156
+msgid "Please enter a zip code (5 digits)"
+msgstr "Lütfen bir posta kodu giriniz (5 basamaklı)"
+
+#: validators.py:2180
+msgid "The name %(name)s is missing"
+msgstr "%(name)s ismi eksik"
+
+#: validators.py:2224
+msgid "Value should be %(true)r or %(false)r"
+msgstr "Değer %(true)r yada %(false)r olmalı"
+
+#: validators.py:2259
+msgid "Value does not contain a signature"
+msgstr "Değer bir imza içermiyor"
+
+#: validators.py:2260
+msgid "Signature is not correct"
+msgstr "Hatalı imza"
+
+#: validators.py:2390
+msgid "A MAC address must contain 12 digits and A-F; the value you gave has %(length)s characters"
+msgstr "Bir MAC adresi 12 basamak ve A-F arası değerler içermeli; vermiş olduğunuz değer %(length)s karakter içeriyor"
+
+#: validators.py:2391
+msgid "MAC addresses may only contain 0-9 and A-F (and optionally :), not %(char)r"
+msgstr "MAC adresi sadece 0-9 ve A-F arası değerler içerebilir (ve opsiyonel olarak :), %(char)r değil"
+
+#: validators.py:2485
+msgid "Fields do not match (should be %(match)s)"
+msgstr "Girilen değerler uyuşmuyor (%(match)s olmalı)"
+
+#: validators.py:2486
+msgid "Fields do not match"
+msgstr "Girilen değerler aynı değil"
+
+#: validators.py:2548
+msgid "Please enter only the number, no other characters"
+msgstr "Lütfen sadece rakam giriniz, başka karakter değil"
+
+#: validators.py:2549
+msgid "You did not enter a valid number of digits"
+msgstr "Geçerli sayıda rakam girmediniz"
+
+#: validators.py:2550
+msgid "That number is not valid"
+msgstr "Bu sayı geçerli değil"
+
+#: validators.py:2665
+msgid "Please enter numbers only for month and year"
+msgstr "Lütfen ay ve yıl için sadece rakam giriniz"
+
+#: validators.py:2666
+msgid "Invalid Expiration Date"
+msgstr "Hatalı Son Kullanma Tarihi"
+
+#: validators.py:2735
+msgid "Please enter numbers only for credit card security code"
+msgstr "Lütfen kredi kartı güvenlik kodu için sadece rakam giriniz"
+
+#: validators.py:2736
+msgid "Invalid credit card security code length"
+msgstr "Kredi kartı güvenlik kodu uzunluğu geçersiz"
+

@@ -114,3 +114,8 @@ def test_et():
 def test_lt():
   _test_lang("lt", u"Prašome įvesti reikšmę")
 
+def test_ja():
+  _test_lang("ja", u"入力してください")
+
+def test_tr():
+  _test_lang("tr", u"Lütfen bir değer giriniz")

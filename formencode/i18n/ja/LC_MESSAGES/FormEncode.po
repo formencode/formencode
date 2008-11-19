@@ -1,0 +1,323 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: FormEncode 0.7.1\n"
+"POT-Creation-Date: 2007-09-29 18:53+0900\n"
+"PO-Revision-Date: 2007-09-29 18:53+0900\n"
+"Last-Translator: kogakazuo@gmail.com\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-License: PSF\n"
+"X-Poedit-Language: Japanese\n"
+
+#: api.py:335
+#: validators.py:433
+msgid "Please enter a value"
+msgstr "入力してください"
+
+#: api.py:336
+msgid "The input must be a string (not a %(type)s: %(value)r)"
+msgstr "文字を与えてください（%(type)s: %(value)rです）"
+
+#: api.py:337
+msgid "The input must be a string (not None)"
+msgstr "文字を与えてください（Noneです）"
+
+#: validators.py:160
+msgid "%(object)r is not a subclass of %(subclass)s"
+msgstr "%(object)rは%(subclass)sのサブクラスではありません"
+
+#: validators.py:161
+msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
+msgstr "%(object)rはいずれかのサブクラスではありません(%(subclassList)s)"
+
+#: validators.py:162
+msgid "%(object)r must be one of the types %(typeList)s"
+msgstr "%(object)rはいずれかの型でなければなりません(%(typeList)s)"
+
+#: validators.py:163
+msgid "%(object)r must be of the type %(type)s"
+msgstr "%(object)rの型は%(type)sでなければなりません"
+
+#: validators.py:344
+msgid "Enter a value less than %(maxLength)i characters long"
+msgstr "長さ%(maxLength)i文字以下で入力してください"
+
+#: validators.py:345
+#: validators.py:399
+msgid "Invalid value (value with length expected)"
+msgstr "正しくない値です（文字数が不正です）"
+
+#: validators.py:398
+msgid "Enter a value at least %(minLength)i characters long"
+msgstr "長さ%(minLength)i文字以上で入力してください"
+
+#: validators.py:458
+msgid "You cannot enter a value here"
+msgstr "ここに入力しないでください"
+
+#: validators.py:509
+msgid "The input is not valid"
+msgstr "入力が正しくありません"
+
+#: validators.py:565
+msgid "Enter only letters, numbers, or _ (underscore)"
+msgstr "英数字と下線（_）だけ入力できます"
+
+#: validators.py:604
+msgid "Invalid value"
+msgstr "正しくない値です"
+
+#: validators.py:605
+msgid "Value must be one of: %(items)s (not %(value)r)"
+msgstr "%(items)sのいずれかでなければなりません（%(value)r）"
+
+#: validators.py:668
+msgid "Choose something"
+msgstr "選んでください"
+
+#: validators.py:669
+msgid "Enter a value from: %(items)s"
+msgstr "%(items)sから選んでください"
+
+#: validators.py:670
+msgid "That value is not known"
+msgstr "不明な値です"
+
+#: validators.py:671
+msgid "Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"
+msgstr "%(value)sは辞書にありません。%(items)sから選んでください"
+
+#: validators.py:732
+msgid "Must be an integer index"
+msgstr "数値で指定してください"
+
+#: validators.py:733
+msgid "Index out of range"
+msgstr "範囲外の値です"
+
+#: validators.py:734
+msgid "Item %(value)s was not found in the list"
+msgstr "%(value)sはリストにありません"
+
+#: validators.py:809
+msgid "Date must be after %(date)s"
+msgstr "%(date)sより後の日付にしてください"
+
+#: validators.py:810
+msgid "Date must be before %(date)s"
+msgstr "%(date)sより前の日付にしてください"
+
+#: validators.py:812
+msgid "%%A, %%d %%B %%Y"
+msgstr "%%Y年%%m月%%d日"
+
+#: validators.py:813
+msgid "The date must be sometime in the future"
+msgstr "過去の日付は指定できません"
+
+#: validators.py:913
+msgid "Please enter an integer value"
+msgstr "整数を入力してください"
+
+#: validators.py:945
+msgid "Please enter a number"
+msgstr "数値を入力してください"
+
+#: validators.py:998
+msgid "Enter a value less than %(max)i characters long"
+msgstr "長さ%(max)i文字以下で入力してください"
+
+#: validators.py:999
+msgid "Enter a value %(min)i characters long or more"
+msgstr "長さ%(min)i文字以上で入力してください"
+
+#: validators.py:1050
+msgid "Invalid data or incorrect encoding"
+msgstr "データが正しくないか不正なエンコーディングです"
+
+#: validators.py:1178
+msgid "Please enter an email address"
+msgstr "メールアドレスを入力してください"
+
+#: validators.py:1179
+msgid "An email address must contain a single @"
+msgstr "メールアドレスには@がひとつ必要です"
+
+#: validators.py:1180
+msgid "The username portion of the email address is invalid (the portion before the @: %(username)s)"
+msgstr "メールアドレスのユーザ名が正しくありません（@より前の部分：%(username)s）"
+
+#: validators.py:1181
+#: validators.py:1294
+msgid "An error occured when trying to connect to the server: %(error)s"
+msgstr "サーバ%(error)sに接続中にエラーが発生しました"
+
+#: validators.py:1182
+msgid "The domain portion of the email address is invalid (the portion after the @: %(domain)s)"
+msgstr "メールアドレスのドメインが正しくありません（@より後の部分：%(domain)s）"
+
+#: validators.py:1183
+msgid "The domain of the email address does not exist (the portion after the @: %(domain)s)"
+msgstr "メールアドレスのドメインは存在しません（@より後の部分：%(domain)s）"
+
+#: validators.py:1291
+msgid "You must start your URL with http://, https://, etc"
+msgstr "URLは先頭のhttp://、https://などから入力してください"
+
+#: validators.py:1292
+msgid "That is not a valid URL"
+msgstr "正しいURLではありません"
+
+#: validators.py:1293
+msgid "An error occurred when trying to access the URL: %(error)s"
+msgstr "URLにアクセスできません：%(error)s"
+
+#: validators.py:1295
+msgid "The server responded that the page could not be found"
+msgstr "指定のページは見付かりません"
+
+#: validators.py:1296
+msgid "The server responded with a bad status code (%(status)s)"
+msgstr "サーバはエラーコード(%(status)s)を返しました"
+
+#: validators.py:1399
+msgid "Please enter a state code"
+msgstr "州コードを入力してください"
+
+#: validators.py:1400
+msgid "Please enter a state code with TWO letters"
+msgstr "州コードを2文字で入力してください"
+
+#: validators.py:1401
+msgid "That is not a valid state code"
+msgstr "正しい州コードではありません"
+
+#: validators.py:1452
+msgid "Please enter a number, with area code, in the form ###-###-####, optionally with \"ext.####\""
+msgstr "次の形式で入力してください：###-###-####、必要であれば\"ext.####\""
+
+#: validators.py:1614
+#: validators.py:1622
+msgid "Please enter the date in the form %(format)s"
+msgstr "次の形式で日付を入力してください：%(format)s"
+
+#: validators.py:1615
+msgid "Please enter a month from 1 to 12"
+msgstr "月を1から12で入力してください"
+
+#: validators.py:1616
+msgid "Please enter a valid day"
+msgstr "正しい日を入力してください"
+
+#: validators.py:1617
+msgid "That month only has %(days)i days"
+msgstr "この月は%(days)i日しかありません"
+
+#: validators.py:1618
+msgid "That is not a valid day (%(exception)s)"
+msgstr "正しい日付ではありません(%(exception)s)"
+
+#: validators.py:1619
+msgid "Unknown month name: %(month)s"
+msgstr "月名ではありません：%(month)s"
+
+#: validators.py:1620
+msgid "Please enter a number for the year"
+msgstr "西暦を入力してください"
+
+#: validators.py:1621
+msgid "Please enter a four-digit year"
+msgstr "西暦を4桁で入力してください"
+
+#: validators.py:1800
+msgid "You must indicate AM or PM"
+msgstr "AMかPMを指定してください"
+
+#: validators.py:1801
+msgid "There are too many :'s"
+msgstr "コロン(:)が多すぎます"
+
+#: validators.py:1802
+msgid "You may not enter seconds"
+msgstr "秒を入力しないでください"
+
+#: validators.py:1803
+msgid "You must enter seconds"
+msgstr "秒まで入力してください"
+
+#: validators.py:1804
+msgid "You must enter minutes (after a :)"
+msgstr "分を入力してください（:の後）"
+
+#: validators.py:1805
+msgid "The %(part)s value you gave is not a number: %(number)r"
+msgstr "%(part)sの部分が数値ではありません：%(number)r"
+
+#: validators.py:1806
+msgid "You must enter an hour in the range %(range)s"
+msgstr "時間は%(range)sの範囲で指定してください"
+
+#: validators.py:1807
+msgid "You must enter a minute in the range 0-59"
+msgstr "分は0から59の範囲で指定してください"
+
+#: validators.py:1808
+msgid "You must enter a second in the range 0-59"
+msgstr "秒は0から59の範囲で指定してください"
+
+#: validators.py:1962
+msgid "Please enter a zip code (5 digits)"
+msgstr "郵便コードを入力してください（5桁）"
+
+#: validators.py:1986
+msgid "The name %(name)s is missing"
+msgstr "%(name)sは見付かりません"
+
+#: validators.py:2027
+msgid "Value should be %(true)r or %(false)r"
+msgstr "値は%(true)rか%(false)rです"
+
+#: validators.py:2062
+msgid "Value does not contain a signature"
+msgstr "シグネチャが含まれていません"
+
+#: validators.py:2063
+msgid "Signature is not correct"
+msgstr "不正なシグネチャです"
+
+#: validators.py:2185
+msgid "Fields do not match (should be %(match)s)"
+msgstr "項目が一致しません(%(match)s)"
+
+#: validators.py:2186
+msgid "Fields do not match"
+msgstr "項目が一致しません"
+
+#: validators.py:2248
+msgid "Please enter only the number, no other characters"
+msgstr "番号だけを入力してください"
+
+#: validators.py:2249
+msgid "You did not enter a valid number of digits"
+msgstr "正しく番号が入力されていません"
+
+#: validators.py:2250
+msgid "That number is not valid"
+msgstr "番号が正しくありません"
+
+#: validators.py:2365
+msgid "Please enter numbers only for month and year"
+msgstr "数字で入力してください"
+
+#: validators.py:2366
+msgid "Invalid Expiration Date"
+msgstr "有効期限が正しくありません"
+
+#: validators.py:2435
+msgid "Please enter numbers only for credit card security code"
+msgstr "セキュリティコードを数字で入力してください"
+
+#: validators.py:2436
+msgid "Invalid credit card security code length"
+msgstr "セキュリティコードの長さが正しくありません"
