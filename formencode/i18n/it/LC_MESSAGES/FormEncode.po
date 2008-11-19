@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: FormEncode 0.51\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2006-10-02 20:59+0200\n"
-"PO-Revision-Date: 2008-11-17 15:16-0800\n"
+"PO-Revision-Date: 2008-11-18 17:03-0800\n"
 "Last-Translator: Jose Soares Da Silva <jose.soares@sferacarta.com>\n"
 "Language-Team: Jose Soares Da Silva <jose.soares@sferacarta.com>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -242,16 +242,14 @@ msgid "The date must be sometime in the future"
 msgstr "La data deve indicare un tempo futuro"
 
 #: formencode/validators.py:933
-#, fuzzy, python-format
-#| msgid "Please enter a number for the year"
+#, python-format
 msgid "Please enter a number that is %(min)s or greater"
-msgstr "Inserire un numero per l'anno"
+msgstr "Selezionare un numero che Ã¨ %(min)s o maggior"
 
 #: formencode/validators.py:934
-#, fuzzy, python-format
-#| msgid "Please enter a number for the year"
+#, python-format
 msgid "Please enter a number that is %(max)s or smaller"
-msgstr "Inserire un numero per l'anno"
+msgstr "Selezionare un numero che Ã¨ %(max)s o piÃ¹ piccolo"
 
 #: formencode/validators.py:973
 msgid "Please enter an integer value"
