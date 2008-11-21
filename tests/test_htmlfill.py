@@ -128,3 +128,8 @@ def test_image_submit():
     assert (htmlfill.render('<input name="image-submit" type="image" src="foo.jpg" value="bar">',
                             defaults={'image-submit': 'blahblah'})
             == '<input name="image-submit" type="image" src="foo.jpg" value="bar">')
+
+def test_unicode():
+    assert (htmlfill.render(u'<input type="checkbox" name="tags" value="2" />',
+                           dict(tags=[])) == 
+            '<input type="checkbox" name="tags" value="2" />')
