@@ -3,8 +3,8 @@ News
 
 .. contents::
 
-svn trunk
----------
+1.2
+---
 
 * Added :class:`formencode.validators.IPAddress`, validating IP
   addresses, from Leandro Lucarella.
