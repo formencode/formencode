@@ -29,6 +29,12 @@ svn trunk
   
 * The ``tw`` locale has been renamed to the more standard ``zh_TW``.
 
+* Added Japanese and Turkish translations.
+
+* Fixed some outdated translations and errors in Spanish and Greek
+  translations. Translations now managed with `Babel
+  <http://babel.edgewall.org/>`_.
+
 1.1
 ---
 
