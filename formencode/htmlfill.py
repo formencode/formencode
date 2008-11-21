@@ -363,7 +363,8 @@ class FillingParser(RewritingParser):
             selected = False
             if not self.get_attr(attrs, 'value'):
                 selected = value
-            elif self.selected_multiple(value, self.get_attr(attrs, 'value')):
+            elif self.selected_multiple(value,
+                                        self.get_attr(attrs, 'value', '')):
                 selected = True
             if selected:
                 self.set_attr(attrs, 'checked', 'checked')
@@ -373,7 +374,7 @@ class FillingParser(RewritingParser):
             self.skip_next = True
             self.add_key(name)
         elif t == 'radio':
-            if self.str_compare(value, self.get_attr(attrs, 'value')):
+            if self.str_compare(value, self.get_attr(attrs, 'value', '')):
                 self.set_attr(attrs, 'checked', 'checked')
             else:
                 self.del_attr(attrs, 'checked')
