@@ -29,6 +29,7 @@ you can install from with ``easy_install FormEncode==dev``
       author_email="ianb@colorstudy.com",
       url="http://formencode.org",
       license="PSF",
+      zip_safe=False,
       packages=["formencode", "formencode.util"],
       include_package_data=True,
       test_suite='nose.collector',

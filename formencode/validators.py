@@ -33,9 +33,10 @@ from interfaces import *
 from api import *
 sha1 = random = None
 
+filters = warnings.filters[:]
 warnings.simplefilter('ignore', DeprecationWarning)
 import sets
-warnings.resetwarnings()
+warnings.filters = filters
 try:
     set
 except NameError:

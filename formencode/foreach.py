@@ -2,9 +2,10 @@
 Validator for repeating items.
 """
 import warnings
+filters = warnings.filters[:]
 warnings.simplefilter('ignore', DeprecationWarning)
 from sets import Set
-warnings.resetwarnings()
+warnings.filters = filters
 try:
     set
 except NameError:
