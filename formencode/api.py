@@ -225,13 +225,15 @@ class Validator(declarative.Declarative):
             trans = _stdtrans
 
 
+        msg = self._messages[msgName]
+        msg = trans(msg, **self.gettextargs)
         try:
-            return trans(self._messages[msgName], **self.gettextargs) % kw
+            return msg % kw
         except KeyError, e:
             raise KeyError(
                 "Key not found (%s) for %r=%r %% %r (from: %s)"
                 % (e, msgName, self._messages.get(msgName), kw,
-                   ', '.join(self._messages.keys())))        
+                   ', '.join(self._messages.keys())))
 
     def all_messages(self):
         """
