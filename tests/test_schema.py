@@ -1,5 +1,5 @@
 from formencode import validators, foreach
-from formencode.schema import Schema, merge_dicts
+from formencode.schema import Schema, merge_dicts, SimpleFormValidator
 from formencode.api import *
 from formencode.variabledecode import NestedVariables
 import cgi
@@ -171,3 +171,19 @@ def test_multiple_chained_validators_errors():
         pass
     else:
         assert 0
+
+def test_SimpleFormValidator_doc():
+    """
+    Verify SimpleFormValidator preserves the decorated function's
+    docstring.
+    """
+
+    BOGUS_DOCSTRING = "blah blah blah"
+
+    def f(value_dict, state, validator):
+       value_dict['f'] = 99
+
+    f.__doc__ = BOGUS_DOCSTRING
+    g = SimpleFormValidator(f)
+
+    assert f.__doc__ == g.__doc__, "Docstrings don't match!"

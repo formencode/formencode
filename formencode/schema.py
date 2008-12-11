@@ -434,6 +434,9 @@ class SimpleFormValidator(FancyValidator):
 
     validate_partial_form = False
 
+    def __initargs__(self, new_attrs):
+        self.__doc__ = getattr(self.func, '__doc__', None)
+
     def to_python(self, value_dict, state):
         # Since we aren't really supposed to modify things in-place,
         # we'll give the validation function a copy:
@@ -457,12 +460,7 @@ class SimpleFormValidator(FancyValidator):
 
     def decorate(cls, **kw):
         def decorator(func):
-            result = cls(func, **kw)
-            try:
-                result.__doc__ = func.__doc__
-            except:
-                pass
-            return result
+            return cls(func, **kw)
         return decorator
 
     decorate = classmethod(decorate)
