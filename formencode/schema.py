@@ -457,7 +457,12 @@ class SimpleFormValidator(FancyValidator):
 
     def decorate(cls, **kw):
         def decorator(func):
-            return cls(func, **kw)
+            result = cls(func, **kw)
+            try:
+                result.__doc__ = func.__doc__
+            except:
+                pass
+            return result
         return decorator
 
     decorate = classmethod(decorate)
