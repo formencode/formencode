@@ -119,7 +119,12 @@ class Invalid(Exception):
         return val    
 
     def __unicode__(self):
-        return self.msg
+        if isinstance(self.msg, unicode):
+            return self.msg
+        elif isinstance(self.msg, str):
+            return self.msg.decode('utf8')
+        else:
+            return unicode(self.msg)
 
     def unpack_errors(self, encode_variables=False, dict_char='.',
                       list_char='-'):
