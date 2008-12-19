@@ -521,7 +521,3 @@ msgstr "Prosim, vnesite številke samo za varnostno kodo kartice"
 #: formencode/validators.py:2951
 msgid "Invalid credit card security code length"
 msgstr "Neveljavna dolžina varnostne kode kartice"
-
-#~ msgid "Please enter a zip code (5 digits)"
-#~ msgstr ""
-

@@ -60,7 +60,6 @@ msgstr ""
 #: formencode/national.py:156 formencode/national.py:216
 #: formencode/national.py:251
 #, python-format
-#| msgid "Please enter a zip code (5 digits)"
 msgid "Please enter a zip code (%s)"
 msgstr "Prosím zadejte PSČ (%s)"
 
@@ -504,7 +503,6 @@ msgstr "Zadané číslo není platné"
 
 #: formencode/validators.py:2761
 #, python-format
-#| msgid "The name %(name)s is missing"
 msgid "The field %(key)s is missing"
 msgstr ""
 

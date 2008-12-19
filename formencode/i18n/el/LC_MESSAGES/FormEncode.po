@@ -61,7 +61,6 @@ msgstr ""
 #: formencode/national.py:156 formencode/national.py:216
 #: formencode/national.py:251
 #, python-format
-#| msgid "Please enter a zip code (5 digits)"
 msgid "Please enter a zip code (%s)"
 msgstr "Παρακαλούμε εισάγετε έναν ταχυδρομικό κωδικό (%s)"
 
