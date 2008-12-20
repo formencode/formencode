@@ -463,7 +463,7 @@ class FillingParser(RewritingParser):
             default = self.defaults.get(self.in_select, '')
 
             if self.selected_multiple(self.defaults.get(self.in_select, ''),
-                                      self.get_attr(attrs, 'value')):
+                                      self.get_attr(attrs, 'value', '')):
                 self.set_attr(attrs, 'selected', 'selected')
                 self.add_key(self.in_select)
             else:
