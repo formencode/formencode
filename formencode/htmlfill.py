@@ -150,21 +150,23 @@ class FillingParser(RewritingParser):
         >>> parser.feed('<input type="text" name="name" value="fill">\
         ... <select name="occupation"><option value="">Default</option>\
         ... <option value="Crazy Cultist">Crazy cultist</option>\
-        ... </select> <textarea cols=20 style="width: 100%" name="address">An address\
+        ... </select> <textarea cols="20" style="width: 100%" name="address">An address\
         ... </textarea> <input type="radio" name="living" value="yes">\
         ... <input type="radio" name="living" value="no">\
         ... <input type="checkbox" name="nice_guy" checked="checked">')
-        >>> print parser.text()
+        >>> parser.close()
+        >>> print parser.text() # doctest: +NORMALIZE_WHITESPACE
         <input type="text" name="name" value="Bob Jones">
         <select name="occupation">
         <option value="">Default</option>
         <option value="Crazy Cultist" selected="selected">Crazy cultist</option>
         </select>
-        <textarea cols=20 style="width: 100%" name="address">14 W. Canal
+        <textarea cols="20" style="width: 100%" name="address">14 W. Canal
         New Guinea</textarea>
         <input type="radio" name="living" value="yes">
-        <input type="radio" name="living" value="no" selected="selected">
+        <input type="radio" name="living" value="no" checked="checked">
         <input type="checkbox" name="nice_guy">
+
     """
 
     default_encoding = 'utf8'

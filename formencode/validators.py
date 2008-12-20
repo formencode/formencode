@@ -250,10 +250,10 @@ class Wrapper(FancyValidator):
         >>> wrap3 = Wrapper(validate_python=int)
         >>> wrap3.to_python('1')
         '1'
-        >>> wrap3.to_python('a')
+        >>> wrap3.to_python('a') # doctest: +ELLIPSIS
         Traceback (most recent call last):
           ...
-        Invalid: invalid literal for int(): a
+        Invalid: invalid literal for int()...
     """
 
     func_to_python = None
