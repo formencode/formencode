@@ -3,8 +3,8 @@ News
 
 .. contents::
 
-svn trunk
----------
+1.2.1
+-----
 
 * Be more careful about ``unicode(Invalid(...))``, to make sure it
   always returns unicode.
