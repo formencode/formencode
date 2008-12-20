@@ -14,6 +14,12 @@ try:
 except:
     has_turbogears = False
 
+no_country = False
+if not (has_pycountry or has_turbogears):
+    import warnings
+    no_country = ('Please easy_install pycountry or validators handling '
+                  'country names and/or languages will not work.')
+
 ############################################################
 ## country lists and functions
 ############################################################
@@ -83,10 +89,6 @@ elif has_pycountry:
 
     def get_language(code):
         return _l(pycountry.languages.get(alpha2=code).name)
-else:
-    from warnings import warn
-    warn('Please easy_install pycountry or validators handling country names and/or languages will not work.', DeprecationWarning)
-#endif
 
 ############################################################
 ## country, state and postal code validators
@@ -153,7 +155,7 @@ class DelimitedDigitsPostalCode(Regex):
         Regex.__init__(self, *args, **kw)
 
     messages = {
-        'invalid': _('Please enter a zip code (%s)'),
+        'invalid': _('Please enter a zip code (%%s)'),
         }
 
     def _to_python(self, value, state):
@@ -326,6 +328,11 @@ class CountryValidator(FancyValidator):
     messages = {
         'valueNotFound': _("That country is not listed in ISO 3166"),
         }
+
+    def __init__(self, *args, **kw):
+        FancyValidator.__init__(self, *args, **kw)
+        if no_country:
+            warnings.warn(no_country, Warning, 2)
 
     def _to_python(self, value, state):
         upval = value.upper()
@@ -705,6 +712,11 @@ class LanguageValidator(FancyValidator):
     messages = {
         'valueNotFound': _("That language is not listed in ISO 639"),
         }
+
+    def __init__(self, *args, **kw):
+        FancyValidator.__init__(self, *args, **kw)
+        if no_country:
+            warnings.warn(no_country, Warning, 2)
 
     def _to_python(self, value, state):
         upval = value.upper()
