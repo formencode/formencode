@@ -9,6 +9,14 @@ svn trunk
 * Be more careful about ``unicode(Invalid(...))``, to make sure it
   always returns unicode.
 
+* Fix broken :mod:`formencode.national` zip code validators.
+
+* In :mod:`formencode.national` only warn about the pycountry or TG
+  requirement when creating validators that require them.
+
+* Fix another :mod:`formencode.htmlfill` error due to a field with
+  no explicit value.
+
 1.2
 ---
 
