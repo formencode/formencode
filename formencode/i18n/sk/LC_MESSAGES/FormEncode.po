@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2006-10-02 20:59+0200\n"
-"PO-Revision-Date: 2008-12-19 16:33-0800\n"
+"PO-Revision-Date: 2008-12-19 16:56-0800\n"
 "Last-Translator: Julius Minka <julius@minka.sk>\n"
 "Language-Team: sk <LL@li.org>\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
@@ -60,10 +60,10 @@ msgid "%d digits"
 msgstr ""
 
 #: formencode/national.py:158
-#, fuzzy, python-format
+#, python-format
 #| msgid "Please enter a zip code (%s)"
 msgid "Please enter a zip code (%%s)"
-msgstr "Zadajte, prosím, PSČ (%s)"
+msgstr "Zadajte, prosím, PSČ (%%s)"
 
 #: formencode/national.py:218 formencode/national.py:253
 #, python-format

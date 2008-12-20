@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: FormEncode 0.6\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2006-10-02 20:59+0200\n"
-"PO-Revision-Date: 2008-12-19 16:33-0800\n"
+"PO-Revision-Date: 2008-12-19 16:57-0800\n"
 "Last-Translator: Matej Barič <matej.baric@gmail.com>\n"
 "Language-Team: Matej Barič <matej.baric@gmail.com>\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 "
@@ -60,10 +60,10 @@ msgid "%d digits"
 msgstr ""
 
 #: formencode/national.py:158
-#, fuzzy, python-format
+#, python-format
 #| msgid "Please enter a zip code (%s)"
 msgid "Please enter a zip code (%%s)"
-msgstr "Prosim, vnesite veljaven dan (%s)"
+msgstr "Prosim, vnesite veljaven dan (%%s)"
 
 #: formencode/national.py:218 formencode/national.py:253
 #, python-format

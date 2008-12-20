@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version:  1.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2008-03-29 12:00+0200\n"
-"PO-Revision-Date: 2008-12-19 16:33-0800\n"
+"PO-Revision-Date: 2008-12-19 16:57-0800\n"
 "Last-Translator: Oktay Sancak <oktaysancak@gmail.com>\n"
 "Language-Team: Oktay Sancak <oktaysancak@gmail.com>\n"
 "Plural-Forms: nplurals=1; plural=0\n"
@@ -59,10 +59,10 @@ msgid "%d digits"
 msgstr ""
 
 #: formencode/national.py:158
-#, fuzzy, python-format
+#, python-format
 #| msgid "Please enter a zip code (%s)"
 msgid "Please enter a zip code (%%s)"
-msgstr "Lütfen bir posta kodu giriniz (%s)"
+msgstr "Lütfen bir posta kodu giriniz (%%s)"
 
 #: formencode/national.py:218 formencode/national.py:253
 #, python-format

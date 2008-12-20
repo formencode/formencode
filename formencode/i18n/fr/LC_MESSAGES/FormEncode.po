@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FormEncode 1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2008-11-05 12:01+0100\n"
-"PO-Revision-Date: 2008-12-19 16:33-0800\n"
+"PO-Revision-Date: 2008-12-19 16:54-0800\n"
 "Last-Translator: Stéphane Raimbault <stephane.raimbault@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
@@ -60,10 +60,10 @@ msgid "%d digits"
 msgstr "%d chiffres"
 
 #: formencode/national.py:158
-#, fuzzy, python-format
+#, python-format
 #| msgid "Please enter a zip code (%s)"
 msgid "Please enter a zip code (%%s)"
-msgstr "Saisissez un code postal (%s)"
+msgstr "Saisissez un code postal (%%s)"
 
 #: formencode/national.py:218 formencode/national.py:253
 #, python-format

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version:  r2591\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2006-10-02 20:59+0200\n"
-"PO-Revision-Date: 2008-12-19 16:33-0800\n"
+"PO-Revision-Date: 2008-12-19 16:55-0800\n"
 "Last-Translator: Jan-Wijbrand Kolman <jkolman@thehealthagency.com>\n"
 "Language-Team: nl <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -61,10 +61,10 @@ msgid "%d digits"
 msgstr ""
 
 #: formencode/national.py:158
-#, fuzzy, python-format
+#, python-format
 #| msgid "Please enter a zip code (%s)"
 msgid "Please enter a zip code (%%s)"
-msgstr "Voer een geldige postcode in (%s)"
+msgstr "Voer een geldige postcode in (%%s)"
 
 #: formencode/national.py:218 formencode/national.py:253
 #, python-format

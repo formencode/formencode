@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: FormEncode 0.51\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2006-10-02 20:59+0200\n"
-"PO-Revision-Date: 2008-12-19 16:33-0800\n"
+"PO-Revision-Date: 2008-12-19 16:56-0800\n"
 "Last-Translator: Pedro Algarvio <ufs@ufsoft.org>\n"
 "Language-Team: Pedro Algarvio <ufs@ufsoft.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -59,10 +59,10 @@ msgid "%d digits"
 msgstr ""
 
 #: formencode/national.py:158
-#, fuzzy, python-format
+#, python-format
 #| msgid "Please enter a zip code (%s)"
 msgid "Please enter a zip code (%%s)"
-msgstr "Por favor insira um código postal (%s)"
+msgstr "Por favor insira um código postal (%%s)"
 
 #: formencode/national.py:218 formencode/national.py:253
 #, python-format
