@@ -133,3 +133,132 @@ def test_unicode():
     assert (htmlfill.render(u'<input type="checkbox" name="tags" value="2" />',
                            dict(tags=[])) == 
             '<input type="checkbox" name="tags" value="2" />')
+
+def test_defaults_not_form_submission_textarea():
+    html = """<textarea name="textarea-1" class="my_textarea">i like this text</textarea>"""
+    rendered_html = htmlfill.render(html, defaults=dict(),
+                                    defaults_as_form_submission=False)
+    assert html == rendered_html, rendered_html
+
+def test_defaults_not_form_submission_textarea_value():
+    html = """<textarea name="textarea-1" class="my_textarea">i like this text</textarea>"""
+    expected_html = """<textarea name="textarea-1" class="my_textarea">this text is better</textarea>"""
+    rendered_html = htmlfill.render(html, defaults={"textarea-1": "this text is better"},
+                                    defaults_as_form_submission=False)
+    assert expected_html == rendered_html, rendered_html
+
+def test_defaults_as_form_submission_textarea():
+    html = """<textarea name="textarea-1" class="my_textarea">i like this text</textarea>"""
+    expected_html = \
+        """<textarea name="textarea-1" class="my_textarea"></textarea>"""
+    rendered_html = htmlfill.render(html, defaults=dict())
+    assert expected_html == rendered_html, rendered_html
+
+def test_defaults_not_form_submission_checkbox():
+    html = """<input type="checkbox" name="checkbox-1" class="my_checkbox" checked="checked" value="cb">"""
+    rendered_html = htmlfill.render(html, defaults=dict(),
+                                    defaults_as_form_submission=False)
+    assert html == rendered_html, rendered_html
+
+def test_defaults_as_form_submission_checkbox():
+    html = """<input type="checkbox" name="checkbox-1" class="my_checkbox" checked="checked" value="cb">"""
+    expected_html = \
+        """<input type="checkbox" name="checkbox-1" class="my_checkbox" value="cb">"""
+    rendered_html = htmlfill.render(html, defaults=dict())
+    assert expected_html == rendered_html, rendered_html
+
+def test_defaults_not_form_submission_checkbox_default_unchecked():
+    html = """<input type="checkbox" name="checkbox-1" class="my_checkbox" checked="checked" value="cb">"""
+    expected_html = \
+        """<input type="checkbox" name="checkbox-1" class="my_checkbox" value="cb">"""
+    rendered_html = htmlfill.render(html, defaults={"checkbox-1": False})
+    assert expected_html == rendered_html, rendered_html
+
+def test_defaults_not_form_submission_checkbox_default_checked():
+    html = """<input type="checkbox" name="checkbox-1" class="my_checkbox" value="cb">"""
+    expected_html = \
+        """<input type="checkbox" name="checkbox-1" class="my_checkbox" value="cb" checked="checked">"""
+    rendered_html = htmlfill.render(html, defaults={"checkbox-1": "cb"},
+                                    defaults_as_form_submission=False)
+    assert expected_html == rendered_html, rendered_html
+
+def test_defaults_not_form_submission_radio():
+    html = """<input type="radio" name="radio-1" class="my_radio" checked="checked" value="cb">"""
+    rendered_html = htmlfill.render(html, defaults=dict(),
+                                    defaults_as_form_submission=False)
+    assert html == rendered_html, rendered_html
+
+def test_defaults_not_form_submission_radio_unchecked():
+    html = """<input type="radio" name="radio-1" class="my_radio" checked="checked" value="cb">"""
+    expected_html = """<input type="radio" name="radio-1" class="my_radio" value="cb">"""
+    rendered_html = htmlfill.render(html, defaults={"radio-1": "ba"},
+                                    defaults_as_form_submission=False)
+    assert expected_html == rendered_html, rendered_html
+
+def test_defaults_not_form_submission_radio_checked():
+    html = """<input type="radio" name="radio-1" class="my_radio" value="cb">"""
+    expected_html = """<input type="radio" name="radio-1" class="my_radio" value="cb" checked="checked">"""
+    rendered_html = htmlfill.render(html, defaults={"radio-1": "cb"},
+                                    defaults_as_form_submission=False)
+    assert expected_html == rendered_html, rendered_html
+
+def test_defaults_as_form_submission_radio():
+    html = """<input type="radio" name="radio-1" class="my_radio" checked="checked" value="cb">"""
+    expected_html = """<input type="radio" name="radio-1" class="my_radio" value="cb">"""
+    rendered_html = htmlfill.render(html, defaults=dict())
+    assert expected_html == rendered_html, rendered_html
+
+def test_defaults_not_form_submission_select():
+    html = """
+<select name="select-1" class="my_select">
+  <option value="option-1" selected="selected">this is option-1</option>
+</select>
+"""
+    rendered_html = htmlfill.render(html, defaults=dict(),
+                                    defaults_as_form_submission=False)
+    assert html == rendered_html, rendered_html
+    
+def test_defaults_not_form_submission_select_selected():
+    html = """
+<select name="select-1" class="my_select">
+  <option value="option-1">this is option-1</option>
+</select>
+"""
+    expected_html = """
+<select name="select-1" class="my_select">
+  <option value="option-1" selected="selected">this is option-1</option>
+</select>
+"""
+    rendered_html = htmlfill.render(html, defaults={"select-1": "option-1"},
+                                    defaults_as_form_submission=False)
+    assert html == rendered_html, rendered_html
+    
+def test_defaults_not_form_submission_select_not_selected():
+    html = """
+<select name="select-1" class="my_select">
+  <option value="option-1" selected="selected">this is option-1</option>
+</select>
+"""
+    expected_html = """
+<select name="select-1" class="my_select">
+  <option value="option-1">this is option-1</option>
+</select>
+"""
+    rendered_html = htmlfill.render(html, defaults={"select-1": "option-2"},
+                                    defaults_as_form_submission=False)
+    assert html == rendered_html, rendered_html
+
+def test_defaults_as_form_submission_select():
+    html = """
+<select name="select-1" class="my_select">
+  <option value="option-1" selected="selected">this is option-1</option>
+</select>
+"""
+    expected_html = """
+<select name="select-1" class="my_select">
+  <option value="option-1">this is option-1</option>
+</select>
+"""
+    rendered_html = htmlfill.render(html, defaults=dict())
+    assert expected_html == rendered_html, rendered_html
+

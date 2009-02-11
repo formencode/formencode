@@ -37,7 +37,7 @@ return the form to the user with the values they entered, in addition
 to errors.
 
 See `formencode.htmlfill.render for more
-<module-formencode.htmlfill.html#render>`_ for more.
+<modules/htmlfill.html#formencode.htmlfill.render>`_ for more.
 
 Errors
 ------

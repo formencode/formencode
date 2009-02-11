@@ -15,7 +15,8 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
            error_formatters=None, add_attributes=None,
            auto_insert_errors=True, auto_error_formatter=None,
            text_as_default=False, listener=None, encoding=None,
-           error_class='error', prefix_error=True):
+           error_class='error', prefix_error=True,
+           force_defaults=True):
     """
     Render the ``form`` (which should be a string) given the defaults
     and errors.  Defaults are the values that go in the input fields
@@ -59,6 +60,13 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     
     ``prefix_error`` specifies if the HTML created by auto_error_formatter is
     put before the input control (default) or after the control.
+    
+    ``force_defaults`` specifies if a field default is not given in
+    the ``defaults`` dictionary then the control associated with the
+    field should be set as an unsuccessful control. So checkboxes will
+    be cleared, radio and select controls will have no value selected,
+    and textareas will be emptied. This defaults to ``True``, which is
+    appropriate the defaults are the result of a form submission.
     """
     if defaults is None:
         defaults = {}
@@ -74,6 +82,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
         listener=listener, encoding=encoding,
         prefix_error=prefix_error,
         error_class=error_class,
+        force_defaults=force_defaults,
         )
     p.feed(form)
     p.close()
@@ -175,13 +184,15 @@ class FillingParser(RewritingParser):
                  error_formatters=None, error_class='error',
                  add_attributes=None, listener=None,
                  auto_error_formatter=None,
-                 text_as_default=False, encoding=None, prefix_error=True):
+                 text_as_default=False, encoding=None, prefix_error=True,
+                 force_defaults=True):
         RewritingParser.__init__(self)
         self.source = None
         self.lines = None
         self.source_pos = None
         self.defaults = defaults
         self.in_textarea = None
+        self.skip_textarea = False
         self.last_textarea_name = None
         self.in_select = None
         self.skip_next = False        
@@ -204,7 +215,8 @@ class FillingParser(RewritingParser):
         self.text_as_default = text_as_default
         self.encoding = encoding
         self.prefix_error = prefix_error
-
+        self.force_defaults = force_defaults
+    
     def str_compare(self, str1, str2):
         """
         Compare the two objects as strings (coercing to strings if necessary).
@@ -262,7 +274,7 @@ class FillingParser(RewritingParser):
         self._text = self._get_text()
 
     def skip_output(self):
-        return self.in_textarea or self.skip_error
+        return (self.in_textarea and self.skip_textarea) or self.skip_error
 
     def add_key(self, key):
         self.used_keys[key] = 1
@@ -362,7 +374,10 @@ class FillingParser(RewritingParser):
             self.skip_next = True
             self.add_key(name)
         elif t == 'checkbox':
-            selected = False
+            if self.force_defaults:
+                selected = False
+            else:
+                selected = self.get_attr(attrs, 'checked')
             if not self.get_attr(attrs, 'value'):
                 selected = value
             elif self.selected_multiple(value,
@@ -378,7 +393,7 @@ class FillingParser(RewritingParser):
         elif t == 'radio':
             if self.str_compare(value, self.get_attr(attrs, 'value', '')):
                 self.set_attr(attrs, 'checked', 'checked')
-            else:
+            elif self.force_defaults or name in self.defaults:
                 self.del_attr(attrs, 'checked')
             self.write_tag('input', attrs, startend)
             self.skip_next = True
@@ -421,15 +436,21 @@ class FillingParser(RewritingParser):
         if (self.error_class
             and self.errors.get(name)):
             self.add_class(attrs, self.error_class)
-        self.write_tag('textarea', attrs)
         value = self.defaults.get(name, '')
-        self.write_text(html_quote(value))
-        self.write_text('</textarea>')
+        if value or self.force_defaults:
+            self.write_tag('textarea', attrs)
+            self.write_text(html_quote(value))
+            self.write_text('</textarea>')
+            self.skip_textarea = True
         self.in_textarea = True
         self.last_textarea_name = name
         self.add_key(name)
 
     def handle_end_textarea(self):
+        if self.skip_textarea:
+            self.skip_textarea = False
+        else:
+            self.write_text('</textarea>')            
         self.in_textarea = False
         self.skip_next = True
         if not self.prefix_error:
@@ -461,13 +482,13 @@ class FillingParser(RewritingParser):
             % self.getpos())
         if self.in_select != False:
             default = self.defaults.get(self.in_select, '')
-
-            if self.selected_multiple(self.defaults.get(self.in_select, ''),
-                                      self.get_attr(attrs, 'value', '')):
-                self.set_attr(attrs, 'selected', 'selected')
-                self.add_key(self.in_select)
-            else:
-                self.del_attr(attrs, 'selected')
+            if self.force_defaults:
+                if self.selected_multiple(self.defaults.get(self.in_select, ''),
+                                          self.get_attr(attrs, 'value', '')):
+                    self.set_attr(attrs, 'selected', 'selected')
+                    self.add_key(self.in_select)
+                else:
+                    self.del_attr(attrs, 'selected')
         self.write_tag('option', attrs)
         self.skip_next = True
 

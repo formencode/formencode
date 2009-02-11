@@ -3,6 +3,14 @@ News
 
 .. contents::
 
+svn trunk
+---------
+
+* Added keyword argument ``force_defaults`` to
+  :func:`formencode.htmlfill.render`; when this is True (the default)
+  this will uncheck checkboxes, unselect select boxes, etc., when a
+  value is missing from the default dictionary.  
+
 1.2.1
 -----
 
