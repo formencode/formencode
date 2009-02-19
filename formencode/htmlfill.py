@@ -401,7 +401,7 @@ class FillingParser(RewritingParser):
         elif t == 'file':
             pass # don't skip next
         elif t == 'password':
-            if not self.force_defaults:
+            if value is None and not self.force_defaults:
                 value = value or self.get_attr(attrs, 'value', '')
             self.set_attr(attrs, 'value', value)
             self.write_tag('input', attrs, startend)

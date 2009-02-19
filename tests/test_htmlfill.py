@@ -147,6 +147,13 @@ def test_not_force_defaults_text_value():
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
+def test_not_force_defaults_text_explicit_empty_value():
+    html = """<input type="text" name="text-1" class="my_text" value="i like this text" />"""
+    expected_html = """<input type="text" name="text-1" class="my_text" value="" />"""
+    rendered_html = htmlfill.render(html, defaults={"text-1": ""},
+                                    force_defaults=False)
+    assert expected_html == rendered_html, rendered_html
+
 def test_force_defaults_text():
     html = """<input type="text" name="text-1" class="my_text" value="i like this text" />"""
     expected_html = """<input type="text" name="text-1" class="my_text" value="" />"""
@@ -183,6 +190,13 @@ def test_not_force_defaults_password_value():
     html = """<input type="password" name="password-1" class="my_password" value="i like this password" />"""
     expected_html = """<input type="password" name="password-1" class="my_password" value="this password is better" />"""
     rendered_html = htmlfill.render(html, defaults={"password-1": "this password is better"},
+                                    force_defaults=False)
+    assert expected_html == rendered_html, rendered_html
+
+def test_not_force_defaults_password_explicit_empty_value():
+    html = """<input type="password" name="password-1" class="my_password" value="i like this password" />"""
+    expected_html = """<input type="password" name="password-1" class="my_password" value="" />"""
+    rendered_html = htmlfill.render(html, defaults={"password-1": ""},
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
