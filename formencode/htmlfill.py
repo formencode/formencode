@@ -367,7 +367,7 @@ class FillingParser(RewritingParser):
             and self.errors.get(self.get_attr(attrs, 'name'))):
             self.add_class(attrs, self.error_class)
         if t in ('text', 'hidden'):
-            if value is None:
+            if value is None and not self.force_defaults:
                 value = self.get_attr(attrs, 'value', '')
             self.set_attr(attrs, 'value', value)
             self.write_tag('input', attrs, startend)
@@ -401,8 +401,9 @@ class FillingParser(RewritingParser):
         elif t == 'file':
             pass # don't skip next
         elif t == 'password':
-            self.set_attr(attrs, 'value', value or
-                          self.get_attr(attrs, 'value', ''))
+            if not self.force_defaults:
+                value = value or self.get_attr(attrs, 'value', '')
+            self.set_attr(attrs, 'value', value)
             self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)

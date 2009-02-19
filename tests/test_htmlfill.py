@@ -134,6 +134,25 @@ def test_unicode():
                            dict(tags=[])) == 
             '<input type="checkbox" name="tags" value="2" />')
 
+def test_not_force_defaults_text():
+    html = """<input type="text" name="text-1" class="my_text" value="i like this text" />"""
+    rendered_html = htmlfill.render(html, defaults=dict(),
+                                    force_defaults=False)
+    assert html == rendered_html, rendered_html
+
+def test_not_force_defaults_text_value():
+    html = """<input type="text" name="text-1" class="my_text" value="i like this text" />"""
+    expected_html = """<input type="text" name="text-1" class="my_text" value="this text is better" />"""
+    rendered_html = htmlfill.render(html, defaults={"text-1": "this text is better"},
+                                    force_defaults=False)
+    assert expected_html == rendered_html, rendered_html
+
+def test_force_defaults_text():
+    html = """<input type="text" name="text-1" class="my_text" value="i like this text" />"""
+    expected_html = """<input type="text" name="text-1" class="my_text" value="" />"""
+    rendered_html = htmlfill.render(html, defaults=dict())
+    assert expected_html == rendered_html, rendered_html
+
 def test_not_force_defaults_textarea():
     html = """<textarea name="textarea-1" class="my_textarea">i like this text</textarea>"""
     rendered_html = htmlfill.render(html, defaults=dict(),
@@ -151,6 +170,25 @@ def test_force_defaults_textarea():
     html = """<textarea name="textarea-1" class="my_textarea">i like this text</textarea>"""
     expected_html = \
         """<textarea name="textarea-1" class="my_textarea"></textarea>"""
+    rendered_html = htmlfill.render(html, defaults=dict())
+    assert expected_html == rendered_html, rendered_html
+
+def test_not_force_defaults_password():
+    html = """<input type="password" name="password-1" class="my_password" value="i like this password" />"""
+    rendered_html = htmlfill.render(html, defaults=dict(),
+                                    force_defaults=False)
+    assert html == rendered_html, rendered_html
+
+def test_not_force_defaults_password_value():
+    html = """<input type="password" name="password-1" class="my_password" value="i like this password" />"""
+    expected_html = """<input type="password" name="password-1" class="my_password" value="this password is better" />"""
+    rendered_html = htmlfill.render(html, defaults={"password-1": "this password is better"},
+                                    force_defaults=False)
+    assert expected_html == rendered_html, rendered_html
+
+def test_force_defaults_password():
+    html = """<input type="password" name="password-1" class="my_password" value="i like this password" />"""
+    expected_html = """<input type="password" name="password-1" class="my_password" value="" />"""
     rendered_html = htmlfill.render(html, defaults=dict())
     assert expected_html == rendered_html, rendered_html
 
