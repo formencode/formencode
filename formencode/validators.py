@@ -23,6 +23,7 @@
 Validator/Converters for use with FormEncode.
 """
 
+import locale
 import warnings
 import re
 DateTime = None
@@ -829,8 +830,8 @@ class DateValidator(FancyValidator):
     def validate_python(self, value, state):
         date_format = self.message('date_format', state)
         if isinstance(date_format, unicode):
-            # strftime doesn't like unicode
-            encoding = 'utf8'
+            # strftime uses the locale encoding, not Unicode
+            encoding = locale.getlocale(locale.LC_TIME)[1] or 'utf-8'
             date_format = date_format.encode(encoding)
         else:
             encoding = None
