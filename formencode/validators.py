@@ -1150,6 +1150,8 @@ class UnicodeString(String):
 
     """
     encoding = 'utf-8'
+    inputEncoding = NoDefault
+    outputEncoding = NoDefault
     messages = {
         'badEncoding' : _("Invalid data or incorrect encoding"),
     }
@@ -1157,11 +1159,13 @@ class UnicodeString(String):
     def __init__(self, inputEncoding=NoDefault, outputEncoding=NoDefault, **kw):
         String.__init__(self, **kw)
         if inputEncoding is NoDefault:
-            self.inputEncoding = self.encoding
+            if self.inputEncoding is NoDefault:
+                self.inputEncoding = self.encoding
         else:
             self.inputEncoding = inputEncoding
         if outputEncoding is NoDefault:
-            self.outputEncoding = self.encoding
+            if self.outputEncoding is NoDefault:
+                self.outputEncoding = self.encoding
         else:
             self.outputEncoding = outputEncoding
 
