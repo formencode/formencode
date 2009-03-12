@@ -1135,7 +1135,10 @@ class UnicodeString(String):
     the String class.
 
     In addition to the String arguments, an encoding argument is also
-    accepted. By default the encoding will be utf-8.
+    accepted. By default the encoding will be utf-8. You can overwrite
+    this using the encoding parameter. You can also set inputEncoding
+    and outputEncoding differently. An inputEncoding of None means
+    "do not decode", an outputEncoding of None means "do not encode".
 
     All converted strings are returned as Unicode strings.
 
@@ -1156,18 +1159,12 @@ class UnicodeString(String):
         'badEncoding' : _("Invalid data or incorrect encoding"),
     }
 
-    def __init__(self, inputEncoding=NoDefault, outputEncoding=NoDefault, **kw):
+    def __init__(self, **kw):
         String.__init__(self, **kw)
-        if inputEncoding is NoDefault:
-            if self.inputEncoding is NoDefault:
-                self.inputEncoding = self.encoding
-        else:
-            self.inputEncoding = inputEncoding
-        if outputEncoding is NoDefault:
-            if self.outputEncoding is NoDefault:
-                self.outputEncoding = self.encoding
-        else:
-            self.outputEncoding = outputEncoding
+        if self.inputEncoding is NoDefault:
+            self.inputEncoding = self.encoding
+        if self.outputEncoding is NoDefault:
+            self.outputEncoding = self.encoding
 
     def _to_python(self, value, state):
         if not value:
