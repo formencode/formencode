@@ -12,6 +12,10 @@ svn trunk
 * Fixes `#2666139 DateValidator bug happening only in March under Windows in Germany :)
   <http://sourceforge.net/tracker/index.php?func=detail&aid=2666139&group_id=91231&atid=596418>`_
 
+* Don't let :class:`formencode.compound.Any` shortcut validation when
+  it gets an empty value (this same change had already been made to
+  :class:`formencode.compound.All`).
+
 * Really updated German translation
 
 1.2.2
