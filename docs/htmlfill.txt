@@ -13,11 +13,11 @@ htmlfill
 Introduction
 ============
 
-`htmlfill <module-formencode.htmlfill.html>`_ is a library to fill out
-forms, both with default values and error messages.  It's like a
-template library, but more limited, and it can be used with the output
-from other templates.  It has no prerequesites, and can be used
-without any other parts of FormEncode.
+:mod:`formencode.htmlfill` is a library to fill out forms, both with default
+values and error messages.  It's like a template library, but more
+limited, and it can be used with the output from other templates.  It
+has no prerequesites, and can be used without any other parts of
+FormEncode.
 
 Usage
 =====
@@ -36,8 +36,7 @@ use this would be with a form submission that had errors -- you can
 return the form to the user with the values they entered, in addition
 to errors.
 
-See `formencode.htmlfill.render for more
-<modules/htmlfill.html#formencode.htmlfill.render>`_ for more.
+See :func:`formencode.htmlfill.render` for more.
 
 Errors
 ------
@@ -99,5 +98,5 @@ In most cases, htmlfill tries to keep the template the way it found
 it, without reformatting it too much.  If HTMLParser_ chokes on the
 code, so will htmlfill.
 
-.. _HTMLParser: http://python.org/doc/current/lib/module-HTMLParser.html
+.. _HTMLParser: http://docs.python.org/library/htmlparser.html
 

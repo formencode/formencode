@@ -115,8 +115,7 @@ Available Validators
 
 There's lots of validators.  The best way to read about the individual
 validators available in the ``formencode.validators`` module is to
-read the `validators generated documentation
-<module-formencode.validators.html#classes>`_.
+read about :module:`formencode.validators`.
 
 Compound Validators
 -------------------
@@ -504,13 +503,13 @@ Localization of Error Messages (i18n)
 
 When a failed validation occurs FormEncode tries to output the error
 message in the appropriate language. For this it uses the standard
-`gettext <http://python.org/doc/current/lib/module-gettext.html>`_
-mechanism of python. To translate the message in the appropirate
-message FormEncode has to find a gettext function that translates the
-string. The language to be translated into and the used domain is
-determined by the found gettext function. To serve a standard
-translation mechanism and to enable custom translations it looks in
-the following order to find a gettext (``_``) function:
+`gettext <http://docs.python.org/library/gettext.html>`_ mechanism of
+python. To translate the message in the appropirate message FormEncode
+has to find a gettext function that translates the string. The
+language to be translated into and the used domain is determined by
+the found gettext function. To serve a standard translation mechanism
+and to enable custom translations it looks in the following order to
+find a gettext (``_``) function:
 
 1. method of the ``state`` object
 
@@ -577,15 +576,15 @@ And the test for your language::
 HTTP/HTML Form Input
 --------------------
 
-The validation expects nested data structures; specifically `Schema
-<class-formencode.schema.Schema.html>`_ and `ForEach
-<class-formencode.foreach.ForEach.html>`__ deal with these structures
-well.  HTML forms, however, do not produce nested structures -- they
-produce flat structures with keys (input names) and associated values.
+The validation expects nested data structures; specifically
+:class:`formencode.schema.Schema` and
+:class:`formencode.foreach.ForEach` deal with these structures well.
+HTML forms, however, do not produce nested structures -- they produce
+flat structures with keys (input names) and associated values.
 
-Validator includes the module `variabledecode
-<module-formencode.variabledecode.html>`, which allows you to encode
-nested dictionary and list structures into a flat dictionary.
+Validator includes the module :module:`formencode.variabledecode`,
+which allows you to encode nested dictionary and list structures into
+a flat dictionary.
 
 To do this it uses keys with ``"."`` for nested dictionaries, and
 ``"-int"`` for (ordered) lists.  So something like:
@@ -626,10 +625,9 @@ is associated with the key ``None``).  Lists are created with keys
 with ``'-int'``, where they are ordered by the integer (the integers
 are used for sorting, missing numbers in a sequence are ignored).
 
-`NestedVariables
-<class-formencode.variabledecode.NestedVariables.html>`_ is a
-validator that decodes and encodes dictionaries using this algorithm.
-You can use it with a Schema's `pre_validators`_ attribute.
+:class:`formencode.variabledecode.NestedVariables` is a validator that
+decodes and encodes dictionaries using this algorithm.  You can use it
+with a Schema's `pre_validators`_ attribute.
 
 Of course, in the example we use the data is rather eclectic -- for
 instance, Tim Smith doesn't have his name separated into first and

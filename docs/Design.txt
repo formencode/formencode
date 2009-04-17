@@ -24,15 +24,12 @@ Of course FormEncode works fine with such a system, but because
 nothing is done until everything validates, you can use this without
 transactions.
 
-FormEncode generally works on primitive types (though you could extend
-it to deal with your own types if you wish; `formencode.sqlschema
-<module-formencode.sqlschema.html>`_ is an example of this).  These
-are things like strings, lists, dictionaries, integers, etc.  This
-fits in with look-before-you-leap; often your domain objects won't
-exist until after you apply the user's request, so it's necessary to
-work on an early form of the data.  Also, FormEncode doesn't know
-anything about your domain objects or classes; it's just easier to
-keep it this way.
+FormEncode generally works on primitive types.  These are things like
+strings, lists, dictionaries, integers, etc.  This fits in with
+look-before-you-leap; often your domain objects won't exist until
+after you apply the user's request, so it's necessary to work on an
+early form of the data.  Also, FormEncode doesn't know anything about
+your domain objects or classes; it's just easier to keep it this way.
 
 Validation only operates on a single "value" at a time.  This is
 Python, collections are easy, and collections are themselves a single

@@ -33,12 +33,6 @@ Things To Do
 * Make ``doctest_xml_compare`` work with wildcards/ellipses.  Maybe
   with non-XHTML.
 
-* Maybe include `wareweb.packing
-  <http://pythonpaste.org/wareweb/module-wareweb.packing.html>`_,
-  which is kind like like one-way validation for really small forms.
-  A compliment/alternative to `variabledecode
-  <module-formencode.variabledecode.html>`_.
-
 * Some more ways to build validation.  Validation from docstrings or
   method signatures.
 
