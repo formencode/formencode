@@ -148,9 +148,8 @@ they'll be specific to your application::
     ...         return value
 
 .. note::
-   `formencode.FancyValidator
-   <class-formencode.api.FancyValidator.html>`__ is the superclass for
-   most validators in FormEncode, and it provides a number of useful
+   :class:`formencode.FancyValidator` is the superclass for most
+   validators in FormEncode, and it provides a number of useful
    features that most validators can use -- for instance, you can pass
    ``strip=True`` into any of these validators, and they'll strip
    whitespace from the incoming value before any other validation.
@@ -158,11 +157,10 @@ they'll be specific to your application::
 This overrides ``_to_python``: ``formencode.FancyValidator`` adds a
 number of extra features, and then calls the private ``_to_python``
 method, which is the method you'll typically write.  When a validator
-finds an error it raises an exception (`formencode.Invalid
-<class-formencode.api.Invalid.html>`_), with the error message and the
-value and "state" objects.  We'll talk about state_ later.  Here's the
-other custom validator, that checks passwords against words in the
-standard Unix word file::
+finds an error it raises an exception (:class:`formencode.Invalid`),
+with the error message and the value and "state" objects.  We'll talk
+about state_ later.  Here's the other custom validator, that checks
+passwords against words in the standard Unix word file::
 
     >>> class SecurePassword(formencode.FancyValidator):
     ...     words_filename = '/usr/share/dict/words'
@@ -199,17 +197,16 @@ get information about all of them.
 
 Most validators (anything that subclasses
 ``formencode.FancyValidator``) will take a certain standard set of
-constructor keyword arguments.  See `FancyValidator
-<class-formencode.api.FancyValidator.html>`__ for more -- here we use
+constructor keyword arguments.  See
+:class:`formencode.api.FancyValidator` for more -- here we use
 ``not_empty=True``.
 
-Another notable validator is `All
-<class-formencode.compound.All.html>`_ -- this is a *compound
-validator* -- that is, it's a validator that takes validators as
-input.  Schemas are one example; in this case ``All`` takes a list of
-validators and applies each of them in turn.  `Any
-<class-formencode.compound.Any.html>`_ is its compliment, that uses
-the first passing validator in its list.
+Another notable validator is :class:`formencode.compound.All` -- this
+is a *compound validator* -- that is, it's a validator that takes
+validators as input.  Schemas are one example; in this case ``All``
+takes a list of validators and applies each of them in turn.
+:class:`formencode.compound.Any` is its compliment, that uses the
+first passing validator in its list.
 
 .. _pre_validators:
 .. _chained_validators:
@@ -231,9 +228,9 @@ This will leave the error_dict with both password_confirm and
 email_confirm error keys, which is likely the desired behavior
 for web forms.
 
-Since a `Schema <class-formencode.schema.Schema.html>`_ is just
-another kind of validator, you can nest these indefinitely, validating
-dictionaries of dictionaries.
+Since a :class:`formencode.schema.Schema` is just another kind of
+validator, you can nest these indefinitely, validating dictionaries of
+dictionaries.
 
 .. _SimpleFormValidator:
 
@@ -270,11 +267,11 @@ possibly-invalid values gracefully.
 
 .. _ForEach:
 
-You can also validate lists of items using `ForEach
-<class-formencode.foreach.ForEach.html>`__.  For example, let's say we
-have a form where someone can edit a list of book titles.  Each title
-has an associated book ID, so we can match up the new title and the
-book it is for::
+You can also validate lists of items using
+:class:`formencode.foreach.ForEach`.  For example, let's say we have a
+form where someone can edit a list of book titles.  Each title has an
+associated book ID, so we can match up the new title and the book it
+is for::
 
     >>> class BookSchema(formencode.Schema):
     ...     id = validators.Int()
@@ -372,8 +369,8 @@ to work with, and better displays the structure.
 .. _FancyValidator:
 
 There are several options that most validators support (including your
-own validators, if you subclass from `FancyValidator
-<class-formencode.api.FancyValidator.html>`__):
+own validators, if you subclass from
+:class:`formencode.api.FancyValidator`):
     
 ``if_empty``:
       If set, then this value will be returned if the input evaluates
@@ -425,10 +422,9 @@ validator know the locale?  State!  Whatever else you need to pass in,
 just put it in the state object as an attribute, then look for that
 attribute in your validator.
 
-Also, during compound validation (a `Schema
-<class-formencode.schema.Schema.html>`_ or `ForEach
-<class-formencode.foreach.ForEach.html>`__) the state (if not None)
-will have more instance variables added to it.  During a ``Schema``
+Also, during compound validation (a :class:`formencode.schema.Schema`
+or :class:`formencode.foreach.ForEach`) the state (if not None) will
+have more instance variables added to it.  During a ``Schema``
 (dictionary) validation the instance variable ``key`` and
 ``full_dict`` will be added -- ``key`` is the current key (i.e.,
 validator name), and ``full_dict`` is the rest of the values being
@@ -438,9 +434,8 @@ validated.  During a ``ForEeach`` (list) validation, ``index`` and
 Invalid Exceptions
 ------------------
 
-Besides the string error message, `Invalid
-<class-formencode.api.Invalid.html>`_ exceptions have a few other
-instance variables:
+Besides the string error message, :class:`formencode.api.Invalid`
+exceptions have a few other instance variables:
 
 ``value``:
     The input to the validator that failed.
@@ -558,7 +553,7 @@ translation (where ``<lang>`` is you language code)::
 Then test, and send the PO and MO files to g...@gregor-horvath.com.
 
 See also `the Python internationalization documents
-<http://docs.python.org/lib/node738.html>`_.
+<http://docs.python.org/library/gettext.html>`_.
 
 Optionally you can also add a test of your language to
 ``tests/test_i18n.py``.  An Example of a language test::
