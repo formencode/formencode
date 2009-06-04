@@ -115,7 +115,7 @@ Available Validators
 
 There's lots of validators.  The best way to read about the individual
 validators available in the ``formencode.validators`` module is to
-read about :module:`formencode.validators`.
+read about :mod:`formencode.validators`.
 
 Compound Validators
 -------------------
@@ -577,7 +577,7 @@ The validation expects nested data structures; specifically
 HTML forms, however, do not produce nested structures -- they produce
 flat structures with keys (input names) and associated values.
 
-Validator includes the module :module:`formencode.variabledecode`,
+Validator includes the module :mod:`formencode.variabledecode`,
 which allows you to encode nested dictionary and list structures into
 a flat dictionary.
 
