@@ -314,3 +314,14 @@ def test_force_defaults_select():
     rendered_html = htmlfill.render(html, defaults=dict())
     assert expected_html == rendered_html, rendered_html
 
+def test_script_quoting():
+    html = """
+<script>Some <weird JS</script>
+Then a form <input type="text" name="name">
+"""
+    expected_html = """
+<script>Some <weird JS</script>
+Then a form <input type="text" name="name" value="foo">
+"""
+    rendered_html = htmlfill.render(html, defaults=dict(name="foo"))
+    assert expected_html == rendered_html, rendered_html
