@@ -18,6 +18,11 @@ svn trunk
 
 * Really updated German translation
 
+* Fixes `#2799713 force_defaults=False and <select> fields
+  <https://sourceforge.net/tracker/?func=detail&aid=2799713&group_id=91231&atid=596416>`_
+  (regarding :func:`formencode.htmlfill.render`)
+  Thanks to w31rd0 for the bug report and patch to fix it.
+
 1.2.2
 -----
 
