@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>formencode.htmlfill_schemabuilder</title>
+</head>
+<body>
+formencode.htmlfill_schemabuilder
+<style>
+.coverage pre {float: left; margin: 0px 1em; border: none;
+               padding: 0px; }
+.num pre { margin: 0px }
+.nocov, .nocov pre {background-color: #faa}
+.cov, .cov pre {background-color: #cfc}
+div.coverage div { clear: both; height: 1.1em}
+</style>
+<div class="stats">
+Covered: 78 lines<br/>
+Missed: 18 lines<br/>
+Skipped 17 lines<br/>
+Percent: 81 %<br/>
+
+</div>
+<div class="coverage">
+<div class="cov"><span class="num"><pre>  1</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre>  2</pre></span><pre>Extension to ``htmlfill`` that can parse out schema-defining</pre></div>
+<div class="cov"><span class="num"><pre>  3</pre></span><pre>statements.</pre></div>
+<div class="skip"><span class="num"><pre>  4</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>  5</pre></span><pre>You can either pass ``SchemaBuilder`` to ``htmlfill.render`` (the</pre></div>
+<div class="cov"><span class="num"><pre>  6</pre></span><pre>``listen`` argument), or call ``parse_schema`` to just parse out a</pre></div>
+<div class="cov"><span class="num"><pre>  7</pre></span><pre>``Schema`` object.</pre></div>
+<div class="cov"><span class="num"><pre>  8</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre>  9</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 10</pre></span><pre>import validators, schema, compound</pre></div>
+<div class="skip"><span class="num"><pre> 11</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 12</pre></span><pre>__all__ = ['parse_schema', 'SchemaBuilder']</pre></div>
+<div class="skip"><span class="num"><pre> 13</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 14</pre></span><pre>def parse_schema(form):</pre></div>
+<div class="cov"><span class="num"><pre> 15</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre> 16</pre></span><pre>    Given an HTML form, parse out the schema defined in it and return</pre></div>
+<div class="cov"><span class="num"><pre> 17</pre></span><pre>    that schema.</pre></div>
+<div class="cov"><span class="num"><pre> 18</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre> 19</pre></span><pre>    listener = htmlfill_schemabuilder.SchemaBuilder()</pre></div>
+<div class="nocov"><span class="num"><pre> 20</pre></span><pre>    p = htmlfill.FillingParser(</pre></div>
+<div class="nocov"><span class="num"><pre> 21</pre></span><pre>        defaults={}, listener=listener)</pre></div>
+<div class="nocov"><span class="num"><pre> 22</pre></span><pre>    p.feed(self.form)</pre></div>
+<div class="nocov"><span class="num"><pre> 23</pre></span><pre>    p.close()</pre></div>
+<div class="nocov"><span class="num"><pre> 24</pre></span><pre>    return listener.schema()</pre></div>
+<div class="skip"><span class="num"><pre> 25</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 26</pre></span><pre>default_validators = dict(</pre></div>
+<div class="cov"><span class="num"><pre> 27</pre></span><pre>    [(name.lower(), getattr(validators, name))</pre></div>
+<div class="cov"><span class="num"><pre> 28</pre></span><pre>     for name in dir(validators)])</pre></div>
+<div class="skip"><span class="num"><pre> 29</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 30</pre></span><pre>def get_messages(cls, message):</pre></div>
+<div class="cov"><span class="num"><pre> 31</pre></span><pre>    if not message:</pre></div>
+<div class="cov"><span class="num"><pre> 32</pre></span><pre>        return {}</pre></div>
+<div class="cov"><span class="num"><pre> 33</pre></span><pre>    else:</pre></div>
+<div class="cov"><span class="num"><pre> 34</pre></span><pre>        return dict([(k, message) for k in cls._messages.keys()])</pre></div>
+<div class="skip"><span class="num"><pre> 35</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 36</pre></span><pre>def to_bool(value):</pre></div>
+<div class="cov"><span class="num"><pre> 37</pre></span><pre>    value = value.strip().lower()</pre></div>
+<div class="cov"><span class="num"><pre> 38</pre></span><pre>    if value in ('true', 't', 'yes', 'y', 'on', '1'):</pre></div>
+<div class="cov"><span class="num"><pre> 39</pre></span><pre>        return True</pre></div>
+<div class="cov"><span class="num"><pre> 40</pre></span><pre>    elif value in ('false', 'f', 'no', 'n', 'off', '0'):</pre></div>
+<div class="cov"><span class="num"><pre> 41</pre></span><pre>        return False</pre></div>
+<div class="nocov"><span class="num"><pre> 42</pre></span><pre>    else:</pre></div>
+<div class="nocov"><span class="num"><pre> 43</pre></span><pre>        raise ValueError(&quot;Not a boolean value: %r (use 'true'/'false')&quot;)</pre></div>
+<div class="skip"><span class="num"><pre> 44</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 45</pre></span><pre>def force_list(v):</pre></div>
+<div class="cov"><span class="num"><pre> 46</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre> 47</pre></span><pre>    Force single items into a list. This is useful for checkboxes.</pre></div>
+<div class="cov"><span class="num"><pre> 48</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre> 49</pre></span><pre>    if isinstance(v, list):</pre></div>
+<div class="nocov"><span class="num"><pre> 50</pre></span><pre>        return v</pre></div>
+<div class="nocov"><span class="num"><pre> 51</pre></span><pre>    elif isinstance(v, tuple):</pre></div>
+<div class="nocov"><span class="num"><pre> 52</pre></span><pre>        return list(v)</pre></div>
+<div class="nocov"><span class="num"><pre> 53</pre></span><pre>    else:</pre></div>
+<div class="nocov"><span class="num"><pre> 54</pre></span><pre>        return [v]</pre></div>
+<div class="skip"><span class="num"><pre> 55</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 56</pre></span><pre>class SchemaBuilder(object):</pre></div>
+<div class="skip"><span class="num"><pre> 57</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 58</pre></span><pre>    def __init__(self, validators=default_validators):</pre></div>
+<div class="cov"><span class="num"><pre> 59</pre></span><pre>        self.validators = validators</pre></div>
+<div class="cov"><span class="num"><pre> 60</pre></span><pre>        self._schema = None</pre></div>
+<div class="skip"><span class="num"><pre> 61</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 62</pre></span><pre>    def reset(self):</pre></div>
+<div class="cov"><span class="num"><pre> 63</pre></span><pre>        self._schema = schema.Schema()</pre></div>
+<div class="skip"><span class="num"><pre> 64</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 65</pre></span><pre>    def schema(self):</pre></div>
+<div class="cov"><span class="num"><pre> 66</pre></span><pre>        return self._schema</pre></div>
+<div class="skip"><span class="num"><pre> 67</pre></span><pre>        </pre></div>
+<div class="cov"><span class="num"><pre> 68</pre></span><pre>    def listen_input(self, parser, tag, attrs):</pre></div>
+<div class="cov"><span class="num"><pre> 69</pre></span><pre>        get_attr = parser.get_attr</pre></div>
+<div class="cov"><span class="num"><pre> 70</pre></span><pre>        name = get_attr(attrs, 'name')</pre></div>
+<div class="cov"><span class="num"><pre> 71</pre></span><pre>        if not name:</pre></div>
+<div class="skip"><span class="num"><pre> 72</pre></span><pre>            # @@: should warn if you try to validate unnamed fields</pre></div>
+<div class="nocov"><span class="num"><pre> 73</pre></span><pre>            return</pre></div>
+<div class="cov"><span class="num"><pre> 74</pre></span><pre>        v = compound.All(validators.Identity())</pre></div>
+<div class="cov"><span class="num"><pre> 75</pre></span><pre>        add_to_end = None</pre></div>
+<div class="skip"><span class="num"><pre> 76</pre></span><pre>        # for checkboxes, we must set if_missing = False</pre></div>
+<div class="cov"><span class="num"><pre> 77</pre></span><pre>        if tag.lower() == &quot;input&quot;:</pre></div>
+<div class="cov"><span class="num"><pre> 78</pre></span><pre>            type_attr = get_attr(attrs, &quot;type&quot;).lower().strip()</pre></div>
+<div class="cov"><span class="num"><pre> 79</pre></span><pre>            if type_attr == &quot;submit&quot;:</pre></div>
+<div class="cov"><span class="num"><pre> 80</pre></span><pre>                v.validators.append(validators.Bool())</pre></div>
+<div class="cov"><span class="num"><pre> 81</pre></span><pre>            elif type_attr == &quot;checkbox&quot;:</pre></div>
+<div class="cov"><span class="num"><pre> 82</pre></span><pre>                v.validators.append(validators.Wrapper(to_python = force_list))</pre></div>
+<div class="cov"><span class="num"><pre> 83</pre></span><pre>            elif type_attr == &quot;file&quot;:</pre></div>
+<div class="nocov"><span class="num"><pre> 84</pre></span><pre>                add_to_end = validators.FieldStorageUploadConverter()</pre></div>
+<div class="cov"><span class="num"><pre> 85</pre></span><pre>        message = get_attr(attrs, 'form:message')</pre></div>
+<div class="cov"><span class="num"><pre> 86</pre></span><pre>        required = to_bool(get_attr(attrs, 'form:required', 'false'))</pre></div>
+<div class="cov"><span class="num"><pre> 87</pre></span><pre>        if required:</pre></div>
+<div class="cov"><span class="num"><pre> 88</pre></span><pre>            v.validators.append(</pre></div>
+<div class="cov"><span class="num"><pre> 89</pre></span><pre>                validators.NotEmpty(</pre></div>
+<div class="cov"><span class="num"><pre> 90</pre></span><pre>                messages=get_messages(validators.NotEmpty, message)))</pre></div>
+<div class="cov"><span class="num"><pre> 91</pre></span><pre>        else:</pre></div>
+<div class="cov"><span class="num"><pre> 92</pre></span><pre>            v.validators[0].if_missing = False</pre></div>
+<div class="cov"><span class="num"><pre> 93</pre></span><pre>        if add_to_end:</pre></div>
+<div class="nocov"><span class="num"><pre> 94</pre></span><pre>            v.validators.append(add_to_end)</pre></div>
+<div class="cov"><span class="num"><pre> 95</pre></span><pre>        v_type = get_attr(attrs, 'form:validate', None)</pre></div>
+<div class="cov"><span class="num"><pre> 96</pre></span><pre>        if v_type:</pre></div>
+<div class="cov"><span class="num"><pre> 97</pre></span><pre>            pos = v_type.find(':')</pre></div>
+<div class="cov"><span class="num"><pre> 98</pre></span><pre>            if pos != -1:</pre></div>
+<div class="skip"><span class="num"><pre> 99</pre></span><pre>                # @@: should parse args</pre></div>
+<div class="cov"><span class="num"><pre>100</pre></span><pre>                args = (v_type[pos+1:],)</pre></div>
+<div class="cov"><span class="num"><pre>101</pre></span><pre>                v_type = v_type[:pos]</pre></div>
+<div class="cov"><span class="num"><pre>102</pre></span><pre>            else:</pre></div>
+<div class="cov"><span class="num"><pre>103</pre></span><pre>                args = ()</pre></div>
+<div class="cov"><span class="num"><pre>104</pre></span><pre>            v_type = v_type.lower()</pre></div>
+<div class="cov"><span class="num"><pre>105</pre></span><pre>            v_class = self.validators.get(v_type)</pre></div>
+<div class="cov"><span class="num"><pre>106</pre></span><pre>            if not v_class:</pre></div>
+<div class="nocov"><span class="num"><pre>107</pre></span><pre>                raise ValueError(&quot;Invalid validation type: %r&quot; % v_type)</pre></div>
+<div class="cov"><span class="num"><pre>108</pre></span><pre>            kw_args={'messages': get_messages(v_class, message)}</pre></div>
+<div class="cov"><span class="num"><pre>109</pre></span><pre>            v_inst = v_class(</pre></div>
+<div class="cov"><span class="num"><pre>110</pre></span><pre>                *args, **kw_args)</pre></div>
+<div class="cov"><span class="num"><pre>111</pre></span><pre>            v.validators.append(v_inst)</pre></div>
+<div class="cov"><span class="num"><pre>112</pre></span><pre>        self._schema.add_field(name, v)</pre></div>
+<div class="skip"><span class="num"><pre>113</pre></span><pre></pre></div>
+</div>
+</body>
+</html>

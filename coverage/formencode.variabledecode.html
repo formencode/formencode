@@ -1,0 +1,173 @@
+<html>
+<head>
+<title>formencode.variabledecode</title>
+</head>
+<body>
+formencode.variabledecode
+<style>
+.coverage pre {float: left; margin: 0px 1em; border: none;
+               padding: 0px; }
+.num pre { margin: 0px }
+.nocov, .nocov pre {background-color: #faa}
+.cov, .cov pre {background-color: #cfc}
+div.coverage div { clear: both; height: 1.1em}
+</style>
+<div class="stats">
+Covered: 66 lines<br/>
+Missed: 67 lines<br/>
+Skipped 15 lines<br/>
+Percent: 49 %<br/>
+
+</div>
+<div class="coverage">
+<div class="cov"><span class="num"><pre>  1</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre>  2</pre></span><pre>Takes GET/POST variable dictionary, as might be returned by ``cgi``,</pre></div>
+<div class="cov"><span class="num"><pre>  3</pre></span><pre>and turns them into lists and dictionaries.</pre></div>
+<div class="skip"><span class="num"><pre>  4</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>  5</pre></span><pre>Keys (variable names) can have subkeys, with a ``.`` and</pre></div>
+<div class="cov"><span class="num"><pre>  6</pre></span><pre>can be numbered with ``-``, like ``a.b-3=something`` means that</pre></div>
+<div class="cov"><span class="num"><pre>  7</pre></span><pre>the value ``a`` is a dictionary with a key ``b``, and ``b``</pre></div>
+<div class="cov"><span class="num"><pre>  8</pre></span><pre>is a list, the third(-ish) element with the value ``something``.</pre></div>
+<div class="cov"><span class="num"><pre>  9</pre></span><pre>Numbers are used to sort, missing numbers are ignored.</pre></div>
+<div class="skip"><span class="num"><pre> 10</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 11</pre></span><pre>This doesn't deal with multiple keys, like in a query string of</pre></div>
+<div class="cov"><span class="num"><pre> 12</pre></span><pre>``id=10&amp;id=20``, which returns something like ``{'id': ['10',</pre></div>
+<div class="cov"><span class="num"><pre> 13</pre></span><pre>'20']}``.  That's left to someplace else to interpret.  If you want to</pre></div>
+<div class="cov"><span class="num"><pre> 14</pre></span><pre>represent lists in this model, you use indexes, and the lists are</pre></div>
+<div class="cov"><span class="num"><pre> 15</pre></span><pre>explicitly ordered.</pre></div>
+<div class="skip"><span class="num"><pre> 16</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 17</pre></span><pre>If you want to change the character that determines when to split for</pre></div>
+<div class="cov"><span class="num"><pre> 18</pre></span><pre>a dict or list, both variable_decode and variable_encode take dict_char</pre></div>
+<div class="cov"><span class="num"><pre> 19</pre></span><pre>and list_char keyword args. For example, to have the GET/POST variables,</pre></div>
+<div class="cov"><span class="num"><pre> 20</pre></span><pre>``a_1=something`` as a list, you would use a list_char='_'.</pre></div>
+<div class="cov"><span class="num"><pre> 21</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre> 22</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 23</pre></span><pre>import api</pre></div>
+<div class="skip"><span class="num"><pre> 24</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 25</pre></span><pre>__all__ = ['variable_decode', 'variable_encode', 'NestedVariables']</pre></div>
+<div class="skip"><span class="num"><pre> 26</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 27</pre></span><pre>def variable_decode(d, dict_char='.', list_char='-'):</pre></div>
+<div class="nocov"><span class="num"><pre> 28</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre> 29</pre></span><pre>    Decodes the flat dictionary d into a nested structure.</pre></div>
+<div class="nocov"><span class="num"><pre> 30</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre> 31</pre></span><pre>    result = {}</pre></div>
+<div class="cov"><span class="num"><pre> 32</pre></span><pre>    dicts_to_sort = {}</pre></div>
+<div class="cov"><span class="num"><pre> 33</pre></span><pre>    known_lengths = {}</pre></div>
+<div class="cov"><span class="num"><pre> 34</pre></span><pre>    for key, value in d.items():</pre></div>
+<div class="cov"><span class="num"><pre> 35</pre></span><pre>        keys = key.split(dict_char)</pre></div>
+<div class="cov"><span class="num"><pre> 36</pre></span><pre>        new_keys = []</pre></div>
+<div class="cov"><span class="num"><pre> 37</pre></span><pre>        was_repetition_count = False</pre></div>
+<div class="cov"><span class="num"><pre> 38</pre></span><pre>        for key in keys:</pre></div>
+<div class="cov"><span class="num"><pre> 39</pre></span><pre>            if key.endswith('--repetitions'):</pre></div>
+<div class="nocov"><span class="num"><pre> 40</pre></span><pre>                key = key[:-len('--repetitions')]</pre></div>
+<div class="nocov"><span class="num"><pre> 41</pre></span><pre>                new_keys.append(key)</pre></div>
+<div class="nocov"><span class="num"><pre> 42</pre></span><pre>                known_lengths[tuple(new_keys)] = int(value)</pre></div>
+<div class="nocov"><span class="num"><pre> 43</pre></span><pre>                was_repetition_count = True</pre></div>
+<div class="nocov"><span class="num"><pre> 44</pre></span><pre>                break</pre></div>
+<div class="cov"><span class="num"><pre> 45</pre></span><pre>            elif list_char in key:</pre></div>
+<div class="cov"><span class="num"><pre> 46</pre></span><pre>                key, index = key.split(list_char)</pre></div>
+<div class="cov"><span class="num"><pre> 47</pre></span><pre>                new_keys.append(key)</pre></div>
+<div class="cov"><span class="num"><pre> 48</pre></span><pre>                dicts_to_sort[tuple(new_keys)] = 1</pre></div>
+<div class="cov"><span class="num"><pre> 49</pre></span><pre>                new_keys.append(int(index))</pre></div>
+<div class="cov"><span class="num"><pre> 50</pre></span><pre>            else:</pre></div>
+<div class="cov"><span class="num"><pre> 51</pre></span><pre>                new_keys.append(key)</pre></div>
+<div class="cov"><span class="num"><pre> 52</pre></span><pre>        if was_repetition_count:</pre></div>
+<div class="nocov"><span class="num"><pre> 53</pre></span><pre>            continue</pre></div>
+<div class="skip"><span class="num"><pre> 54</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 55</pre></span><pre>        place = result</pre></div>
+<div class="cov"><span class="num"><pre> 56</pre></span><pre>        for i in range(len(new_keys)-1):</pre></div>
+<div class="cov"><span class="num"><pre> 57</pre></span><pre>            try:</pre></div>
+<div class="cov"><span class="num"><pre> 58</pre></span><pre>                if not isinstance(place[new_keys[i]], dict):</pre></div>
+<div class="nocov"><span class="num"><pre> 59</pre></span><pre>                    place[new_keys[i]] = {None: place[new_keys[i]]}</pre></div>
+<div class="cov"><span class="num"><pre> 60</pre></span><pre>                place = place[new_keys[i]]</pre></div>
+<div class="cov"><span class="num"><pre> 61</pre></span><pre>            except KeyError:</pre></div>
+<div class="cov"><span class="num"><pre> 62</pre></span><pre>                place[new_keys[i]] = {}</pre></div>
+<div class="cov"><span class="num"><pre> 63</pre></span><pre>                place = place[new_keys[i]]</pre></div>
+<div class="cov"><span class="num"><pre> 64</pre></span><pre>        if place.has_key(new_keys[-1]):</pre></div>
+<div class="nocov"><span class="num"><pre> 65</pre></span><pre>            if isinstance(place[new_keys[-1]], dict):</pre></div>
+<div class="nocov"><span class="num"><pre> 66</pre></span><pre>                place[new_keys[-1]][None] = value</pre></div>
+<div class="nocov"><span class="num"><pre> 67</pre></span><pre>            elif isinstance(place[new_keys[-1]], list):</pre></div>
+<div class="nocov"><span class="num"><pre> 68</pre></span><pre>                if isinstance(value, list):</pre></div>
+<div class="nocov"><span class="num"><pre> 69</pre></span><pre>                    place[new_keys[-1]].extend(value)</pre></div>
+<div class="nocov"><span class="num"><pre> 70</pre></span><pre>                else:</pre></div>
+<div class="nocov"><span class="num"><pre> 71</pre></span><pre>                    place[new_keys[-1]].append(value)</pre></div>
+<div class="nocov"><span class="num"><pre> 72</pre></span><pre>            else:</pre></div>
+<div class="nocov"><span class="num"><pre> 73</pre></span><pre>                if isinstance(value, list):</pre></div>
+<div class="nocov"><span class="num"><pre> 74</pre></span><pre>                    place[new_keys[-1]] = [place[new_keys[-1]]]</pre></div>
+<div class="nocov"><span class="num"><pre> 75</pre></span><pre>                    place[new_keys[-1]].extend(value)</pre></div>
+<div class="nocov"><span class="num"><pre> 76</pre></span><pre>                else:</pre></div>
+<div class="nocov"><span class="num"><pre> 77</pre></span><pre>                    place[new_keys[-1]] = [place[new_keys[-1]], value]</pre></div>
+<div class="cov"><span class="num"><pre> 78</pre></span><pre>        else:</pre></div>
+<div class="cov"><span class="num"><pre> 79</pre></span><pre>            place[new_keys[-1]] = value</pre></div>
+<div class="skip"><span class="num"><pre> 80</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 81</pre></span><pre>    to_sort_keys = dicts_to_sort.keys()</pre></div>
+<div class="cov"><span class="num"><pre> 82</pre></span><pre>    to_sort_keys.sort(lambda a, b: -cmp(len(a), len(b)))</pre></div>
+<div class="cov"><span class="num"><pre> 83</pre></span><pre>    for key in to_sort_keys:</pre></div>
+<div class="cov"><span class="num"><pre> 84</pre></span><pre>        to_sort = result</pre></div>
+<div class="cov"><span class="num"><pre> 85</pre></span><pre>        source = None</pre></div>
+<div class="cov"><span class="num"><pre> 86</pre></span><pre>        last_key = None</pre></div>
+<div class="cov"><span class="num"><pre> 87</pre></span><pre>        for sub_key in key:</pre></div>
+<div class="cov"><span class="num"><pre> 88</pre></span><pre>            source = to_sort</pre></div>
+<div class="cov"><span class="num"><pre> 89</pre></span><pre>            last_key = sub_key</pre></div>
+<div class="cov"><span class="num"><pre> 90</pre></span><pre>            to_sort = to_sort[sub_key]</pre></div>
+<div class="cov"><span class="num"><pre> 91</pre></span><pre>        if to_sort.has_key(None):</pre></div>
+<div class="nocov"><span class="num"><pre> 92</pre></span><pre>            noneVals = [(0, x) for x in to_sort[None]]</pre></div>
+<div class="nocov"><span class="num"><pre> 93</pre></span><pre>            del to_sort[None]</pre></div>
+<div class="nocov"><span class="num"><pre> 94</pre></span><pre>            noneVals.extend(to_sort.items())</pre></div>
+<div class="nocov"><span class="num"><pre> 95</pre></span><pre>            to_sort = noneVals</pre></div>
+<div class="cov"><span class="num"><pre> 96</pre></span><pre>        else:</pre></div>
+<div class="cov"><span class="num"><pre> 97</pre></span><pre>            to_sort = to_sort.items()</pre></div>
+<div class="cov"><span class="num"><pre> 98</pre></span><pre>        to_sort.sort()</pre></div>
+<div class="cov"><span class="num"><pre> 99</pre></span><pre>        to_sort = [v for k, v in to_sort]</pre></div>
+<div class="cov"><span class="num"><pre>100</pre></span><pre>        if known_lengths.has_key(key):</pre></div>
+<div class="nocov"><span class="num"><pre>101</pre></span><pre>            if len(to_sort) &lt; known_lengths[key]:</pre></div>
+<div class="nocov"><span class="num"><pre>102</pre></span><pre>                to_sort.extend(['']*(known_lengths[key] - len(to_sort)))</pre></div>
+<div class="cov"><span class="num"><pre>103</pre></span><pre>        source[last_key] = to_sort</pre></div>
+<div class="skip"><span class="num"><pre>104</pre></span><pre>        </pre></div>
+<div class="cov"><span class="num"><pre>105</pre></span><pre>    return result</pre></div>
+<div class="skip"><span class="num"><pre>106</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>107</pre></span><pre>def variable_encode(d, prepend='', result=None, add_repetitions=True,</pre></div>
+<div class="nocov"><span class="num"><pre>108</pre></span><pre>                    dict_char='.', list_char='-'):</pre></div>
+<div class="nocov"><span class="num"><pre>109</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>110</pre></span><pre>    Encodes a nested structure into a flat dictionary.</pre></div>
+<div class="nocov"><span class="num"><pre>111</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>112</pre></span><pre>    if result is None:</pre></div>
+<div class="nocov"><span class="num"><pre>113</pre></span><pre>        result = {}</pre></div>
+<div class="nocov"><span class="num"><pre>114</pre></span><pre>    if isinstance(d, dict):</pre></div>
+<div class="nocov"><span class="num"><pre>115</pre></span><pre>        for key, value in d.items():</pre></div>
+<div class="nocov"><span class="num"><pre>116</pre></span><pre>            if key is None:</pre></div>
+<div class="nocov"><span class="num"><pre>117</pre></span><pre>                name = prepend</pre></div>
+<div class="nocov"><span class="num"><pre>118</pre></span><pre>            elif not prepend:</pre></div>
+<div class="nocov"><span class="num"><pre>119</pre></span><pre>                name = key</pre></div>
+<div class="nocov"><span class="num"><pre>120</pre></span><pre>            else:</pre></div>
+<div class="nocov"><span class="num"><pre>121</pre></span><pre>                name = &quot;%s%s%s&quot; % (prepend, dict_char, key)</pre></div>
+<div class="nocov"><span class="num"><pre>122</pre></span><pre>            variable_encode(value, name, result, add_repetitions,</pre></div>
+<div class="nocov"><span class="num"><pre>123</pre></span><pre>                            dict_char=dict_char, list_char=list_char)</pre></div>
+<div class="nocov"><span class="num"><pre>124</pre></span><pre>    elif isinstance(d, list):</pre></div>
+<div class="nocov"><span class="num"><pre>125</pre></span><pre>        for i in range(len(d)):</pre></div>
+<div class="nocov"><span class="num"><pre>126</pre></span><pre>            variable_encode(d[i], &quot;%s%s%i&quot; % (prepend, list_char, i), result,</pre></div>
+<div class="nocov"><span class="num"><pre>127</pre></span><pre>                            add_repetitions, dict_char=dict_char, list_char=list_char)</pre></div>
+<div class="nocov"><span class="num"><pre>128</pre></span><pre>        if add_repetitions:</pre></div>
+<div class="nocov"><span class="num"><pre>129</pre></span><pre>            if prepend:</pre></div>
+<div class="nocov"><span class="num"><pre>130</pre></span><pre>                repName = '%s--repetitions' % prepend</pre></div>
+<div class="nocov"><span class="num"><pre>131</pre></span><pre>            else:</pre></div>
+<div class="nocov"><span class="num"><pre>132</pre></span><pre>                repName = '__repetitions__'</pre></div>
+<div class="nocov"><span class="num"><pre>133</pre></span><pre>            result[repName] = str(len(d))</pre></div>
+<div class="nocov"><span class="num"><pre>134</pre></span><pre>    else:</pre></div>
+<div class="nocov"><span class="num"><pre>135</pre></span><pre>        result[prepend] = d</pre></div>
+<div class="nocov"><span class="num"><pre>136</pre></span><pre>    return result</pre></div>
+<div class="skip"><span class="num"><pre>137</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>138</pre></span><pre>class NestedVariables(api.FancyValidator):</pre></div>
+<div class="skip"><span class="num"><pre>139</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>140</pre></span><pre>    def _to_python(self, value, state):</pre></div>
+<div class="cov"><span class="num"><pre>141</pre></span><pre>        return variable_decode(value)</pre></div>
+<div class="skip"><span class="num"><pre>142</pre></span><pre>    </pre></div>
+<div class="nocov"><span class="num"><pre>143</pre></span><pre>    def _from_python(self, value, state):</pre></div>
+<div class="nocov"><span class="num"><pre>144</pre></span><pre>        return variable_encode(value)</pre></div>
+<div class="skip"><span class="num"><pre>145</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>146</pre></span><pre>    def empty_value(self, value):</pre></div>
+<div class="cov"><span class="num"><pre>147</pre></span><pre>        return {}</pre></div>
+<div class="skip"><span class="num"><pre>148</pre></span><pre></pre></div>
+</div>
+</body>
+</html>

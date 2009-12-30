@@ -1,0 +1,102 @@
+<html>
+<head>
+<title>formencode.htmlrename</title>
+</head>
+<body>
+formencode.htmlrename
+<style>
+.coverage pre {float: left; margin: 0px 1em; border: none;
+               padding: 0px; }
+.num pre { margin: 0px }
+.nocov, .nocov pre {background-color: #faa}
+.cov, .cov pre {background-color: #cfc}
+div.coverage div { clear: both; height: 1.1em}
+</style>
+<div class="stats">
+Covered: 55 lines<br/>
+Missed: 8 lines<br/>
+Skipped 14 lines<br/>
+Percent: 87 %<br/>
+
+</div>
+<div class="coverage">
+<div class="cov"><span class="num"><pre> 1</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre> 2</pre></span><pre>Module to rename form fields</pre></div>
+<div class="cov"><span class="num"><pre> 3</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre> 4</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 5</pre></span><pre>import HTMLParser</pre></div>
+<div class="cov"><span class="num"><pre> 6</pre></span><pre>from formencode.rewritingparser import RewritingParser</pre></div>
+<div class="skip"><span class="num"><pre> 7</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 8</pre></span><pre>__all__ = ['rename', 'add_prefix']</pre></div>
+<div class="skip"><span class="num"><pre> 9</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>10</pre></span><pre>def rename(form, rename_func):</pre></div>
+<div class="cov"><span class="num"><pre>11</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre>12</pre></span><pre>    Rename all the form fields in the form (a string), using rename_func</pre></div>
+<div class="skip"><span class="num"><pre>13</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>14</pre></span><pre>    rename_func will be called with one argument, the name of the</pre></div>
+<div class="cov"><span class="num"><pre>15</pre></span><pre>    field, and should return a new name.</pre></div>
+<div class="cov"><span class="num"><pre>16</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre>17</pre></span><pre>    p = RenamingParser(rename_func)</pre></div>
+<div class="cov"><span class="num"><pre>18</pre></span><pre>    p.feed(form)</pre></div>
+<div class="cov"><span class="num"><pre>19</pre></span><pre>    p.close()</pre></div>
+<div class="cov"><span class="num"><pre>20</pre></span><pre>    return p.text()</pre></div>
+<div class="skip"><span class="num"><pre>21</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>22</pre></span><pre>def add_prefix(form, prefix, dotted=False):</pre></div>
+<div class="cov"><span class="num"><pre>23</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre>24</pre></span><pre>    Add the given prefix to all the fields in the form.</pre></div>
+<div class="skip"><span class="num"><pre>25</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>26</pre></span><pre>    If dotted is true, then add a dot between prefix and the previous</pre></div>
+<div class="cov"><span class="num"><pre>27</pre></span><pre>    name.  Empty fields will use the prefix as the name (with no dot).</pre></div>
+<div class="cov"><span class="num"><pre>28</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre>29</pre></span><pre>    def rename_func(field_name):</pre></div>
+<div class="cov"><span class="num"><pre>30</pre></span><pre>        if dotted:</pre></div>
+<div class="cov"><span class="num"><pre>31</pre></span><pre>            if field_name:</pre></div>
+<div class="cov"><span class="num"><pre>32</pre></span><pre>                return prefix + '.' + field_name</pre></div>
+<div class="cov"><span class="num"><pre>33</pre></span><pre>            else:</pre></div>
+<div class="cov"><span class="num"><pre>34</pre></span><pre>                return prefix</pre></div>
+<div class="cov"><span class="num"><pre>35</pre></span><pre>        else:</pre></div>
+<div class="cov"><span class="num"><pre>36</pre></span><pre>            return prefix + field_name</pre></div>
+<div class="cov"><span class="num"><pre>37</pre></span><pre>    return rename(form, rename_func)</pre></div>
+<div class="skip"><span class="num"><pre>38</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>39</pre></span><pre>class RenamingParser(RewritingParser):</pre></div>
+<div class="skip"><span class="num"><pre>40</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>41</pre></span><pre>    def __init__(self, rename_func):</pre></div>
+<div class="cov"><span class="num"><pre>42</pre></span><pre>        RewritingParser.__init__(self)</pre></div>
+<div class="cov"><span class="num"><pre>43</pre></span><pre>        self.rename_func = rename_func</pre></div>
+<div class="skip"><span class="num"><pre>44</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>45</pre></span><pre>    def close(self):</pre></div>
+<div class="cov"><span class="num"><pre>46</pre></span><pre>        self.handle_misc(None)</pre></div>
+<div class="cov"><span class="num"><pre>47</pre></span><pre>        RewritingParser.close(self)</pre></div>
+<div class="cov"><span class="num"><pre>48</pre></span><pre>        self._text = self._get_text()</pre></div>
+<div class="skip"><span class="num"><pre>49</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>50</pre></span><pre>    def text(self):</pre></div>
+<div class="cov"><span class="num"><pre>51</pre></span><pre>        try:</pre></div>
+<div class="cov"><span class="num"><pre>52</pre></span><pre>            return self._text</pre></div>
+<div class="nocov"><span class="num"><pre>53</pre></span><pre>        except AttributeError:</pre></div>
+<div class="nocov"><span class="num"><pre>54</pre></span><pre>            raise Exception(</pre></div>
+<div class="nocov"><span class="num"><pre>55</pre></span><pre>                &quot;You must .close() a parser instance before getting &quot;</pre></div>
+<div class="nocov"><span class="num"><pre>56</pre></span><pre>                &quot;the text from it&quot;)</pre></div>
+<div class="skip"><span class="num"><pre>57</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>58</pre></span><pre>    def handle_starttag(self, tag, attrs, startend=False):</pre></div>
+<div class="cov"><span class="num"><pre>59</pre></span><pre>        self.write_pos()</pre></div>
+<div class="cov"><span class="num"><pre>60</pre></span><pre>        if tag in ('input', 'textarea', 'select'):</pre></div>
+<div class="cov"><span class="num"><pre>61</pre></span><pre>            self.handle_field(tag, attrs, startend)</pre></div>
+<div class="nocov"><span class="num"><pre>62</pre></span><pre>        else:</pre></div>
+<div class="nocov"><span class="num"><pre>63</pre></span><pre>            return</pre></div>
+<div class="skip"><span class="num"><pre>64</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>65</pre></span><pre>    def handle_startendtag(self, tag, attrs):</pre></div>
+<div class="nocov"><span class="num"><pre>66</pre></span><pre>        return self.handle_starttag(tag, attrs, True)</pre></div>
+<div class="skip"><span class="num"><pre>67</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>68</pre></span><pre>    def handle_field(self, tag, attrs, startend):</pre></div>
+<div class="cov"><span class="num"><pre>69</pre></span><pre>        name = self.get_attr(attrs, 'name', '')</pre></div>
+<div class="cov"><span class="num"><pre>70</pre></span><pre>        new_name = self.rename_func(name)</pre></div>
+<div class="cov"><span class="num"><pre>71</pre></span><pre>        if name is None:</pre></div>
+<div class="nocov"><span class="num"><pre>72</pre></span><pre>            self.del_attr(attrs, 'name')</pre></div>
+<div class="cov"><span class="num"><pre>73</pre></span><pre>        else:</pre></div>
+<div class="cov"><span class="num"><pre>74</pre></span><pre>            self.set_attr(attrs, 'name', new_name)</pre></div>
+<div class="cov"><span class="num"><pre>75</pre></span><pre>        self.write_tag(tag, attrs)</pre></div>
+<div class="cov"><span class="num"><pre>76</pre></span><pre>        self.skip_next = True</pre></div>
+<div class="skip"><span class="num"><pre>77</pre></span><pre></pre></div>
+</div>
+</body>
+</html>

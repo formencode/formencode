@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>formencode.interfaces</title>
+</head>
+<body>
+formencode.interfaces
+<style>
+.coverage pre {float: left; margin: 0px 1em; border: none;
+               padding: 0px; }
+.num pre { margin: 0px }
+.nocov, .nocov pre {background-color: #faa}
+.cov, .cov pre {background-color: #cfc}
+div.coverage div { clear: both; height: 1.1em}
+</style>
+<div class="stats">
+Covered: 3 lines<br/>
+Missed: 50 lines<br/>
+Skipped 15 lines<br/>
+Percent: 5 %<br/>
+
+</div>
+<div class="coverage">
+<div class="cov"><span class="num"><pre> 1</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre> 2</pre></span><pre>Interfaces for FormEncode (for documentation purposes only)</pre></div>
+<div class="cov"><span class="num"><pre> 3</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre> 4</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 5</pre></span><pre>class Attribute(object):</pre></div>
+<div class="skip"><span class="num"><pre> 6</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 7</pre></span><pre>    def __init__(self, description, name=None):</pre></div>
+<div class="nocov"><span class="num"><pre> 8</pre></span><pre>        self.description = description</pre></div>
+<div class="nocov"><span class="num"><pre> 9</pre></span><pre>        self.name = name</pre></div>
+<div class="skip"><span class="num"><pre>10</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>11</pre></span><pre>class Interface(object):</pre></div>
+<div class="nocov"><span class="num"><pre>12</pre></span><pre>    pass</pre></div>
+<div class="skip"><span class="num"><pre>13</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>14</pre></span><pre>class IDeclarative(Interface):</pre></div>
+<div class="skip"><span class="num"><pre>15</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>16</pre></span><pre>    def __init__(**kw):</pre></div>
+<div class="nocov"><span class="num"><pre>17</pre></span><pre>        &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>18</pre></span><pre>        Instantiates this class with all the keywords being used to</pre></div>
+<div class="nocov"><span class="num"><pre>19</pre></span><pre>        update the instance variables.</pre></div>
+<div class="nocov"><span class="num"><pre>20</pre></span><pre>        &quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre>21</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>22</pre></span><pre>    def __call__(**kw):</pre></div>
+<div class="nocov"><span class="num"><pre>23</pre></span><pre>        &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>24</pre></span><pre>        Returns a copy with all attributes using the given keywords,</pre></div>
+<div class="nocov"><span class="num"><pre>25</pre></span><pre>        being updated.</pre></div>
+<div class="nocov"><span class="num"><pre>26</pre></span><pre>        &quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre>27</pre></span><pre></pre></div>
+<div class="skip"><span class="num"><pre>28</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>29</pre></span><pre>class IValidator(IDeclarative):</pre></div>
+<div class="skip"><span class="num"><pre>30</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>31</pre></span><pre>    messages = Attribute(&quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>32</pre></span><pre>    A dictionary of messages (with formatting strings) for error</pre></div>
+<div class="nocov"><span class="num"><pre>33</pre></span><pre>    responses&quot;&quot;&quot;, name='messages')</pre></div>
+<div class="nocov"><span class="num"><pre>34</pre></span><pre>    if_missing = Attribute(&quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>35</pre></span><pre>    If the source that this validator would handle is missing (e.g.,</pre></div>
+<div class="nocov"><span class="num"><pre>36</pre></span><pre>    a field that was not specified), use this value.  If</pre></div>
+<div class="nocov"><span class="num"><pre>37</pre></span><pre>    Validator.NoDefault, then if the field is missing an exception</pre></div>
+<div class="nocov"><span class="num"><pre>38</pre></span><pre>    should be raised.&quot;&quot;&quot;, name='ifMissing')</pre></div>
+<div class="nocov"><span class="num"><pre>39</pre></span><pre>    repeating = Attribute(&quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>40</pre></span><pre>    A boolean; this object accepts lists if true, subvalidators can be</pre></div>
+<div class="nocov"><span class="num"><pre>41</pre></span><pre>    found in the validators attribute.&quot;&quot;&quot;, name='repeating')</pre></div>
+<div class="nocov"><span class="num"><pre>42</pre></span><pre>    compound = Attribute(&quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>43</pre></span><pre>    A boolean; this object has a dictionary of validators if this is</pre></div>
+<div class="nocov"><span class="num"><pre>44</pre></span><pre>    true, subvalidators can be found in the field attribute (a</pre></div>
+<div class="nocov"><span class="num"><pre>45</pre></span><pre>    dictionary).&quot;&quot;&quot;, name='compound')</pre></div>
+<div class="skip"><span class="num"><pre>46</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>47</pre></span><pre>    def to_python(value, state=None):</pre></div>
+<div class="nocov"><span class="num"><pre>48</pre></span><pre>        &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>49</pre></span><pre>        Convert `value` from its foreign representation to its Python</pre></div>
+<div class="nocov"><span class="num"><pre>50</pre></span><pre>        representation.  `state` is for application-specific hooks.</pre></div>
+<div class="nocov"><span class="num"><pre>51</pre></span><pre>        &quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre>52</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>53</pre></span><pre>    def from_python(value, state=None):</pre></div>
+<div class="nocov"><span class="num"><pre>54</pre></span><pre>        &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>55</pre></span><pre>        Convert `value` from its Python representation to the foreign</pre></div>
+<div class="nocov"><span class="num"><pre>56</pre></span><pre>        representation.  `state` is for application-specific hooks.</pre></div>
+<div class="nocov"><span class="num"><pre>57</pre></span><pre>        &quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre>58</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>59</pre></span><pre>    def message(name, default):</pre></div>
+<div class="nocov"><span class="num"><pre>60</pre></span><pre>        &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>61</pre></span><pre>        Return the message (from the `messages` attribute) that goes</pre></div>
+<div class="nocov"><span class="num"><pre>62</pre></span><pre>        with `name`, or return default if `name` not found `default`.</pre></div>
+<div class="nocov"><span class="num"><pre>63</pre></span><pre>        &quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre>64</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>65</pre></span><pre>class ISchema(IValidator):</pre></div>
+<div class="skip"><span class="num"><pre>66</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>67</pre></span><pre>    fields = Attribute('A dictionary of (field name: validator)', name='fields')</pre></div>
+<div class="skip"><span class="num"><pre>68</pre></span><pre></pre></div>
+</div>
+</body>
+</html>

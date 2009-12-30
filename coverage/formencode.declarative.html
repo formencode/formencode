@@ -1,0 +1,263 @@
+<html>
+<head>
+<title>formencode.declarative</title>
+</head>
+<body>
+formencode.declarative
+<style>
+.coverage pre {float: left; margin: 0px 1em; border: none;
+               padding: 0px; }
+.num pre { margin: 0px }
+.nocov, .nocov pre {background-color: #faa}
+.cov, .cov pre {background-color: #cfc}
+div.coverage div { clear: both; height: 1.1em}
+</style>
+<div class="stats">
+Covered: 67 lines<br/>
+Missed: 133 lines<br/>
+Skipped 38 lines<br/>
+Percent: 33 %<br/>
+
+</div>
+<div class="coverage">
+<div class="cov"><span class="num"><pre>  1</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre>  2</pre></span><pre>Declarative objects for FormEncode.</pre></div>
+<div class="skip"><span class="num"><pre>  3</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>  4</pre></span><pre>Declarative objects have a simple protocol: you can use classes in</pre></div>
+<div class="cov"><span class="num"><pre>  5</pre></span><pre>lieu of instances and they are equivalent, and any keyword arguments</pre></div>
+<div class="cov"><span class="num"><pre>  6</pre></span><pre>you give to the constructor will override those instance variables.</pre></div>
+<div class="cov"><span class="num"><pre>  7</pre></span><pre>(So if a class is received, we'll simply instantiate an instance with</pre></div>
+<div class="cov"><span class="num"><pre>  8</pre></span><pre>no arguments).</pre></div>
+<div class="skip"><span class="num"><pre>  9</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 10</pre></span><pre>You can provide a variable __unpackargs__ (a list of strings), and if</pre></div>
+<div class="cov"><span class="num"><pre> 11</pre></span><pre>the constructor is called with non-keyword arguments they will be</pre></div>
+<div class="cov"><span class="num"><pre> 12</pre></span><pre>interpreted as the given keyword arguments.</pre></div>
+<div class="skip"><span class="num"><pre> 13</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 14</pre></span><pre>If __unpackargs__ is ('*', name), then all the arguments will be put</pre></div>
+<div class="cov"><span class="num"><pre> 15</pre></span><pre>in a variable by that name.</pre></div>
+<div class="skip"><span class="num"><pre> 16</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 17</pre></span><pre>Also, you can define a __classinit__(cls, new_attrs) method, which</pre></div>
+<div class="cov"><span class="num"><pre> 18</pre></span><pre>will be called when the class is created (including subclasses).</pre></div>
+<div class="cov"><span class="num"><pre> 19</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre> 20</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 21</pre></span><pre>from __future__ import generators</pre></div>
+<div class="skip"><span class="num"><pre> 22</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 23</pre></span><pre>import copy</pre></div>
+<div class="nocov"><span class="num"><pre> 24</pre></span><pre>import new</pre></div>
+<div class="skip"><span class="num"><pre> 25</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 26</pre></span><pre>try:</pre></div>
+<div class="nocov"><span class="num"><pre> 27</pre></span><pre>    import itertools</pre></div>
+<div class="nocov"><span class="num"><pre> 28</pre></span><pre>    counter = itertools.count()</pre></div>
+<div class="nocov"><span class="num"><pre> 29</pre></span><pre>except ImportError:</pre></div>
+<div class="nocov"><span class="num"><pre> 30</pre></span><pre>    def _counter():</pre></div>
+<div class="nocov"><span class="num"><pre> 31</pre></span><pre>        i = 0</pre></div>
+<div class="nocov"><span class="num"><pre> 32</pre></span><pre>        while 1:</pre></div>
+<div class="nocov"><span class="num"><pre> 33</pre></span><pre>            i += 1</pre></div>
+<div class="nocov"><span class="num"><pre> 34</pre></span><pre>            yield i</pre></div>
+<div class="nocov"><span class="num"><pre> 35</pre></span><pre>    counter = _counter()</pre></div>
+<div class="skip"><span class="num"><pre> 36</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 37</pre></span><pre>class classinstancemethod(object):</pre></div>
+<div class="nocov"><span class="num"><pre> 38</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre> 39</pre></span><pre>    Acts like a class method when called from a class, like an</pre></div>
+<div class="nocov"><span class="num"><pre> 40</pre></span><pre>    instance method when called by an instance.  The method should</pre></div>
+<div class="nocov"><span class="num"><pre> 41</pre></span><pre>    take two arguments, 'self' and 'cls'; one of these will be None</pre></div>
+<div class="nocov"><span class="num"><pre> 42</pre></span><pre>    depending on how the method was called.</pre></div>
+<div class="nocov"><span class="num"><pre> 43</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre> 44</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 45</pre></span><pre>    def __init__(self, func):</pre></div>
+<div class="nocov"><span class="num"><pre> 46</pre></span><pre>        self.func = func</pre></div>
+<div class="skip"><span class="num"><pre> 47</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 48</pre></span><pre>    def __get__(self, obj, type=None):</pre></div>
+<div class="cov"><span class="num"><pre> 49</pre></span><pre>        return _methodwrapper(self.func, obj=obj, type=type)</pre></div>
+<div class="skip"><span class="num"><pre> 50</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 51</pre></span><pre>class _methodwrapper(object):</pre></div>
+<div class="skip"><span class="num"><pre> 52</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 53</pre></span><pre>    def __init__(self, func, obj, type):</pre></div>
+<div class="cov"><span class="num"><pre> 54</pre></span><pre>        self.func = func</pre></div>
+<div class="cov"><span class="num"><pre> 55</pre></span><pre>        self.obj = obj</pre></div>
+<div class="cov"><span class="num"><pre> 56</pre></span><pre>        self.type = type</pre></div>
+<div class="skip"><span class="num"><pre> 57</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 58</pre></span><pre>    def __call__(self, *args, **kw):</pre></div>
+<div class="cov"><span class="num"><pre> 59</pre></span><pre>        assert not kw.has_key('self') and not kw.has_key('cls'), (</pre></div>
+<div class="cov"><span class="num"><pre> 60</pre></span><pre>            &quot;You cannot use 'self' or 'cls' arguments to a &quot;</pre></div>
+<div class="cov"><span class="num"><pre> 61</pre></span><pre>            &quot;classinstancemethod&quot;)</pre></div>
+<div class="cov"><span class="num"><pre> 62</pre></span><pre>        return self.func(*((self.obj, self.type) + args), **kw)</pre></div>
+<div class="skip"><span class="num"><pre> 63</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 64</pre></span><pre>    def __repr__(self):</pre></div>
+<div class="nocov"><span class="num"><pre> 65</pre></span><pre>        if self.obj is None:</pre></div>
+<div class="nocov"><span class="num"><pre> 66</pre></span><pre>            return ('&lt;bound class method %s.%s&gt;'</pre></div>
+<div class="nocov"><span class="num"><pre> 67</pre></span><pre>                    % (self.type.__name__, self.func.func_name))</pre></div>
+<div class="nocov"><span class="num"><pre> 68</pre></span><pre>        else:</pre></div>
+<div class="nocov"><span class="num"><pre> 69</pre></span><pre>            return ('&lt;bound method %s.%s of %r&gt;'</pre></div>
+<div class="nocov"><span class="num"><pre> 70</pre></span><pre>                    % (self.type.__name__, self.func.func_name, self.obj))</pre></div>
+<div class="skip"><span class="num"><pre> 71</pre></span><pre></pre></div>
+<div class="skip"><span class="num"><pre> 72</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 73</pre></span><pre>class DeclarativeMeta(type):</pre></div>
+<div class="skip"><span class="num"><pre> 74</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 75</pre></span><pre>    def __new__(meta, class_name, bases, new_attrs):</pre></div>
+<div class="cov"><span class="num"><pre> 76</pre></span><pre>        cls = type.__new__(meta, class_name, bases, new_attrs)</pre></div>
+<div class="cov"><span class="num"><pre> 77</pre></span><pre>        for name in cls.__mutableattributes__:</pre></div>
+<div class="cov"><span class="num"><pre> 78</pre></span><pre>            setattr(cls, name, copy.copy(getattr(cls, name)))</pre></div>
+<div class="cov"><span class="num"><pre> 79</pre></span><pre>        cls.declarative_count = counter.next()</pre></div>
+<div class="cov"><span class="num"><pre> 80</pre></span><pre>        if (new_attrs.has_key('__classinit__')</pre></div>
+<div class="cov"><span class="num"><pre> 81</pre></span><pre>            and not isinstance(cls.__classinit__, staticmethod)):</pre></div>
+<div class="nocov"><span class="num"><pre> 82</pre></span><pre>            setattr(cls, '__classinit__',</pre></div>
+<div class="nocov"><span class="num"><pre> 83</pre></span><pre>                    staticmethod(cls.__classinit__.im_func))</pre></div>
+<div class="cov"><span class="num"><pre> 84</pre></span><pre>        cls.__classinit__(cls, new_attrs)</pre></div>
+<div class="cov"><span class="num"><pre> 85</pre></span><pre>        names = getattr(cls, '__singletonmethods__', None)</pre></div>
+<div class="cov"><span class="num"><pre> 86</pre></span><pre>        if names:</pre></div>
+<div class="cov"><span class="num"><pre> 87</pre></span><pre>            for name in names:</pre></div>
+<div class="cov"><span class="num"><pre> 88</pre></span><pre>                meth = cls.__dict__.get(name)</pre></div>
+<div class="cov"><span class="num"><pre> 89</pre></span><pre>                if meth and not isinstance(meth, singletonmethod):</pre></div>
+<div class="nocov"><span class="num"><pre> 90</pre></span><pre>                    setattr(cls, name, singletonmethod(meth))</pre></div>
+<div class="cov"><span class="num"><pre> 91</pre></span><pre>        return cls</pre></div>
+<div class="skip"><span class="num"><pre> 92</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 93</pre></span><pre>class singletonmethod(object):</pre></div>
+<div class="nocov"><span class="num"><pre> 94</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre> 95</pre></span><pre>    For Declarative subclasses, this decorator will call the method</pre></div>
+<div class="nocov"><span class="num"><pre> 96</pre></span><pre>    on the cls.singleton() object if called as a class method (or</pre></div>
+<div class="nocov"><span class="num"><pre> 97</pre></span><pre>    as normal if called as an instance method).</pre></div>
+<div class="nocov"><span class="num"><pre> 98</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre> 99</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>100</pre></span><pre>    def __init__(self, func):</pre></div>
+<div class="nocov"><span class="num"><pre>101</pre></span><pre>        self.func = func</pre></div>
+<div class="skip"><span class="num"><pre>102</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>103</pre></span><pre>    def __get__(self, obj, type=None):</pre></div>
+<div class="cov"><span class="num"><pre>104</pre></span><pre>        if obj is None:</pre></div>
+<div class="cov"><span class="num"><pre>105</pre></span><pre>            obj = type.singleton()</pre></div>
+<div class="cov"><span class="num"><pre>106</pre></span><pre>        if type is None:</pre></div>
+<div class="nocov"><span class="num"><pre>107</pre></span><pre>            type = obj.__class__</pre></div>
+<div class="cov"><span class="num"><pre>108</pre></span><pre>        return new.instancemethod(self.func, obj, type)</pre></div>
+<div class="skip"><span class="num"><pre>109</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>110</pre></span><pre>class Declarative(object):</pre></div>
+<div class="skip"><span class="num"><pre>111</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>112</pre></span><pre>    __unpackargs__ = ()</pre></div>
+<div class="skip"><span class="num"><pre>113</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>114</pre></span><pre>    __mutableattributes__ = ()</pre></div>
+<div class="skip"><span class="num"><pre>115</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>116</pre></span><pre>    __metaclass__ = DeclarativeMeta</pre></div>
+<div class="skip"><span class="num"><pre>117</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>118</pre></span><pre>    __singletonmethods__ = ()</pre></div>
+<div class="skip"><span class="num"><pre>119</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>120</pre></span><pre>    def __classinit__(cls, new_attrs):</pre></div>
+<div class="nocov"><span class="num"><pre>121</pre></span><pre>        pass</pre></div>
+<div class="skip"><span class="num"><pre>122</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>123</pre></span><pre>    def __init__(self, *args, **kw):</pre></div>
+<div class="cov"><span class="num"><pre>124</pre></span><pre>        if self.__unpackargs__ and self.__unpackargs__[0] == '*':</pre></div>
+<div class="cov"><span class="num"><pre>125</pre></span><pre>            assert len(self.__unpackargs__) == 2, \</pre></div>
+<div class="cov"><span class="num"><pre>126</pre></span><pre>                   &quot;When using __unpackargs__ = ('*', varname), you must only provide a single variable name (you gave %r)&quot; % self.__unpackargs__</pre></div>
+<div class="cov"><span class="num"><pre>127</pre></span><pre>            name = self.__unpackargs__[1]</pre></div>
+<div class="cov"><span class="num"><pre>128</pre></span><pre>            if kw.has_key(name):</pre></div>
+<div class="nocov"><span class="num"><pre>129</pre></span><pre>                raise TypeError(</pre></div>
+<div class="nocov"><span class="num"><pre>130</pre></span><pre>                    &quot;keyword parameter '%s' was given by position and name&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>131</pre></span><pre>                    % name)</pre></div>
+<div class="cov"><span class="num"><pre>132</pre></span><pre>            kw[name] = args</pre></div>
+<div class="cov"><span class="num"><pre>133</pre></span><pre>        else:</pre></div>
+<div class="cov"><span class="num"><pre>134</pre></span><pre>            if len(args) &gt; len(self.__unpackargs__):</pre></div>
+<div class="nocov"><span class="num"><pre>135</pre></span><pre>                raise TypeError(</pre></div>
+<div class="nocov"><span class="num"><pre>136</pre></span><pre>                    '%s() takes at most %i arguments (%i given)'</pre></div>
+<div class="nocov"><span class="num"><pre>137</pre></span><pre>                    % (self.__class__.__name__,</pre></div>
+<div class="nocov"><span class="num"><pre>138</pre></span><pre>                       len(self.__unpackargs__),</pre></div>
+<div class="nocov"><span class="num"><pre>139</pre></span><pre>                       len(args)))</pre></div>
+<div class="cov"><span class="num"><pre>140</pre></span><pre>            for name, arg in zip(self.__unpackargs__, args):</pre></div>
+<div class="cov"><span class="num"><pre>141</pre></span><pre>                if kw.has_key(name):</pre></div>
+<div class="nocov"><span class="num"><pre>142</pre></span><pre>                    raise TypeError(</pre></div>
+<div class="nocov"><span class="num"><pre>143</pre></span><pre>                        &quot;keyword parameter '%s' was given by position and name&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>144</pre></span><pre>                        % name)</pre></div>
+<div class="cov"><span class="num"><pre>145</pre></span><pre>                kw[name] = arg</pre></div>
+<div class="cov"><span class="num"><pre>146</pre></span><pre>        for name in self.__mutableattributes__:</pre></div>
+<div class="cov"><span class="num"><pre>147</pre></span><pre>            if not kw.has_key(name):</pre></div>
+<div class="cov"><span class="num"><pre>148</pre></span><pre>                setattr(self, name, copy.copy(getattr(self, name)))</pre></div>
+<div class="cov"><span class="num"><pre>149</pre></span><pre>        for name, value in kw.items():</pre></div>
+<div class="cov"><span class="num"><pre>150</pre></span><pre>            setattr(self, name, value)</pre></div>
+<div class="cov"><span class="num"><pre>151</pre></span><pre>        if not kw.has_key('declarative_count'):</pre></div>
+<div class="cov"><span class="num"><pre>152</pre></span><pre>            self.declarative_count = counter.next()</pre></div>
+<div class="cov"><span class="num"><pre>153</pre></span><pre>        self.__initargs__(kw)</pre></div>
+<div class="skip"><span class="num"><pre>154</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>155</pre></span><pre>    def __initargs__(self, new_attrs):</pre></div>
+<div class="cov"><span class="num"><pre>156</pre></span><pre>        pass</pre></div>
+<div class="skip"><span class="num"><pre>157</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>158</pre></span><pre>    def __call__(self, *args, **kw):</pre></div>
+<div class="cov"><span class="num"><pre>159</pre></span><pre>        current = self.__dict__.copy()</pre></div>
+<div class="cov"><span class="num"><pre>160</pre></span><pre>        current.update(kw)</pre></div>
+<div class="cov"><span class="num"><pre>161</pre></span><pre>        return self.__class__(*args, **current)</pre></div>
+<div class="skip"><span class="num"><pre>162</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>163</pre></span><pre>    def singleton(cls):</pre></div>
+<div class="cov"><span class="num"><pre>164</pre></span><pre>        name = '_%s__singleton' % cls.__name__</pre></div>
+<div class="cov"><span class="num"><pre>165</pre></span><pre>        if not hasattr(cls, name):</pre></div>
+<div class="cov"><span class="num"><pre>166</pre></span><pre>            setattr(cls, name, cls(declarative_count=cls.declarative_count))</pre></div>
+<div class="cov"><span class="num"><pre>167</pre></span><pre>        return getattr(cls, name)</pre></div>
+<div class="nocov"><span class="num"><pre>168</pre></span><pre>    singleton = classmethod(singleton)</pre></div>
+<div class="skip"><span class="num"><pre>169</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>170</pre></span><pre>    def __sourcerepr__(self, source, binding=None):</pre></div>
+<div class="nocov"><span class="num"><pre>171</pre></span><pre>        if binding and len(self.__dict__) &gt; 3:</pre></div>
+<div class="nocov"><span class="num"><pre>172</pre></span><pre>            return self._source_repr_class(source, binding=binding)</pre></div>
+<div class="nocov"><span class="num"><pre>173</pre></span><pre>        else:</pre></div>
+<div class="nocov"><span class="num"><pre>174</pre></span><pre>            vals = self.__dict__.copy()</pre></div>
+<div class="nocov"><span class="num"><pre>175</pre></span><pre>            if vals.has_key('declarative_count'):</pre></div>
+<div class="nocov"><span class="num"><pre>176</pre></span><pre>                del vals['declarative_count']</pre></div>
+<div class="nocov"><span class="num"><pre>177</pre></span><pre>            args = []</pre></div>
+<div class="nocov"><span class="num"><pre>178</pre></span><pre>            if (self.__unpackargs__ and self.__unpackargs__[0] == '*'</pre></div>
+<div class="nocov"><span class="num"><pre>179</pre></span><pre>                and vals.has_key(self.__unpackargs__[1])):</pre></div>
+<div class="nocov"><span class="num"><pre>180</pre></span><pre>                v = vals[self.__unpackargs__[1]]</pre></div>
+<div class="nocov"><span class="num"><pre>181</pre></span><pre>                if isinstance(v, (list, int)):</pre></div>
+<div class="nocov"><span class="num"><pre>182</pre></span><pre>                    args.extend(map(source.makeRepr, v))</pre></div>
+<div class="nocov"><span class="num"><pre>183</pre></span><pre>                    del v[self.__unpackargs__[1]]</pre></div>
+<div class="nocov"><span class="num"><pre>184</pre></span><pre>            for name in self.__unpackargs__:</pre></div>
+<div class="nocov"><span class="num"><pre>185</pre></span><pre>                if vals.has_key(name):</pre></div>
+<div class="nocov"><span class="num"><pre>186</pre></span><pre>                    args.append(source.makeRepr(vals[name]))</pre></div>
+<div class="nocov"><span class="num"><pre>187</pre></span><pre>                    del vals[name]</pre></div>
+<div class="nocov"><span class="num"><pre>188</pre></span><pre>                else:</pre></div>
+<div class="nocov"><span class="num"><pre>189</pre></span><pre>                    break</pre></div>
+<div class="nocov"><span class="num"><pre>190</pre></span><pre>            args.extend(['%s=%s' % (name, source.makeRepr(value))</pre></div>
+<div class="nocov"><span class="num"><pre>191</pre></span><pre>                         for (name, value) in vals.items()])</pre></div>
+<div class="nocov"><span class="num"><pre>192</pre></span><pre>            return '%s(%s)' % (self.__class__.__name__,</pre></div>
+<div class="nocov"><span class="num"><pre>193</pre></span><pre>                               ', '.join(args))</pre></div>
+<div class="skip"><span class="num"><pre>194</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>195</pre></span><pre>    def _source_repr_class(self, source, binding=None):</pre></div>
+<div class="nocov"><span class="num"><pre>196</pre></span><pre>        d = self.__dict__.copy()</pre></div>
+<div class="nocov"><span class="num"><pre>197</pre></span><pre>        if d.has_key('declarative_count'):</pre></div>
+<div class="nocov"><span class="num"><pre>198</pre></span><pre>            del d['declarative_count']</pre></div>
+<div class="nocov"><span class="num"><pre>199</pre></span><pre>        return source.makeClass(self, binding, d,</pre></div>
+<div class="nocov"><span class="num"><pre>200</pre></span><pre>                                (self.__class__,))</pre></div>
+<div class="skip"><span class="num"><pre>201</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>202</pre></span><pre>    def __classsourcerepr__(cls, source, binding=None):</pre></div>
+<div class="nocov"><span class="num"><pre>203</pre></span><pre>        d = cls.__dict__.copy()</pre></div>
+<div class="nocov"><span class="num"><pre>204</pre></span><pre>        del d['declarative_count']</pre></div>
+<div class="nocov"><span class="num"><pre>205</pre></span><pre>        return source.makeClass(cls, binding or cls.__name__, d,</pre></div>
+<div class="nocov"><span class="num"><pre>206</pre></span><pre>                                cls.__bases__)</pre></div>
+<div class="nocov"><span class="num"><pre>207</pre></span><pre>    __classsourcerepr__ = classmethod(__classsourcerepr__)</pre></div>
+<div class="skip"><span class="num"><pre>208</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>209</pre></span><pre>    def __repr__(self, cls):</pre></div>
+<div class="nocov"><span class="num"><pre>210</pre></span><pre>        if self:</pre></div>
+<div class="nocov"><span class="num"><pre>211</pre></span><pre>            name = '%s object' % self.__class__.__name__</pre></div>
+<div class="nocov"><span class="num"><pre>212</pre></span><pre>            v = self.__dict__.copy()</pre></div>
+<div class="nocov"><span class="num"><pre>213</pre></span><pre>        else:</pre></div>
+<div class="nocov"><span class="num"><pre>214</pre></span><pre>            name = '%s class' % cls.__name__</pre></div>
+<div class="nocov"><span class="num"><pre>215</pre></span><pre>            v = cls.__dict__.copy()</pre></div>
+<div class="nocov"><span class="num"><pre>216</pre></span><pre>        if v.has_key('declarative_count'):</pre></div>
+<div class="nocov"><span class="num"><pre>217</pre></span><pre>            name = '%s %i' % (name, v['declarative_count'])</pre></div>
+<div class="nocov"><span class="num"><pre>218</pre></span><pre>            del v['declarative_count']</pre></div>
+<div class="nocov"><span class="num"><pre>219</pre></span><pre>        names = v.keys()</pre></div>
+<div class="nocov"><span class="num"><pre>220</pre></span><pre>        args = []</pre></div>
+<div class="nocov"><span class="num"><pre>221</pre></span><pre>        for n in self._repr_vars(names):</pre></div>
+<div class="nocov"><span class="num"><pre>222</pre></span><pre>            args.append('%s=%r' % (n, v[n]))</pre></div>
+<div class="nocov"><span class="num"><pre>223</pre></span><pre>        if not args:</pre></div>
+<div class="nocov"><span class="num"><pre>224</pre></span><pre>            return '&lt;%s&gt;' % name</pre></div>
+<div class="nocov"><span class="num"><pre>225</pre></span><pre>        else:</pre></div>
+<div class="nocov"><span class="num"><pre>226</pre></span><pre>            return '&lt;%s %s&gt;' % (name, ' '.join(args))</pre></div>
+<div class="skip"><span class="num"><pre>227</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>228</pre></span><pre>    def _repr_vars(dictNames):</pre></div>
+<div class="nocov"><span class="num"><pre>229</pre></span><pre>        names = [n for n in dictNames</pre></div>
+<div class="nocov"><span class="num"><pre>230</pre></span><pre>                 if not n.startswith('_')</pre></div>
+<div class="nocov"><span class="num"><pre>231</pre></span><pre>                 and n != 'declarative_count']</pre></div>
+<div class="nocov"><span class="num"><pre>232</pre></span><pre>        names.sort()</pre></div>
+<div class="nocov"><span class="num"><pre>233</pre></span><pre>        return names</pre></div>
+<div class="nocov"><span class="num"><pre>234</pre></span><pre>    _repr_vars = staticmethod(_repr_vars)</pre></div>
+<div class="skip"><span class="num"><pre>235</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>236</pre></span><pre>    __repr__ = classinstancemethod(__repr__)</pre></div>
+<div class="skip"><span class="num"><pre>237</pre></span><pre></pre></div>
+<div class="skip"><span class="num"><pre>238</pre></span><pre></pre></div>
+</div>
+</body>
+</html>

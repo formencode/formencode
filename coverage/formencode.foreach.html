@@ -1,0 +1,174 @@
+<html>
+<head>
+<title>formencode.foreach</title>
+</head>
+<body>
+formencode.foreach
+<style>
+.coverage pre {float: left; margin: 0px 1em; border: none;
+               padding: 0px; }
+.num pre { margin: 0px }
+.nocov, .nocov pre {background-color: #faa}
+.cov, .cov pre {background-color: #cfc}
+div.coverage div { clear: both; height: 1.1em}
+</style>
+<div class="stats">
+Covered: 48 lines<br/>
+Missed: 82 lines<br/>
+Skipped 19 lines<br/>
+Percent: 36 %<br/>
+
+</div>
+<div class="coverage">
+<div class="cov"><span class="num"><pre>  1</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre>  2</pre></span><pre>Validator for repeating items.</pre></div>
+<div class="cov"><span class="num"><pre>  3</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>  4</pre></span><pre>import warnings</pre></div>
+<div class="nocov"><span class="num"><pre>  5</pre></span><pre>filters = warnings.filters[:]</pre></div>
+<div class="nocov"><span class="num"><pre>  6</pre></span><pre>warnings.simplefilter('ignore', DeprecationWarning)</pre></div>
+<div class="nocov"><span class="num"><pre>  7</pre></span><pre>from sets import Set</pre></div>
+<div class="nocov"><span class="num"><pre>  8</pre></span><pre>warnings.filters = filters</pre></div>
+<div class="nocov"><span class="num"><pre>  9</pre></span><pre>try:</pre></div>
+<div class="nocov"><span class="num"><pre> 10</pre></span><pre>    set</pre></div>
+<div class="nocov"><span class="num"><pre> 11</pre></span><pre>except NameError:</pre></div>
+<div class="nocov"><span class="num"><pre> 12</pre></span><pre>    set = Set</pre></div>
+<div class="skip"><span class="num"><pre> 13</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 14</pre></span><pre>from api import NoDefault, Invalid</pre></div>
+<div class="nocov"><span class="num"><pre> 15</pre></span><pre>from compound import CompoundValidator, to_python, from_python</pre></div>
+<div class="skip"><span class="num"><pre> 16</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 17</pre></span><pre>__all__ = ['ForEach']</pre></div>
+<div class="skip"><span class="num"><pre> 18</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 19</pre></span><pre>class ForEach(CompoundValidator):</pre></div>
+<div class="skip"><span class="num"><pre> 20</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 21</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="nocov"><span class="num"><pre> 22</pre></span><pre>    Use this to apply a validator/converter to each item in a list.</pre></div>
+<div class="skip"><span class="num"><pre> 23</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 24</pre></span><pre>    For instance::</pre></div>
+<div class="skip"><span class="num"><pre> 25</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 26</pre></span><pre>        ForEach(AsInt(), InList([1, 2, 3]))</pre></div>
+<div class="skip"><span class="num"><pre> 27</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 28</pre></span><pre>    Will take a list of values and try to convert each of them to</pre></div>
+<div class="nocov"><span class="num"><pre> 29</pre></span><pre>    an integer, and then check if each integer is 1, 2, or 3.  Using</pre></div>
+<div class="nocov"><span class="num"><pre> 30</pre></span><pre>    multiple arguments is equivalent to::</pre></div>
+<div class="skip"><span class="num"><pre> 31</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 32</pre></span><pre>        ForEach(All(AsInt(), InList([1, 2, 3])))</pre></div>
+<div class="skip"><span class="num"><pre> 33</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 34</pre></span><pre>    Use convert_to_list=True if you want to force the input to be a</pre></div>
+<div class="nocov"><span class="num"><pre> 35</pre></span><pre>    list.  This will turn non-lists into one-element lists, and None</pre></div>
+<div class="nocov"><span class="num"><pre> 36</pre></span><pre>    into the empty list.  This tries to detect sequences by iterating</pre></div>
+<div class="nocov"><span class="num"><pre> 37</pre></span><pre>    over them (except strings, which aren't considered sequences).</pre></div>
+<div class="skip"><span class="num"><pre> 38</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 39</pre></span><pre>    ForEach will try to convert the entire list, even if errors are</pre></div>
+<div class="nocov"><span class="num"><pre> 40</pre></span><pre>    encountered.  If errors are encountered, they will be collected</pre></div>
+<div class="nocov"><span class="num"><pre> 41</pre></span><pre>    and a single Invalid exception will be raised at the end (with</pre></div>
+<div class="nocov"><span class="num"><pre> 42</pre></span><pre>    error_list set).</pre></div>
+<div class="skip"><span class="num"><pre> 43</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 44</pre></span><pre>    If the incoming value is a set, then we return a set.</pre></div>
+<div class="nocov"><span class="num"><pre> 45</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre> 46</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre> 47</pre></span><pre>    convert_to_list = True</pre></div>
+<div class="nocov"><span class="num"><pre> 48</pre></span><pre>    if_empty = NoDefault</pre></div>
+<div class="nocov"><span class="num"><pre> 49</pre></span><pre>    repeating = True</pre></div>
+<div class="nocov"><span class="num"><pre> 50</pre></span><pre>    _if_missing = ()</pre></div>
+<div class="skip"><span class="num"><pre> 51</pre></span><pre>    </pre></div>
+<div class="nocov"><span class="num"><pre> 52</pre></span><pre>    def attempt_convert(self, value, state, validate):</pre></div>
+<div class="cov"><span class="num"><pre> 53</pre></span><pre>        if self.convert_to_list:</pre></div>
+<div class="cov"><span class="num"><pre> 54</pre></span><pre>            value = self._convert_to_list(value)</pre></div>
+<div class="cov"><span class="num"><pre> 55</pre></span><pre>        if self.if_empty is not NoDefault and not value:</pre></div>
+<div class="nocov"><span class="num"><pre> 56</pre></span><pre>            return self.if_empty</pre></div>
+<div class="cov"><span class="num"><pre> 57</pre></span><pre>        if self.not_empty and not value:</pre></div>
+<div class="nocov"><span class="num"><pre> 58</pre></span><pre>            if validate is from_python and self.accept_python:</pre></div>
+<div class="nocov"><span class="num"><pre> 59</pre></span><pre>                return []</pre></div>
+<div class="nocov"><span class="num"><pre> 60</pre></span><pre>            raise Invalid(</pre></div>
+<div class="nocov"><span class="num"><pre> 61</pre></span><pre>                self.message('empty', state),</pre></div>
+<div class="nocov"><span class="num"><pre> 62</pre></span><pre>                value, state)</pre></div>
+<div class="cov"><span class="num"><pre> 63</pre></span><pre>        new_list = []</pre></div>
+<div class="cov"><span class="num"><pre> 64</pre></span><pre>        errors = []</pre></div>
+<div class="cov"><span class="num"><pre> 65</pre></span><pre>        all_good = True</pre></div>
+<div class="cov"><span class="num"><pre> 66</pre></span><pre>        is_set = isinstance(value, (set, Set))</pre></div>
+<div class="cov"><span class="num"><pre> 67</pre></span><pre>        if state is not None:</pre></div>
+<div class="nocov"><span class="num"><pre> 68</pre></span><pre>            previous_index = getattr(state, 'index', NoDefault)</pre></div>
+<div class="nocov"><span class="num"><pre> 69</pre></span><pre>            previous_full_list = getattr(state, 'full_list', NoDefault)</pre></div>
+<div class="nocov"><span class="num"><pre> 70</pre></span><pre>            index = 0</pre></div>
+<div class="nocov"><span class="num"><pre> 71</pre></span><pre>            state.full_list = value</pre></div>
+<div class="cov"><span class="num"><pre> 72</pre></span><pre>        try:</pre></div>
+<div class="cov"><span class="num"><pre> 73</pre></span><pre>            for sub_value in value:</pre></div>
+<div class="cov"><span class="num"><pre> 74</pre></span><pre>                if state:</pre></div>
+<div class="nocov"><span class="num"><pre> 75</pre></span><pre>                    state.index = index</pre></div>
+<div class="nocov"><span class="num"><pre> 76</pre></span><pre>                    index += 1</pre></div>
+<div class="cov"><span class="num"><pre> 77</pre></span><pre>                good_pass = True</pre></div>
+<div class="cov"><span class="num"><pre> 78</pre></span><pre>                for validator in self.validators:</pre></div>
+<div class="cov"><span class="num"><pre> 79</pre></span><pre>                    try:</pre></div>
+<div class="cov"><span class="num"><pre> 80</pre></span><pre>                        sub_value = validate(validator, sub_value, state)</pre></div>
+<div class="cov"><span class="num"><pre> 81</pre></span><pre>                    except Invalid, e:</pre></div>
+<div class="cov"><span class="num"><pre> 82</pre></span><pre>                        errors.append(e)</pre></div>
+<div class="cov"><span class="num"><pre> 83</pre></span><pre>                        all_good = False</pre></div>
+<div class="cov"><span class="num"><pre> 84</pre></span><pre>                        good_pass = False</pre></div>
+<div class="cov"><span class="num"><pre> 85</pre></span><pre>                        break</pre></div>
+<div class="cov"><span class="num"><pre> 86</pre></span><pre>                if good_pass:</pre></div>
+<div class="cov"><span class="num"><pre> 87</pre></span><pre>                    errors.append(None)</pre></div>
+<div class="cov"><span class="num"><pre> 88</pre></span><pre>                new_list.append(sub_value)</pre></div>
+<div class="cov"><span class="num"><pre> 89</pre></span><pre>            if all_good:</pre></div>
+<div class="cov"><span class="num"><pre> 90</pre></span><pre>                if is_set:</pre></div>
+<div class="nocov"><span class="num"><pre> 91</pre></span><pre>                    new_list = set(new_list)</pre></div>
+<div class="cov"><span class="num"><pre> 92</pre></span><pre>                return new_list</pre></div>
+<div class="cov"><span class="num"><pre> 93</pre></span><pre>            else:</pre></div>
+<div class="cov"><span class="num"><pre> 94</pre></span><pre>                raise Invalid(</pre></div>
+<div class="cov"><span class="num"><pre> 95</pre></span><pre>                    'Errors:\n%s' % '\n'.join([unicode(e) for e in errors if e]),</pre></div>
+<div class="cov"><span class="num"><pre> 96</pre></span><pre>                    value,</pre></div>
+<div class="cov"><span class="num"><pre> 97</pre></span><pre>                    state,</pre></div>
+<div class="cov"><span class="num"><pre> 98</pre></span><pre>                    error_list=errors)</pre></div>
+<div class="cov"><span class="num"><pre> 99</pre></span><pre>        finally:</pre></div>
+<div class="cov"><span class="num"><pre>100</pre></span><pre>            if state is not None:</pre></div>
+<div class="nocov"><span class="num"><pre>101</pre></span><pre>                if previous_index is NoDefault:</pre></div>
+<div class="nocov"><span class="num"><pre>102</pre></span><pre>                    try:</pre></div>
+<div class="nocov"><span class="num"><pre>103</pre></span><pre>                        del state.index</pre></div>
+<div class="nocov"><span class="num"><pre>104</pre></span><pre>                    except AttributeError:</pre></div>
+<div class="nocov"><span class="num"><pre>105</pre></span><pre>                        pass</pre></div>
+<div class="nocov"><span class="num"><pre>106</pre></span><pre>                else:</pre></div>
+<div class="nocov"><span class="num"><pre>107</pre></span><pre>                    state.index = previous_index</pre></div>
+<div class="nocov"><span class="num"><pre>108</pre></span><pre>                if previous_full_list is NoDefault:</pre></div>
+<div class="nocov"><span class="num"><pre>109</pre></span><pre>                    try:</pre></div>
+<div class="nocov"><span class="num"><pre>110</pre></span><pre>                        del state.full_list</pre></div>
+<div class="nocov"><span class="num"><pre>111</pre></span><pre>                    except AttributeError:</pre></div>
+<div class="nocov"><span class="num"><pre>112</pre></span><pre>                        pass</pre></div>
+<div class="nocov"><span class="num"><pre>113</pre></span><pre>                else:</pre></div>
+<div class="nocov"><span class="num"><pre>114</pre></span><pre>                    state.full_list = previous_full_list</pre></div>
+<div class="skip"><span class="num"><pre>115</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>116</pre></span><pre>    def empty_value(self, value):</pre></div>
+<div class="nocov"><span class="num"><pre>117</pre></span><pre>        return []</pre></div>
+<div class="skip"><span class="num"><pre>118</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>119</pre></span><pre>    class _IfMissing(object):</pre></div>
+<div class="nocov"><span class="num"><pre>120</pre></span><pre>        def __get__(self, obj, type=None):</pre></div>
+<div class="cov"><span class="num"><pre>121</pre></span><pre>            if obj is None:</pre></div>
+<div class="cov"><span class="num"><pre>122</pre></span><pre>                return []</pre></div>
+<div class="cov"><span class="num"><pre>123</pre></span><pre>            elif obj._if_missing is ForEach._if_missing:</pre></div>
+<div class="nocov"><span class="num"><pre>124</pre></span><pre>                return []</pre></div>
+<div class="cov"><span class="num"><pre>125</pre></span><pre>            else:</pre></div>
+<div class="cov"><span class="num"><pre>126</pre></span><pre>                return obj._if_missing</pre></div>
+<div class="nocov"><span class="num"><pre>127</pre></span><pre>        def __set__(self, obj, value):</pre></div>
+<div class="cov"><span class="num"><pre>128</pre></span><pre>            obj._if_missing = value</pre></div>
+<div class="nocov"><span class="num"><pre>129</pre></span><pre>        def __delete__(self, obj):</pre></div>
+<div class="nocov"><span class="num"><pre>130</pre></span><pre>            obj._if_missing = NoDefault</pre></div>
+<div class="skip"><span class="num"><pre>131</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>132</pre></span><pre>    if_missing = _IfMissing()</pre></div>
+<div class="nocov"><span class="num"><pre>133</pre></span><pre>    del _IfMissing</pre></div>
+<div class="skip"><span class="num"><pre>134</pre></span><pre></pre></div>
+<div class="nocov"><span class="num"><pre>135</pre></span><pre>    def _convert_to_list(self, value):</pre></div>
+<div class="cov"><span class="num"><pre>136</pre></span><pre>        if isinstance(value, (str, unicode)):</pre></div>
+<div class="nocov"><span class="num"><pre>137</pre></span><pre>            return [value]</pre></div>
+<div class="cov"><span class="num"><pre>138</pre></span><pre>        elif value is None:</pre></div>
+<div class="nocov"><span class="num"><pre>139</pre></span><pre>            return []</pre></div>
+<div class="cov"><span class="num"><pre>140</pre></span><pre>        elif isinstance(value, (list, tuple)):</pre></div>
+<div class="cov"><span class="num"><pre>141</pre></span><pre>            return value</pre></div>
+<div class="nocov"><span class="num"><pre>142</pre></span><pre>        try:</pre></div>
+<div class="nocov"><span class="num"><pre>143</pre></span><pre>            for n in value:</pre></div>
+<div class="nocov"><span class="num"><pre>144</pre></span><pre>                break</pre></div>
+<div class="nocov"><span class="num"><pre>145</pre></span><pre>            return value</pre></div>
+<div class="skip"><span class="num"><pre>146</pre></span><pre>        ## @@: Should this catch any other errors?:</pre></div>
+<div class="nocov"><span class="num"><pre>147</pre></span><pre>        except TypeError:</pre></div>
+<div class="nocov"><span class="num"><pre>148</pre></span><pre>            return [value]</pre></div>
+<div class="skip"><span class="num"><pre>149</pre></span><pre></pre></div>
+</div>
+</body>
+</html>

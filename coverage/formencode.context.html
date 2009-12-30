@@ -1,0 +1,193 @@
+<html>
+<head>
+<title>formencode.context</title>
+</head>
+<body>
+formencode.context
+<style>
+.coverage pre {float: left; margin: 0px 1em; border: none;
+               padding: 0px; }
+.num pre { margin: 0px }
+.nocov, .nocov pre {background-color: #faa}
+.cov, .cov pre {background-color: #cfc}
+div.coverage div { clear: both; height: 1.1em}
+</style>
+<div class="stats">
+Covered: 113 lines<br/>
+Missed: 22 lines<br/>
+Skipped 33 lines<br/>
+Percent: 83 %<br/>
+
+</div>
+<div class="coverage">
+<div class="cov"><span class="num"><pre>  1</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre>  2</pre></span><pre>A dynamic-scope-like system, aka fluid variables.</pre></div>
+<div class="skip"><span class="num"><pre>  3</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>  4</pre></span><pre>The idea behind dynamic scoped variables is for when, at one level,</pre></div>
+<div class="cov"><span class="num"><pre>  5</pre></span><pre>you want to change the behavior of something you call.  Except you</pre></div>
+<div class="cov"><span class="num"><pre>  6</pre></span><pre>can't pass in any new arguments (e.g., there's some function or object</pre></div>
+<div class="cov"><span class="num"><pre>  7</pre></span><pre>inbetween you and the thing you want to change), or you can't predict</pre></div>
+<div class="cov"><span class="num"><pre>  8</pre></span><pre>exactly what you will want to change.</pre></div>
+<div class="skip"><span class="num"><pre>  9</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 10</pre></span><pre>You should use it like::</pre></div>
+<div class="skip"><span class="num"><pre> 11</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 12</pre></span><pre>    context = Context()</pre></div>
+<div class="skip"><span class="num"><pre> 13</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 14</pre></span><pre>    def do_stuff():</pre></div>
+<div class="cov"><span class="num"><pre> 15</pre></span><pre>        state = context.set(inside='do_stuff')</pre></div>
+<div class="cov"><span class="num"><pre> 16</pre></span><pre>        try:</pre></div>
+<div class="cov"><span class="num"><pre> 17</pre></span><pre>            do stuff...</pre></div>
+<div class="cov"><span class="num"><pre> 18</pre></span><pre>        finally:</pre></div>
+<div class="cov"><span class="num"><pre> 19</pre></span><pre>            state.restore()</pre></div>
+<div class="skip"><span class="num"><pre> 20</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 21</pre></span><pre>Then ``context.inside`` will be set to ``'do_stuff'`` inside that try</pre></div>
+<div class="cov"><span class="num"><pre> 22</pre></span><pre>block.  If a value isn't set, you'll get an attribute error.</pre></div>
+<div class="skip"><span class="num"><pre> 23</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 24</pre></span><pre>Note that all values are thread local; this means you cannot use a</pre></div>
+<div class="cov"><span class="num"><pre> 25</pre></span><pre>context object to pass information to another thread.  In a</pre></div>
+<div class="cov"><span class="num"><pre> 26</pre></span><pre>single-thread environment it doesn't really matter.</pre></div>
+<div class="skip"><span class="num"><pre> 27</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 28</pre></span><pre>Typically you will create ``Context`` instances for your application,</pre></div>
+<div class="cov"><span class="num"><pre> 29</pre></span><pre>environment, etc.  These should be global module-level variables, that</pre></div>
+<div class="cov"><span class="num"><pre> 30</pre></span><pre>may be imported by any interested module; each instance is a namespace</pre></div>
+<div class="cov"><span class="num"><pre> 31</pre></span><pre>of its own.</pre></div>
+<div class="skip"><span class="num"><pre> 32</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 33</pre></span><pre>Sometimes it's nice to have default values, instead of getting</pre></div>
+<div class="cov"><span class="num"><pre> 34</pre></span><pre>attribute errors.  This makes it easier to put in new variables that</pre></div>
+<div class="cov"><span class="num"><pre> 35</pre></span><pre>are intended to be used elsewhere, without having to use</pre></div>
+<div class="cov"><span class="num"><pre> 36</pre></span><pre>``getattr(context, 'var', default)`` to avoid AttributeErrors.  There</pre></div>
+<div class="cov"><span class="num"><pre> 37</pre></span><pre>are two ways (that can be used together) to do this.</pre></div>
+<div class="skip"><span class="num"><pre> 38</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 39</pre></span><pre>First, when instantiating a ``Context`` object, you can give it a</pre></div>
+<div class="cov"><span class="num"><pre> 40</pre></span><pre>``default`` value.  If given, then all variables will default to that</pre></div>
+<div class="cov"><span class="num"><pre> 41</pre></span><pre>value.  ``None`` is a typical value for that.</pre></div>
+<div class="skip"><span class="num"><pre> 42</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 43</pre></span><pre>Another is ``context.set_default(**vars)``, which will set only those</pre></div>
+<div class="cov"><span class="num"><pre> 44</pre></span><pre>variables to default values.  This will not effect the stack of</pre></div>
+<div class="cov"><span class="num"><pre> 45</pre></span><pre>scopes, but will only add defaults.</pre></div>
+<div class="skip"><span class="num"><pre> 46</pre></span><pre></pre></div>
+<div class="skip"><span class="num"><pre> 47</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 48</pre></span><pre>When Python 2.5 comes out, this syntax would certainly be useful::</pre></div>
+<div class="skip"><span class="num"><pre> 49</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 50</pre></span><pre>    with context(page='view'):</pre></div>
+<div class="cov"><span class="num"><pre> 51</pre></span><pre>        do stuff...</pre></div>
+<div class="skip"><span class="num"><pre> 52</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 53</pre></span><pre>And ``page`` will be set to ``'view'`` only inside that ``with``</pre></div>
+<div class="cov"><span class="num"><pre> 54</pre></span><pre>block.</pre></div>
+<div class="cov"><span class="num"><pre> 55</pre></span><pre>&quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre> 56</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 57</pre></span><pre>from formencode.util import threadinglocal</pre></div>
+<div class="cov"><span class="num"><pre> 58</pre></span><pre>from itertools import count</pre></div>
+<div class="skip"><span class="num"><pre> 59</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 60</pre></span><pre>__all__ = ['Context', 'ContextRestoreError']</pre></div>
+<div class="skip"><span class="num"><pre> 61</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 62</pre></span><pre>_restore_ids = count()</pre></div>
+<div class="skip"><span class="num"><pre> 63</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 64</pre></span><pre>class _NoDefault:</pre></div>
+<div class="cov"><span class="num"><pre> 65</pre></span><pre>    pass</pre></div>
+<div class="skip"><span class="num"><pre> 66</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 67</pre></span><pre>class ContextRestoreError(Exception):</pre></div>
+<div class="cov"><span class="num"><pre> 68</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="cov"><span class="num"><pre> 69</pre></span><pre>    Raised when something is restored out-of-order.</pre></div>
+<div class="cov"><span class="num"><pre> 70</pre></span><pre>    &quot;&quot;&quot;</pre></div>
+<div class="skip"><span class="num"><pre> 71</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 72</pre></span><pre>class Context(object):</pre></div>
+<div class="skip"><span class="num"><pre> 73</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 74</pre></span><pre>    def __init__(self, default=_NoDefault):</pre></div>
+<div class="cov"><span class="num"><pre> 75</pre></span><pre>        self.__dict__['_local'] = threadinglocal.local()</pre></div>
+<div class="cov"><span class="num"><pre> 76</pre></span><pre>        self.__dict__['_default'] = default</pre></div>
+<div class="skip"><span class="num"><pre> 77</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 78</pre></span><pre>    def __getattr__(self, attr):</pre></div>
+<div class="cov"><span class="num"><pre> 79</pre></span><pre>        if attr.startswith('_'):</pre></div>
+<div class="nocov"><span class="num"><pre> 80</pre></span><pre>            raise AttributeError</pre></div>
+<div class="cov"><span class="num"><pre> 81</pre></span><pre>        try:</pre></div>
+<div class="cov"><span class="num"><pre> 82</pre></span><pre>            stack = self._local.stack</pre></div>
+<div class="nocov"><span class="num"><pre> 83</pre></span><pre>        except AttributeError:</pre></div>
+<div class="nocov"><span class="num"><pre> 84</pre></span><pre>            stack = []</pre></div>
+<div class="cov"><span class="num"><pre> 85</pre></span><pre>        for i in range(len(stack)-1, -1, -1):</pre></div>
+<div class="cov"><span class="num"><pre> 86</pre></span><pre>            if attr in stack[i][0]:</pre></div>
+<div class="cov"><span class="num"><pre> 87</pre></span><pre>                return stack[i][0][attr]</pre></div>
+<div class="cov"><span class="num"><pre> 88</pre></span><pre>        if self._default is _NoDefault:</pre></div>
+<div class="nocov"><span class="num"><pre> 89</pre></span><pre>            raise AttributeError(</pre></div>
+<div class="nocov"><span class="num"><pre> 90</pre></span><pre>                &quot;The attribute %s has not been set on %r&quot;</pre></div>
+<div class="nocov"><span class="num"><pre> 91</pre></span><pre>                % (attr, self))</pre></div>
+<div class="cov"><span class="num"><pre> 92</pre></span><pre>        return self._default</pre></div>
+<div class="skip"><span class="num"><pre> 93</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre> 94</pre></span><pre>    def __setattr__(self, attr, value):</pre></div>
+<div class="nocov"><span class="num"><pre> 95</pre></span><pre>        raise AttributeError(</pre></div>
+<div class="nocov"><span class="num"><pre> 96</pre></span><pre>            &quot;You can only write attribute on context object with the .set() method&quot;)</pre></div>
+<div class="skip"><span class="num"><pre> 97</pre></span><pre>    </pre></div>
+<div class="cov"><span class="num"><pre> 98</pre></span><pre>    def set(self, **kw):</pre></div>
+<div class="cov"><span class="num"><pre> 99</pre></span><pre>        state_id = _restore_ids.next()</pre></div>
+<div class="cov"><span class="num"><pre>100</pre></span><pre>        try:</pre></div>
+<div class="cov"><span class="num"><pre>101</pre></span><pre>            stack = self._local.stack</pre></div>
+<div class="cov"><span class="num"><pre>102</pre></span><pre>        except AttributeError:</pre></div>
+<div class="cov"><span class="num"><pre>103</pre></span><pre>            stack = self._local.stack = [({}, -1)]</pre></div>
+<div class="cov"><span class="num"><pre>104</pre></span><pre>        restorer = RestoreState(self, state_id)</pre></div>
+<div class="cov"><span class="num"><pre>105</pre></span><pre>        stack.append((kw, state_id))</pre></div>
+<div class="cov"><span class="num"><pre>106</pre></span><pre>        return restorer</pre></div>
+<div class="skip"><span class="num"><pre>107</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>108</pre></span><pre>    def _restore(self, state_id):</pre></div>
+<div class="cov"><span class="num"><pre>109</pre></span><pre>        try:</pre></div>
+<div class="cov"><span class="num"><pre>110</pre></span><pre>            stack = self._local.stack</pre></div>
+<div class="nocov"><span class="num"><pre>111</pre></span><pre>        except AttributeError:</pre></div>
+<div class="nocov"><span class="num"><pre>112</pre></span><pre>            raise ContextRestoreError(</pre></div>
+<div class="nocov"><span class="num"><pre>113</pre></span><pre>                &quot;Tried to restore context %r (to state ID %s) but no variables have been set in context&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>114</pre></span><pre>                % (self, state_id))</pre></div>
+<div class="cov"><span class="num"><pre>115</pre></span><pre>        if stack[-1][1] == -1:</pre></div>
+<div class="nocov"><span class="num"><pre>116</pre></span><pre>            raise ContextRestoreError(</pre></div>
+<div class="nocov"><span class="num"><pre>117</pre></span><pre>                &quot;Out of order restoration of context %r (to state ID %s); the stack state is empty&quot;</pre></div>
+<div class="nocov"><span class="num"><pre>118</pre></span><pre>                % (self, state_id))</pre></div>
+<div class="cov"><span class="num"><pre>119</pre></span><pre>        if stack[-1][1] != state_id:</pre></div>
+<div class="cov"><span class="num"><pre>120</pre></span><pre>            raise ContextRestoreError(</pre></div>
+<div class="cov"><span class="num"><pre>121</pre></span><pre>                &quot;Out of order restoration of context %r (to state ID %s) when last state is %s&quot;</pre></div>
+<div class="cov"><span class="num"><pre>122</pre></span><pre>                % (self, state_id, stack[-1][1]))</pre></div>
+<div class="cov"><span class="num"><pre>123</pre></span><pre>        stack.pop()</pre></div>
+<div class="skip"><span class="num"><pre>124</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>125</pre></span><pre>    def set_default(self, **kw):</pre></div>
+<div class="cov"><span class="num"><pre>126</pre></span><pre>        try:</pre></div>
+<div class="cov"><span class="num"><pre>127</pre></span><pre>            stack = self._local.stack</pre></div>
+<div class="nocov"><span class="num"><pre>128</pre></span><pre>        except AttributeError:</pre></div>
+<div class="nocov"><span class="num"><pre>129</pre></span><pre>            stack = self._local.stack = [({}, -1)]</pre></div>
+<div class="cov"><span class="num"><pre>130</pre></span><pre>        stack[0][0].update(kw)</pre></div>
+<div class="skip"><span class="num"><pre>131</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>132</pre></span><pre>    def __repr__(self):</pre></div>
+<div class="cov"><span class="num"><pre>133</pre></span><pre>        try:</pre></div>
+<div class="cov"><span class="num"><pre>134</pre></span><pre>            stack = self._local.stack</pre></div>
+<div class="nocov"><span class="num"><pre>135</pre></span><pre>        except AttributeError:</pre></div>
+<div class="nocov"><span class="num"><pre>136</pre></span><pre>            stack = []</pre></div>
+<div class="cov"><span class="num"><pre>137</pre></span><pre>        myid = hex(abs(id(self)))[2:]</pre></div>
+<div class="cov"><span class="num"><pre>138</pre></span><pre>        if not stack:</pre></div>
+<div class="nocov"><span class="num"><pre>139</pre></span><pre>            return '&lt;%s %s (empty)&gt;' % (self.__class__.__name__, myid)</pre></div>
+<div class="cov"><span class="num"><pre>140</pre></span><pre>        cur = {}</pre></div>
+<div class="cov"><span class="num"><pre>141</pre></span><pre>        for vars, state_id in stack:</pre></div>
+<div class="cov"><span class="num"><pre>142</pre></span><pre>            cur.update(vars)</pre></div>
+<div class="cov"><span class="num"><pre>143</pre></span><pre>        keys = cur.keys()</pre></div>
+<div class="cov"><span class="num"><pre>144</pre></span><pre>        keys.sort()</pre></div>
+<div class="cov"><span class="num"><pre>145</pre></span><pre>        varlist = []</pre></div>
+<div class="cov"><span class="num"><pre>146</pre></span><pre>        for key in keys:</pre></div>
+<div class="cov"><span class="num"><pre>147</pre></span><pre>            rep = repr(cur[key])</pre></div>
+<div class="cov"><span class="num"><pre>148</pre></span><pre>            if len(rep) &gt; 10:</pre></div>
+<div class="nocov"><span class="num"><pre>149</pre></span><pre>                rep = rep[:9]+'...'+rep[-1]</pre></div>
+<div class="cov"><span class="num"><pre>150</pre></span><pre>            varlist.append('%s=%s' % (key, rep))</pre></div>
+<div class="cov"><span class="num"><pre>151</pre></span><pre>        return '&lt;%s %s %s&gt;' % (</pre></div>
+<div class="cov"><span class="num"><pre>152</pre></span><pre>            self.__class__.__name__, myid, ' '.join(varlist))</pre></div>
+<div class="skip"><span class="num"><pre>153</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>154</pre></span><pre>class RestoreState(object):</pre></div>
+<div class="skip"><span class="num"><pre>155</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>156</pre></span><pre>    def __init__(self, context, state_id):</pre></div>
+<div class="cov"><span class="num"><pre>157</pre></span><pre>        self.state_id = state_id</pre></div>
+<div class="cov"><span class="num"><pre>158</pre></span><pre>        self.context = context</pre></div>
+<div class="cov"><span class="num"><pre>159</pre></span><pre>        self.restored = False</pre></div>
+<div class="skip"><span class="num"><pre>160</pre></span><pre></pre></div>
+<div class="cov"><span class="num"><pre>161</pre></span><pre>    def restore(self):</pre></div>
+<div class="cov"><span class="num"><pre>162</pre></span><pre>        if self.restored:</pre></div>
+<div class="skip"><span class="num"><pre>163</pre></span><pre>            # @@: Should this really be allowed?</pre></div>
+<div class="nocov"><span class="num"><pre>164</pre></span><pre>            return</pre></div>
+<div class="cov"><span class="num"><pre>165</pre></span><pre>        self.context._restore(self.state_id)</pre></div>
+<div class="cov"><span class="num"><pre>166</pre></span><pre>        self.restored = True</pre></div>
+<div class="skip"><span class="num"><pre>167</pre></span><pre>        </pre></div>
+<div class="skip"><span class="num"><pre>168</pre></span><pre></pre></div>
+</div>
+</body>
+</html>
