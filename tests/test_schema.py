@@ -187,3 +187,31 @@ def test_SimpleFormValidator_doc():
     g = SimpleFormValidator(f)
 
     assert f.__doc__ == g.__doc__, "Docstrings don't match!"
+
+class TestAtLeastOneCheckboxIsChecked(object):
+    """ tests to address sourceforge bug #1777245
+        
+        The reporter is trying to enforce agreement to a Terms of Service
+        agreement, with failure to check the 'I agree' checkbox handled as
+        a validation failure. The tests below illustrate a working approach.
+    """
+    
+    def setup(self):
+        self.not_empty_messages = {'missing': 'a missing value message'}
+        class CheckForCheckboxSchema(Schema):
+            agree = validators.StringBool(messages=self.not_empty_messages)
+        self.schema = CheckForCheckboxSchema()
+    
+    def test_Schema_with_input_present(self):
+        # <input type="checkbox" name="agree" value="yes" checked="checked">
+        result = self.schema.to_python({'agree': 'yes'})
+        assert result['agree'] is True
+
+    def test_Schema_with_input_missing(self):
+        # <input type="checkbox" name="agree" value="yes">
+        try:
+            result = self.schema.to_python({})
+        except Invalid, exc:
+            error_message = exc.error_dict['agree'].msg
+            assert self.not_empty_messages['missing'] == error_message, \
+                error_message
