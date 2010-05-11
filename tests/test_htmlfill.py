@@ -74,6 +74,7 @@ def run_filename(filename):
         print expected
         assert 0
     checker(p, listener.schema())
+    checker(p, htmlfill_schemabuilder.parse_schema(template))
 
 def test_no_trailing_newline():
     assert (htmlfill.render('<html><body></body></html>', {}, {})
@@ -88,10 +89,10 @@ def test_escape_defaults():
     assert (htmlfill.render('<input type="submit" value="Japan - &#x65E5;&#x672C; Nihon" />',
                             {}, {}) ==
             u'<input type="submit" value="Japan - 日本 Nihon" />')
-    
+
 def test_xhtml():
     result = htmlfill.render('<form:error name="code"/>', errors={'code': 'an error'})
-    
+
 def test_trailing_error():
     assert (htmlfill.render('<input type="text" name="email">', errors={'email': 'error'},
                             prefix_error=False)
@@ -131,7 +132,7 @@ def test_image_submit():
 
 def test_unicode():
     assert (htmlfill.render(u'<input type="checkbox" name="tags" value="2" />',
-                           dict(tags=[])) == 
+                           dict(tags=[])) ==
             '<input type="checkbox" name="tags" value="2" />')
 
 def test_not_force_defaults_text():
@@ -269,7 +270,7 @@ def test_not_force_defaults_select():
     rendered_html = htmlfill.render(html, defaults=dict(),
                                     force_defaults=False)
     assert html == rendered_html, rendered_html
-    
+
 def test_not_force_defaults_select_selected():
     html = """
 <select name="select-1" class="my_select">
@@ -284,7 +285,7 @@ def test_not_force_defaults_select_selected():
     rendered_html = htmlfill.render(html, defaults={"select-1": "option-1"},
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
-    
+
 def test_not_force_defaults_select_not_selected():
     html = """
 <select name="select-1" class="my_select">

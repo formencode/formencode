@@ -7,7 +7,7 @@ You can either pass ``SchemaBuilder`` to ``htmlfill.render`` (the
 ``Schema`` object.
 """
 
-import validators, schema, compound
+import validators, schema, compound, htmlfill
 
 __all__ = ['parse_schema', 'SchemaBuilder']
 
@@ -16,10 +16,10 @@ def parse_schema(form):
     Given an HTML form, parse out the schema defined in it and return
     that schema.
     """
-    listener = htmlfill_schemabuilder.SchemaBuilder()
+    listener = SchemaBuilder()
     p = htmlfill.FillingParser(
         defaults={}, listener=listener)
-    p.feed(self.form)
+    p.feed(form)
     p.close()
     return listener.schema()
 
@@ -64,7 +64,7 @@ class SchemaBuilder(object):
 
     def schema(self):
         return self._schema
-        
+
     def listen_input(self, parser, tag, attrs):
         get_attr = parser.get_attr
         name = get_attr(attrs, 'name')
