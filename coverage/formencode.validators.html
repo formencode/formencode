@@ -13,8 +13,8 @@ formencode.validators
 div.coverage div { clear: both; height: 1.1em}
 </style>
 <div class="stats">
-Covered: 295 lines<br/>
-Missed: 2199 lines<br/>
+Covered: 299 lines<br/>
+Missed: 2195 lines<br/>
 Skipped 499 lines<br/>
 Percent: 11 %<br/>
 
@@ -2354,10 +2354,10 @@ Percent: 11 %<br/>
 <div class="nocov"><span class="num"><pre>2332</pre></span><pre>    messages = { &quot;string&quot; : _(&quot;Value should be %(true)r or %(false)r&quot;) }</pre></div>
 <div class="skip"><span class="num"><pre>2333</pre></span><pre></pre></div>
 <div class="nocov"><span class="num"><pre>2334</pre></span><pre>    def _to_python(self, value, state):</pre></div>
-<div class="nocov"><span class="num"><pre>2335</pre></span><pre>        if isinstance(value, (str, unicode)):</pre></div>
-<div class="nocov"><span class="num"><pre>2336</pre></span><pre>            value = value.strip().lower()</pre></div>
-<div class="nocov"><span class="num"><pre>2337</pre></span><pre>            if value in self.true_values:</pre></div>
-<div class="nocov"><span class="num"><pre>2338</pre></span><pre>                return True</pre></div>
+<div class="cov"><span class="num"><pre>2335</pre></span><pre>        if isinstance(value, (str, unicode)):</pre></div>
+<div class="cov"><span class="num"><pre>2336</pre></span><pre>            value = value.strip().lower()</pre></div>
+<div class="cov"><span class="num"><pre>2337</pre></span><pre>            if value in self.true_values:</pre></div>
+<div class="cov"><span class="num"><pre>2338</pre></span><pre>                return True</pre></div>
 <div class="nocov"><span class="num"><pre>2339</pre></span><pre>            if not value or value in self.false_values:</pre></div>
 <div class="nocov"><span class="num"><pre>2340</pre></span><pre>                return False</pre></div>
 <div class="nocov"><span class="num"><pre>2341</pre></span><pre>            raise Invalid(self.message(&quot;string&quot;, state,</pre></div>
