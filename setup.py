@@ -3,12 +3,16 @@ from setuptools import setup
 
 version = '1.2.3'
 
+if not '2.3' <= sys.version < '3.0':
+    raise ImportError('Python version not supported')
+
 tests_require = ['nose']
 if sys.version < '2.5':
     tests_require.append('elementtree')
 
 setup(name="FormEncode",
       version=version,
+      #requires_python=]'>=2.3,<3', # PEP345
       description="HTML form validation, generation, and conversion package",
       long_description="""\
 FormEncode validates and converts nested structures.  It allows for
