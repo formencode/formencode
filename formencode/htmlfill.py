@@ -3,8 +3,8 @@ Parser for HTML forms, that fills in defaults and errors.  See
 ``render``.
 """
 
-import HTMLParser
 import re
+
 from formencode.rewritingparser import RewritingParser, html_quote
 
 __all__ = ['render', 'htmlliteral', 'default_formatter',

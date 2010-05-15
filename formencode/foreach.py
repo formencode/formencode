@@ -3,17 +3,19 @@ Validator for repeating items.
 """
 
 import warnings
+
+try:
+    set
+except NameError: # Python < 2.4
+    from sets import Set as set
+
 filters = warnings.filters[:]
 warnings.simplefilter('ignore', DeprecationWarning)
 warnings.filters = filters
 
-try:
-    set
-except NameError:
-    from sets import Set as set
 
 from api import NoDefault, Invalid
-from compound import CompoundValidator, to_python, from_python
+from compound import CompoundValidator, from_python
 
 __all__ = ['ForEach']
 

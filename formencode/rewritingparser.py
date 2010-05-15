@@ -1,6 +1,8 @@
+
+import cgi
 import HTMLParser
 import re
-import cgi
+
 from htmlentitydefs import name2codepoint
 
 def html_quote(v):

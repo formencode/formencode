@@ -54,14 +54,15 @@ And ``page`` will be set to ``'view'`` only inside that ``with``
 block.
 """
 
-from formencode.util import threadinglocal
 from itertools import count
+
+from formencode.util import threadinglocal
 
 __all__ = ['Context', 'ContextRestoreError']
 
 _restore_ids = count()
 
-class _NoDefault:
+class _NoDefault(object):
     pass
 
 class ContextRestoreError(Exception):

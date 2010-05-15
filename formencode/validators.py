@@ -4,29 +4,15 @@
 Validator/Converters for use with FormEncode.
 """
 
+import cgi
 import locale
-import warnings
 import re
-DateTime = None
-httplib = None
-urlparse = None
-import socket
-from interfaces import *
-from api import *
-sha1 = random = None
-
-filters = warnings.filters[:]
-warnings.simplefilter('ignore', DeprecationWarning)
-warnings.filters = filters
+import warnings
 
 try:
     set
-except NameError:
+except NameError: # Python < 2.4
     from sets import Set as set
-
-import cgi
-
-import fieldstorage
 
 try:
     import DNS
@@ -34,6 +20,20 @@ try:
     have_dns = True
 except ImportError:
     have_dns = False
+
+# These are only imported when needed
+httplib = None
+random = None
+sha1 = None
+socket = None
+urlparse = None
+
+filters = warnings.filters[:]
+warnings.simplefilter('ignore', DeprecationWarning)
+warnings.filters = filters
+
+from interfaces import *
+from api import *
 
 # dummy translation function, nothing is translated here.
 # Instead this is actually done in api.message.
@@ -53,7 +53,7 @@ mxDateTime_module = None
 def import_datetime(module_type):
     global datetime_module, mxDateTime_module
     module_type = module_type and module_type.lower() or 'datetime'
-    if module_type == 'datetimex':
+    if module_type == 'datetime':
         if datetime_module is None:
             import datetime as datetime_module
         return datetime_module
@@ -2363,7 +2363,7 @@ class SignedString(FancyValidator):
         if not sha1:
             try:
                 from hashlib import sha1
-            except ImportError:
+            except ImportError: # Python < 2.5
                 from sha import sha as sha1
         assert self.secret is not None, (
             "You must give a secret")

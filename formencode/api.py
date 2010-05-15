@@ -3,9 +3,11 @@ Core classes for validation.
 """
 
 import declarative
-import textwrap
-import re
+import gettext
 import os
+import re
+import textwrap
+
 try:
     from pkg_resources import resource_filename
 except ImportError:
@@ -13,8 +15,6 @@ except ImportError:
 
 __all__ = ['NoDefault', 'Invalid', 'Validator', 'Identity',
            'FancyValidator', 'is_validator']
-
-import gettext
 
 def get_localedir():
     """

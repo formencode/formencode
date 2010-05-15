@@ -2,7 +2,6 @@
 Module to rename form fields
 """
 
-import HTMLParser
 from formencode.rewritingparser import RewritingParser
 
 __all__ = ['rename', 'add_prefix']

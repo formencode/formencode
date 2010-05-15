@@ -61,7 +61,7 @@ from __future__ import generators
 from cgi import escape
 try:
     import xml.etree.ElementTree as ET
-except ImportError:
+except ImportError: # Python < 2.5
     import elementtree.ElementTree as ET
 
 default_encoding = 'utf-8'
