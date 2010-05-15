@@ -5,6 +5,7 @@ import re
 
 from htmlentitydefs import name2codepoint
 
+
 def html_quote(v):
     if v is None:
         return ''
@@ -18,6 +19,7 @@ def html_quote(v):
         else:
             v = str(v)
         return cgi.escape(v, 1)
+
 
 class RewritingParser(HTMLParser.HTMLParser):
 

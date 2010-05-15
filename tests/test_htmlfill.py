@@ -113,6 +113,7 @@ def test_trailing_error():
                             prefix_error=False)
             == '<select name="type" class="error"><option value="foo">foo</option></select><!-- for: type -->\n<span class="error-message">error</span><br />\n')
 
+
 def test_iferror():
     assert (htmlfill.render('<form:iferror name="field1">an error</form:iferror>', errors={}, auto_insert_errors=False)
             == '')
@@ -129,6 +130,7 @@ def test_iferror():
                             errors={'field1': 'foo'}, auto_insert_errors=False)
             == 'errors')
 
+
 def test_literal():
     assert (htmlfill.render('<form:error name="foo" />',
                             errors={'foo': htmlfill.htmlliteral('<test>')})
@@ -139,16 +141,19 @@ def test_image_submit():
                             defaults={'image-submit': 'blahblah'})
             == '<input name="image-submit" type="image" src="foo.jpg" value="bar">')
 
+
 def test_unicode():
     assert (htmlfill.render(u'<input type="checkbox" name="tags" value="2" />',
                            dict(tags=[])) ==
             '<input type="checkbox" name="tags" value="2" />')
+
 
 def test_not_force_defaults_text():
     html = """<input type="text" name="text-1" class="my_text" value="i like this text" />"""
     rendered_html = htmlfill.render(html, defaults=dict(),
                                     force_defaults=False)
     assert html == rendered_html, rendered_html
+
 
 def test_not_force_defaults_text_value():
     html = """<input type="text" name="text-1" class="my_text" value="i like this text" />"""
@@ -157,6 +162,7 @@ def test_not_force_defaults_text_value():
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
+
 def test_not_force_defaults_text_explicit_empty_value():
     html = """<input type="text" name="text-1" class="my_text" value="i like this text" />"""
     expected_html = """<input type="text" name="text-1" class="my_text" value="" />"""
@@ -164,17 +170,20 @@ def test_not_force_defaults_text_explicit_empty_value():
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
+
 def test_force_defaults_text():
     html = """<input type="text" name="text-1" class="my_text" value="i like this text" />"""
     expected_html = """<input type="text" name="text-1" class="my_text" value="" />"""
     rendered_html = htmlfill.render(html, defaults=dict())
     assert expected_html == rendered_html, rendered_html
 
+
 def test_not_force_defaults_textarea():
     html = """<textarea name="textarea-1" class="my_textarea">i like this text</textarea>"""
     rendered_html = htmlfill.render(html, defaults=dict(),
                                     force_defaults=False)
     assert html == rendered_html, rendered_html
+
 
 def test_not_force_defaults_textarea_value():
     html = """<textarea name="textarea-1" class="my_textarea">i like this text</textarea>"""
@@ -183,6 +192,7 @@ def test_not_force_defaults_textarea_value():
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
+
 def test_force_defaults_textarea():
     html = """<textarea name="textarea-1" class="my_textarea">i like this text</textarea>"""
     expected_html = \
@@ -190,11 +200,13 @@ def test_force_defaults_textarea():
     rendered_html = htmlfill.render(html, defaults=dict())
     assert expected_html == rendered_html, rendered_html
 
+
 def test_not_force_defaults_password():
     html = """<input type="password" name="password-1" class="my_password" value="i like this password" />"""
     rendered_html = htmlfill.render(html, defaults=dict(),
                                     force_defaults=False)
     assert html == rendered_html, rendered_html
+
 
 def test_not_force_defaults_password_value():
     html = """<input type="password" name="password-1" class="my_password" value="i like this password" />"""
@@ -203,6 +215,7 @@ def test_not_force_defaults_password_value():
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
+
 def test_not_force_defaults_password_explicit_empty_value():
     html = """<input type="password" name="password-1" class="my_password" value="i like this password" />"""
     expected_html = """<input type="password" name="password-1" class="my_password" value="" />"""
@@ -210,17 +223,20 @@ def test_not_force_defaults_password_explicit_empty_value():
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
+
 def test_force_defaults_password():
     html = """<input type="password" name="password-1" class="my_password" value="i like this password" />"""
     expected_html = """<input type="password" name="password-1" class="my_password" value="" />"""
     rendered_html = htmlfill.render(html, defaults=dict())
     assert expected_html == rendered_html, rendered_html
 
+
 def test_not_force_defaults_checkbox():
     html = """<input type="checkbox" name="checkbox-1" class="my_checkbox" checked="checked" value="cb">"""
     rendered_html = htmlfill.render(html, defaults=dict(),
                                     force_defaults=False)
     assert html == rendered_html, rendered_html
+
 
 def test_force_defaults_checkbox():
     html = """<input type="checkbox" name="checkbox-1" class="my_checkbox" checked="checked" value="cb">"""
@@ -229,12 +245,14 @@ def test_force_defaults_checkbox():
     rendered_html = htmlfill.render(html, defaults=dict())
     assert expected_html == rendered_html, rendered_html
 
+
 def test_not_force_defaults_checkbox_default_unchecked():
     html = """<input type="checkbox" name="checkbox-1" class="my_checkbox" checked="checked" value="cb">"""
     expected_html = \
         """<input type="checkbox" name="checkbox-1" class="my_checkbox" value="cb">"""
     rendered_html = htmlfill.render(html, defaults={"checkbox-1": False})
     assert expected_html == rendered_html, rendered_html
+
 
 def test_not_force_defaults_checkbox_default_checked():
     html = """<input type="checkbox" name="checkbox-1" class="my_checkbox" value="cb">"""
@@ -244,11 +262,13 @@ def test_not_force_defaults_checkbox_default_checked():
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
+
 def test_not_force_defaults_radio():
     html = """<input type="radio" name="radio-1" class="my_radio" checked="checked" value="cb">"""
     rendered_html = htmlfill.render(html, defaults=dict(),
                                     force_defaults=False)
     assert html == rendered_html, rendered_html
+
 
 def test_not_force_defaults_radio_unchecked():
     html = """<input type="radio" name="radio-1" class="my_radio" checked="checked" value="cb">"""
@@ -257,6 +277,7 @@ def test_not_force_defaults_radio_unchecked():
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
+
 def test_not_force_defaults_radio_checked():
     html = """<input type="radio" name="radio-1" class="my_radio" value="cb">"""
     expected_html = """<input type="radio" name="radio-1" class="my_radio" value="cb" checked="checked">"""
@@ -264,11 +285,13 @@ def test_not_force_defaults_radio_checked():
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
+
 def test_force_defaults_radio():
     html = """<input type="radio" name="radio-1" class="my_radio" checked="checked" value="cb">"""
     expected_html = """<input type="radio" name="radio-1" class="my_radio" value="cb">"""
     rendered_html = htmlfill.render(html, defaults=dict())
     assert expected_html == rendered_html, rendered_html
+
 
 def test_not_force_defaults_select():
     html = """
@@ -279,6 +302,7 @@ def test_not_force_defaults_select():
     rendered_html = htmlfill.render(html, defaults=dict(),
                                     force_defaults=False)
     assert html == rendered_html, rendered_html
+
 
 def test_not_force_defaults_select_selected():
     html = """
@@ -295,6 +319,7 @@ def test_not_force_defaults_select_selected():
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
+
 def test_not_force_defaults_select_not_selected():
     html = """
 <select name="select-1" class="my_select">
@@ -310,6 +335,7 @@ def test_not_force_defaults_select_not_selected():
                                     force_defaults=False)
     assert expected_html == rendered_html, rendered_html
 
+
 def test_force_defaults_select():
     html = """
 <select name="select-1" class="my_select">
@@ -324,10 +350,11 @@ def test_force_defaults_select():
     rendered_html = htmlfill.render(html, defaults=dict())
     assert expected_html == rendered_html, rendered_html
 
+
 def test_script_quoting():
     html = """
 <script>Some <weird JS</script>
-Then a form <input type="text" name="name">
+Then a form <input tdype="text" name="name">
 """
     expected_html = """
 <script>Some <weird JS</script>
