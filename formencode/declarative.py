@@ -18,21 +18,10 @@ Also, you can define a __classinit__(cls, new_attrs) method, which
 will be called when the class is created (including subclasses).
 """
 
-from __future__ import generators
-
 import copy
+import itertools
 import new
 
-try:
-    import itertools
-    counter = itertools.count()
-except ImportError:
-    def _counter():
-        i = 0
-        while 1:
-            i += 1
-            yield i
-    counter = _counter()
 
 class classinstancemethod(object):
     """
@@ -76,7 +65,7 @@ class DeclarativeMeta(type):
         cls = type.__new__(meta, class_name, bases, new_attrs)
         for name in cls.__mutableattributes__:
             setattr(cls, name, copy.copy(getattr(cls, name)))
-        cls.declarative_count = counter.next()
+        cls.declarative_count = cls.counter.next()
         if (new_attrs.has_key('__classinit__')
             and not isinstance(cls.__classinit__, staticmethod)):
             setattr(cls, '__classinit__',
@@ -116,6 +105,8 @@ class Declarative(object):
     __metaclass__ = DeclarativeMeta
 
     __singletonmethods__ = ()
+    
+    counter = itertools.count()
 
     def __classinit__(cls, new_attrs):
         pass
@@ -149,7 +140,7 @@ class Declarative(object):
         for name, value in kw.items():
             setattr(self, name, value)
         if not kw.has_key('declarative_count'):
-            self.declarative_count = counter.next()
+            self.declarative_count = self.counter.next()
         self.__initargs__(kw)
 
     def __initargs__(self, new_attrs):

@@ -56,8 +56,6 @@ Examples::
 
 """
 
-from __future__ import generators
-
 from cgi import escape
 try:
     import xml.etree.ElementTree as ET
