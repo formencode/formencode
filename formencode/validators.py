@@ -46,33 +46,23 @@ _ = lambda s: s
 ## Utility methods
 ############################################################
 
-# These all deal with accepting both mxDateTime and datetime
-# modules and types
+# These all deal with accepting both datetime and mxDateTime modules and types
 datetime_module = None
 mxDateTime_module = None
 
 def import_datetime(module_type):
     global datetime_module, mxDateTime_module
-    if module_type is None:
-        try:
-            if datetime_module is None:
-                import datetime as datetime_module
-            return datetime_module
-        except ImportError:
-            if mxDateTime_module is None:
-                from mx import DateTime as mxDateTime_module
-            return mxDateTime_module
-
-    module_type = module_type.lower()
-    assert module_type in ('datetime', 'mxdatetime')
-    if module_type == 'datetime':
+    module_type = module_type and module_type.lower() or 'datetime'
+    if module_type == 'datetimex':
         if datetime_module is None:
             import datetime as datetime_module
         return datetime_module
-    else:
+    elif module_type == 'mxdatetime':
         if mxDateTime_module is None:
             from mx import DateTime as mxDateTime_module
         return mxDateTime_module
+    else:
+        raise ImportError('Invalid datetime module %r' % module_type)
 
 def datetime_now(module):
     if module.__name__ == 'datetime':
@@ -89,17 +79,17 @@ def datetime_makedate(module, year, month, day):
         except module.RangeError, e:
             raise ValueError(str(e))
 
-
-# TODO: Needs being extended to support mx.DateTime as well.
 def datetime_time(module):
     if module.__name__ == 'datetime':
         return module.time
-
-# TODO: Needs being extended to support mx.DateTime as well.
+    else:
+        return module.Time
+    
 def datetime_isotime(module):
     if module.__name__ == 'datetime':
         return module.time.isoformat
-
+    else:
+        return module.ISO.Time
 
 
 ############################################################
@@ -793,9 +783,8 @@ class DateValidator(FancyValidator):
     after_now = False
     # Like after_now, but just after this morning:
     today_or_after = False
-    # Use 'datetime' to force the Python 2.3+ datetime module, or
-    # 'mxDateTime' to force the mxDateTime module (None means use
-    # datetime, or if not present mxDateTime)
+    # Use None or 'datetime' for the datetime module in the standard lib,
+    # or 'mxDateTime' to force the mxDateTime module
     datetime_module = None
 
     messages = {
