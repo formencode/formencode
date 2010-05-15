@@ -184,8 +184,8 @@ class Validator(declarative.Declarative):
     repeating = False
     compound = False
     gettextargs = {}
-    use_builtins_gettext = True #In case you dont want to use __builtins__._
-                                #altough it may be definied, set this to False
+    use_builtins_gettext = True # In case you don't want to use __builtins__._
+                                # although it may be defined, set this to False
     
     __singletonmethods__ = ('to_python', 'from_python', 'message', 'all_messages',
                             'subvalidators')
@@ -228,7 +228,6 @@ class Validator(declarative.Declarative):
  
         if not callable(trans):
             trans = _stdtrans
-
 
         msg = self._messages[msgName]
         msg = trans(msg, **self.gettextargs)

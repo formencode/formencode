@@ -1,15 +1,16 @@
 """
 Validator for repeating items.
 """
+
 import warnings
 filters = warnings.filters[:]
 warnings.simplefilter('ignore', DeprecationWarning)
-from sets import Set
 warnings.filters = filters
+
 try:
     set
 except NameError:
-    set = Set
+    from sets import Set as set
 
 from api import NoDefault, Invalid
 from compound import CompoundValidator, to_python, from_python
@@ -63,7 +64,7 @@ class ForEach(CompoundValidator):
         new_list = []
         errors = []
         all_good = True
-        is_set = isinstance(value, (set, Set))
+        is_set = isinstance(value, set)
         if state is not None:
             previous_index = getattr(state, 'index', NoDefault)
             previous_full_list = getattr(state, 'full_list', NoDefault)

@@ -17,12 +17,12 @@ sha1 = random = None
 
 filters = warnings.filters[:]
 warnings.simplefilter('ignore', DeprecationWarning)
-import sets
 warnings.filters = filters
+
 try:
     set
 except NameError:
-    set = sets.Set
+    from sets import Set as set
 
 import cgi
 
@@ -31,11 +31,9 @@ import fieldstorage
 try:
     import DNS
     DNS.DiscoverNameServers()
-    have_dns=True
+    have_dns = True
 except ImportError:
-    have_dns=False
-
-True, False = (1==1), (0==1)
+    have_dns = False
 
 # dummy translation function, nothing is translated here.
 # Instead this is actually done in api.message.
@@ -1216,7 +1214,7 @@ class Set(FancyValidator):
 
     def _to_python(self, value, state):
         if self.use_set:
-            if isinstance(value, (set, sets.Set)):
+            if isinstance(value, set):
                 return value
             elif isinstance(value, (list, tuple)):
                 return set(value)
@@ -1227,7 +1225,7 @@ class Set(FancyValidator):
         else:
             if isinstance(value, list):
                 return value
-            elif sets and isinstance(value, (set, sets.Set)):
+            elif isinstance(value, set):
                 return list(value)
             elif isinstance(value, tuple):
                 return list(value)
