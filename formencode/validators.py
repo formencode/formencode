@@ -2775,7 +2775,7 @@ class CreditCardValidator(FormValidator):
             if len(number) == length:
                 validLength = True
             if (len(number) == length
-                and number.startswith(prefix)):
+                    and number.startswith(prefix)):
                 foundValid = True
                 break
         if not validLength:
@@ -2788,16 +2788,13 @@ class CreditCardValidator(FormValidator):
         return None
 
     def _validateMod10(self, s):
-        """
-        This code by Sean Reifschneider, of tummy.com
-        """
-        double = 0
-        sum = 0
-        for i in range(len(s) - 1, -1, -1):
-            for c in str((double + 1) * int(s[i])):
-                sum = sum + int(c)
-            double = (double + 1) % 2
-        return((sum % 10) == 0)
+        """Check string with the mod 10 algorithm (aka "Luhn formula")."""
+        checksum, factor = 0, 1
+        for c in s[::-1]:
+            for c in str(factor * int(c)):
+                checksum += int(c)
+            factor = 3 - factor
+        return checksum % 10 == 0
 
     _cardInfo = {
         "visa": [('4', 16),
