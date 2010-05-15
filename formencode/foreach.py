@@ -19,6 +19,7 @@ from compound import CompoundValidator, from_python
 
 __all__ = ['ForEach']
 
+
 class ForEach(CompoundValidator):
 
     """

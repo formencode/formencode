@@ -42,6 +42,7 @@ from api import *
 # (Note: we can't use a def statement, because pygettext dislikes it)
 _ = lambda s: s
 
+
 ############################################################
 ## Utility methods
 ############################################################
@@ -49,6 +50,7 @@ _ = lambda s: s
 # These all deal with accepting both datetime and mxDateTime modules and types
 datetime_module = None
 mxDateTime_module = None
+
 
 def import_datetime(module_type):
     global datetime_module, mxDateTime_module
@@ -64,11 +66,13 @@ def import_datetime(module_type):
     else:
         raise ImportError('Invalid datetime module %r' % module_type)
 
+
 def datetime_now(module):
     if module.__name__ == 'datetime':
         return module.datetime.now()
     else:
         return module.now()
+
 
 def datetime_makedate(module, year, month, day):
     if module.__name__ == 'datetime':
@@ -79,12 +83,14 @@ def datetime_makedate(module, year, month, day):
         except module.RangeError, e:
             raise ValueError(str(e))
 
+
 def datetime_time(module):
     if module.__name__ == 'datetime':
         return module.time
     else:
         return module.Time
-    
+
+
 def datetime_isotime(module):
     if module.__name__ == 'datetime':
         return module.time.isoformat
@@ -188,6 +194,7 @@ class ConfirmType(FancyValidator):
     def is_empty(self, value):
         return False
 
+
 class Wrapper(FancyValidator):
 
     """
@@ -252,6 +259,7 @@ class Wrapper(FancyValidator):
                 raise Invalid(str(e), {}, value, state)
         return result
 
+
 class Constant(FancyValidator):
 
     """
@@ -282,6 +290,7 @@ class Constant(FancyValidator):
         return self.value
 
     _from_python = _to_python
+
 
 ############################################################
 ## Normal validators
@@ -321,6 +330,7 @@ class MaxLength(FancyValidator):
     """
 
     __unpackargs__ = ('maxLength',)
+
     messages = {
         'tooLong': _("Enter a value less than %(maxLength)i characters long"),
         'invalid': _("Invalid value (value with length expected)"),
@@ -338,6 +348,7 @@ class MaxLength(FancyValidator):
         except TypeError:
             raise Invalid(self.message('invalid', state),
                           value, state)
+
 
 class MinLength(FancyValidator):
 
@@ -392,6 +403,7 @@ class MinLength(FancyValidator):
             raise Invalid(self.message('invalid', state),
                           value, state)
 
+
 class NotEmpty(FancyValidator):
 
     """
@@ -424,6 +436,7 @@ class NotEmpty(FancyValidator):
             raise Invalid(self.message('empty', state),
                           value, state)
 
+
 class Empty(FancyValidator):
 
     """
@@ -445,6 +458,7 @@ class Empty(FancyValidator):
         if value or value == 0:
             raise Invalid(self.message('notEmpty', state),
                           value, state)
+
 
 class Regex(FancyValidator):
 
@@ -519,6 +533,7 @@ class Regex(FancyValidator):
             return value.strip()
         return value
 
+
 class PlainText(Regex):
 
     """
@@ -546,6 +561,7 @@ class PlainText(Regex):
     messages = {
         'invalid': _('Enter only letters, numbers, or _ (underscore)'),
         }
+
 
 class OneOf(FancyValidator):
 
@@ -602,6 +618,7 @@ class OneOf(FancyValidator):
                                                items=items,
                                                value=value),
                                   value, state)
+
 
 class DictConverter(FancyValidator):
 
@@ -680,6 +697,7 @@ class DictConverter(FancyValidator):
                                        items=items),
                           value, state)
 
+
 class IndexListConverter(FancyValidator):
 
     """
@@ -735,6 +753,7 @@ class IndexListConverter(FancyValidator):
         raise Invalid(self.message('notFound', state,
                                    value=repr(value)),
                       value, state)
+
 
 class DateValidator(FancyValidator):
 
@@ -885,6 +904,7 @@ class Bool(FancyValidator):
 
     def empty_value(self, value):
         return False
+
 
 class RangeValidator(FancyValidator):
 
@@ -1356,6 +1376,7 @@ class Email(FancyValidator):
     def _to_python(self, value, state):
         return value.strip()
 
+
 class URL(FancyValidator):
 
     """
@@ -1724,15 +1745,18 @@ def StateProvince(*kw, **kwargs):
     from formencode.national import USStateProvince
     return USStateProvince(*kw, **kwargs)
 
+
 def PhoneNumber(*kw, **kwargs):
     warnings.warn("please use formencode.national.USPhoneNumber", DeprecationWarning, stacklevel=2)
     from formencode.national import USPhoneNumber
     return USPhoneNumber(*kw, **kwargs)
 
+
 def IPhoneNumberValidator(*kw, **kwargs):
     warnings.warn("please use formencode.national.InternationalPhoneNumber", DeprecationWarning, stacklevel=2)
     from formencode.national import InternationalPhoneNumber
     return InternationalPhoneNumber(*kw, **kwargs)
+
 
 class FieldStorageUploadConverter(FancyValidator):
     """
@@ -1754,6 +1778,7 @@ class FieldStorageUploadConverter(FancyValidator):
         if isinstance(value, cgi.FieldStorage):
             return not bool(getattr(value, 'filename', None))
         return FancyValidator.is_empty(self, value)
+
 
 class FileUploadKeeper(FancyValidator):
     """
@@ -1829,6 +1854,7 @@ class FileUploadKeeper(FancyValidator):
         enc_content = (content or '').encode('base64')
         result = '%s %s' % (enc_filename, enc_content)
         return result
+
 
 class DateConverter(FancyValidator):
 
@@ -1948,7 +1974,7 @@ class DateConverter(FancyValidator):
             if self.month_style == 'mm/dd/yyyy':
                 month, day = day, month
         year = self.make_year(match.group(3), state)
-        if month > 12 or month < 1:
+        if not 1 <= month <= 12:
             raise Invalid(self.message('monthRange', state),
                           value, state)
         if day < 1:
@@ -1984,10 +2010,10 @@ class DateConverter(FancyValidator):
         except ValueError:
             raise Invalid(self.message('invalidYear', state), year, state)
         if year <= 20:
-            year = year + 2000
-        if year >= 50 and year < 100:
-            year = year + 1900
-        if (year > 20 and year < 50) or (year>99 and year<1900):
+            year += 2000
+        elif 50 <= year < 100:
+            year += 1900
+        if 20 < year < 50 or 99 < year < 1900:
             raise Invalid(self.message('fourDigitYear', state), year, state)
         return year
 
@@ -1999,7 +2025,7 @@ class DateConverter(FancyValidator):
                           value, state)
         month = self.make_month(match.group(1), state)
         year = self.make_year(match.group(2), state)
-        if month > 12 or month < 1:
+        if not 1 <= month <= 12:
             raise Invalid(self.message('monthRange', state), value, state)
         dt_mod = import_datetime(self.datetime_module)
         return datetime_makedate(dt_mod, year, month, 1)
@@ -2022,6 +2048,7 @@ class DateConverter(FancyValidator):
     def unconvert_month(self, value, state):
         # @@ ib: double-check, improve
         return value.strftime("%m/%Y")
+
 
 class TimeConverter(FancyValidator):
 
@@ -2152,8 +2179,8 @@ class TimeConverter(FancyValidator):
                 self.message('noSeconds', state),
                 value, state)
         if (len(parts) == 2
-            and self.use_seconds
-            and self.use_seconds != 'optional'):
+                and self.use_seconds
+                and self.use_seconds != 'optional'):
             raise Invalid(
                 self.message('secondsRequired', state),
                 value, state)
@@ -2168,7 +2195,7 @@ class TimeConverter(FancyValidator):
                 self.message('badNumber', state, number=parts[0], part='hour'),
                 value, state)
         if explicit_ampm:
-            if hour > 12 or hour < 1:
+            if not 1 <= hour < 12:
                 raise Invalid(
                     self.message('badHour', state, number=hour, range='1-12'),
                     value, state)
@@ -2181,7 +2208,7 @@ class TimeConverter(FancyValidator):
             else:
                 hour += offset
         else:
-            if hour > 23 or hour < 0:
+            if not 0 <= hour < 24:
                 raise Invalid(
                     self.message('badHour', state,
                                  number=hour, range='0-23'),
@@ -2193,7 +2220,7 @@ class TimeConverter(FancyValidator):
                 self.message('badNumber', state,
                              number=parts[1], part='minute'),
                 value, state)
-        if minute > 59 or minute < 0:
+        if not 0 <= minute < 60:
             raise Invalid(
                 self.message('badMinute', state, number=minute),
                 value, state)
@@ -2204,7 +2231,7 @@ class TimeConverter(FancyValidator):
                 raise Invalid(
                     self.message('badNumber', state,
                                  number=parts[2], part='second'))
-            if second > 59 or second < 0:
+            if not 0 <= second < 60:
                 raise Invalid(
                     self.message('badSecond', state, number=second),
                     value, state)
@@ -2228,7 +2255,7 @@ class TimeConverter(FancyValidator):
             second = 0
         ampm = ''
         if ((self.use_ampm == 'optional' and self.prefer_ampm)
-            or (self.use_ampm and self.use_ampm != 'optional')):
+                or (self.use_ampm and self.use_ampm != 'optional')):
             ampm = 'am'
             if hour > 12:
                 hour -= 12
@@ -2242,19 +2269,20 @@ class TimeConverter(FancyValidator):
         else:
             return '%i:%02i%s' % (hour, minute, ampm)
 
+
 def PostalCode(*kw, **kwargs):
-    warnings.warn("please use formencode.national.USPostalCode", DeprecationWarning, stacklevel=2)
+    warnings.warn("please use formencode.national.USPostalCode",
+        DeprecationWarning, stacklevel=2)
     from formencode.national import USPostalCode
     return USPostalCode(*kw, **kwargs)
 
+
 class StripField(FancyValidator):
-
     """
-    Take a field from a dictionary, removing the key from the
-    dictionary.
+    Take a field from a dictionary, removing the key from the dictionary.
 
-    ``name`` is the key.  The field value and a new copy of the
-    dictionary with that field removed are returned.
+    ``name`` is the key.  The field value and a new copy of the dictionary
+    with that field removed are returned.
 
     >>> StripField('test').to_python({'a': 1, 'test': 2})
     (2, {'a': 1})
@@ -2274,8 +2302,7 @@ class StripField(FancyValidator):
     def _to_python(self, valueDict, state):
         v = valueDict.copy()
         try:
-            field = v[self.name]
-            del v[self.name]
+            field = v.pop(self.name)
         except KeyError:
             raise Invalid(self.message('missing', state,
                                        name=repr(self.name)),
@@ -2283,11 +2310,11 @@ class StripField(FancyValidator):
         return field, v
 
     def is_empty(self, value):
-        ## Empty dictionaries don't really apply here
+        # empty dictionaries don't really apply here
         return False
 
-class StringBool(FancyValidator):
-    # Originally from TurboGears
+
+class StringBool(FancyValidator): # originally from TurboGears
     """
     Converts a string to a boolean.
 
@@ -2335,6 +2362,7 @@ class StringBool(FancyValidator):
 
 # Should deprecate:
 StringBoolean = StringBool
+
 
 class SignedString(FancyValidator):
 
@@ -2401,6 +2429,7 @@ class SignedString(FancyValidator):
             chr(random.randrange(256))
             for i in range(self.nonce_length)])
 
+
 class IPAddress(FancyValidator):
     """
     Formencode validator to check whether a string is a correct IP address
@@ -2431,19 +2460,19 @@ class IPAddress(FancyValidator):
     def validate_python(self, value, state):
         try:
             octets = value.split('.')
-
             # Only 4 octets?
             if len(octets) != 4:
-                raise Invalid(self.message("bad_format", state, value=value), value, state)
-
+                raise Invalid(self.message("bad_format",
+                    state, value=value), value, state)
             # Correct octets?
             for octet in octets:
-                if int(octet) < 0 or int(octet) > 255:
-                    raise Invalid(self.message("illegal_octets", state, octet=octet), value, state)
-
+                if not 0 <= int(octet) < 256:
+                    raise Invalid(self.message("illegal_octets",
+                        state, octet=octet), value, state)
         # Splitting faild: wrong syntax
         except ValueError:
             raise Invalid(self.message("bad_format", state), value, state)
+
 
 class CIDR(IPAddress):
     """
@@ -2480,17 +2509,16 @@ class CIDR(IPAddress):
                 addr, bits = value.split('/')
             else: # a.b.c.d
                 addr, bits = value, 32
-
             # Use IPAddress validator to validate the IP part
             IPAddress.validate_python(self, addr, state)
-
             # Bits (netmask) correct?
-            if int(bits) < 8 or int(bits) > 32:
-                    raise Invalid(self.message("illegal_bits", state, bits=bits), value, state)
-
+            if not 8 <= int(bits) <= 32:
+                raise Invalid(self.message("illegal_bits",
+                    state, bits=bits), value, state)
         # Splitting faild: wrong syntax
         except ValueError:
             raise Invalid(self.message("bad_format", state), value, state)
+
 
 class MACAddress(FancyValidator):
     """
@@ -2514,7 +2542,7 @@ class MACAddress(FancyValidator):
         'aa:bb:cc:dd:ee:ff'
     """
 
-    strip=True
+    strip = True
     valid_characters = '0123456789abcdefABCDEF'
     add_colons = False
 
@@ -2526,11 +2554,13 @@ class MACAddress(FancyValidator):
     def _to_python(self, value, state):
         address = value.replace(':','') # remove colons
         address = address.lower()
-        if len(address)!=12:
-            raise Invalid(self.message("bad_length", state, length=len(address)), address, state)
+        if len(address) != 12:
+            raise Invalid(self.message("bad_length",
+                state, length=len(address)), address, state)
         for char in address:
             if char not in self.valid_characters:
-                raise Invalid(self.message("bad_character", state, char=char), address, state)
+                raise Invalid(self.message("bad_character",
+                    state, char=char), address, state)
         if self.add_colons:
             address = '%s:%s:%s:%s:%s:%s' % (
                 address[0:2], address[2:4], address[4:6],
@@ -2538,6 +2568,7 @@ class MACAddress(FancyValidator):
         return address
 
     _from_python = _to_python
+
 
 class FormValidator(FancyValidator):
     """
@@ -2568,6 +2599,7 @@ class FormValidator(FancyValidator):
 
     def is_empty(self, value):
         return False
+
 
 class RequireIfMissing(FormValidator):
     """
@@ -2611,6 +2643,7 @@ class RequireIfMissing(FormValidator):
     missing = None
     # If this field is present, then it is required:
     present = None
+
     __unpackargs__ = ('required',)
 
     def _to_python(self, value_dict, state):
@@ -2627,6 +2660,7 @@ class RequireIfMissing(FormValidator):
         return value_dict
 
 RequireIfPresent = RequireIfMissing
+
 
 class FieldsMatch(FormValidator):
 
@@ -2649,6 +2683,7 @@ class FieldsMatch(FormValidator):
     show_match = False
     field_names = None
     validate_partial_form = True
+
     __unpackargs__ = ('*', 'field_names')
 
     messages = {
@@ -2658,7 +2693,7 @@ class FieldsMatch(FormValidator):
         }
 
     def __init__(self, *args, **kw):
-        super(FormValidator, self).__init__(*args, **kw)
+        super(FieldsMatch, self).__init__(*args, **kw)
         if len(self.field_names) < 2:
             raise TypeError("FieldsMatch() requires at least two field names")
 
@@ -2689,9 +2724,8 @@ class FieldsMatch(FormValidator):
             error_list.sort()
             error_message = '<br>\n'.join(
                 ['%s: %s' % (name, value) for name, value in error_list])
-            raise Invalid(error_message,
-                          field_dict, state,
-                          error_dict=errors)
+            raise Invalid(error_message, field_dict, state, error_dict=errors)
+
 
 class CreditCardValidator(FormValidator):
     """
@@ -2728,6 +2762,7 @@ class CreditCardValidator(FormValidator):
 
     cc_type_field = 'ccType'
     cc_number_field = 'ccNumber'
+
     __unpackargs__ = ('cc_type_field', 'cc_number_field')
 
     messages = {
@@ -2756,8 +2791,8 @@ class CreditCardValidator(FormValidator):
     def _validateReturn(self, field_dict, state):
         for field in self.cc_type_field, self.cc_number_field:
             if field not in field_dict:
-                raise Invalid(
-                    self.message('missing_key', state, key=field), value, state)
+                raise Invalid(self.message('missing_key',
+                    state, key=field), value, state)
         ccType = field_dict[self.cc_type_field].lower().strip()
         number = field_dict[self.cc_number_field].strip()
         number = number.replace(' ', '')
@@ -2766,7 +2801,6 @@ class CreditCardValidator(FormValidator):
             long(number)
         except ValueError:
             return {self.cc_number_field: self.message('notANumber', state)}
-
         assert ccType in self._cardInfo, (
             "I can't validate that type of credit card")
         foundValid = False
@@ -2782,7 +2816,6 @@ class CreditCardValidator(FormValidator):
             return {self.cc_number_field: self.message('badLength', state)}
         if not foundValid:
             return {self.cc_number_field: self.message('invalidNumber', state)}
-
         if not self._validateMod10(number):
             return {self.cc_number_field: self.message('invalidNumber', state)}
         return None
@@ -2820,6 +2853,7 @@ class CreditCardValidator(FormValidator):
                 ('1800', 15)],
             }
 
+
 class CreditCardExpires(FormValidator):
     """
     Checks that credit card expiration date is valid relative to
@@ -2845,6 +2879,7 @@ class CreditCardExpires(FormValidator):
 
     cc_expires_month_field = 'ccExpiresMonth'
     cc_expires_year_field = 'ccExpiresYear'
+
     __unpackargs__ = ('cc_expires_month_field', 'cc_expires_year_field')
 
     datetime_module = None
@@ -2885,14 +2920,20 @@ class CreditCardExpires(FormValidator):
                 next_month_year = ccExpiresYear + 1
             else:
                 next_month_year = ccExpiresYear
-            expires_date = datetime_makedate(dt_mod, next_month_year, next_month, 1)
+            expires_date = datetime_makedate(
+                dt_mod, next_month_year, next_month, 1)
             assert expires_date > today
         except ValueError:
-            return {self.cc_expires_month_field: self.message('notANumber', state),
-                    self.cc_expires_year_field: self.message('notANumber', state)}
+            return {self.cc_expires_month_field:
+                        self.message('notANumber', state),
+                    self.cc_expires_year_field:
+                        self.message('notANumber', state)}
         except AssertionError:
-            return {self.cc_expires_month_field: self.message('invalidNumber', state),
-                    self.cc_expires_year_field: self.message('invalidNumber', state)}
+            return {self.cc_expires_month_field:
+                        self.message('invalidNumber', state),
+                    self.cc_expires_year_field:
+                        self.message('invalidNumber', state)}
+
 
 class CreditCardSecurityCode(FormValidator):
     """
@@ -2917,6 +2958,7 @@ class CreditCardSecurityCode(FormValidator):
 
     cc_type_field = 'ccType'
     cc_code_field = 'ccCode'
+
     __unpackargs__ = ('cc_type_field', 'cc_code_field')
 
     messages = {
@@ -2958,15 +3000,9 @@ class CreditCardSecurityCode(FormValidator):
 
     # key = credit card type
     # value = length of security code
-    _cardInfo = {
-        "visa": 3,
-        "mastercard": 3,
-        "discover": 3,
-        "amex": 4,
-            }
+    _cardInfo = dict(visa=3, mastercard=3, discover=3, amex=4)
 
 
-__all__ = ['Invalid']
-for name, value in globals().items():
-    if isinstance(value, type) and issubclass(value, Validator):
-        __all__.append(name)
+__all__ = ['Invalid'] + [name for name, value in globals().items()
+    if isinstance(value, type) and issubclass(value, Validator)]
+

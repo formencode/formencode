@@ -6,6 +6,7 @@ from formencode.rewritingparser import RewritingParser
 
 __all__ = ['rename', 'add_prefix']
 
+
 def rename(form, rename_func):
     """
     Rename all the form fields in the form (a string), using rename_func
@@ -17,6 +18,7 @@ def rename(form, rename_func):
     p.feed(form)
     p.close()
     return p.text()
+
 
 def add_prefix(form, prefix, dotted=False):
     """
@@ -34,6 +36,7 @@ def add_prefix(form, prefix, dotted=False):
         else:
             return prefix + field_name
     return rename(form, rename_func)
+
 
 class RenamingParser(RewritingParser):
 

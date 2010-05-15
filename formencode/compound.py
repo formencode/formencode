@@ -14,8 +14,10 @@ __all__ = ['Any', 'All', 'Pipe']
 def to_python(validator, value, state):
     return validator.to_python(value, state)
 
+
 def from_python(validator, value, state):
     return validator.from_python(value, state)
+
 
 class CompoundValidator(FancyValidator):
 
@@ -63,8 +65,8 @@ class CompoundValidator(FancyValidator):
     def subvalidators(self):
         return self.validators
 
+
 class Any(CompoundValidator):
-    
     """
     This class is like an 'or' operator for validators.  The first
     validator/converter that validates the value will be used.  (You
@@ -98,8 +100,8 @@ class Any(CompoundValidator):
         # sub-validators should handle emptiness.
         return False
 
-class All(CompoundValidator):
 
+class All(CompoundValidator):
     """
     This class is like an 'and' operator for validators.  All
     validators must work, and the results are passed in turn through
@@ -136,7 +138,7 @@ class All(CompoundValidator):
             new.extend(validator)
         else:
             new.append(validator)
-        return self.__class__(*new, **{'if_invalid': self.if_invalid})
+        return self.__class__(*new, **dict(if_invalid=self.if_invalid))
 
     def join(cls, *validators):
         """
@@ -174,6 +176,7 @@ class All(CompoundValidator):
         # sub-validators should handle emptiness.
         return False
 
+
 class Pipe(All):
     """
     This class works like 'All', all validators muss pass, but the result
@@ -202,7 +205,7 @@ class Pipe(All):
 
     def attempt_convert(self, value, state, validate):
         # To preserve the order of the transformations, we do them
-        # differently when we are converting to and from python.
+        # differently when we are converting to and from Python.
         if validate is from_python:
             validators = list(self.validators)
             validators.reverse()

@@ -11,6 +11,7 @@ import validators, schema, compound, htmlfill
 
 __all__ = ['parse_schema', 'SchemaBuilder']
 
+
 def parse_schema(form):
     """
     Given an HTML form, parse out the schema defined in it and return
@@ -23,15 +24,18 @@ def parse_schema(form):
     p.close()
     return listener.schema()
 
+
 default_validators = dict(
     [(name.lower(), getattr(validators, name))
      for name in dir(validators)])
+
 
 def get_messages(cls, message):
     if not message:
         return {}
     else:
         return dict([(k, message) for k in cls._messages.keys()])
+
 
 def to_bool(value):
     value = value.strip().lower()
@@ -41,6 +45,7 @@ def to_bool(value):
         return False
     else:
         raise ValueError("Not a boolean value: %r (use 'true'/'false')")
+
 
 def force_list(v):
     """
@@ -52,6 +57,7 @@ def force_list(v):
         return list(v)
     else:
         return [v]
+
 
 class SchemaBuilder(object):
 

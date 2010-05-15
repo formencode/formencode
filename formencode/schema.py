@@ -6,6 +6,7 @@ import declarative
 
 __all__ = ['Schema']
 
+
 class Schema(FancyValidator):
 
     """
@@ -269,8 +270,6 @@ class Schema(FancyValidator):
             if state is not None:
                 state.key = previous_key
                 state.full_dict = previous_full_dict
-            
-
 
     def add_chained_validator(self, cls, validator):
         if self is not None:
@@ -317,6 +316,7 @@ class Schema(FancyValidator):
     def empty_value(self, value):
         return {}
 
+
 def format_compound_error(v, indent=0):
     if isinstance(v, Exception):
         try:
@@ -343,7 +343,8 @@ def format_compound_error(v, indent=0):
         return v
     else:
         assert 0, "I didn't expect something like %s" % repr(v)
-        
+
+
 def merge_dicts(d1, d2):
     for key in d2:
         if key in d1:
@@ -351,6 +352,7 @@ def merge_dicts(d1, d2):
         else:
             d1[key] = d2[key]
     return d1
+
 
 def merge_values(v1, v2):
     if (isinstance(v1, (str, unicode))
@@ -364,6 +366,7 @@ def merge_values(v1, v2):
     else:
         # @@: Should we just ignore errors?  Seems we do...
         return v1
+
 
 def merge_lists(l1, l2):
     if len(l1) < len(l2):
@@ -381,6 +384,7 @@ def merge_lists(l1, l2):
             item = merge_values(l1item, l2item)
         result.append(item)
     return result
+
 
 class SimpleFormValidator(FancyValidator):
     """

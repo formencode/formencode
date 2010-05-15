@@ -11,9 +11,11 @@ from xml.parsers.expat import ExpatError as XMLParseError
 
 RealOutputChecker = doctest.OutputChecker
 
+
 def debug(*msg):
     import sys
     print >> sys.stderr, ' '.join(map(str, msg))
+
 
 class HTMLOutputChecker(RealOutputChecker):
 
@@ -23,7 +25,7 @@ class HTMLOutputChecker(RealOutputChecker):
             return normal
         try:
             want_xml = make_xml(want)
-        except XMLParseError, e:
+        except XMLParseError:
             pass
         else:
             try:
@@ -63,6 +65,7 @@ class HTMLOutputChecker(RealOutputChecker):
             xml_compare(want_xml, got_xml, result.append)
             s += 'Difference report:\n%s\n' % '\n'.join(result)
         return s
+
 
 def xml_compare(x1, x2, reporter=None):
     if x1.tag != x2.tag:
@@ -106,6 +109,7 @@ def xml_compare(x1, x2, reporter=None):
             return False
     return True
 
+
 def text_compare(t1, t2):
     if not t1 and not t2:
         return True
@@ -113,8 +117,10 @@ def text_compare(t1, t2):
         return True
     return (t1 or '').strip() == (t2 or '').strip()
 
+
 def make_xml(s):
     return ET.XML('<xml>%s</xml>' % s)
+
 
 def make_string(xml):
     if isinstance(xml, (str, unicode)):
@@ -124,6 +130,7 @@ def make_string(xml):
         return ''
     assert s.startswith('<xml>') and s.endswith('</xml>'), repr(s)
     return s[5:-6]
+
 
 def install():
     doctest.OutputChecker = HTMLOutputChecker

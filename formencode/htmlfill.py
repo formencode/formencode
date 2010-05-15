@@ -1,6 +1,5 @@
 """
-Parser for HTML forms, that fills in defaults and errors.  See
-``render``.
+Parser for HTML forms, that fills in defaults and errors.  See ``render``.
 """
 
 import re
@@ -10,6 +9,7 @@ from formencode.rewritingparser import RewritingParser, html_quote
 __all__ = ['render', 'htmlliteral', 'default_formatter',
            'none_formatter', 'escape_formatter',
            'FillingParser']
+
 
 def render(form, defaults=None, errors=None, use_all_keys=False,
            error_formatters=None, add_attributes=None,
@@ -111,6 +111,7 @@ class htmlliteral(object):
     def __html__(self):
         return self.html
 
+
 def default_formatter(error):
     """
     Formatter that escapes the error, wraps the error in a span with
@@ -118,17 +119,20 @@ def default_formatter(error):
     """
     return '<span class="error-message">%s</span><br />\n' % html_quote(error)
 
+
 def none_formatter(error):
     """
     Formatter that does nothing, no escaping HTML, nothin'
     """
     return error
 
+
 def escape_formatter(error):
     """
     Formatter that escapes HTML, no more.
     """
     return html_quote(error)
+
 
 def escapenl_formatter(error):
     """
@@ -138,11 +142,13 @@ def escapenl_formatter(error):
     error = error.replace('\n', '<br>\n')
     return error
 
+
 def ignore_formatter(error):
     """
     Formatter that emits nothing, regardless of the error.
     """
     return ''
+
 
 class FillingParser(RewritingParser):
     r"""
@@ -482,8 +488,7 @@ class FillingParser(RewritingParser):
             "<option> outside of <select>: line %i, column %i"
             % self.getpos())
         if self.in_select != False:
-            default = self.defaults.get(self.in_select, '')
-            if self.force_defaults or (self.in_select in self.defaults):
+            if self.force_defaults or self.in_select in self.defaults:
                 if self.selected_multiple(self.defaults.get(self.in_select, ''),
                                           self.get_attr(attrs, 'value', '')):
                     self.set_attr(attrs, 'selected', 'selected')
@@ -523,10 +528,11 @@ class FillingParser(RewritingParser):
         else:
             self._content.insert(0, text)
 
+
 # This can potentially be extended globally
-default_formatter_dict = {'default': default_formatter,
-                          'none': none_formatter,
-                          'escape': escape_formatter,
-                          'escapenl': escapenl_formatter,
-                          'ignore': ignore_formatter,
-                          }
+default_formatter_dict = dict(
+    default=default_formatter,
+    none=none_formatter,
+    escape=escape_formatter,
+    escapenl=escapenl_formatter,
+    ignore=ignore_formatter)

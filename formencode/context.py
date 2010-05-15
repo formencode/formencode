@@ -33,8 +33,8 @@ of its own.
 Sometimes it's nice to have default values, instead of getting
 attribute errors.  This makes it easier to put in new variables that
 are intended to be used elsewhere, without having to use
-``getattr(context, 'var', default)`` to avoid AttributeErrors.  There
-are two ways (that can be used together) to do this.
+``getattr(context, 'var', default)`` to avoid AttributeErrors.
+There are two ways (that can be used together) to do this.
 
 First, when instantiating a ``Context`` object, you can give it a
 ``default`` value.  If given, then all variables will default to that
@@ -44,14 +44,12 @@ Another is ``context.set_default(**vars)``, which will set only those
 variables to default values.  This will not effect the stack of
 scopes, but will only add defaults.
 
-
 When Python 2.5 comes out, this syntax would certainly be useful::
 
     with context(page='view'):
         do stuff...
 
-And ``page`` will be set to ``'view'`` only inside that ``with``
-block.
+And ``page`` will be set to ``'view'`` only inside that ``with`` block.
 """
 
 from itertools import count
@@ -62,17 +60,18 @@ __all__ = ['Context', 'ContextRestoreError']
 
 _restore_ids = count()
 
-class _NoDefault(object):
-    pass
+
+class NoDefault(object):
+    """A dummy value used for parameters with no default."""
+
 
 class ContextRestoreError(Exception):
-    """
-    Raised when something is restored out-of-order.
-    """
+    """Raised when something is restored out-of-order."""
+
 
 class Context(object):
 
-    def __init__(self, default=_NoDefault):
+    def __init__(self, default=NoDefault):
         self.__dict__['_local'] = threadinglocal.local()
         self.__dict__['_default'] = default
 
@@ -86,7 +85,7 @@ class Context(object):
         for i in range(len(stack)-1, -1, -1):
             if attr in stack[i][0]:
                 return stack[i][0][attr]
-        if self._default is _NoDefault:
+        if self._default is NoDefault:
             raise AttributeError(
                 "The attribute %s has not been set on %r"
                 % (attr, self))
@@ -151,6 +150,7 @@ class Context(object):
             varlist.append('%s=%s' % (key, rep))
         return '<%s %s %s>' % (
             self.__class__.__name__, myid, ' '.join(varlist))
+
 
 class RestoreState(object):
 

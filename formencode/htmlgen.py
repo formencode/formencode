@@ -62,7 +62,10 @@ try:
 except ImportError: # Python < 2.5
     import elementtree.ElementTree as ET
 
+__all__ = ['html']
+
 default_encoding = 'utf-8'
+
 
 class _HTML:
 
@@ -102,6 +105,7 @@ class _HTML:
             return unicode(arg).encode(default_encoding)
 
 html = _HTML()
+
 
 class Element(ET._ElementInterface):
 
@@ -167,6 +171,7 @@ class Element(ET._ElementInterface):
             content = repr(content)
         return '<Element %r>' % content
 
+
 class ElementList(list):
     
     def __str__(self):
@@ -175,6 +180,7 @@ class ElementList(list):
     def __repr__(self):
         return 'ElementList(%s)' % list.__repr__(self)
 
+
 def flatten(items):
     for item in items:
         if isinstance(item, (list, tuple)):
@@ -182,5 +188,3 @@ def flatten(items):
                 yield sub
         else:
             yield item
-
-__all__ = ['html']

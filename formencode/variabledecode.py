@@ -24,9 +24,10 @@ import api
 
 __all__ = ['variable_decode', 'variable_encode', 'NestedVariables']
 
+
 def variable_decode(d, dict_char='.', list_char='-'):
     """
-    Decodes the flat dictionary d into a nested structure.
+    Decode the flat dictionary d into a nested structure.
     """
     result = {}
     dicts_to_sort = {}
@@ -78,8 +79,11 @@ def variable_decode(d, dict_char='.', list_char='-'):
         else:
             place[new_keys[-1]] = value
 
-    to_sort_keys = dicts_to_sort.keys()
-    to_sort_keys.sort(lambda a, b: -cmp(len(a), len(b)))
+    try:
+        to_sort_keys = sorted(dicts_to_sort, key=len, reverse=True)
+    except NameError: # Python < 2.4
+        to_sort_keys = dicts_to_sort.keys()
+        to_sort_keys.sort(lambda a, b: -cmp(len(a), len(b)))
     for key in to_sort_keys:
         to_sort = result
         source = None
@@ -89,8 +93,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
             last_key = sub_key
             to_sort = to_sort[sub_key]
         if None in to_sort:
-            noneVals = [(0, x) for x in to_sort[None]]
-            del to_sort[None]
+            noneVals = [(0, x) for x in to_sort.pop(None)]
             noneVals.extend(to_sort.items())
             to_sort = noneVals
         else:
@@ -104,10 +107,11 @@ def variable_decode(d, dict_char='.', list_char='-'):
         
     return result
 
+
 def variable_encode(d, prepend='', result=None, add_repetitions=True,
                     dict_char='.', list_char='-'):
     """
-    Encodes a nested structure into a flat dictionary.
+    Encode a nested structure into a flat dictionary.
     """
     if result is None:
         result = {}
@@ -134,6 +138,7 @@ def variable_encode(d, prepend='', result=None, add_repetitions=True,
     else:
         result[prepend] = d
     return result
+
 
 class NestedVariables(api.FancyValidator):
 

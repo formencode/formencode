@@ -1,4 +1,4 @@
-from formencode import compound, Invalid, htmlfill, Schema, validators
+from formencode import Invalid, htmlfill, Schema, validators
 
 from WebKit.Page import Page
 

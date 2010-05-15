@@ -19,8 +19,9 @@ will be called when the class is created (including subclasses).
 """
 
 import copy
-import itertools
 import new
+
+from itertools import count
 
 
 class classinstancemethod(object):
@@ -36,6 +37,7 @@ class classinstancemethod(object):
 
     def __get__(self, obj, type=None):
         return _methodwrapper(self.func, obj=obj, type=type)
+
 
 class _methodwrapper(object):
 
@@ -79,6 +81,7 @@ class DeclarativeMeta(type):
                     setattr(cls, name, singletonmethod(meth))
         return cls
 
+
 class singletonmethod(object):
     """
     For Declarative subclasses, this decorator will call the method
@@ -96,6 +99,7 @@ class singletonmethod(object):
             type = obj.__class__
         return new.instancemethod(self.func, obj, type)
 
+
 class Declarative(object):
 
     __unpackargs__ = ()
@@ -106,15 +110,17 @@ class Declarative(object):
 
     __singletonmethods__ = ()
     
-    counter = itertools.count()
+    counter = count()
 
     def __classinit__(cls, new_attrs):
         pass
 
     def __init__(self, *args, **kw):
         if self.__unpackargs__ and self.__unpackargs__[0] == '*':
-            assert len(self.__unpackargs__) == 2, \
-                   "When using __unpackargs__ = ('*', varname), you must only provide a single variable name (you gave %r)" % self.__unpackargs__
+            assert len(self.__unpackargs__) == 2, (
+                "When using __unpackargs__ = ('*', varname),"
+                " you must only provide a single variable name"
+                " (you gave %r)" % self.__unpackargs__)
             name = self.__unpackargs__[1]
             if name in kw:
                 raise TypeError(
@@ -217,8 +223,7 @@ class Declarative(object):
 
     def _repr_vars(dictNames):
         names = [n for n in dictNames
-                 if not n.startswith('_')
-                 and n != 'declarative_count']
+                 if not n.startswith('_') and n != 'declarative_count']
         names.sort()
         return names
     _repr_vars = staticmethod(_repr_vars)

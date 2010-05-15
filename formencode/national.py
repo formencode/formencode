@@ -24,11 +24,13 @@ if not (has_pycountry or has_turbogears):
 ############################################################
 ## country lists and functions
 ############################################################
+
 country_additions = [
     ('BY', _("Belarus")),
     ('ME', _("Montenegro")),
     ('AU', _("Tasmania")),
 ]
+
 fuzzy_countrynames = [
     ('US', 'U.S.A'),
     ('US', 'USA'),
@@ -90,6 +92,7 @@ elif has_pycountry:
 
     def get_language(code):
         return _l(pycountry.languages.get(alpha2=code).name)
+
 
 ############################################################
 ## country, state and postal code validators
@@ -167,6 +170,7 @@ class DelimitedDigitsPostalCode(Regex):
                 self.message('invalid', state) % self.format, value, state)
         return self.delimiter.join(match.groups())
 
+
 def USPostalCode(*args, **kw):
     """
     US Postal codes (aka Zip Codes).
@@ -186,14 +190,18 @@ def USPostalCode(*args, **kw):
     return Any(DelimitedDigitsPostalCode(5, None, *args, **kw),
                DelimitedDigitsPostalCode([5, 4], '-', *args, **kw))
 
+
 def GermanPostalCode(*args, **kw):
     return DelimitedDigitsPostalCode(5, None, *args, **kw)
+
 
 def FourDigitsPostalCode(*args, **kw):
     return DelimitedDigitsPostalCode(4, None, *args, **kw)
 
+
 def PolishPostalCode(*args, **kw):
     return DelimitedDigitsPostalCode([2, 3], '-', *args, **kw)
+
 
 class ArgentinianPostalCode(Regex):
 
@@ -230,6 +238,7 @@ class ArgentinianPostalCode(Regex):
                            match.group(2),
                            match.group(3).upper())
 
+
 class CanadianPostalCode(Regex):
 
     """
@@ -262,6 +271,7 @@ class CanadianPostalCode(Regex):
                 self.message('invalid', state),
                 value, state)
         return '%s %s' % (match.group(1).upper(), match.group(2).upper())
+
 
 class UKPostalCode(Regex):
 
@@ -297,6 +307,7 @@ class UKPostalCode(Regex):
                 self.message('invalid', state),
                 value, state)
         return match.group(1).upper()
+
 
 class CountryValidator(FancyValidator):
     """
@@ -353,6 +364,7 @@ class CountryValidator(FancyValidator):
             return get_country(value.upper())
         except KeyError:
             return value
+
 
 class PostalCodeInCountryFormat(FancyValidator):
     """
@@ -433,6 +445,7 @@ class PostalCodeInCountryFormat(FancyValidator):
                               error_dict = {self.zip_field: e.message,
                                             self.country_field: message})
 
+
 class USStateProvince(FancyValidator):
 
     """
@@ -494,6 +507,7 @@ class USStateProvince(FancyValidator):
     def _to_python(self, value, state):
         return str(value).strip().upper()
 
+
 ############################################################
 ## phone number validators
 ############################################################
@@ -546,8 +560,9 @@ class USPhoneNumber(FancyValidator):
                           value, state)
         result = '%s-%s-%s' % (match.group(1), match.group(2), match.group(3))
         if match.group(4):
-            result = result + " ext.%s" % match.group(4)
+            result += " ext.%s" % match.group(4)
         return result
+
 
 class InternationalPhoneNumber(FancyValidator):
 
@@ -672,6 +687,7 @@ class InternationalPhoneNumber(FancyValidator):
         if not self._phoneIsSane.search(value):
             raise Invalid(self.message('phoneFormat', state), value, state)
         return value
+
 
 ############################################################
 ## language validators

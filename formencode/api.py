@@ -16,6 +16,7 @@ except ImportError:
 __all__ = ['NoDefault', 'Invalid', 'Validator', 'Identity',
            'FancyValidator', 'is_validator']
 
+
 def get_localedir():
     """
     Retrieve the location of locales.
@@ -47,6 +48,7 @@ def get_localedir():
 
     return locale_dir
 
+
 def set_stdtranslation(domain="FormEncode", languages=None, \
                        localedir = get_localedir()):
 
@@ -58,19 +60,22 @@ def set_stdtranslation(domain="FormEncode", languages=None, \
 
 set_stdtranslation()
 
-def _(s): return s # dummy i18n translation function, nothing is translated here.
-                   # Instead this is actually done in api.Validator.message.
-                   # The surrounding _("string") of the strings is only for extracting
-                   # the strings automatically
-                   # if you run pygettext with this source comment this function out temporarly 
 
-class NoDefault:
-    pass
+def _(s): return s # Dummy i18n translation function, nothing is translated here.
+    # Instead this is actually done in api.Validator.message.
+    # The surrounding _("string") of the strings is only for extracting
+    # the strings automatically.
+    # If you run pygettext with this source comment this function out temporarily. 
+
+
+class NoDefault(object):
+    """A dummy value used for parameters with no default."""
+
 
 def is_validator(obj):
     return (isinstance(obj, Validator) or
-            (isinstance(obj, type) and
-             issubclass(obj, Validator)))
+        (isinstance(obj, type) and issubclass(obj, Validator)))
+
 
 class Invalid(Exception):
 
@@ -210,7 +215,7 @@ class Validator(declarative.Declarative):
         return value
 
     def message(self, msgName, state, **kw):
-        #determine translation function
+        # determine translation function
         try:
             trans = state._
         except AttributeError:
@@ -275,7 +280,6 @@ class Validator(declarative.Declarative):
         """
         return []
 
-    #@classmethod
     def _initialize_docstring(cls):
         """
         This changes the class's docstring to include information
@@ -293,10 +297,14 @@ class Validator(declarative.Declarative):
         cls.__doc__ = ''.join(doc)
     _initialize_docstring = classmethod(_initialize_docstring)
 
+
 class _Identity(Validator):
+    
     def __repr__(self):
         return 'validators.Identity'
+    
 Identity = _Identity()
+
 
 class FancyValidator(Validator):
 
