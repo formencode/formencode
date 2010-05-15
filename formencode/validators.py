@@ -232,11 +232,10 @@ class Wrapper(FancyValidator):
     func_validate_other = None
 
     def __init__(self, *args, **kw):
-        for n in ['to_python', 'from_python', 'validate_python',
-                  'validate_other']:
-            if kw.has_key(n):
-                kw['func_%s' % n] = kw[n]
-                del kw[n]
+        for n in ('to_python', 'from_python',
+                  'validate_python', 'validate_other'):
+            if n in kw:
+                kw['func_%s' % n] = kw.pop(n)
         FancyValidator.__init__(self, *args, **kw)
         self._to_python = self.wrap(self.func_to_python)
         self._from_python = self.wrap(self.func_from_python)
@@ -1972,7 +1971,7 @@ class DateConverter(FancyValidator):
             return int(value)
         except ValueError:
             value = value.lower().strip()
-            if self._month_names.has_key(value):
+            if value in self._month_names:
                 return self._month_names[value]
             else:
                 raise Invalid(self.message('unknownMonthName', state,
@@ -1983,15 +1982,13 @@ class DateConverter(FancyValidator):
         try:
             year = int(year)
         except ValueError:
-            raise Invalid(self.message('invalidYear', state),
-                          year, state)
+            raise Invalid(self.message('invalidYear', state), year, state)
         if year <= 20:
             year = year + 2000
         if year >= 50 and year < 100:
             year = year + 1900
         if (year > 20 and year < 50) or (year>99 and year<1900):
-            raise Invalid(self.message('fourDigitYear', state),
-                          year, state)
+            raise Invalid(self.message('fourDigitYear', state), year, state)
         return year
 
     def convert_month(self, value, state):
@@ -2003,8 +2000,7 @@ class DateConverter(FancyValidator):
         month = self.make_month(match.group(1), state)
         year = self.make_year(match.group(2), state)
         if month > 12 or month < 1:
-            raise Invalid(self.message('monthRange', state),
-                          value, state)
+            raise Invalid(self.message('monthRange', state), value, state)
         dt_mod = import_datetime(self.datetime_module)
         return datetime_makedate(dt_mod, year, month, 1)
 
@@ -2545,15 +2541,16 @@ class MACAddress(FancyValidator):
 
 class FormValidator(FancyValidator):
     """
-    A FormValidator is something that can be chained with a
-    Schema.  Unlike normal chaining the FormValidator can
-    validate forms that aren't entirely valid.
+    A FormValidator is something that can be chained with a Schema.
+    
+    Unlike normal chaining the FormValidator can validate forms that
+    aren't entirely valid.
 
     The important method is .validate(), of course.  It gets passed a
     dictionary of the (processed) values from the form.  If you have
     .validate_partial_form set to True, then it will get the incomplete
-    values as well -- use .has_key() to test if the field was able to
-    process any particular field.
+    values as well -- check with the "in" operator if the form was able
+    to process any particular field.
 
     Anyway, .validate() should return a string or a dictionary.  If a
     string, it's an error message that applies to the whole form.  If
@@ -2561,7 +2558,7 @@ class FormValidator(FancyValidator):
     The special key "form" is the error message for the form as a whole
     (i.e., a string is equivalent to {"form": string}).
 
-    Return None on no errors.
+    Returns None on no errors.
     """
 
     validate_partial_form = False
@@ -2573,7 +2570,6 @@ class FormValidator(FancyValidator):
         return False
 
 class RequireIfMissing(FormValidator):
-
     """
     This requires one field based on another field being present or
     missing.  This is applied to a form, not an individual field
@@ -2668,7 +2664,7 @@ class FieldsMatch(FormValidator):
 
     def validate_partial(self, field_dict, state):
         for name in self.field_names:
-            if not field_dict.has_key(name):
+            if name not in field_dict:
                 return
         self.validate_python(field_dict, state)
 
@@ -2771,7 +2767,7 @@ class CreditCardValidator(FormValidator):
         except ValueError:
             return {self.cc_number_field: self.message('notANumber', state)}
 
-        assert self._cardInfo.has_key(ccType), (
+        assert ccType in self._cardInfo, (
             "I can't validate that type of credit card")
         foundValid = False
         validLength = False

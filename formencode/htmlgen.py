@@ -107,13 +107,12 @@ class Element(ET._ElementInterface):
 
     def __call__(self, *args, **kw):
         el = self.__class__(self.tag, self.attrib)
-        if kw.has_key('c'):
+        if 'c' in kw:
             if args:
                 raise ValueError(
                     "You may either provide positional arguments or a "
                     "'c' keyword argument, but not both")
-            args = kw['c']
-            del kw['c']
+            args = kw.pop('c')
             if not isinstance(args, (list, tuple)):
                 args = (args,)
         for name, value in kw.items():

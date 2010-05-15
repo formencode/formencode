@@ -61,7 +61,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
             except KeyError:
                 place[new_keys[i]] = {}
                 place = place[new_keys[i]]
-        if place.has_key(new_keys[-1]):
+        if new_keys[-1] in place:
             if isinstance(place[new_keys[-1]], dict):
                 place[new_keys[-1]][None] = value
             elif isinstance(place[new_keys[-1]], list):
@@ -88,7 +88,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
             source = to_sort
             last_key = sub_key
             to_sort = to_sort[sub_key]
-        if to_sort.has_key(None):
+        if None in to_sort:
             noneVals = [(0, x) for x in to_sort[None]]
             del to_sort[None]
             noneVals.extend(to_sort.items())
@@ -97,7 +97,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
             to_sort = to_sort.items()
         to_sort.sort()
         to_sort = [v for k, v in to_sort]
-        if known_lengths.has_key(key):
+        if key in known_lengths:
             if len(to_sort) < known_lengths[key]:
                 to_sort.extend(['']*(known_lengths[key] - len(to_sort)))
         source[last_key] = to_sort

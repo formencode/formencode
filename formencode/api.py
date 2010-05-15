@@ -191,17 +191,16 @@ class Validator(declarative.Declarative):
                             'subvalidators')
 
     def __classinit__(cls, new_attrs):
-        if new_attrs.has_key('messages'):
+        if 'messages' in new_attrs:
             cls._messages = cls._messages.copy()
             cls._messages.update(cls.messages)
             del cls.messages
         cls._initialize_docstring()
 
     def __init__(self, *args, **kw):
-        if kw.has_key('messages'):
+        if 'messages' in kw:
             self._messages = self._messages.copy()
-            self._messages.update(kw['messages'])
-            del kw['messages']
+            self._messages.update(kw.pop('messages'))
         declarative.Declarative.__init__(self, *args, **kw)
 
     def to_python(self, value, state=None):

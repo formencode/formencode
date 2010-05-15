@@ -44,9 +44,8 @@ def run_filename(filename):
         exec data_content in namespace
     data = namespace.copy()
     data['defaults'] = data.get('defaults', {})
-    if data.has_key('check'):
-        checker = data['check']
-        del data['check']
+    if 'check' in data:
+        checker = data.pop('check')
     else:
         def checker(p, s):
             pass

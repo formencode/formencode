@@ -29,7 +29,7 @@ def cgi_parse(qs):
     """
     d = {}
     for key, value in cgi.parse_qsl(qs, 1):
-        if d.has_key(key):
+        if key in d:
             if isinstance(d[key], list):
                 d[key].append(value)
             else:
@@ -63,7 +63,7 @@ class BadCase(DecodeCase):
 
     def __init__(self, *args, **kw):
         DecodeCase.__init__(self, *args, **kw)
-        if len(self.output) == 1 and self.output.has_key('text'):
+        if len(self.output) == 1 and 'text' in self.output:
             self.output = self.output['text']
 
     def test(self):
@@ -164,7 +164,7 @@ def test_multiple_chained_validators_errors():
     try:
         s.to_python({'a':'1', 'a_confirm':'2', 'b':'3', 'b_confirm':'4'})
     except Invalid, e:
-        assert(e.error_dict.has_key('a_confirm') and e.error_dict.has_key('b_confirm'))
+        assert 'a_confirm' in e.error_dict and 'b_confirm' in e.error_dict
     try:
         s.to_python({})
     except Invalid, e:
@@ -181,7 +181,7 @@ def test_SimpleFormValidator_doc():
     BOGUS_DOCSTRING = "blah blah blah"
 
     def f(value_dict, state, validator):
-       value_dict['f'] = 99
+        value_dict['f'] = 99
 
     f.__doc__ = BOGUS_DOCSTRING
     g = SimpleFormValidator(f)

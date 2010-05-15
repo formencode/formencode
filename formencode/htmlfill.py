@@ -240,7 +240,7 @@ class FillingParser(RewritingParser):
         RewritingParser.close(self)
         unused_errors = self.errors.copy()
         for key in self.used_errors.keys():
-            if unused_errors.has_key(key):
+            if key in unused_errors:
                 del unused_errors[key]
         if self.auto_error_formatter:
             for key, value in unused_errors.items():
@@ -252,7 +252,7 @@ class FillingParser(RewritingParser):
         if self.use_all_keys:
             unused = self.defaults.copy()
             for key in self.used_keys.keys():
-                if unused.has_key(key):
+                if key in unused:
                     del unused[key]
             assert not unused, (
                 "These keys from defaults were not used in the form: %s"
@@ -354,7 +354,7 @@ class FillingParser(RewritingParser):
         if self.prefix_error:
             self.write_marker(name)
         value = self.defaults.get(name)
-        if self.add_attributes.has_key(name):
+        if name in self.add_attributes:
             for attr_name, attr_value in self.add_attributes[name].items():
                 if attr_name.startswith('+'):
                     attr_name = attr_name[1:]
@@ -364,7 +364,7 @@ class FillingParser(RewritingParser):
                 else:
                     self.set_attr(attrs, attr_name, attr_value)
         if (self.error_class
-            and self.errors.get(self.get_attr(attrs, 'name'))):
+                and self.errors.get(self.get_attr(attrs, 'name'))):
             self.add_class(attrs, self.error_class)
         if t in ('text', 'hidden'):
             if value is None and not self.force_defaults:

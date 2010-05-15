@@ -86,22 +86,21 @@ class Schema(FancyValidator):
                 delattr(cls, key)
             # This last case means we're overwriting a validator
             # from a superclass:
-            elif cls.fields.has_key(key):
+            elif key in cls.fields:
                 del cls.fields[key]
         for name, value in cls.fields.items():
             cls.add_field(name, value)
 
     def __initargs__(self, new_attrs):
         for key, value in new_attrs.items():
-            if key in ('pre_validators', 'chained_validators',
-                       'view'):
+            if key in ('pre_validators', 'chained_validators', 'view'):
                 continue
             if is_validator(value):
                 self.fields[key] = value
                 delattr(self, key)
             # This last case means we're overwriting a validator
             # from a superclass:
-            elif self.fields.has_key(key):
+            elif key in self.fields:
                 del self.fields[key]
         for name, value in self.fields.items():
             self.add_field(name, value)
