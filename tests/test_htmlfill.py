@@ -1,22 +1,26 @@
 # -*- coding: utf-8 -*-
-import sys
+
+import __builtin__
 import os
 import re
-import __builtin__
+import sys
+
 from htmlentitydefs import name2codepoint
+from xml.parsers.expat import ExpatError
+
+try:
+    import xml.etree.ElementTree as ET
+except ImportError:
+    import elementtree.ElementTree as ET
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__))))
 if base_dir not in sys.path:
     sys.path.insert(0, base_dir)
-from formencode import htmlfill
+
+from formencode import htmlfill, htmlfill_schemabuilder
 from formencode.doctest_xml_compare import xml_compare
-from xml.parsers.expat import ExpatError
-from formencode import htmlfill_schemabuilder
-try:
-    import xml.etree.ElementTree as ET
-except ImportError:
-    import elementtree.ElementTree as ET
+
 
 def test_inputoutput():
     data_dir = os.path.join(os.path.dirname(__file__), 'htmlfill_data')
@@ -24,6 +28,7 @@ def test_inputoutput():
         if fn.startswith('data-'):
             fn = os.path.join(data_dir, fn)
             yield run_filename, fn
+
 
 def run_filename(filename):
     f = open(filename)
@@ -75,9 +80,11 @@ def run_filename(filename):
     checker(p, listener.schema())
     checker(p, htmlfill_schemabuilder.parse_schema(template))
 
+
 def test_no_trailing_newline():
     assert (htmlfill.render('<html><body></body></html>', {}, {})
             == '<html><body></body></html>')
+
 
 def test_escape_defaults():
     rarr = unichr(name2codepoint['rarr'])
@@ -89,8 +96,11 @@ def test_escape_defaults():
                             {}, {}) ==
             u'<input type="submit" value="Japan - 日本 Nihon" />')
 
+
 def test_xhtml():
     result = htmlfill.render('<form:error name="code"/>', errors={'code': 'an error'})
+    assert 'an error' in result
+
 
 def test_trailing_error():
     assert (htmlfill.render('<input type="text" name="email">', errors={'email': 'error'},

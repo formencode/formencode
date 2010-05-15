@@ -1,5 +1,6 @@
 from formencode.validators import CreditCardValidator, Invalid
 
+
 cc = CreditCardValidator()
 
 def validate(cctype, ccnumber):
@@ -10,6 +11,7 @@ def validate(cctype, ccnumber):
         return e.unpack_errors()['ccNumber']
 
 messages = cc.message
+
 
 def test_cc():
     assert validate('visa', '4'+('1'*15)) is None

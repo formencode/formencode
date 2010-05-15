@@ -1,9 +1,11 @@
-import os, sys
+import os
+import sys
 
 if __name__ == '__main__':
     base = os.path.dirname(
         os.path.dirname(os.path.abspath(__file__)))
     sys.path.append(base)
+    
 try:
     import doctest
     doctest.OutputChecker
@@ -22,10 +24,10 @@ text_files = [
 
 from formencode import validators
 from formencode import schema
+
 modules = [validators, schema]
 
 if __name__ == '__main__':
-    import sys
     args = sys.argv[1:]
     verbose = False
     if '-v' in args:
@@ -42,5 +44,3 @@ if __name__ == '__main__':
         else:
             doctest.testmod(fn, optionflags=doctest.ELLIPSIS,
                             verbose=verbose)
-
-

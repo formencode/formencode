@@ -1,8 +1,10 @@
-from formencode.context import Context, ContextRestoreError
 from nose.tools import assert_raises
+
+from formencode.context import Context, ContextRestoreError
 
 c1 = Context(default=None)
 c2 = Context()
+
 
 def test_one():
     state = c1.set(foo=1)
@@ -18,12 +20,14 @@ def test_one():
     state.restore()
     state2.restore()
 
+
 def change_state(context, func, *args, **change):
     state = context.set(**change)
     try:
         return func(*args)
     finally:
         state.restore()
+
 
 def test_fail():
     c3 = Context()
@@ -34,9 +38,11 @@ def test_fail():
     assert c3.a==1
     res2.restore()
     res1.restore()
-    
+
+
 def assert_is(ob, attr, value):
     assert getattr(ob, attr) == value
+
 
 def test_default():
     con = Context()

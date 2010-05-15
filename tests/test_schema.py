@@ -21,7 +21,8 @@ def teardown_module(module):
     del __builtin__._
 
 
-def d(**kw): return kw
+def d(**kw):
+    return kw
 
 def cgi_parse(qs):
     """
@@ -37,6 +38,7 @@ def cgi_parse(qs):
         else:
             d[key] = value
     return d
+
 
 class DecodeCase(object):
 
@@ -57,6 +59,7 @@ class DecodeCase(object):
         print 'output', repr(actual)
         assert actual == self.output
 
+
 class BadCase(DecodeCase):
 
     error_expected = True
@@ -76,10 +79,12 @@ class BadCase(DecodeCase):
         else:
             assert 0, "Exception expected"
 
+
 class Name(Schema):
     fname = validators.String(not_empty=True)
     mi = validators.String(max=1, if_missing=None, if_empty=None)
     lname = validators.String(not_empty=True)
+
 
 all_cases = []
 
@@ -100,12 +105,14 @@ BadCase(Name, '',
         fname='Missing value',
         lname='Missing value')
 
+
 class AddressesForm(Schema):
     pre_validators = [NestedVariables()]
     class addresses(foreach.ForEach):
         class schema(Schema):
             name = Name()
             email = validators.Email()
+
 
 DecodeCase(AddressesForm,
            'addresses-2.name.fname=Jill&addresses-1.name.fname=Bob&'
@@ -131,6 +138,7 @@ BadCase(AddressesForm,
         'whatever=nothing',
         text="The input field 'whatever' was not expected.")
 
+
 def test_this():
 
     for case in all_cases:
@@ -149,6 +157,7 @@ def test_merge():
             == dict(a=['a1\naa1', 'a2'], b=['b\nbb', 'bbb'],
                     c=['c']))
 
+
 class ChainedTest(Schema):
     a = validators.String()
     a_confirm = validators.String()
@@ -158,6 +167,7 @@ class ChainedTest(Schema):
 
     chained_validators = [validators.FieldsMatch('a', 'a_confirm'),
                             validators.FieldsMatch('b', 'b_confirm')]
+
 
 def test_multiple_chained_validators_errors():
     s = ChainedTest()
@@ -172,10 +182,10 @@ def test_multiple_chained_validators_errors():
     else:
         assert 0
 
+
 def test_SimpleFormValidator_doc():
     """
-    Verify SimpleFormValidator preserves the decorated function's
-    docstring.
+    Verify SimpleFormValidator preserves the decorated function's docstring.
     """
 
     BOGUS_DOCSTRING = "blah blah blah"
@@ -187,6 +197,7 @@ def test_SimpleFormValidator_doc():
     g = SimpleFormValidator(f)
 
     assert f.__doc__ == g.__doc__, "Docstrings don't match!"
+
 
 class TestAtLeastOneCheckboxIsChecked(object):
     """ tests to address sourceforge bug #1777245
@@ -210,8 +221,10 @@ class TestAtLeastOneCheckboxIsChecked(object):
     def test_Schema_with_input_missing(self):
         # <input type="checkbox" name="agree" value="yes">
         try:
-            result = self.schema.to_python({})
+            self.schema.to_python({})
         except Invalid, exc:
             error_message = exc.error_dict['agree'].msg
             assert self.not_empty_messages['missing'] == error_message, \
                 error_message
+        else:
+            assert False, 'missing input not detected'

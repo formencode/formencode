@@ -11,6 +11,7 @@ def validate(month, year):
 
 messages = ed.message
 
+
 def test_ed():
     assert validate('11', '2250') is None
     assert validate('11', 'test') == messages('notANumber', None)

@@ -1,7 +1,10 @@
+from datetime import date
+
 from sqlobject import *
+
 from formencode.sqlschema import *
 from formencode import validators
-from datetime import datetime, date
+
 
 def setup_module(module):
     """Disable i18n translation
@@ -21,6 +24,7 @@ def teardown_module(module):
 
 sqlhub.processConnection = connectionForURI('sqlite:/:memory:')
 
+
 class EventObject(SQLObject):
 
     name = StringCol(alternateID=True)
@@ -29,6 +33,7 @@ class EventObject(SQLObject):
 
 EventObject.createTable()
 
+
 class EventObjectSchema(SQLSchema):
 
     wrap = EventObject
@@ -36,21 +41,23 @@ class EventObjectSchema(SQLSchema):
     description = validators.String(strip=True, max=1024, if_empty=None)
     date = validators.DateConverter(if_empty=None)
 
-def get_error(input, schema):
+
+def get_error(inp, schema):
     try:
-        result = schema.to_python(input)
+        result = schema.to_python(inp)
         assert 0, (
             "Got %r from %r instead of an Invalid exception"
-            % (result, input))
+            % (result, inp))
     except validators.Invalid, e:
         return e
-    
+
+
 def test_validate():
-    input = dict(name='test1', date='11/10/2010')
-    res = get_error(input, EventObjectSchema())
+    inp = dict(name='test1', date='11/10/2010')
+    res = get_error(inp, EventObjectSchema())
     assert str(res) == 'description: Missing value'
-    input['description'] = '  test  '
-    obj = EventObjectSchema().to_python(input)
+    inp['description'] = '  test  '
+    obj = EventObjectSchema().to_python(inp)
     assert isinstance(obj, EventObject)
     assert obj.name == 'test1'
     assert obj.date == date(2010, 11, 10)
@@ -60,13 +67,14 @@ def test_validate():
 def test_update():
     obj = EventObject(name='foobar', date=date(2020, 10, 1),
                       description=None)
-    input = dict(id=obj.id, date=None)
+    inp = dict(id=obj.id, date=None)
     objschema = EventObjectSchema(wrap=obj)
-    assert str(get_error(input, objschema)) == 'date: You may not provide None for that value'
-    input = dict(id=obj.id, name='test2')
-    print str(objschema.to_python(input))
-    assert objschema.to_python(input) is obj
+    assert str(get_error(inp, objschema)) == 'date: You may not provide None for that value'
+    inp = dict(id=obj.id, name='test2')
+    print str(objschema.to_python(inp))
+    assert objschema.to_python(inp) is obj
     assert obj.name == 'test2'
+
 
 def test_defaults():
     res = EventObjectSchema().from_python(None)
@@ -84,6 +92,7 @@ def test_defaults():
                        name='bar', description='foobarish')
     res2 = EventObjectSchema().from_python(obj2)
     assert res2 == res
+
 
 def test_sign():
     obj = EventObject(name='signer', date=date(2020, 10, 1),
