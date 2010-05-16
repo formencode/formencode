@@ -405,8 +405,6 @@ class FillingParser(RewritingParser):
             self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)
-        elif t == 'file':
-            pass # don't skip next
         elif t == 'password':
             if value is None and not self.force_defaults:
                 value = value or self.get_attr(attrs, 'value', '')
@@ -414,11 +412,11 @@ class FillingParser(RewritingParser):
             self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)
-        elif t == 'image':
+        elif t in ('file', 'image'):
             self.write_tag('input', attrs, startend)
             self.skip_next = True
             self.add_key(name)
-        elif t == 'submit' or t == 'reset' or t == 'button':
+        elif t in ('submit', 'reset', 'button'):
             self.set_attr(attrs, 'value', value or
                           self.get_attr(attrs, 'value', ''))
             self.write_tag('input', attrs, startend)
