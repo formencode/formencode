@@ -1,0 +1,41 @@
+:mod:`formencode.national` -- Country specific validators
+=========================================================
+
+.. automodule:: formencode.national
+
+.. contents::
+
+Module Contents
+---------------
+
+.. admonition:: Note
+
+   To use CountryValidator and LanguageValidator, install either
+   `pycountry <http://pypi.python.org/pypi/pycountry/0.10>`__ or
+   `TurboGears <http://turbogears.org>`__.
+
+Country, State, and Postal Codes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: DelimitedDigitsPostalCode
+.. autofunction:: USPostalCode
+.. autofunction:: GermanPostalCode
+.. autofunction:: FourDigitsPostalCode
+.. autofunction:: PolishPostalCode
+.. autoclass:: ArgentinianPostalCode
+.. autoclass:: CanadianPostalCode
+.. autoclass:: UKPostalCode
+.. autoclass:: CountryValidator
+.. autoclass:: PostalCodeInCountryFormat
+.. autoclass:: USStateProvince
+
+Phones and Addresses
+~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: USPhoneNumber
+.. autoclass:: InternationalPhoneNumber
+
+Language Codes and Names
+~~~~~~~~~~~~~~~~~~~~~~~~
+.. autoclass:: LanguageValidator
+

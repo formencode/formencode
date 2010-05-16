@@ -114,8 +114,8 @@ Available Validators
 --------------------
 
 There's lots of validators.  The best way to read about the individual
-validators available in the ``formencode.validators`` module is to
-read about :mod:`formencode.validators`.
+validators available in the ``formencode.validators`` module is to read
+about :mod:`formencode.validators` and :module:`formencode.national`.
 
 Compound Validators
 -------------------
@@ -297,32 +297,32 @@ little more.  Here's a more complete implementation of
 
     >>> import re
     >>> class SecurePassword(validators.FancyValidator):
-    ... 
+    ...
     ...     min = 3
     ...     non_letter = 1
     ...     letter_regex = re.compile(r'[a-zA-Z]')
-    ... 
+    ...
     ...     messages = {
     ...         'too_few': 'Your password must be longer than %(min)i '
     ...                   'characters long',
     ...         'non_letter': 'You must include at least %(non_letter)i '
     ...                      'characters in your password',
     ...         }
-    ... 
+    ...
     ...     def _to_python(self, value, state):
     ...         # _to_python gets run before validate_python.  Here we
     ...         # strip whitespace off the password, because leading and
     ...         # trailing whitespace in a password is too elite.
     ...         return value.strip()
-    ... 
+    ...
     ...     def validate_python(self, value, state):
     ...         if len(value) < self.min:
-    ...             raise Invalid(self.message("too_few", state, 
+    ...             raise Invalid(self.message("too_few", state,
     ...                                        min=self.min),
     ...                           value, state)
     ...         non_letters = self.letter_regex.sub('', value)
     ...         if len(non_letters) < self.non_letter:
-    ...             raise Invalid(self.message("non_letter", 
+    ...             raise Invalid(self.message("non_letter",
     ...                                         non_letter=self.non_letter),
     ...                           value, state)
 
@@ -371,12 +371,12 @@ to work with, and better displays the structure.
 There are several options that most validators support (including your
 own validators, if you subclass from
 :class:`formencode.api.FancyValidator`):
-    
+
 ``if_empty``:
       If set, then this value will be returned if the input evaluates
       to false (empty list, empty string, None, etc), but not the 0 or
       False objects.  This only applies to ``.to_python()``.
-      
+
 ``not_empty``:
       If true, then if an empty value is given raise an error.
       (Both with ``.to_python()`` and also ``.from_python()``
@@ -389,7 +389,7 @@ own validators, if you subclass from
 ``if_invalid``:
       If set, then when this validator would raise Invalid during
       ``.to_python()``, instead return this value.
-      
+
 ``if_invalid_python``:
       If set, when the Python value (converted with
       ``.from_python()``) is invalid, this value will be returned.
@@ -566,7 +566,7 @@ Optionally you can also add a test of your language to
 And the test for your language::
 
     def test_<lang>():
-        _test_lang("<lang>", u"<translation of Not Empty Text in the language <lang>") 
+        _test_lang("<lang>", u"<translation of Not Empty Text in the language <lang>")
 
 HTTP/HTML Form Input
 --------------------

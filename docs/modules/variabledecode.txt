@@ -8,5 +8,5 @@ Module Contents
 
 .. autofunction:: variable_decode
 .. autofunction:: variable_encode
-.. autofunction:: NestedVariables
+.. autoclass:: NestedVariables
 

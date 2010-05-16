@@ -48,14 +48,6 @@ Dates and Times
 .. autoclass:: TimeConverter
 
 
-Phones and Addresses
-~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: PhoneNumber
-.. autoclass:: IPhoneNumberValidator
-.. autoclass:: StateProvince
-.. autoclass:: PostalCode
-
 HTML Form Helpers
 ~~~~~~~~~~~~~~~~~
 

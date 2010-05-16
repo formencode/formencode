@@ -1,3 +1,6 @@
+"""
+Country specific validators for use with FormEncode.
+"""
 import re
 
 from api import FancyValidator
