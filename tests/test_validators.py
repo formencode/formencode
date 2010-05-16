@@ -4,7 +4,7 @@ import datetime
 import unittest
 
 from formencode.validators import DateConverter, Int, Invalid, OpenId, \
-    String, UnicodeString, XRI
+    String, TimeConverter, UnicodeString, XRI
 from formencode.variabledecode import NestedVariables
 from formencode.schema import Schema
 from formencode.foreach import ForEach
@@ -135,27 +135,57 @@ def test_int_minmax_mandatory():
 
 
 def test_month_style():
-    date = DateConverter(month_style='dd/mm/yyyy')
+    dc = DateConverter(month_style='dd/mm/yyyy')
     d = datetime.date(2007,12,20)
-    assert date.to_python('20/12/2007') == d
-    assert date.from_python(d) == '20/12/2007'
-    assert date.to_python('20/December/2007') == d
+    assert dc.to_python('20/12/2007') == d
+    assert dc.from_python(d) == '20/12/2007'
+    assert dc.to_python('20/December/2007') == d
 
 
 def test_date():
-    date = DateConverter(month_style='dd/mm/yyyy')
+    dc = DateConverter(month_style='dd/mm/yyyy')
     try:
-        date.to_python('20/12/150')
+        dc.to_python('20/12/150')
     except Invalid, e:
         assert 'Please enter a four-digit year after 1899' in str(e)
     else:
         assert False, 'Date should be invalid'
     try:
-        date.to_python('oh/happy/day')
+        dc.to_python('oh/happy/day')
     except Invalid, e:
         assert 'Please enter the date in the form dd/mm/yyyy' in str(e)
     else:
         assert False, 'Date should be invalid'
+
+
+def test_time():
+    tc = TimeConverter()
+    assert tc.to_python('20:30:15') == (20, 30, 15)
+    try:
+        tc.to_python('25:30:15')
+    except Invalid, e:
+        assert 'You must enter an hour in the range 0-23' in str(e)
+    else:
+        assert False, 'Time should be invalid'
+    try:
+        tc.to_python('20:75:15')
+    except Invalid, e:
+        assert 'You must enter a minute in the range 0-59' in str(e)
+    else:
+        assert False, 'Time should be invalid'
+    try:
+        tc.to_python('20:30:75')
+    except Invalid, e:
+        assert 'You must enter a second in the range 0-59' in str(e)
+    else:
+        assert False, 'Time should be invalid'
+    try:
+        tc.to_python('20:30:zx')
+    except Invalid, e:
+        assert 'The second value you gave is not a number' in str(e)
+        assert 'zx' in str(e)
+    else:
+        assert False, 'Time should be invalid'
 
 
 def test_foreach_if_missing():
