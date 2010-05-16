@@ -253,7 +253,7 @@ class Wrapper(FancyValidator):
             try:
                 return func(value)
             except Exception, e:
-                raise Invalid(str(e), {}, value, state)
+                raise Invalid(str(e), value, state)
         return result
 
 
