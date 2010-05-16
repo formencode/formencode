@@ -590,7 +590,10 @@ class OneOf(FancyValidator):
                 if self.hideList:
                     raise Invalid(self.message('invalid', state), value, state)
                 else:
-                    items = '; '.join(map(str, self.list))
+                    try:
+                        items = '; '.join(map(str, self.list))
+                    except UnicodeError:
+                        items = '; '.join(map(unicode, self.list))
                     raise Invalid(
                         self.message('notIn', state,
                             items=items, value=value), value, state)
