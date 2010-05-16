@@ -2532,9 +2532,11 @@ class FormValidator(FancyValidator):
 
 class RequireIfMissing(FormValidator):
     """
-    This requires one field based on another field being present or missing.
-    This is applied to a form, not an individual field (usually using a
-    Schema's ``pre_validators`` or ``chained_validators``).
+    Require one field based on another field being present or missing.
+    
+    This validator is applied to a form, not an individual field (usually
+    using a Schema's ``pre_validators`` or ``chained_validators``) and is
+    available under both names ``RequireIfMissing`` and ``RequireIfPresent``.
 
     If you provide a ``missing`` value (a string key name) then
     if that field is missing the field must be entered.
@@ -2582,9 +2584,9 @@ class RequireIfMissing(FormValidator):
         if is_required and not value_dict.get(self.required):
             raise Invalid(
                 _('You must give a value for %s') % self.required,
-                value, state,
+                value_dict, state,
                 error_dict={self.required:
-                    Invalid(self.message('empty', state), value, state)})
+                    Invalid(self.message('empty', state), value_dict, state)})
         return value_dict
 
 RequireIfPresent = RequireIfMissing
@@ -2718,7 +2720,7 @@ class CreditCardValidator(FormValidator):
             if field not in field_dict:
                 raise Invalid(
                     self.message('missing_key', state, key=field),
-                    value, state)
+                    field_dict, state)
         ccType = field_dict[self.cc_type_field].lower().strip()
         number = field_dict[self.cc_number_field].strip()
         number = number.replace(' ', '')
@@ -2926,6 +2928,11 @@ class CreditCardSecurityCode(FormValidator):
     _cardInfo = dict(visa=3, mastercard=3, discover=3, amex=4)
 
 
-__all__ = ['Invalid'] + [name for name, value in globals().items()
-    if isinstance(value, type) and issubclass(value, Validator)]
+
+def validators():
+    """Return the names of all validators in this module."""
+    return [name for name, value in globals().items()
+        if isinstance(value, type) and issubclass(value, Validator)]
+
+__all__ = ['Invalid'] + validators()
 
