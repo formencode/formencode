@@ -1024,9 +1024,9 @@ class String(FancyValidator):
             self.not_empty = True
 
     def _to_python(self, value, state):
-        if not value:
+        if value is None:
             value = ''
-        if not isinstance(value, basestring):
+        elif not isinstance(value, basestring):
             try:
                 value = str(value)
             except UnicodeEncodeError:
@@ -1036,9 +1036,9 @@ class String(FancyValidator):
         return value
 
     def _from_python(self, value, state):
-        if not value and value != 0:
+        if value is None:
             value = ''
-        if not isinstance(value, basestring):
+        elif not isinstance(value, basestring):
             if isinstance(value, (list, tuple)):
                 value = self.list_joiner.join([
                     self._from_python(v, state) for v in value])
@@ -1053,12 +1053,19 @@ class String(FancyValidator):
         return value
 
     def validate_other(self, value, state):
-        if (self.max is not None and value is not None
-                and len(value) > self.max):
+        if self.max is None and self.min is None:
+            return
+        if value is None:
+            value = ''
+        elif not isinstance(value, basestring):
+            try:
+                value = str(value)
+            except UnicodeEncodeError:
+                value = unicode(value)
+        if self.max is not None and len(value) > self.max:
             raise Invalid(
                 self.message('tooLong', state, max=self.max), value, state)
-        if (self.min is not None
-            and (not value or len(value) < self.min)):
+        if self.min is not None and len(value) < self.min:
             raise Invalid(
                 self.message('tooShort', state, min=self.min), value, state)
 
