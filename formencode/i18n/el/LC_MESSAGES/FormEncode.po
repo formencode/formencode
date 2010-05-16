@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  FormEncode\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-05-16 05:25+0200\n"
+"POT-Creation-Date: 2010-05-16 19:11+0200\n"
 "PO-Revision-Date: 2010-05-16 04:32+0200\n"
 "Last-Translator: Dimitris Glezos <dimitris@glezos.com>\n"
 "Language-Team: Greek <fedora-trans-el@redhat.com>\n"
@@ -260,8 +260,8 @@ msgid "Please enter a number"
 msgstr "Παρακαλούμε εισάγετε έναν αριθμό"
 
 #: formencode/validators.py:1019
-#, python-format
-msgid "Enter a value less than %(max)i characters long"
+#, fuzzy, python-format
+msgid "Enter a value not more than %(max)i characters long"
 msgstr "Εισάγετε μία τιμή με μήκος μικρότερο από %(max)i χαρακτήρες"
 
 #: formencode/validators.py:1020
@@ -508,57 +508,57 @@ msgstr ""
 "Διευθύνσεις MAC μπορούν μόνο να περιέχουν 0-9 και A-F (και προαιρετικά "
 ":), οχί %(char)r"
 
-#: formencode/validators.py:2584
+#: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
 msgstr ""
 
-#: formencode/validators.py:2617
+#: formencode/validators.py:2619
 #, python-format
 msgid "Fields do not match (should be %(match)s)"
 msgstr "Τα πεδία δεν ταιριάζουν (θα έπρεπε να είναι %(match)s)"
 
-#: formencode/validators.py:2618
+#: formencode/validators.py:2620
 msgid "Fields do not match"
 msgstr "Τα πεδία δεν ταιριάζουν"
 
-#: formencode/validators.py:2619
+#: formencode/validators.py:2621
 msgid "Fields should be a dictionary"
 msgstr "Τα πεδια πρέπει να είναι λεξικό"
 
-#: formencode/validators.py:2695
+#: formencode/validators.py:2697
 msgid "Please enter only the number, no other characters"
 msgstr "Παρακαλούμε εισάγετε μόνο τον αριθμό, χωρίς άλλους χαρακτήρες"
 
-#: formencode/validators.py:2696
+#: formencode/validators.py:2698
 msgid "You did not enter a valid number of digits"
 msgstr "Δεν έχετε εισάγει έναν έγκυρο αριθμό από ψηφία"
 
-#: formencode/validators.py:2697
+#: formencode/validators.py:2699
 msgid "That number is not valid"
 msgstr "Ο αριθμός δεν είναι έγκυρος"
 
-#: formencode/validators.py:2698
+#: formencode/validators.py:2700
 #, python-format
 msgid "The field %(key)s is missing"
 msgstr "Το πεδίο %(key)s λείπει"
 
-#: formencode/validators.py:2814
+#: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"
 msgstr "Παρακαλώ εισάγετε μόνο αριθμούς για μήνα και έτος"
 
-#: formencode/validators.py:2815
+#: formencode/validators.py:2817
 msgid "Invalid Expiration Date"
 msgstr "Μη έγκυρη ημερομηνία λήξης"
 
-#: formencode/validators.py:2890
+#: formencode/validators.py:2892
 msgid "Please enter numbers only for credit card security code"
 msgstr ""
 "Παρακαλώ εισάγετε νούμερο μονο για των κωδικό της πιστωτικής κάρτας\"\n"
 "\"Παρακαλούμε εισάγετε μόνο αριθμούς για τον κωδικό ασφάλειας της \"\n"
 "\"πιστωτικής κάρτας"
 
-#: formencode/validators.py:2891
+#: formencode/validators.py:2893
 msgid "Invalid credit card security code length"
 msgstr "Μη έγκυρο μήκος του κωδικού ασφάλειας της πιστωτικής κάρτας"
 

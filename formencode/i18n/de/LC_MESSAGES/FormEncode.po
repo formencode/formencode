@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FormEncode 1.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-05-16 05:25+0200\n"
+"POT-Creation-Date: 2010-05-16 19:11+0200\n"
 "PO-Revision-Date: 2010-05-16 04:33+0100\n"
 "Last-Translator: Christoph Zwerschke <cito@online.de>\n"
 "Language-Team: Gregor Horvath <gh@gregor-horvath.com>\n"
@@ -260,8 +260,8 @@ msgstr "Bitte eine Zahl eingeben"
 
 #: formencode/validators.py:1019
 #, python-format
-msgid "Enter a value less than %(max)i characters long"
-msgstr "Bitte einen Wert mit weniger als %(max)i Zeichen eingeben"
+msgid "Enter a value not more than %(max)i characters long"
+msgstr "Bitte einen Wert mit höchstens %(max)i Zeichen eingeben"
 
 #: formencode/validators.py:1020
 #, python-format
@@ -510,54 +510,54 @@ msgstr ""
 "MAC-Adressen dürfen nur 0-9 und A-F (und Doppelpunkte) enthalten, nicht "
 "%(char)r"
 
-#: formencode/validators.py:2584
+#: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
 msgstr "Sie müssen einen Wert für %s eingeben"
 
-#: formencode/validators.py:2617
+#: formencode/validators.py:2619
 #, python-format
 msgid "Fields do not match (should be %(match)s)"
 msgstr "Felder stimmen nicht überein (sollte %(match)s sein)"
 
-#: formencode/validators.py:2618
+#: formencode/validators.py:2620
 msgid "Fields do not match"
 msgstr "Felder stimmen nicht überein"
 
-#: formencode/validators.py:2619
+#: formencode/validators.py:2621
 msgid "Fields should be a dictionary"
 msgstr "Felder sollten Dictionaries sein"
 
-#: formencode/validators.py:2695
+#: formencode/validators.py:2697
 msgid "Please enter only the number, no other characters"
 msgstr "Bitte nur die Nummer, keine anderen Zeichen eingeben"
 
-#: formencode/validators.py:2696
+#: formencode/validators.py:2698
 msgid "You did not enter a valid number of digits"
 msgstr "Sie haben keine gültige Nummer aus Ziffern eingegeben"
 
-#: formencode/validators.py:2697
+#: formencode/validators.py:2699
 msgid "That number is not valid"
 msgstr "Diese Nummer ist ungültig"
 
-#: formencode/validators.py:2698
+#: formencode/validators.py:2700
 #, python-format
 msgid "The field %(key)s is missing"
 msgstr "Das Feld %(key)s fehlt"
 
-#: formencode/validators.py:2814
+#: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"
 msgstr "Bitte nur die Zahlen für Monat und Jahr eingeben"
 
-#: formencode/validators.py:2815
+#: formencode/validators.py:2817
 msgid "Invalid Expiration Date"
 msgstr "Ungültiges Ablaufdatum"
 
-#: formencode/validators.py:2890
+#: formencode/validators.py:2892
 msgid "Please enter numbers only for credit card security code"
 msgstr "Bitte nur Ziffern für den Sicherheitscode der Kreditkarte eingeben"
 
-#: formencode/validators.py:2891
+#: formencode/validators.py:2893
 msgid "Invalid credit card security code length"
 msgstr "Ungültige Länge des Sicherheitscodes der Kreditkarte"
 

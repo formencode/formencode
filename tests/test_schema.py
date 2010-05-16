@@ -99,7 +99,7 @@ BadCase(Name, 'fname=&lname=',
         lname='Please enter a value')
 
 BadCase(Name, 'fname=Franklin&mi=Delano&lname=Roosevelt',
-        mi="Enter a value less than 1 characters long")
+        mi="Enter a value not more than 1 characters long")
 
 BadCase(Name, '',
         fname='Missing value',

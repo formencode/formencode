@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FormEncode 0.51\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-05-16 05:25+0200\n"
+"POT-Creation-Date: 2010-05-16 19:11+0200\n"
 "PO-Revision-Date: 2010-05-16 04:32+0200\n"
 "Last-Translator: Jose Soares Da Silva <jose.soares@sferacarta.com>\n"
 "Language-Team: Jose Soares Da Silva <jose.soares@sferacarta.com>\n"
@@ -261,8 +261,8 @@ msgid "Please enter a number"
 msgstr "Inserire un numero"
 
 #: formencode/validators.py:1019
-#, python-format
-msgid "Enter a value less than %(max)i characters long"
+#, fuzzy, python-format
+msgid "Enter a value not more than %(max)i characters long"
 msgstr "Inserire meno di %(max)i caratteri"
 
 #: formencode/validators.py:1020
@@ -506,54 +506,54 @@ msgid ""
 "%(char)r"
 msgstr ""
 
-#: formencode/validators.py:2584
+#: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
 msgstr ""
 
-#: formencode/validators.py:2617
+#: formencode/validators.py:2619
 #, python-format
 msgid "Fields do not match (should be %(match)s)"
 msgstr "I campi non corrispondono (dovrebbero essere %(match)s)"
 
-#: formencode/validators.py:2618
+#: formencode/validators.py:2620
 msgid "Fields do not match"
 msgstr "I campi non corrispondono"
 
-#: formencode/validators.py:2619
+#: formencode/validators.py:2621
 msgid "Fields should be a dictionary"
 msgstr ""
 
-#: formencode/validators.py:2695
+#: formencode/validators.py:2697
 msgid "Please enter only the number, no other characters"
 msgstr "Inserire soltanto numeri, nessun altro carattere"
 
-#: formencode/validators.py:2696
+#: formencode/validators.py:2698
 msgid "You did not enter a valid number of digits"
 msgstr "Numero di cifre non valida"
 
-#: formencode/validators.py:2697
+#: formencode/validators.py:2699
 msgid "That number is not valid"
 msgstr "Numero non valido"
 
-#: formencode/validators.py:2698
+#: formencode/validators.py:2700
 #, python-format
 msgid "The field %(key)s is missing"
 msgstr ""
 
-#: formencode/validators.py:2814
+#: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"
 msgstr "Inserire numeri solo per il mese e anno"
 
-#: formencode/validators.py:2815
+#: formencode/validators.py:2817
 msgid "Invalid Expiration Date"
 msgstr "Data di scadenza non valida"
 
-#: formencode/validators.py:2890
+#: formencode/validators.py:2892
 msgid "Please enter numbers only for credit card security code"
 msgstr "Inserire solo numeri nel codice di sicurezza della carta di credito"
 
-#: formencode/validators.py:2891
+#: formencode/validators.py:2893
 msgid "Invalid credit card security code length"
 msgstr "Lunghezza del codice di sicurezza della carta di credito non valido"
 

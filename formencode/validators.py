@@ -991,7 +991,7 @@ class String(FancyValidator):
         >>> String(max=10).to_python('xxxxxxxxxxx')
         Traceback (most recent call last):
             ...
-        Invalid: Enter a value less than 10 characters long
+        Invalid: Enter a value not more than 10 characters long
         >>> String().from_python(None)
         ''
         >>> String().from_python([])
@@ -1016,7 +1016,7 @@ class String(FancyValidator):
     list_joiner = ', '
 
     messages = dict(
-        tooLong=_('Enter a value less than %(max)i characters long'),
+        tooLong=_('Enter a value not more than %(max)i characters long'),
         tooShort=_('Enter a value %(min)i characters long or more'))
 
     def __initargs__(self, new_attrs):

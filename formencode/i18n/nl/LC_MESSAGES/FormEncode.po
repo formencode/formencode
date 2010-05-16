@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  r2591\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-05-16 05:25+0200\n"
+"POT-Creation-Date: 2010-05-16 19:11+0200\n"
 "PO-Revision-Date: 2010-05-16 04:32+0200\n"
 "Last-Translator: Jan-Wijbrand Kolman <jkolman@thehealthagency.com>\n"
 "Language-Team: nl <LL@li.org>\n"
@@ -263,8 +263,8 @@ msgid "Please enter a number"
 msgstr "Voer een getal in"
 
 #: formencode/validators.py:1019
-#, python-format
-msgid "Enter a value less than %(max)i characters long"
+#, fuzzy, python-format
+msgid "Enter a value not more than %(max)i characters long"
 msgstr "Maximaal %(max)i tekens"
 
 #: formencode/validators.py:1020
@@ -508,54 +508,54 @@ msgid ""
 "%(char)r"
 msgstr ""
 
-#: formencode/validators.py:2584
+#: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
 msgstr ""
 
-#: formencode/validators.py:2617
+#: formencode/validators.py:2619
 #, python-format
 msgid "Fields do not match (should be %(match)s)"
 msgstr "Waarden komen niet overeen (zou moeten zijn: %(match)s)"
 
-#: formencode/validators.py:2618
+#: formencode/validators.py:2620
 msgid "Fields do not match"
 msgstr "Waarden komen niet overeen"
 
-#: formencode/validators.py:2619
+#: formencode/validators.py:2621
 msgid "Fields should be a dictionary"
 msgstr ""
 
-#: formencode/validators.py:2695
+#: formencode/validators.py:2697
 msgid "Please enter only the number, no other characters"
 msgstr "Voer alleen een getal in, geen andere tekens"
 
-#: formencode/validators.py:2696
+#: formencode/validators.py:2698
 msgid "You did not enter a valid number of digits"
 msgstr "U heeft niet het juiste aantal cijfers ingevoerd"
 
-#: formencode/validators.py:2697
+#: formencode/validators.py:2699
 msgid "That number is not valid"
 msgstr "Ongeldig nummer"
 
-#: formencode/validators.py:2698
+#: formencode/validators.py:2700
 #, fuzzy, python-format
 msgid "The field %(key)s is missing"
 msgstr ""
 
-#: formencode/validators.py:2814
+#: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"
 msgstr "Voer alleen cijfers in voor maand en jaar"
 
-#: formencode/validators.py:2815
+#: formencode/validators.py:2817
 msgid "Invalid Expiration Date"
 msgstr "Ongeldige vervaldatum"
 
-#: formencode/validators.py:2890
+#: formencode/validators.py:2892
 msgid "Please enter numbers only for credit card security code"
 msgstr "Voer alleen de cijfers in van de \"credit card security code\""
 
-#: formencode/validators.py:2891
+#: formencode/validators.py:2893
 msgid "Invalid credit card security code length"
 msgstr "Incorrecte \"credit card security code\"-lengte"
 

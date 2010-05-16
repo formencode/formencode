@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  1.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-05-16 05:25+0200\n"
+"POT-Creation-Date: 2010-05-16 19:11+0200\n"
 "PO-Revision-Date: 2010-05-16 04:32+0200\n"
 "Last-Translator: Oktay Sancak <oktaysancak@gmail.com>\n"
 "Language-Team: Oktay Sancak <oktaysancak@gmail.com>\n"
@@ -260,8 +260,8 @@ msgid "Please enter a number"
 msgstr "Lütfen bir sayı giriniz"
 
 #: formencode/validators.py:1019
-#, python-format
-msgid "Enter a value less than %(max)i characters long"
+#, fuzzy, python-format
+msgid "Enter a value not more than %(max)i characters long"
 msgstr "%(max)i karakterden kısa bir değer giriniz"
 
 #: formencode/validators.py:1020
@@ -506,54 +506,54 @@ msgstr ""
 "MAC adresi sadece 0-9 ve A-F arası değerler içerebilir (ve opsiyonel "
 "olarak :), %(char)r değil"
 
-#: formencode/validators.py:2584
+#: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
 msgstr ""
 
-#: formencode/validators.py:2617
+#: formencode/validators.py:2619
 #, python-format
 msgid "Fields do not match (should be %(match)s)"
 msgstr "Girilen değerler uyuşmuyor (%(match)s olmalı)"
 
-#: formencode/validators.py:2618
+#: formencode/validators.py:2620
 msgid "Fields do not match"
 msgstr "Girilen değerler aynı değil"
 
-#: formencode/validators.py:2619
+#: formencode/validators.py:2621
 msgid "Fields should be a dictionary"
 msgstr ""
 
-#: formencode/validators.py:2695
+#: formencode/validators.py:2697
 msgid "Please enter only the number, no other characters"
 msgstr "Lütfen sadece rakam giriniz, başka karakter değil"
 
-#: formencode/validators.py:2696
+#: formencode/validators.py:2698
 msgid "You did not enter a valid number of digits"
 msgstr "Geçerli sayıda rakam girmediniz"
 
-#: formencode/validators.py:2697
+#: formencode/validators.py:2699
 msgid "That number is not valid"
 msgstr "Bu sayı geçerli değil"
 
-#: formencode/validators.py:2698
+#: formencode/validators.py:2700
 #, python-format
 msgid "The field %(key)s is missing"
 msgstr ""
 
-#: formencode/validators.py:2814
+#: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"
 msgstr "Lütfen ay ve yıl için sadece rakam giriniz"
 
-#: formencode/validators.py:2815
+#: formencode/validators.py:2817
 msgid "Invalid Expiration Date"
 msgstr "Hatalı Son Kullanma Tarihi"
 
-#: formencode/validators.py:2890
+#: formencode/validators.py:2892
 msgid "Please enter numbers only for credit card security code"
 msgstr "Lütfen kredi kartı güvenlik kodu için sadece rakam giriniz"
 
-#: formencode/validators.py:2891
+#: formencode/validators.py:2893
 msgid "Invalid credit card security code length"
 msgstr "Kredi kartı güvenlik kodu uzunluğu geçersiz"
 
