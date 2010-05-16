@@ -150,7 +150,7 @@ class DelimitedDigitsPostalCode(Regex):
         rd = r'\%s?' % delimiter
         return rd.join(mg)
 
-    def __init__(self, partition_lengths, delimiter = None, \
+    def __init__(self, partition_lengths, delimiter = None,
                  *args, **kw):
         if type(partition_lengths) == type(1):
             partition_lengths = [partition_lengths]
@@ -162,14 +162,15 @@ class DelimitedDigitsPostalCode(Regex):
         Regex.__init__(self, *args, **kw)
 
     messages = dict(
-        invalid=_('Please enter a zip code (%%s)'))
+        invalid=_('Please enter a zip code (%(format)s)'))
 
     def _to_python(self, value, state):
         self.assert_string(value, state)
         match = self.regex.search(value)
         if not match:
             raise Invalid(
-                self.message('invalid', state) % self.format, value, state)
+                self.message('invalid', state, format=self.format),
+                value, state)
         return self.delimiter.join(match.groups())
 
 
@@ -494,8 +495,8 @@ class USStateProvince(FancyValidator):
             raise Invalid(
                 self.message('wrongLength', state),
                 value, state)
-        if value not in self.states \
-           and not (self.extra_states and value in self.extra_states):
+        if value not in self.states and not (
+                self.extra_states and value in self.extra_states):
             raise Invalid(
                 self.message('invalid', state),
                 value, state)

@@ -35,11 +35,11 @@ warnings.filters = filters
 from interfaces import *
 from api import *
 
-# dummy translation function, nothing is translated here.
+# Dummy i18n translation function, nothing is translated here.
 # Instead this is actually done in api.message.
 # The surrounding _('string') of the strings is only for extracting
-# the strings automatically
-# (Note: we can't use a def statement, because pygettext dislikes it)
+# the strings automatically.
+# If you run pygettext with this source comment this function out temporarily.
 _ = lambda s: s
 
 

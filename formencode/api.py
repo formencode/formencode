@@ -49,23 +49,23 @@ def get_localedir():
     return locale_dir
 
 
-def set_stdtranslation(domain="FormEncode", languages=None, \
+def set_stdtranslation(domain="FormEncode", languages=None,
                        localedir = get_localedir()):
 
-    t = gettext.translation(domain=domain, \
-                            languages=languages, \
+    t = gettext.translation(domain=domain,
+                            languages=languages,
                             localedir=localedir, fallback=True)
     global _stdtrans
     _stdtrans = t.ugettext
 
 set_stdtranslation()
 
-
-def _(s): return s # Dummy i18n translation function, nothing is translated here.
-    # Instead this is actually done in api.Validator.message.
-    # The surrounding _("string") of the strings is only for extracting
-    # the strings automatically.
-    # If you run pygettext with this source comment this function out temporarily. 
+# Dummy i18n translation function, nothing is translated here.
+# Instead this is actually done in api.Validator.message.
+# The surrounding _('string') of the strings is only for extracting
+# the strings automatically.
+# If you run pygettext with this source comment this function out temporarily.
+_ = lambda s: s
 
 
 class NoDefault(object):
