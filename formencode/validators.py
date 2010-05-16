@@ -1137,13 +1137,12 @@ class UnicodeString(String):
         return u''
 
 class Set(FancyValidator):
-
     """
     This is for when you think you may return multiple values for a
     certain field.
 
     This way the result will always be a list, even if there's only
-    one result.  It's equivalent to ForEach(convertToList=True).
+    one result.  It's equivalent to ForEach(convert_to_list=True).
 
     If you give ``use_set=True``, then it will return an actual
     ``set`` object.

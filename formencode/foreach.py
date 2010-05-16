@@ -21,7 +21,6 @@ __all__ = ['ForEach']
 
 
 class ForEach(CompoundValidator):
-
     """
     Use this to apply a validator/converter to each item in a list.
 
