@@ -106,7 +106,7 @@ class Invalid(Exception):
 
     def __init__(self, msg,
                  value, state, error_list=None, error_dict=None):
-        Exception.__init__(self, msg)
+        Exception.__init__(self, msg, value, state, error_list, error_dict)
         self.msg = msg
         self.value = value
         self.state = state
