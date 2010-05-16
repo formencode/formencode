@@ -361,13 +361,14 @@ class FillingParser(RewritingParser):
         if self.prefix_error:
             self.write_marker(name)
         value = self.defaults.get(name)
+        if isinstance(name, unicode) and isinstance(value, str):
+            value = value.decode(self.encoding or self.default_encoding)
         if name in self.add_attributes:
-            for attr_name, attr_value in self.add_attributes[name].items():
+            for attr_name, attr_value in self.add_attributes[name].iteritems():               
                 if attr_name.startswith('+'):
                     attr_name = attr_name[1:]
                     self.set_attr(attrs, attr_name,
-                                  self.get_attr(attrs, attr_name, '')
-                                  + attr_value)
+                        self.get_attr(attrs, attr_name, '') + attr_value)
                 else:
                     self.set_attr(attrs, attr_name, attr_value)
         if (self.error_class

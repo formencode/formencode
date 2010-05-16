@@ -362,3 +362,19 @@ Then a form <input type="text" name="name" value="foo">
 """
     rendered_html = htmlfill.render(html, defaults=dict(name="foo"))
     assert expected_html == rendered_html, rendered_html
+
+
+def test_mix_str_and_unicode():
+    html = '<input type="text" name="cheese">'
+    uhtml = unicode(html)
+    cheese = dict(cheese='Käse')
+    ucheese = dict(cheese=u'Käse')
+    expected = u'<input type="text" name="cheese" value="Käse">'
+    rendered = htmlfill.render(html, defaults=cheese, encoding='utf-8')
+    assert expected == rendered
+    rendered = htmlfill.render(html, defaults=ucheese, encoding='utf-8')
+    assert expected == rendered
+    rendered = htmlfill.render(uhtml, defaults=cheese, encoding='utf-8')
+    assert expected == rendered
+    rendered = htmlfill.render(uhtml, defaults=ucheese, encoding='utf-8')
+    assert expected == rendered
