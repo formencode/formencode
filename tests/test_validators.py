@@ -139,6 +139,7 @@ def test_month_style():
     d = datetime.date(2007,12,20)
     assert date.to_python('20/12/2007') == d
     assert date.from_python(d) == '20/12/2007'
+    assert date.to_python('20/December/2007') == d
 
 
 def test_date():
@@ -147,6 +148,14 @@ def test_date():
         date.to_python('20/12/150')
     except Invalid, e:
         assert 'Please enter a four-digit year after 1899' in str(e)
+    else:
+        assert False, 'Date should be invalid'
+    try:
+        date.to_python('oh/happy/day')
+    except Invalid, e:
+        assert 'Please enter the date in the form dd/mm/yyyy' in str(e)
+    else:
+        assert False, 'Date should be invalid'
 
 
 def test_foreach_if_missing():

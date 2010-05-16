@@ -1910,7 +1910,7 @@ class DateConverter(FancyValidator):
         day = int(match.group(1))
         try:
             month = int(match.group(2))
-        except TypeError:
+        except (TypeError, ValueError):
             month = self.make_month(match.group(2), state)
         else:
             if self.month_style == 'mm/dd/yyyy':

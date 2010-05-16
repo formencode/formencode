@@ -149,13 +149,13 @@ class RewritingParser(HTMLParser.HTMLParser):
         except UnicodeDecodeError, e:
             if self.data_is_str:
                 e.reason += (
-                    " the form was passed in as an encoded string, but "
-                    "some data or error messages were unicode strings; "
-                    "the form should be passed in as a unicode string")
+                    " the form was passed in as an encoded string, but"
+                    " some data or error messages were unicode strings;"
+                    " the form should be passed in as a unicode string")
             else:
                 e.reason += (
-                    " the form was passed in as an unicode string, but "
-                    "some data or error message was an encoded string; "
-                    "the data and error messages should be passed in as "
-                    "unicode strings")
+                    " the form was passed in as an unicode string, but"
+                    " some data or error message was an encoded string;"
+                    " the data and error messages should be passed in as"
+                    " unicode strings")
             raise
