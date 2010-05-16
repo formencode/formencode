@@ -395,7 +395,7 @@ class SimpleFormValidator(FancyValidator):
       >>> def validate(form_values, state, validator):
       ...     if form_values.get('country', 'US') == 'US':
       ...         if not form_values.get('state'):
-      ...             return {'state': 'You must enter a state'}
+      ...             return dict(state='You must enter a state')
       ...     if not form_values.get('country'):
       ...         form_values['country'] = 'US'
 

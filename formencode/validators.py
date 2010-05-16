@@ -37,7 +37,7 @@ from api import *
 
 # dummy translation function, nothing is translated here.
 # Instead this is actually done in api.message.
-# The surrounding _("string") of the strings is only for extracting
+# The surrounding _('string') of the strings is only for extracting
 # the strings automatically
 # (Note: we can't use a def statement, because pygettext dislikes it)
 _ = lambda s: s
@@ -103,7 +103,6 @@ def datetime_isotime(module):
 ############################################################
 
 class ConfirmType(FancyValidator):
-
     """
     Confirms that the input/output is of the proper type.
 
@@ -144,12 +143,11 @@ class ConfirmType(FancyValidator):
     subclass = None
     type = None
 
-    messages = {
-        'subclass': _("%(object)r is not a subclass of %(subclass)s"),
-        'inSubclass': _("%(object)r is not a subclass of one of the types %(subclassList)s"),
-        'inType': _("%(object)r must be one of the types %(typeList)s"),
-        'type': _("%(object)r must be of the type %(type)s"),
-        }
+    messages = dict(
+        subclass=_('%(object)r is not a subclass of %(subclass)s'),
+        inSubclass=_('%(object)r is not a subclass of one of the types %(subclassList)s'),
+        inType=_('%(object)r must be one of the types %(typeList)s'),
+        type=_('%(object)r must be of the type %(type)s'))
 
     def __init__(self, *args, **kw):
         FancyValidator.__init__(self, *args, **kw)
@@ -196,7 +194,6 @@ class ConfirmType(FancyValidator):
 
 
 class Wrapper(FancyValidator):
-
     """
     Used to convert functions to validator/converters.
 
@@ -261,7 +258,6 @@ class Wrapper(FancyValidator):
 
 
 class Constant(FancyValidator):
-
     """
     This converter converts everything to the same thing.
 
@@ -297,7 +293,6 @@ class Constant(FancyValidator):
 ############################################################
 
 class MaxLength(FancyValidator):
-
     """
     Invalid if the value is longer than `maxLength`.  Uses len(),
     so it can work for strings, lists, or anything with length.
@@ -331,27 +326,24 @@ class MaxLength(FancyValidator):
 
     __unpackargs__ = ('maxLength',)
 
-    messages = {
-        'tooLong': _("Enter a value less than %(maxLength)i characters long"),
-        'invalid': _("Invalid value (value with length expected)"),
-        }
+    messages = dict(
+        tooLong=_('Enter a value less than %(maxLength)i characters long'),
+        invalid=_('Invalid value (value with length expected)'))
 
     def validate_python(self, value, state):
         try:
-            if value and \
-               len(value) > self.maxLength:
-                raise Invalid(self.message('tooLong', state,
-                                           maxLength=self.maxLength),
-                              value, state)
+            if value and len(value) > self.maxLength:
+                raise Invalid(
+                    self.message('tooLong', state,
+                        maxLength=self.maxLength), value, state)
             else:
                 return None
         except TypeError:
-            raise Invalid(self.message('invalid', state),
-                          value, state)
+            raise Invalid(
+                self.message('invalid', state), value, state)
 
 
 class MinLength(FancyValidator):
-
     """
     Invalid if the value is shorter than `minlength`.  Uses len(), so
     it can work for strings, lists, or anything with length.  Note
@@ -388,24 +380,22 @@ class MinLength(FancyValidator):
 
     __unpackargs__ = ('minLength',)
 
-    messages = {
-        'tooShort': _("Enter a value at least %(minLength)i characters long"),
-        'invalid': _("Invalid value (value with length expected)"),
-        }
+    messages = dict(
+        tooShort=_('Enter a value at least %(minLength)i characters long'),
+        invalid=_('Invalid value (value with length expected)'))
 
     def validate_python(self, value, state):
         try:
             if len(value) < self.minLength:
-                raise Invalid(self.message('tooShort', state,
-                                           minLength=self.minLength),
-                              value, state)
+                raise Invalid(
+                    self.message('tooShort', state,
+                        minLength=self.minLength), value, state)
         except TypeError:
-            raise Invalid(self.message('invalid', state),
-                          value, state)
+            raise Invalid(
+                self.message('invalid', state), value, state)
 
 
 class NotEmpty(FancyValidator):
-
     """
     Invalid if value is empty (empty string, empty list, etc).
 
@@ -414,7 +404,7 @@ class NotEmpty(FancyValidator):
 
     Examples::
 
-        >>> ne = NotEmpty(messages={'empty': 'enter something'})
+        >>> ne = NotEmpty(messages=dict(empty='enter something'))
         >>> ne.to_python('')
         Traceback (most recent call last):
           ...
@@ -424,21 +414,18 @@ class NotEmpty(FancyValidator):
     """
     not_empty = True
 
-    messages = {
-        'empty': _("Please enter a value"),
-        }
+    messages = dict(
+        empty=_('Please enter a value'))
 
     def validate_python(self, value, state):
         if value == 0:
             # This isn't "empty" for this definition.
             return value
         if not value:
-            raise Invalid(self.message('empty', state),
-                          value, state)
+            raise Invalid(self.message('empty', state), value, state)
 
 
 class Empty(FancyValidator):
-
     """
     Invalid unless the value is empty.  Use cleverly, if at all.
 
@@ -450,18 +437,15 @@ class Empty(FancyValidator):
         Invalid: You cannot enter a value here
     """
 
-    messages = {
-        'notEmpty': _("You cannot enter a value here"),
-        }
+    messages = dict(
+        notEmpty=_('You cannot enter a value here'))
 
     def validate_python(self, value, state):
         if value or value == 0:
-            raise Invalid(self.message('notEmpty', state),
-                          value, state)
+            raise Invalid(self.message('notEmpty', state), value, state)
 
 
 class Regex(FancyValidator):
-
     """
     Invalid if the value doesn't match the regular expression `regex`.
 
@@ -502,9 +486,8 @@ class Regex(FancyValidator):
 
     __unpackargs__ = ('regex',)
 
-    messages = {
-        'invalid': _("The input is not valid"),
-        }
+    messages = dict(
+        invalid=_('The input is not valid'))
 
     def __init__(self, *args, **kw):
         FancyValidator.__init__(self, *args, **kw)
@@ -525,8 +508,7 @@ class Regex(FancyValidator):
         if self.strip and isinstance(value, basestring):
             value = value.strip()
         if not self.regex.search(value):
-            raise Invalid(self.message('invalid', state),
-                          value, state)
+            raise Invalid(self.message('invalid', state), value, state)
 
     def _to_python(self, value, state):
         if self.strip and isinstance(value, basestring):
@@ -535,7 +517,6 @@ class Regex(FancyValidator):
 
 
 class PlainText(Regex):
-
     """
     Test that the field contains only letters, numbers, underscore,
     and the hyphen.  Subclasses Regex.
@@ -558,13 +539,11 @@ class PlainText(Regex):
 
     regex = r"^[a-zA-Z_\-0-9]*$"
 
-    messages = {
-        'invalid': _('Enter only letters, numbers, or _ (underscore)'),
-        }
+    messages = dict(
+        invalid=_('Enter only letters, numbers, or _ (underscore)'))
 
 
 class OneOf(FancyValidator):
-
     """
     Tests that the value is one of the members of a given list.
 
@@ -598,10 +577,9 @@ class OneOf(FancyValidator):
 
     __unpackargs__ = ('list',)
 
-    messages = {
-        'invalid': _("Invalid value"),
-        'notIn': _("Value must be one of: %(items)s (not %(value)r)"),
-        }
+    messages = dict(
+        invalid=_('Invalid value'),
+        notIn=_('Value must be one of: %(items)s (not %(value)r)'))
 
     def validate_python(self, value, state):
         if self.testValueList and isinstance(value, (list, tuple)):
@@ -610,18 +588,15 @@ class OneOf(FancyValidator):
         else:
             if not value in self.list:
                 if self.hideList:
-                    raise Invalid(self.message('invalid', state),
-                                  value, state)
+                    raise Invalid(self.message('invalid', state), value, state)
                 else:
                     items = '; '.join(map(str, self.list))
-                    raise Invalid(self.message('notIn', state,
-                                               items=items,
-                                               value=value),
-                                  value, state)
+                    raise Invalid(
+                        self.message('notIn', state,
+                            items=items, value=value), value, state)
 
 
 class DictConverter(FancyValidator):
-
     """
     Converts values based on a dictionary which has values as keys for
     the resultant values.
@@ -644,6 +619,7 @@ class DictConverter(FancyValidator):
         1
         >>> dc.to_python(3)
         Traceback (most recent call last):
+            ....
         Invalid: Enter a value from: 1; 2
         >>> dc2 = dc(hideDict=True)
         >>> dc2.hideDict
@@ -652,54 +628,51 @@ class DictConverter(FancyValidator):
         {1: 'one', 2: 'two'}
         >>> dc2.to_python(3)
         Traceback (most recent call last):
+            ....
         Invalid: Choose something
         >>> dc.from_python('three')
         Traceback (most recent call last):
+            ....
         Invalid: Nothing in my dictionary goes by the value 'three'.  Choose one of: 'one'; 'two'
     """
+
+    messages = dict(
+        keyNotFound=_('Choose something'),
+        chooseKey=_('Enter a value from: %(items)s'),
+        valueNotFound=_('That value is not known'),
+        chooseValue=_('Nothing in my dictionary goes by the value %(value)s.'
+            '  Choose one of: %(items)s'))
 
     dict = None
     hideDict = False
 
     __unpackargs__ = ('dict',)
 
-    messages = {
-        'keyNotFound': _("Choose something"),
-        'chooseKey': _("Enter a value from: %(items)s"),
-        'valueNotFound': _("That value is not known"),
-        'chooseValue': _("Nothing in my dictionary goes by the value %(value)s.  Choose one of: %(items)s"),
-        }
-
     def _to_python(self, value, state):
         try:
             return self.dict[value]
         except KeyError:
             if self.hideDict:
-                raise Invalid(self.message('keyNotFound', state),
-                              value, state)
+                raise Invalid(self.message('keyNotFound', state), value, state)
             else:
                 items = '; '.join(map(repr, self.dict.keys()))
-                raise Invalid(self.message('chooseKey', state,
-                                           items=items),
-                              value, state)
+                raise Invalid(
+                    self.message('chooseKey', state, items=items), value, state)
 
     def _from_python(self, value, state):
         for k, v in self.dict.items():
             if value == v:
                 return k
         if self.hideDict:
-            raise Invalid(self.message('valueNotFound', state),
-                          value, state)
+            raise Invalid(self.message('valueNotFound', state), value, state)
         else:
             items = '; '.join(map(repr, self.dict.values()))
-            raise Invalid(self.message('chooseValue', state,
-                                       value=repr(value),
-                                       items=items),
-                          value, state)
+            raise Invalid(
+                self.message('chooseValue', state,
+                    value=repr(value), items=items), value, state)
 
 
 class IndexListConverter(FancyValidator):
-
     """
     Converts a index (which may be a string like '2') to the value in
     the given list.
@@ -728,35 +701,30 @@ class IndexListConverter(FancyValidator):
 
     __unpackargs__ = ('list',)
 
-    messages = {
-        'integer': _("Must be an integer index"),
-        'outOfRange': _("Index out of range"),
-        'notFound': _("Item %(value)s was not found in the list"),
-        }
+    messages = dict(
+        integer=_('Must be an integer index'),
+        outOfRange=_('Index out of range'),
+        notFound=_('Item %(value)s was not found in the list'))
 
     def _to_python(self, value, state):
         try:
             value = int(value)
         except (ValueError, TypeError):
-            raise Invalid(self.message('integer', state),
-                          value, state)
+            raise Invalid(self.message('integer', state), value, state)
         try:
             return self.list[value]
         except IndexError:
-            raise Invalid(self.message('outOfRange', state),
-                          value, state)
+            raise Invalid(self.message('outOfRange', state), value, state)
 
     def _from_python(self, value, state):
         for i in range(len(self.list)):
             if self.list[i] == value:
                 return i
-        raise Invalid(self.message('notFound', state,
-                                   value=repr(value)),
-                      value, state)
+        raise Invalid(
+            self.message('notFound', state, value=repr(value)), value, state)
 
 
 class DateValidator(FancyValidator):
-
     """
     Validates that a date is within the given range.  Be sure to call
     DateConverter first if you aren't expecting mxDateTime input.
@@ -805,13 +773,12 @@ class DateValidator(FancyValidator):
     # or 'mxDateTime' to force the mxDateTime module
     datetime_module = None
 
-    messages = {
-        'after': _("Date must be after %(date)s"),
-        'before': _("Date must be before %(date)s"),
+    messages = dict(
+        after=_('Date must be after %(date)s'),
+        before=_('Date must be before %(date)s'),
         # Double %'s, because this will be substituted twice:
-        'date_format': _("%%A, %%d %%B %%Y"),
-        'future': _("The date must be sometime in the future"),
-        }
+        date_format=_('%%A, %%d %%B %%Y'),
+        future=_('The date must be sometime in the future'))
 
     def validate_python(self, value, state):
         date_format = self.message('date_format', state)
@@ -831,8 +798,7 @@ class DateValidator(FancyValidator):
                 if encoding:
                     date_formatted = date_formatted.decode(encoding)
                 raise Invalid(
-                    self.message('after', state,
-                                 date=date_formatted),
+                    self.message('after', state, date=date_formatted),
                     value, state)
         if self.latest_date:
             if callable(self.latest_date):
@@ -844,8 +810,7 @@ class DateValidator(FancyValidator):
                 if encoding:
                     date_formatted = date_formatted.decode(encoding)
                 raise Invalid(
-                    self.message('before', state,
-                                 date=date_formatted),
+                    self.message('before', state, date=date_formatted),
                     value, state)
         if self.after_now:
             dt_mod = import_datetime(self.datetime_module)
@@ -855,8 +820,7 @@ class DateValidator(FancyValidator):
                 if encoding:
                     date_formatted = date_formatted.decode(encoding)
                 raise Invalid(
-                    self.message('future', state,
-                                 date=date_formatted),
+                    self.message('future', state, date=date_formatted),
                     value, state)
         if self.today_or_after:
             dt_mod = import_datetime(self.datetime_module)
@@ -870,13 +834,11 @@ class DateValidator(FancyValidator):
                 if encoding:
                     date_formatted = date_formatted.decode(encoding)
                 raise Invalid(
-                    self.message('future', state,
-                                 date=date_formatted),
+                    self.message('future', state, date=date_formatted),
                     value, state)
 
 
 class Bool(FancyValidator):
-
     """
     Always Valid, returns True or False based on the value and the
     existance of the value.
@@ -907,21 +869,18 @@ class Bool(FancyValidator):
 
 
 class RangeValidator(FancyValidator):
-
     """This is an abstract base class for Int and Number.
 
     It verifies that a value is within range.  It accepts min and max
     values in the constructor.
 
-    (Since this is an abstract base class, the tests are in Int and
-    Number.)
+    (Since this is an abstract base class, the tests are in Int and Number.)
 
     """
 
-    messages = {
-        'tooLow': _("Please enter a number that is %(min)s or greater"),
-        'tooHigh': _("Please enter a number that is %(max)s or smaller"),
-    }
+    messages = dict(
+        tooLow=_('Please enter a number that is %(min)s or greater'),
+        tooHigh=_('Please enter a number that is %(max)s or smaller'))
 
     min = None
     max = None
@@ -929,16 +888,15 @@ class RangeValidator(FancyValidator):
     def validate_python(self, value, state):
         if self.min is not None:
             if value < self.min:
-                msg = self.message("tooLow", state, min=self.min)
+                msg = self.message('tooLow', state, min=self.min)
                 raise Invalid(msg, value, state)
         if self.max is not None:
             if value > self.max:
-                msg = self.message("tooHigh", state, max=self.max)
+                msg = self.message('tooHigh', state, max=self.max)
                 raise Invalid(msg, value, state)
 
 
 class Int(RangeValidator):
-
     """Convert a value to an integer.
 
     Example::
@@ -958,22 +916,19 @@ class Int(RangeValidator):
 
     """
 
-    messages = {
-        'integer': _("Please enter an integer value")
-    }
+    messages = dict(
+        integer=_('Please enter an integer value'))
 
     def _to_python(self, value, state):
         try:
             return int(value)
         except (ValueError, TypeError):
-            raise Invalid(self.message('integer', state),
-                          value, state)
+            raise Invalid(self.message('integer', state), value, state)
 
     _from_python = _to_python
 
 
 class Number(RangeValidator):
-
     """Convert a value to a float or integer.
 
     Tries to convert it to an integer if no information is lost.
@@ -999,9 +954,8 @@ class Number(RangeValidator):
 
     """
 
-    messages = {
-        'number': _("Please enter a number")
-    }
+    messages = dict(
+        number=_('Please enter a number'))
 
     def _to_python(self, value, state):
         try:
@@ -1014,21 +968,19 @@ class Number(RangeValidator):
                 return int_value
             return value
         except ValueError:
-            raise Invalid(self.message('number', state),
-                          value, state)
+            raise Invalid(self.message('number', state), value, state)
 
 
 class String(FancyValidator):
     """
-    Converts things to string, but treats empty things as the empty
-    string.
+    Converts things to string, but treats empty things as the empty string.
 
-    Also takes a `max` and `min` argument, and the string length must
-    fall in that range.
+    Also takes a `max` and `min` argument, and the string length must fall
+    in that range.
 
-    Also you may give an `encoding` argument, which will encode any
-    unicode that is found.  Lists and tuples are joined with
-    `list_joiner` (default ``', '``) in ``from_python``.
+    Also you may give an `encoding` argument, which will encode any unicode
+    that is found.  Lists and tuples are joined with `list_joiner`
+    (default ``', '``) in ``from_python``.
 
     ::
 
@@ -1063,10 +1015,9 @@ class String(FancyValidator):
     encoding = None
     list_joiner = ', '
 
-    messages = {
-        'tooLong': _("Enter a value less than %(max)i characters long"),
-        'tooShort': _("Enter a value %(min)i characters long or more"),
-        }
+    messages = dict(
+        tooLong=_('Enter a value less than %(max)i characters long'),
+        tooShort=_('Enter a value %(min)i characters long or more'))
 
     def __initargs__(self, new_attrs):
         if self.not_empty is None and self.min:
@@ -1103,15 +1054,13 @@ class String(FancyValidator):
 
     def validate_other(self, value, state):
         if (self.max is not None and value is not None
-            and len(value) > self.max):
-            raise Invalid(self.message('tooLong', state,
-                                       max=self.max),
-                          value, state)
+                and len(value) > self.max):
+            raise Invalid(
+                self.message('tooLong', state, max=self.max), value, state)
         if (self.min is not None
             and (not value or len(value) < self.min)):
-            raise Invalid(self.message('tooShort', state,
-                                       min=self.min),
-                          value, state)
+            raise Invalid(
+                self.message('tooShort', state, min=self.min), value, state)
 
     def empty_value(self, value):
         return ''
@@ -1142,9 +1091,8 @@ class UnicodeString(String):
     encoding = 'utf-8'
     inputEncoding = NoDefault
     outputEncoding = NoDefault
-    messages = {
-        'badEncoding' : _("Invalid data or incorrect encoding"),
-    }
+    messages = dict(
+        badEncoding=_('Invalid data or incorrect encoding'))
 
     def __init__(self, **kw):
         String.__init__(self, **kw)
@@ -1170,8 +1118,9 @@ class UnicodeString(String):
             except UnicodeDecodeError:
                 raise Invalid(self.message('badEncoding', state), value, state)
             except TypeError:
-                raise Invalid(self.message('badType', state, type=type(value),
-                    value=value), value, state)
+                raise Invalid(
+                    self.message('badType', state,
+                        type=type(value), value=value), value, state)
         return value
 
     def _from_python(self, value, state):
@@ -1291,8 +1240,8 @@ class Email(FancyValidator):
         True
         >>> e.to_python('doesnotexist@colorstudy.com')
         'doesnotexist@colorstudy.com'
-        >>> e.to_python('test@forums.nyu.edu')
-        'test@forums.nyu.edu'
+        >>> e.to_python('test@nyu.edu')
+        'test@nyu.edu'
         >>> # NOTE: If you do not have PyDNS installed this example won't work:
         >>> e.to_python('test@thisdomaindoesnotexistithinkforsure.com')
         Traceback (most recent call last):
@@ -1306,6 +1255,7 @@ class Email(FancyValidator):
     """
 
     resolve_domain = False
+    resolve_timeout = 10 # timeout in seconds when resolving domains
 
     usernameRE = re.compile(r"^[^ \t\n\r@<>()]+$", re.I)
     domainRE = re.compile(r'''
@@ -1313,64 +1263,63 @@ class Email(FancyValidator):
         [a-z]{2,}$                       # TLD
     ''', re.I | re.VERBOSE)
 
-    messages = {
-        'empty': _('Please enter an email address'),
-        'noAt': _('An email address must contain a single @'),
-        'badUsername': _('The username portion of the email address is invalid (the portion before the @: %(username)s)'),
-        'socketError': _('An error occured when trying to connect to the server: %(error)s'),
-        'badDomain': _('The domain portion of the email address is invalid (the portion after the @: %(domain)s)'),
-        'domainDoesNotExist': _('The domain of the email address does not exist (the portion after the @: %(domain)s)'),
-        }
+    messages = dict(
+        empty=_('Please enter an email address'),
+        noAt=_('An email address must contain a single @'),
+        badUsername=_('The username portion of the email address is invalid'
+            ' (the portion before the @: %(username)s)'),
+        socketError=_('An error occured when trying to connect to the server:'
+            ' %(error)s'),
+        badDomain=_('The domain portion of the email address is invalid'
+            ' (the portion after the @: %(domain)s)'),
+        domainDoesNotExist=_('The domain of the email address does not exist'
+            ' (the portion after the @: %(domain)s)'))
 
     def __init__(self, *args, **kw):
         FancyValidator.__init__(self, *args, **kw)
         if self.resolve_domain:
             if not have_dns:
-                import warnings
                 warnings.warn(
-                    "pyDNS <http://pydns.sf.net> is not installed on "
-                    "your system (or the DNS package cannot be found).  "
-                    "I cannot resolve domain names in addresses")
-                raise ImportError, "no module named DNS"
+                    "pyDNS <http://pydns.sf.net> is not installed on"
+                    " your system (or the DNS package cannot be found)."
+                    "  I cannot resolve domain names in addresses")
+                raise ImportError("no module named DNS")
 
     def validate_python(self, value, state):
         if not value:
-            raise Invalid(
-                self.message('empty', state),
-                value, state)
+            raise Invalid(self.message('empty', state), value, state)
         value = value.strip()
         splitted = value.split('@', 1)
         try:
             username, domain=splitted
         except ValueError:
-            raise Invalid(
-                self.message('noAt', state),
-                value, state)
+            raise Invalid(self.message('noAt', state), value, state)
         if not self.usernameRE.search(username):
             raise Invalid(
-                self.message('badUsername', state,
-                             username=username),
+                self.message('badUsername', state, username=username),
                 value, state)
         if not self.domainRE.search(domain):
             raise Invalid(
-                self.message('badDomain', state,
-                             domain=domain),
+                self.message('badDomain', state, domain=domain),
                 value, state)
         if self.resolve_domain:
             assert have_dns, "pyDNS should be available"
+            global socket
+            if socket is None:
+                import socket
             try:
-                a=DNS.DnsRequest(domain, qtype='mx').req().answers
-                if not a:
-                    a=DNS.DnsRequest(domain, qtype='a').req().answers
-                dnsdomains=[x['data'] for x in a]
+                answers = DNS.DnsRequest(domain, qtype='a',
+                    timeout=self.resolve_timeout).req().answers
+                if answers:
+                    answers = DNS.DnsRequest(domain, qtype='mx',
+                        timeout=self.resolve_timeout).req().answers
             except (socket.error, DNS.DNSError), e:
                 raise Invalid(
-	            self.message('socketError', state, error=e),
-		    value, state)
-            if not dnsdomains:
+                    self.message('socketError', state, error=e),
+                    value, state)
+            if not answers:
                 raise Invalid(
-                    self.message('domainDoesNotExist', state,
-                                 domain=domain),
+                    self.message('domainDoesNotExist', state, domain=domain),
                     value, state)
 
     def _to_python(self, value, state):
@@ -1378,7 +1327,6 @@ class Email(FancyValidator):
 
 
 class URL(FancyValidator):
-
     """
     Validate a URL, either http://... or https://.  If check_exists
     is true, then we'll actually make a request for the page.
@@ -1422,11 +1370,12 @@ class URL(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: You must start your URL with http://, https://, etc
-        >>> u.to_python('http://ianbicking.org/doesnotexist.html')
+        >>> u.to_python('http://formencode.org/doesnotexist.html')
         Traceback (most recent call last):
             ...
         Invalid: The server responded that the page could not be found
         >>> u.to_python('http://this.domain.does.not.exist.example.org/test.html')
+        ... # doctest: +ELLIPSIS
         Traceback (most recent call last):
             ...
         Invalid: An error occured when trying to connect to the server: ...
@@ -1456,15 +1405,16 @@ class URL(FancyValidator):
 
     scheme_re = re.compile(r'^[a-zA-Z]+:')
 
-    messages = {
-        'noScheme': _('You must start your URL with http://, https://, etc'),
-        'badURL': _('That is not a valid URL'),
-        'httpError': _('An error occurred when trying to access the URL: %(error)s'),
-        'socketError': _('An error occured when trying to connect to the server: %(error)s'),
-        'notFound': _('The server responded that the page could not be found'),
-        'status': _('The server responded with a bad status code (%(status)s)'),
-        'noTLD': _('You must provide a full domain name (like %(domain)s.com)'),
-        }
+    messages = dict(
+        noScheme=_('You must start your URL with http://, https://, etc'),
+        badURL=_('That is not a valid URL'),
+        httpError=_('An error occurred when trying to access the URL:'
+            ' %(error)s'),
+        socketError=_('An error occured when trying to connect to the server:'
+            ' %(error)s'),
+        notFound=_('The server responded that the page could not be found'),
+        status=_('The server responded with a bad status code (%(status)s)'),
+        noTLD=_('You must provide a full domain name (like %(domain)s.com)'))
 
     def _to_python(self, value, state):
         value = value.strip()
@@ -1473,21 +1423,17 @@ class URL(FancyValidator):
                 value = 'http://' + value
         match = self.scheme_re.search(value)
         if not match:
-            raise Invalid(
-                self.message('noScheme', state),
-                value, state)
+            raise Invalid(self.message('noScheme', state), value, state)
         value = match.group(0).lower() + value[len(match.group(0)):]
         match = self.url_re.search(value)
         if not match:
-            raise Invalid(
-                self.message('badURL', state),
-                value, state)
+            raise Invalid(self.message('badURL', state), value, state)
         if self.require_tld and not match.group('domain'):
             raise Invalid(
                 self.message('noTLD', state, domain=match.group('tld')),
                 value, state)
-        if self.check_exists and (value.startswith('http://')
-                                  or value.startswith('https://')):
+        if self.check_exists and (
+                value.startswith('http://') or value.startswith('https://')):
             self._check_url_exists(value, state)
         return value
 
@@ -1515,19 +1461,15 @@ class URL(FancyValidator):
             res = conn.getresponse()
         except httplib.HTTPException, e:
             raise Invalid(
-                self.message('httpError', state, error=e),
-                state, url)
+                self.message('httpError', state, error=e), state, url)
         except socket.error, e:
             raise Invalid(
-                self.message('socketError', state, error=e),
-                state, url)
+                self.message('socketError', state, error=e), state, url)
         else:
             if res.status == 404:
                 raise Invalid(
-                    self.message('notFound', state),
-                    state, url)
-            if (res.status < 200
-                or res.status >= 500):
+                    self.message('notFound', state), state, url)
+            if not 200 <= res.status < 500:
                 raise Invalid(
                     self.message('status', state, status=res.status),
                     state, url)
@@ -1598,40 +1540,39 @@ class XRI(FancyValidator):
     $
     """, re.VERBOSE|re.IGNORECASE)
 
-    messages = {
-        'noType': _("The type of i-name is not defined; it may be either individual or organizational"),
-        'repeatedChar': _("Dots and dashes may not be repeated consecutively"),
-        'badIname': _('"%(iname)s" is an invalid i-name'),
-        'badInameStart': _("i-names may not start with numbers nor punctuation "
-                           "marks"),
-        'badInumber': _('"%(inumber)s" is an invalid i-number'),
-        'badType': _("The XRI must be a string (not a %(type)s: %(value)r)"),
-        'badXri': _('"%(xri_type)s" is not a valid type of XRI')
-        }
+    messages = dict(
+        noType=_('The type of i-name is not defined;'
+            ' it may be either individual or organizational'),
+        repeatedChar=_('Dots and dashes may not be repeated consecutively'),
+        badIname=_('"%(iname)s" is an invalid i-name'),
+        badInameStart=_('i-names may not start with numbers'
+            ' nor punctuation marks'),
+        badInumber=_('"%(inumber)s" is an invalid i-number'),
+        badType=_('The XRI must be a string (not a %(type)s: %(value)r)'),
+        badXri=_('"%(xri_type)s" is not a valid type of XRI'))
 
     def __init__(self, add_xri=False, xri_type="i-name", **kwargs):
         """Create an XRI validator.
 
-        @param add_xri: Should the schema be added if not present? Officially
-            it's optional.
+        @param add_xri: Should the schema be added if not present?
+            Officially it's optional.
         @type add_xri: C{bool}
-        @param xri_type: What type of XRI should be validated? Possible values:
-            C{i-name} or C{i-number}.
+        @param xri_type: What type of XRI should be validated?
+            Possible values: C{i-name} or C{i-number}.
         @type xri_type: C{str}
 
         """
         self.add_xri = add_xri
-        assert xri_type in ('i-name', 'i-number'), \
-                           ('xri_type must be "i-name" or "i-number"')
+        assert xri_type in ('i-name', 'i-number'), (
+            'xri_type must be "i-name" or "i-number"')
         self.xri_type = xri_type
         super(XRI, self).__init__(**kwargs)
 
     def _to_python(self, value, state):
-        """Prepend the 'xri://' schema if necessary and then remove trailing
-        spaces"""
+        """Prepend the 'xri://' schema if needed and remove trailing spaces"""
         value = value.strip()
-        if self.add_xri and not value.startswith("xri://"):
-            value = "xri://" + value
+        if self.add_xri and not value.startswith('xri://'):
+            value = 'xri://' + value
         return value
 
     def validate_python(self, value, state=None):
@@ -1644,20 +1585,20 @@ class XRI(FancyValidator):
                 is not valid.
 
         """
-        if not (isinstance(value, str) or isinstance(value, unicode)):
-            raise Invalid(self.message("badType", state, type=str(type(value)),
-                                       value=value),
-                          value, state)
+        if not isinstance(value, basestring):
+            raise Invalid(
+                self.message('badType', state,
+                    type=str(type(value)), value=value), value, state)
 
         # Let's remove the schema, if any
-        if value.startswith("xri://"):
+        if value.startswith('xri://'):
             value = value[6:]
 
-        if not value[0] in ('@', '=') and not (self.xri_type == "i-number" \
-        and value[0] == '!'):
-            raise Invalid(self.message("noType", state), value, state)
+        if not value[0] in ('@', '=') and not (
+                self.xri_type == 'i-number' and value[0] == '!'):
+            raise Invalid(self.message('noType', state), value, state)
 
-        if self.xri_type == "i-name":
+        if self.xri_type == 'i-name':
             self._validate_iname(value, state)
         else:
             self._validate_inumber(value, state)
@@ -1666,20 +1607,20 @@ class XRI(FancyValidator):
         """Validate an i-name"""
         # The type is not required here:
         iname = iname[1:]
-        if ".." in iname or "--" in iname:
-            raise Invalid(self.message("repeatedChar", state), iname, state)
+        if '..' in iname or '--' in iname:
+            raise Invalid(self.message('repeatedChar', state), iname, state)
         if self.iname_invalid_start.match(iname):
-            raise Invalid(self.message("badInameStart", state), iname, state)
-        if not self.iname_valid_pattern.match(iname) or "_" in iname:
-            raise Invalid(self.message("badIname", state, iname=iname), iname,
-                          state)
+            raise Invalid(self.message('badInameStart', state), iname, state)
+        if not self.iname_valid_pattern.match(iname) or '_' in iname:
+            raise Invalid(
+                self.message('badIname', state, iname=iname), iname, state)
 
     def _validate_inumber(self, inumber, state):
         """Validate an i-number"""
         if not self.__class__.inumber_pattern.match(inumber):
-            raise Invalid(self.message("badInumber", state, inumber=inumber,
-                                       value=inumber),
-                          inumber, state)
+            raise Invalid(
+                self.message('badInumber', state,
+                    inumber=inumber, value=inumber), inumber, state)
 
 
 class OpenId(FancyValidator):
@@ -1706,9 +1647,9 @@ class OpenId(FancyValidator):
 
     """
 
-    messages = {
-        'badId': _('"%(id)s" is not a valid OpenId (it is neither an URL nor an XRI)')
-        }
+    messages = dict(
+        badId=_('"%(id)s" is not a valid OpenId'
+            ' (it is neither an URL nor an XRI)'))
 
     def __init__(self, add_schema=False, **kwargs):
         """Create an OpenId validator.
@@ -1734,26 +1675,29 @@ class OpenId(FancyValidator):
                 except Invalid:
                     pass
         # It's not an OpenId!
-        raise Invalid(self.message("badId", state, id=value), value, state)
+        raise Invalid(self.message('badId', state, id=value), value, state)
 
     def validate_python(self, value, state):
         self._to_python(value, state)
 
 
 def StateProvince(*kw, **kwargs):
-    warnings.warn("please use formencode.national.USStateProvince", DeprecationWarning, stacklevel=2)
+    warnings.warn("please use formencode.national.USStateProvince",
+        DeprecationWarning, stacklevel=2)
     from formencode.national import USStateProvince
     return USStateProvince(*kw, **kwargs)
 
 
 def PhoneNumber(*kw, **kwargs):
-    warnings.warn("please use formencode.national.USPhoneNumber", DeprecationWarning, stacklevel=2)
+    warnings.warn("please use formencode.national.USPhoneNumber",
+        DeprecationWarning, stacklevel=2)
     from formencode.national import USPhoneNumber
     return USPhoneNumber(*kw, **kwargs)
 
 
 def IPhoneNumberValidator(*kw, **kwargs):
-    warnings.warn("please use formencode.national.InternationalPhoneNumber", DeprecationWarning, stacklevel=2)
+    warnings.warn("please use formencode.national.InternationalPhoneNumber",
+        DeprecationWarning, stacklevel=2)
     from formencode.national import InternationalPhoneNumber
     return InternationalPhoneNumber(*kw, **kwargs)
 
@@ -1857,7 +1801,6 @@ class FileUploadKeeper(FancyValidator):
 
 
 class DateConverter(FancyValidator):
-
     """
     Validates and converts a string date, like mm/yy, dd/mm/yy,
     dd-mm-yy, etc.  Using ``month_style`` you can support
@@ -1935,22 +1878,21 @@ class DateConverter(FancyValidator):
         1: 31, 2: 29, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31,
         9: 30, 10: 31, 11: 30, 12: 31}
 
-    messages = {
-        'badFormat': _('Please enter the date in the form %(format)s'),
-        'monthRange': _('Please enter a month from 1 to 12'),
-        'invalidDay': _('Please enter a valid day'),
-        'dayRange': _('That month only has %(days)i days'),
-        'invalidDate': _('That is not a valid day (%(exception)s)'),
-        'unknownMonthName': _("Unknown month name: %(month)s"),
-        'invalidYear': _('Please enter a number for the year'),
-        'fourDigitYear': _('Please enter a four-digit year after 1899'),
-        'wrongFormat': _('Please enter the date in the form %(format)s'),
-        }
+    messages = dict(
+        badFormat=_('Please enter the date in the form %(format)s'),
+        monthRange=_('Please enter a month from 1 to 12'),
+        invalidDay=_('Please enter a valid day'),
+        dayRange=_('That month only has %(days)i days'),
+        invalidDate=_('That is not a valid day (%(exception)s)'),
+        unknownMonthName=_('Unknown month name: %(month)s'),
+        invalidYear=_('Please enter a number for the year'),
+        fourDigitYear=_('Please enter a four-digit year after 1899'),
+        wrongFormat=_('Please enter the date in the form %(format)s'))
 
     def __init__(self, *args, **kw):
         super(DateConverter, self).__init__(*args, **kw)
         if not self.month_style in ('dd/mm/yyyy', 'mm/dd/yyyy'):
-            raise TypeError("Bad month_style: %r" % self.month_style)
+            raise TypeError('Bad month_style: %r' % self.month_style)
 
     def _to_python(self, value, state):
         if self.accept_day:
@@ -1962,9 +1904,9 @@ class DateConverter(FancyValidator):
         self.assert_string(value, state)
         match = self._day_date_re.search(value)
         if not match:
-            raise Invalid(self.message('badFormat', state,
-                                       format=self.month_style),
-                          value, state)
+            raise Invalid(
+                self.message('badFormat', state,
+                    format=self.month_style), value, state)
         day = int(match.group(1))
         try:
             month = int(match.group(2))
@@ -1975,22 +1917,20 @@ class DateConverter(FancyValidator):
                 month, day = day, month
         year = self.make_year(match.group(3), state)
         if not 1 <= month <= 12:
-            raise Invalid(self.message('monthRange', state),
-                          value, state)
+            raise Invalid(self.message('monthRange', state), value, state)
         if day < 1:
-            raise Invalid(self.message('invalidDay', state),
-                          value, state)
+            raise Invalid(self.message('invalidDay', state), value, state)
         if self._monthDays[month] < day:
-            raise Invalid(self.message('dayRange', state,
-                                       days=self._monthDays[month]),
-                          value, state)
+            raise Invalid(
+                self.message('dayRange', state,
+                    days=self._monthDays[month]), value, state)
         dt_mod = import_datetime(self.datetime_module)
         try:
             return datetime_makedate(dt_mod, year, month, day)
         except ValueError, v:
-            raise Invalid(self.message('invalidDate', state,
-                                       exception=str(v)),
-                          value, state)
+            raise Invalid(
+                self.message('invalidDate', state,
+                    exception=str(v)), value, state)
 
     def make_month(self, value, state):
         try:
@@ -2000,9 +1940,9 @@ class DateConverter(FancyValidator):
             if value in self._month_names:
                 return self._month_names[value]
             else:
-                raise Invalid(self.message('unknownMonthName', state,
-                                           month=value),
-                              value, state)
+                raise Invalid(
+                    self.message('unknownMonthName', state,
+                        month=value), value, state)
 
     def make_year(self, year, state):
         try:
@@ -2020,9 +1960,9 @@ class DateConverter(FancyValidator):
     def convert_month(self, value, state):
         match = self._month_date_re.search(value)
         if not match:
-            raise Invalid(self.message('wrongFormat', state,
-                                       format='mm/yyyy'),
-                          value, state)
+            raise Invalid(
+                self.message('wrongFormat', state,
+                    format='mm/yyyy'), value, state)
         month = self.make_month(match.group(1), state)
         year = self.make_year(match.group(2), state)
         if not 1 <= month <= 12:
@@ -2041,17 +1981,16 @@ class DateConverter(FancyValidator):
     def unconvert_day(self, value, state):
         # @@ ib: double-check, improve
         if self.month_style == 'mm/dd/yyyy':
-            return value.strftime("%m/%d/%Y")
+            return value.strftime('%m/%d/%Y')
         else:
-            return value.strftime("%d/%m/%Y")
+            return value.strftime('%d/%m/%Y')
 
     def unconvert_month(self, value, state):
         # @@ ib: double-check, improve
-        return value.strftime("%m/%Y")
+        return value.strftime('%m/%Y')
 
 
 class TimeConverter(FancyValidator):
-
     """
     Converts times in the format HH:MM:SSampm to (h, m, s).
     Seconds are optional.
@@ -2127,17 +2066,16 @@ class TimeConverter(FancyValidator):
     # This can be set to make it prefer mxDateTime:
     datetime_module = None
 
-    messages = {
-        'noAMPM': _('You must indicate AM or PM'),
-        'tooManyColon': _('There are too many :\'s'),
-        'noSeconds': _('You may not enter seconds'),
-        'secondsRequired': _('You must enter seconds'),
-        'minutesRequired': _('You must enter minutes (after a :)'),
-        'badNumber': _('The %(part)s value you gave is not a number: %(number)r'),
-        'badHour': _('You must enter an hour in the range %(range)s'),
-        'badMinute': _('You must enter a minute in the range 0-59'),
-        'badSecond': _('You must enter a second in the range 0-59'),
-        }
+    messages = dict(
+        noAMPM=_('You must indicate AM or PM'),
+        tooManyColon=_('There are too many :\'s'),
+        noSeconds=_('You may not enter seconds'),
+        secondsRequired=_('You must enter seconds'),
+        minutesRequired=_('You must enter minutes (after a :)'),
+        badNumber=_('The %(part)s value you gave is not a number: %(number)r'),
+        badHour=_('You must enter an hour in the range %(range)s'),
+        badMinute=_('You must enter a minute in the range 0-59'),
+        badSecond=_('You must enter a second in the range 0-59'))
 
     def _to_python(self, value, state):
         result = self._to_python_tuple(value, state)
@@ -2155,9 +2093,7 @@ class TimeConverter(FancyValidator):
             last_two = time[-2:].lower()
             if last_two not in ('am', 'pm'):
                 if self.use_ampm != 'optional':
-                    raise Invalid(
-                        self.message('noAMPM', state),
-                        value, state)
+                    raise Invalid(self.message('noAMPM', state), value, state)
                 else:
                     offset = 0
             else:
@@ -2171,34 +2107,25 @@ class TimeConverter(FancyValidator):
             offset = 0
         parts = time.split(':')
         if len(parts) > 3:
-            raise Invalid(
-                self.message('tooManyColon', state),
-                value, state)
+            raise Invalid(self.message('tooManyColon', state), value, state)
         if len(parts) == 3 and not self.use_seconds:
-            raise Invalid(
-                self.message('noSeconds', state),
-                value, state)
+            raise Invalid(self.message('noSeconds', state), value, state)
         if (len(parts) == 2
-                and self.use_seconds
-                and self.use_seconds != 'optional'):
-            raise Invalid(
-                self.message('secondsRequired', state),
-                value, state)
+                and self.use_seconds and self.use_seconds != 'optional'):
+            raise Invalid(self.message('secondsRequired', state), value, state)
         if len(parts) == 1:
-            raise Invalid(
-                self.message('minutesRequired', state),
-                value, state)
+            raise Invalid(self.message('minutesRequired', state), value, state)
         try:
             hour = int(parts[0])
         except ValueError:
             raise Invalid(
-                self.message('badNumber', state, number=parts[0], part='hour'),
-                value, state)
+                self.message('badNumber', state,
+                    number=parts[0], part='hour'), value, state)
         if explicit_ampm:
-            if not 1 <= hour < 12:
+            if not 1 <= hour <= 12:
                 raise Invalid(
-                    self.message('badHour', state, number=hour, range='1-12'),
-                    value, state)
+                    self.message('badHour', state,
+                        number=hour, range='1-12'), value, state)
             if hour == 12 and offset == 12:
                 # 12pm == 12
                 pass
@@ -2211,15 +2138,13 @@ class TimeConverter(FancyValidator):
             if not 0 <= hour < 24:
                 raise Invalid(
                     self.message('badHour', state,
-                                 number=hour, range='0-23'),
-                    value, state)
+                        number=hour, range='0-23'), value, state)
         try:
             minute = int(parts[1])
         except ValueError:
             raise Invalid(
                 self.message('badNumber', state,
-                             number=parts[1], part='minute'),
-                value, state)
+                    number=parts[1], part='minute'), value, state)
         if not 0 <= minute < 60:
             raise Invalid(
                 self.message('badMinute', state, number=minute),
@@ -2230,7 +2155,7 @@ class TimeConverter(FancyValidator):
             except ValueError:
                 raise Invalid(
                     self.message('badNumber', state,
-                                 number=parts[2], part='second'))
+                        number=parts[2], part='second'), value, state)
             if not 0 <= second < 60:
                 raise Invalid(
                     self.message('badSecond', state, number=second),
@@ -2243,7 +2168,7 @@ class TimeConverter(FancyValidator):
             return (hour, minute, second)
 
     def _from_python(self, value, state):
-        if isinstance(value, (str, unicode)):
+        if isinstance(value, basestring):
             return value
         if hasattr(value, 'hour'):
             hour, minute = value.hour, value.minute
@@ -2254,8 +2179,8 @@ class TimeConverter(FancyValidator):
             hour, minute = value
             second = 0
         ampm = ''
-        if ((self.use_ampm == 'optional' and self.prefer_ampm)
-                or (self.use_ampm and self.use_ampm != 'optional')):
+        if (self.use_ampm == 'optional' and self.prefer_ampm) or (
+                self.use_ampm and self.use_ampm != 'optional'):
             ampm = 'am'
             if hour > 12:
                 hour -= 12
@@ -2295,18 +2220,17 @@ class StripField(FancyValidator):
 
     __unpackargs__ = ('name',)
 
-    messages = {
-        'missing': _('The name %(name)s is missing'),
-        }
+    messages = dict(
+        missing=_('The name %(name)s is missing'))
 
     def _to_python(self, valueDict, state):
         v = valueDict.copy()
         try:
             field = v.pop(self.name)
         except KeyError:
-            raise Invalid(self.message('missing', state,
-                                       name=repr(self.name)),
-                          valueDict, state)
+            raise Invalid(
+                self.message('missing', state, name=repr(self.name)),
+                valueDict, state)
         return field, v
 
     def is_empty(self, value):
@@ -2339,19 +2263,20 @@ class StringBool(FancyValidator): # originally from TurboGears
     true_values = ['true', 't', 'yes', 'y', 'on', '1']
     false_values = ['false', 'f', 'no', 'n', 'off', '0']
 
-    messages = { "string" : _("Value should be %(true)r or %(false)r") }
+    messages = dict(
+        string=_('Value should be %(true)r or %(false)r'))
 
     def _to_python(self, value, state):
-        if isinstance(value, (str, unicode)):
+        if isinstance(value, basestring):
             value = value.strip().lower()
             if value in self.true_values:
                 return True
             if not value or value in self.false_values:
                 return False
-            raise Invalid(self.message("string", state,
-                                       true=self.true_values[0],
-                                       false=self.false_values[0]),
-                          value, state)
+            raise Invalid(
+                self.message('string', state,
+                    true=self.true_values[0], false=self.false_values[0]),
+                value, state)
         return bool(value)
 
     def _from_python(self, value, state):
@@ -2365,7 +2290,6 @@ StringBoolean = StringBool
 
 
 class SignedString(FancyValidator):
-
     """
     Encodes a string into a signed string, and base64 encodes both the
     signature string and a random nonce.
@@ -2374,10 +2298,9 @@ class SignedString(FancyValidator):
     and consistent.
     """
 
-    messages = {
-        'malformed': _('Value does not contain a signature'),
-        'badsig': _('Signature is not correct'),
-        }
+    messages = dict(
+        malformed=_('Value does not contain a signature'),
+        badsig=_('Signature is not correct'))
 
     secret = None
     nonce_length = 4
@@ -2393,8 +2316,7 @@ class SignedString(FancyValidator):
             "You must give a secret")
         parts = value.split(None, 1)
         if not parts or len(parts) == 1:
-            raise Invalid(self.message('malformed', state),
-                          value, state)
+            raise Invalid(self.message('malformed', state), value, state)
         sig, rest = parts
         sig = sig.decode('base64')
         rest = rest.decode('base64')
@@ -2402,8 +2324,7 @@ class SignedString(FancyValidator):
         rest = rest[self.nonce_length:]
         expected = sha1(str(self.secret)+nonce+rest).digest()
         if expected != sig:
-            raise Invalid(self.message('badsig', state),
-                          value, state)
+            raise Invalid(self.message('badsig', state), value, state)
         return rest
 
     def _from_python(self, value, state):
@@ -2432,7 +2353,7 @@ class SignedString(FancyValidator):
 
 class IPAddress(FancyValidator):
     """
-    Formencode validator to check whether a string is a correct IP address
+    Formencode validator to check whether a string is a correct IP address.
 
     Examples::
 
@@ -2452,32 +2373,35 @@ class IPAddress(FancyValidator):
             ...
         Invalid: Please enter a valid IP address (a.b.c.d)
     """
-    messages = {
-            'bad_format' : u'Please enter a valid IP address (a.b.c.d)',
-            'illegal_octets' : u'The octets must be within the range of 0-255 (not %(octet)r)',
-            }
+
+    messages = dict(
+        badFormat=_('Please enter a valid IP address (a.b.c.d)'),
+        illegalOctets=_('The octets must be within the range of 0-255'
+            ' (not %(octet)r)'))
 
     def validate_python(self, value, state):
         try:
             octets = value.split('.')
             # Only 4 octets?
             if len(octets) != 4:
-                raise Invalid(self.message("bad_format",
-                    state, value=value), value, state)
+                raise Invalid(
+                    self.message('badFormat', state, value=value),
+                    value, state)
             # Correct octets?
             for octet in octets:
                 if not 0 <= int(octet) < 256:
-                    raise Invalid(self.message("illegal_octets",
-                        state, octet=octet), value, state)
+                    raise Invalid(
+                        self.message('illegalOctets', state, octet=octet),
+                        value, state)
         # Splitting faild: wrong syntax
         except ValueError:
-            raise Invalid(self.message("bad_format", state), value, state)
+            raise Invalid(self.message('badFormat', state), value, state)
 
 
 class CIDR(IPAddress):
     """
     Formencode validator to check whether a string is in correct CIDR
-    notation (IP address, or IP address plus /mask)
+    notation (IP address, or IP address plus /mask).
 
     Examples::
 
@@ -2497,10 +2421,12 @@ class CIDR(IPAddress):
             ...
         Invalid: Please enter a valid IP address (a.b.c.d) or IP network (a.b.c.d/e)
     """
+
     messages = dict(IPAddress._messages,
-            bad_format = u'Please enter a valid IP address (a.b.c.d) or IP network (a.b.c.d/e)',
-            illegal_bits = u'The network size (bits) must be within the range of 8-32 (not %(bits)r)',
-            )
+        badFormat=_('Please enter a valid IP address (a.b.c.d)'
+            ' or IP network (a.b.c.d/e)'),
+        illegalBits=_('The network size (bits) must be within the range'
+            ' of 8-32 (not %(bits)r)'))
 
     def validate_python(self, value, state):
         try:
@@ -2513,11 +2439,12 @@ class CIDR(IPAddress):
             IPAddress.validate_python(self, addr, state)
             # Bits (netmask) correct?
             if not 8 <= int(bits) <= 32:
-                raise Invalid(self.message("illegal_bits",
-                    state, bits=bits), value, state)
+                raise Invalid(
+                    self.message('illegalBits', state, bits=bits),
+                    value, state)
         # Splitting faild: wrong syntax
         except ValueError:
-            raise Invalid(self.message("bad_format", state), value, state)
+            raise Invalid(self.message('badFormat', state), value, state)
 
 
 class MACAddress(FancyValidator):
@@ -2546,21 +2473,23 @@ class MACAddress(FancyValidator):
     valid_characters = '0123456789abcdefABCDEF'
     add_colons = False
 
-    messages = {
-        'bad_length': _(u'A MAC address must contain 12 digits and A-F; the value you gave has %(length)s characters'),
-        'bad_character': _(u'MAC addresses may only contain 0-9 and A-F (and optionally :), not %(char)r'),
-        }
+    messages = dict(
+        badLength=_('A MAC address must contain 12 digits and A-F;'
+            ' the value you gave has %(length)s characters'),
+        badCharacter=_('MAC addresses may only contain 0-9 and A-F'
+            ' (and optionally :), not %(char)r'))
 
     def _to_python(self, value, state):
-        address = value.replace(':','') # remove colons
-        address = address.lower()
+        address = value.replace(':', '').lower() # remove colons
         if len(address) != 12:
-            raise Invalid(self.message("bad_length",
-                state, length=len(address)), address, state)
+            raise Invalid(
+                self.message('badLength', state,
+                    length=len(address)), address, state)
         for char in address:
             if char not in self.valid_characters:
-                raise Invalid(self.message("bad_character",
-                    state, char=char), address, state)
+                raise Invalid(
+                    self.message('badCharacter', state,
+                        char=char), address, state)
         if self.add_colons:
             address = '%s:%s:%s:%s:%s:%s' % (
                 address[0:2], address[2:4], address[4:6],
@@ -2603,14 +2532,13 @@ class FormValidator(FancyValidator):
 
 class RequireIfMissing(FormValidator):
     """
-    This requires one field based on another field being present or
-    missing.  This is applied to a form, not an individual field
-    (usually using a Schema's ``pre_validators`` or
-    ``chained_validators``).
+    This requires one field based on another field being present or missing.
+    This is applied to a form, not an individual field (usually using a
+    Schema's ``pre_validators`` or ``chained_validators``).
 
-    If you provide a ``missing`` value (a string key name) then if
-    that field is missing the field must be entered.  This gives you
-    an either/or situation.
+    If you provide a ``missing`` value (a string key name) then
+    if that field is missing the field must be entered.
+    This gives you an either/or situation.
 
     If you provide a ``present`` value (another string key name) then
     if that field is present, the required field must also be present.
@@ -2618,13 +2546,12 @@ class RequireIfMissing(FormValidator):
     ::
 
         >>> from formencode import validators
-        >>> v = validators.RequireIfPresent('phone_type',
-        ...                                 present='phone')
-        >>> v.to_python({'phone_type':'', 'phone':'510 420  4577'})
+        >>> v = validators.RequireIfPresent('phone_type', present='phone')
+        >>> v.to_python(dict(phone_type='', phone='510 420  4577'))
         Traceback (most recent call last):
             ...
         Invalid: You must give a value for phone_type
-        >>> v.to_python({'phone': ''})
+        >>> v.to_python(dict(phone=''))
         {'phone': ''}
 
     Note that if you have a validator on the optionally-required
@@ -2653,17 +2580,17 @@ class RequireIfMissing(FormValidator):
         if self.present and value_dict.get(self.present):
             is_required = True
         if is_required and not value_dict.get(self.required):
-            raise Invalid('You must give a value for %s' % self.required,
-                          value, state,
-                          error_dict={self.required: Invalid(self.message(
-                              'empty', state), value, state)})
+            raise Invalid(
+                _('You must give a value for %s') % self.required,
+                value, state,
+                error_dict={self.required:
+                    Invalid(self.message('empty', state), value, state)})
         return value_dict
 
 RequireIfPresent = RequireIfMissing
 
 
 class FieldsMatch(FormValidator):
-
     """
     Tests that the given fields match, i.e., are identical.  Useful
     for password+confirmation fields.  Pass the list of field names in
@@ -2686,16 +2613,15 @@ class FieldsMatch(FormValidator):
 
     __unpackargs__ = ('*', 'field_names')
 
-    messages = {
-        'invalid': _("Fields do not match (should be %(match)s)"),
-        'invalidNoMatch': _("Fields do not match"),
-        'notDict': _("Fields should be a dictionary"),
-        }
+    messages = dict(
+        invalid=_('Fields do not match (should be %(match)s)'),
+        invalidNoMatch=_('Fields do not match'),
+        notDict=_('Fields should be a dictionary'))
 
     def __init__(self, *args, **kw):
         super(FieldsMatch, self).__init__(*args, **kw)
         if len(self.field_names) < 2:
-            raise TypeError("FieldsMatch() requires at least two field names")
+            raise TypeError('FieldsMatch() requires at least two field names')
 
     def validate_partial(self, field_dict, state):
         for name in self.field_names:
@@ -2765,12 +2691,11 @@ class CreditCardValidator(FormValidator):
 
     __unpackargs__ = ('cc_type_field', 'cc_number_field')
 
-    messages = {
-        'notANumber': _("Please enter only the number, no other characters"),
-        'badLength': _("You did not enter a valid number of digits"),
-        'invalidNumber': _("That number is not valid"),
-        'missing_key': _("The field %(key)s is missing"),
-        }
+    messages = dict(
+        notANumber=_('Please enter only the number, no other characters'),
+        badLength=_('You did not enter a valid number of digits'),
+        invalidNumber=_('That number is not valid'),
+        missing_key=_('The field %(key)s is missing'))
 
     def validate_partial(self, field_dict, state):
         if not field_dict.get(self.cc_type_field, None) \
@@ -2791,8 +2716,9 @@ class CreditCardValidator(FormValidator):
     def _validateReturn(self, field_dict, state):
         for field in self.cc_type_field, self.cc_number_field:
             if field not in field_dict:
-                raise Invalid(self.message('missing_key',
-                    state, key=field), value, state)
+                raise Invalid(
+                    self.message('missing_key', state, key=field),
+                    value, state)
         ccType = field_dict[self.cc_type_field].lower().strip()
         number = field_dict[self.cc_number_field].strip()
         number = number.replace(' ', '')
@@ -2884,10 +2810,9 @@ class CreditCardExpires(FormValidator):
 
     datetime_module = None
 
-    messages = {
-        'notANumber': _("Please enter numbers only for month and year"),
-        'invalidNumber': _("Invalid Expiration Date"),
-        }
+    messages = dict(
+        notANumber=_('Please enter numbers only for month and year'),
+        invalidNumber=_('Invalid Expiration Date'))
 
     def validate_partial(self, field_dict, state):
         if not field_dict.get(self.cc_expires_month_field, None) \
@@ -2961,10 +2886,9 @@ class CreditCardSecurityCode(FormValidator):
 
     __unpackargs__ = ('cc_type_field', 'cc_code_field')
 
-    messages = {
-        'notANumber': _("Please enter numbers only for credit card security code"),
-        'badLength': _("Invalid credit card security code length"),
-        }
+    messages = dict(
+        notANumber=_('Please enter numbers only for credit card security code'),
+        badLength=_('Invalid credit card security code length'))
 
     def validate_partial(self, field_dict, state):
         if not field_dict.get(self.cc_type_field, None) \
@@ -2998,8 +2922,7 @@ class CreditCardSecurityCode(FormValidator):
         if not validLength:
             return {self.cc_code_field: self.message('badLength', state)}
 
-    # key = credit card type
-    # value = length of security code
+    # key = credit card type, value = length of security code
     _cardInfo = dict(visa=3, mastercard=3, discover=3, amex=4)
 
 

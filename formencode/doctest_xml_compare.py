@@ -1,7 +1,7 @@
 try:
     import doctest
     doctest.OutputChecker
-except AttributeError:
+except AttributeError: # Python < 2.4
     import util.doctest24 as doctest
 try:
     import xml.etree.ElementTree as ET

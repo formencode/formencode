@@ -156,19 +156,20 @@ class FillingParser(RewritingParser):
 
     Examples::
 
-        >>> defaults = {'name': 'Bob Jones',
-        ...             'occupation': 'Crazy Cultist',
-        ...             'address': '14 W. Canal\nNew Guinea',
-        ...             'living': 'no',
-        ...             'nice_guy': 0}
+        >>> defaults = dict(name='Bob Jones',
+        ...             occupation='Crazy Cultist',
+        ...             address='14 W. Canal\nNew Guinea',
+        ...             living='no',
+        ...             nice_guy=0)
         >>> parser = FillingParser(defaults)
-        >>> parser.feed('<input type="text" name="name" value="fill">\
-        ... <select name="occupation"><option value="">Default</option>\
-        ... <option value="Crazy Cultist">Crazy cultist</option>\
-        ... </select> <textarea cols="20" style="width: 100%" name="address">An address\
-        ... </textarea> <input type="radio" name="living" value="yes">\
-        ... <input type="radio" name="living" value="no">\
-        ... <input type="checkbox" name="nice_guy" checked="checked">')
+        >>> parser.feed('''<input type="text" name="name" value="fill">
+        ... <select name="occupation"> <option value="">Default</option>
+        ... <option value="Crazy Cultist">Crazy cultist</option> </select>
+        ... <textarea cols="20" style="width: 100%" name="address">
+        ... An address</textarea>
+        ... <input type="radio" name="living" value="yes">
+        ... <input type="radio" name="living" value="no">
+        ... <input type="checkbox" name="nice_guy" checked="checked">''')
         >>> parser.close()
         >>> print parser.text() # doctest: +NORMALIZE_WHITESPACE
         <input type="text" name="name" value="Bob Jones">

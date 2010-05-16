@@ -10,8 +10,7 @@ except ImportError:
 else:
     try:
         local = threading.local
-    except AttributeError:
-        # Added in 2.4, but now we'll have to define it ourselves
+    except AttributeError: # Python < 2.4
         import thread
         class local(object):
 

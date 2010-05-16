@@ -354,7 +354,7 @@ def test_force_defaults_select():
 def test_script_quoting():
     html = """
 <script>Some <weird JS</script>
-Then a form <input tdype="text" name="name">
+Then a form <input type="text" name="name">
 """
     expected_html = """
 <script>Some <weird JS</script>

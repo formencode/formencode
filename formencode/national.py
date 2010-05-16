@@ -18,28 +18,29 @@ except:
 no_country = False
 if not (has_pycountry or has_turbogears):
     import warnings
-    no_country = ('Please easy_install pycountry or validators handling '
-                  'country names and/or languages will not work.')
+    no_country = ('Please easy_install pycountry or validators handling'
+                  ' country names and/or languages will not work.')
 
 ############################################################
 ## country lists and functions
 ############################################################
 
 country_additions = [
-    ('BY', _("Belarus")),
-    ('ME', _("Montenegro")),
-    ('AU', _("Tasmania")),
+    ('BY', _('Belarus')),
+    ('ME', _('Montenegro')),
+    ('AU', _('Tasmania')),
 ]
 
 fuzzy_countrynames = [
     ('US', 'U.S.A'),
     ('US', 'USA'),
-    ('GB', _("Britain")),
-    ('GB', _("Great Britain")),
-    ('CI', _("Cote de Ivoire")),
+    ('GB', _('Britain')),
+    ('GB', _('Great Britain')),
+    ('CI', _('Cote de Ivoire')),
 ]
 
 if has_turbogears:
+
     def get_countries():
         c1 = tgformat.get_countries('en')
         c2 = tgformat.get_countries()
@@ -71,7 +72,9 @@ if has_turbogears:
             return tgformat.get_language(code)
         except KeyError:
             return tgformat.get_language(code, 'en')
+
 elif has_pycountry:
+    
     # @@ mark: interestingly, common gettext notation does not work here
     import gettext
     gettext.bindtextdomain('iso3166', pycountry.LOCALES_DIR)
@@ -88,7 +91,8 @@ elif has_pycountry:
         return _c(pycountry.countries.get(alpha2=code).name)
 
     def get_languages():
-        return [(e.alpha2, _l(e.name)) for e in pycountry.languages]
+        return [(e.alpha2, _l(e.name)) for e in pycountry.languages
+            if e.name and getattr(e, 'alpha2', None)]
 
     def get_language(code):
         return _l(pycountry.languages.get(alpha2=code).name)
@@ -99,7 +103,6 @@ elif has_pycountry:
 ############################################################
 
 class DelimitedDigitsPostalCode(Regex):
-
     """
     Abstraction of common postal code formats, such as 55555, 55-555 etc.
     With constant amount of digits. By providing a single digit as partition you
@@ -138,13 +141,13 @@ class DelimitedDigitsPostalCode(Regex):
 
     def assembly_formatstring(self, partition_lengths, delimiter):
         if len(partition_lengths) == 1:
-            return _("%d digits") % partition_lengths[0]
+            return _('%d digits') % partition_lengths[0]
         else:
             return delimiter.join(['n'*l for l in partition_lengths])
 
     def assembly_regex(self, partition_lengths, delimiter):
-        mg = [r"(\d{%d})" % l for l in partition_lengths]
-        rd = r"\%s?" % delimiter
+        mg = [r'(\d{%d})' % l for l in partition_lengths]
+        rd = r'\%s?' % delimiter
         return rd.join(mg)
 
     def __init__(self, partition_lengths, delimiter = None, \
@@ -158,9 +161,8 @@ class DelimitedDigitsPostalCode(Regex):
         (self.partition_lengths, self.delimiter) = (partition_lengths, delimiter)
         Regex.__init__(self, *args, **kw)
 
-    messages = {
-        'invalid': _('Please enter a zip code (%%s)'),
-        }
+    messages = dict(
+        invalid=_('Please enter a zip code (%%s)'))
 
     def _to_python(self, value, state):
         self.assert_string(value, state)
@@ -204,7 +206,6 @@ def PolishPostalCode(*args, **kw):
 
 
 class ArgentinianPostalCode(Regex):
-
     """
     Argentinian Postal codes.
 
@@ -223,9 +224,8 @@ class ArgentinianPostalCode(Regex):
     regex = re.compile(r'^([a-zA-Z]{1})\s*(\d{4})\s*([a-zA-Z]{3})$')
     strip = True
 
-    messages = {
-        'invalid': _("Please enter a zip code (%s)") % _("LnnnnLLL"),
-        }
+    messages = dict(
+        invalid=_('Please enter a zip code (%s)') % _('LnnnnLLL'))
 
     def _to_python(self, value, state):
         self.assert_string(value, state)
@@ -240,7 +240,6 @@ class ArgentinianPostalCode(Regex):
 
 
 class CanadianPostalCode(Regex):
-
     """
     Canadian Postal codes.
 
@@ -259,9 +258,8 @@ class CanadianPostalCode(Regex):
     regex = re.compile(r'^([a-zA-Z]\d[a-zA-Z])\s?(\d[a-zA-Z]\d)$')
     strip = True
 
-    messages = {
-        'invalid': _("Please enter a zip code (%s)") % _("LnL nLn"),
-        }
+    messages = dict(
+        invalid=_('Please enter a zip code (%s)') % _('LnL nLn'))
 
     def _to_python(self, value, state):
         self.assert_string(value, state)
@@ -274,7 +272,6 @@ class CanadianPostalCode(Regex):
 
 
 class UKPostalCode(Regex):
-
     """
     UK Postal codes. Please see BS 7666.
 
@@ -295,9 +292,8 @@ class UKPostalCode(Regex):
     regex = re.compile(r'^((ASCN|BBND|BIQQ|FIQQ|PCRN|SIQQ|STHL|TDCU|TKCA) 1ZZ|BFPO (c\/o )?[1-9]{1,4}|GIR 0AA|[A-PR-UWYZ]([0-9]{1,2}|([A-HK-Y][0-9]|[A-HK-Y][0-9]([0-9]|[ABEHMNPRV-Y]))|[0-9][A-HJKS-UW]) [0-9][ABD-HJLNP-UW-Z]{2})$', re.I)
     strip = True
 
-    messages = {
-        'invalid': _("Please enter a valid postal code (for format see BS 7666)"),
-        }
+    messages = dict(
+        invalid=_('Please enter a valid postal code (for format see BS 7666)'))
 
     def _to_python(self, value, state):
         self.assert_string(value, state)
@@ -337,9 +333,8 @@ class CountryValidator(FancyValidator):
 
     key_ok = True
 
-    messages = {
-        'valueNotFound': _("That country is not listed in ISO 3166"),
-        }
+    messages = dict(
+        valueNotFound=_('That country is not listed in ISO 3166'))
 
     def __init__(self, *args, **kw):
         FancyValidator.__init__(self, *args, **kw)
@@ -375,25 +370,27 @@ class PostalCodeInCountryFormat(FancyValidator):
     ::
 
         >>> fs = PostalCodeInCountryFormat('country', 'zip')
-        >>> fs.to_python({'country': 'DE', 'zip': '30167'})
+        >>> fs.to_python(dict(country='DE', zip='30167'))
         {'country': 'DE', 'zip': '30167'}
-        >>> fs.to_python({'country': 'DE', 'zip': '3008'})
+        >>> fs.to_python(dict(country='DE', zip='3008'))
         Traceback (most recent call last):
             ...
         Invalid: Given postal code does not match the country's format.
-        >>> fs.to_python({'country': 'PL', 'zip': '34343'})
+        >>> fs.to_python(dict(country='PL', zip='34343'))
         {'country': 'PL', 'zip': '34-343'}
         >>> fs = PostalCodeInCountryFormat('staat', 'plz')
-        >>> fs.to_python({'staat': 'GB', 'plz': 'l1a 3gr'})
+        >>> fs.to_python(dict(staat='GB', plz='l1a 3gr'))
         {'staat': 'GB', 'plz': 'L1A 3GR'}
     """
 
     country_field = 'country'
     zip_field = 'zip'
+    
     __unpackargs__ = ('country_field', 'zip_field')
-    messages = {
-        'badFormat': _("Given postal code does not match the country's format."),
-        }
+    
+    messages = dict(
+        badFormat=_("Given postal code does not match the country's format."))
+
     _vd = {
         'AR': ArgentinianPostalCode,
         'AT': FourDigitsPostalCode,
@@ -438,16 +435,16 @@ class PostalCodeInCountryFormat(FancyValidator):
         if fields_dict[self.country_field] in self._vd:
             try:
                 zip_validator = self._vd[fields_dict[self.country_field]]()
-                fields_dict[self.zip_field] = zip_validator.to_python(fields_dict[self.zip_field])
+                fields_dict[self.zip_field] = zip_validator.to_python(
+                    fields_dict[self.zip_field])
             except Invalid, e:
                 message = self.message('badFormat', state)
                 raise Invalid(message, fields_dict, state,
-                              error_dict = {self.zip_field: e.message,
-                                            self.country_field: message})
+                    error_dict={self.zip_field: e.msg,
+                        self.country_field: message})
 
 
 class USStateProvince(FancyValidator):
-
     """
     Valid state or province code (two-letter).
 
@@ -482,11 +479,10 @@ class USStateProvince(FancyValidator):
 
     __unpackargs__ = ('extra_states',)
 
-    messages = {
-        'empty': _('Please enter a state code'),
-        'wrongLength': _('Please enter a state code with TWO letters'),
-        'invalid': _('That is not a valid state code'),
-        }
+    messages = dict(
+        empty=_('Please enter a state code'),
+        wrongLength=_('Please enter a state code with TWO letters'),
+        invalid=_('That is not a valid state code'))
 
     def validate_python(self, value, state):
         value = str(value).strip().upper()
@@ -513,7 +509,6 @@ class USStateProvince(FancyValidator):
 ############################################################
 
 class USPhoneNumber(FancyValidator):
-
     """
     Validates, and converts to ###-###-####, optionally with extension
     (as ext.##...).  Only support US phone numbers.  See
@@ -539,9 +534,9 @@ class USPhoneNumber(FancyValidator):
 
     _phoneRE = re.compile(r'^\s*(?:1-)?(\d\d\d)[\- \.]?(\d\d\d)[\- \.]?(\d\d\d\d)(?:\s*ext\.?\s*(\d+))?\s*$', re.I)
 
-    messages = {
-        'phoneFormat': _('Please enter a number, with area code, in the form ###-###-####, optionally with "ext.####"'),
-        }
+    messages = dict(
+        phoneFormat=_('Please enter a number, with area code,'
+            ' in the form ###-###-####, optionally with "ext.####"'))
 
     def _to_python(self, value, state):
         self.assert_string(value, state)
@@ -565,7 +560,6 @@ class USPhoneNumber(FancyValidator):
 
 
 class InternationalPhoneNumber(FancyValidator):
-
     """
     Validates, and converts phone numbers to +##-###-#######.
     Adapted from RFC 3966
@@ -647,9 +641,9 @@ class InternationalPhoneNumber(FancyValidator):
         ]
     _phoneIsSane = re.compile(r'^(\+[1-9]\d*)-([\d\-]+)$')
 
-    messages = {
-        'phoneFormat': _('Please enter a number, with area code, in the form +##-###-#######.'),
-        }
+    messages = dict(
+        phoneFormat=_('Please enter a number, with area code,'
+            ' in the form +##-###-#######.'))
 
     def _perform_rex_transformation(self, value, transformations):
         for rex, trf in transformations:
@@ -672,7 +666,8 @@ class InternationalPhoneNumber(FancyValidator):
         except:
             raise Invalid(self.message('phoneFormat', state), value, state)
         value = self._mark_chars_re.sub('-', value)
-        for f, t in [('  ', ' '), ('--', '-'), (' - ', '-'), ('- ', '-'), (' -', '-')]:
+        for f, t in [('  ', ' '),
+                ('--', '-'), (' - ', '-'), ('- ', '-'), (' -', '-')]:
             value = value.replace(f, t)
         value = self._perform_rex_transformation(value, self._preTransformations)
         if self.default_cc:
@@ -694,7 +689,6 @@ class InternationalPhoneNumber(FancyValidator):
 ############################################################
 
 class LanguageValidator(FancyValidator):
-
     """
     Converts a given language into its ISO 639 alpha 2 code, if there is any.
     Returns the language's full name in the reverse.
@@ -726,9 +720,8 @@ class LanguageValidator(FancyValidator):
 
     key_ok = True
 
-    messages = {
-        'valueNotFound': _("That language is not listed in ISO 639"),
-        }
+    messages = dict(
+        valueNotFound=_('That language is not listed in ISO 639'))
 
     def __init__(self, *args, **kw):
         FancyValidator.__init__(self, *args, **kw)
