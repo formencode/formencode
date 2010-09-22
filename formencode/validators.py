@@ -847,7 +847,7 @@ class Bool(FancyValidator):
     existance of the value.
 
     If you want to convert strings like ``'true'`` to booleans, then
-    use ``StringBoolean``.
+    use ``StringBool``.
 
     Examples::
 
@@ -2258,7 +2258,7 @@ class StringBool(FancyValidator): # originally from TurboGears
 
     ::
 
-        >>> s = StringBoolean()
+        >>> s = StringBool()
         >>> s.to_python('yes'), s.to_python('no')
         (True, False)
         >>> s.to_python(1), s.to_python('N')
@@ -2511,7 +2511,7 @@ class MACAddress(FancyValidator):
 class FormValidator(FancyValidator):
     """
     A FormValidator is something that can be chained with a Schema.
-    
+
     Unlike normal chaining the FormValidator can validate forms that
     aren't entirely valid.
 
@@ -2542,7 +2542,7 @@ class FormValidator(FancyValidator):
 class RequireIfMissing(FormValidator):
     """
     Require one field based on another field being present or missing.
-    
+
     This validator is applied to a form, not an individual field (usually
     using a Schema's ``pre_validators`` or ``chained_validators``) and is
     available under both names ``RequireIfMissing`` and ``RequireIfPresent``.
