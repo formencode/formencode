@@ -3,8 +3,10 @@ News
 
 .. contents::
 
-svn trunk
----------
+1.2.3
+-----
+
+* Moved to `BitBucket <http://bitbucket.org/ianb/formencode>`_.
 
 * Allowed :class:`formencode.validators.UnicodeString` to use different
   encoding of input and output, or no encoding/decoding at all.
