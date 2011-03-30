@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: FormEncode 0.7.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2010-05-16 19:11+0200\n"
-"PO-Revision-Date: 2011-03-30 23:00+0100\n"
+"PO-Revision-Date: 2011-03-30 23:07+0100\n"
 "Last-Translator: Juliusz Gonera <jgonera@gmail.com>\n"
 "Language-Team: Robert Wojciechowicz <rw@smsnet.pl>\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
@@ -151,7 +151,7 @@ msgstr "%(object)r musi być typu %(type)s"
 #: formencode/validators.py:330
 #, python-format
 msgid "Enter a value less than %(maxLength)i characters long"
-msgstr "Wprowadź wartość z mniejszą liczbą znaków niż %(maxLength)i"
+msgstr "Wprowadź wartość z liczbą znaków mniejszą niż %(maxLength)i"
 
 #: formencode/validators.py:331
 #: formencode/validators.py:385
@@ -204,7 +204,7 @@ msgstr "Mój słownik nie zawiera wartości: %(value)s. Wybierz jedną z wartoś
 
 #: formencode/validators.py:705
 msgid "Must be an integer index"
-msgstr "Musi to być wartość całkowita."
+msgstr "Musi to być wartość całkowita"
 
 #: formencode/validators.py:706
 msgid "Index out of range"
@@ -218,12 +218,12 @@ msgstr "Wartość %(value)s nie została znaleziona na liście"
 #: formencode/validators.py:777
 #, python-format
 msgid "Date must be after %(date)s"
-msgstr "Data musi następować po %(date)s"
+msgstr "Data musi być późniejsza niż %(date)s"
 
 #: formencode/validators.py:778
 #, python-format
 msgid "Date must be before %(date)s"
-msgstr "Data musi występować przed %(date)s"
+msgstr "Data musi być wcześniejsza niż %(date)s"
 
 #: formencode/validators.py:780
 #, python-format
@@ -232,7 +232,7 @@ msgstr "%%A, %%d %%B %%Y"
 
 #: formencode/validators.py:781
 msgid "The date must be sometime in the future"
-msgstr "Data musi odnosić się do przyszłości"
+msgstr "Data musi być przyszła"
 
 #: formencode/validators.py:882
 #, python-format
@@ -297,7 +297,7 @@ msgstr "Nazwa domeny adresu e-mail nie istnieje (część po @: %(domain)s)"
 
 #: formencode/validators.py:1409
 msgid "You must start your URL with http://, https://, etc"
-msgstr "URL musi się zaczynać od http://, https://, etc"
+msgstr "URL musi się zaczynać od http://, https://, itd."
 
 #: formencode/validators.py:1410
 msgid "That is not a valid URL"
