@@ -50,7 +50,7 @@ def get_localedir():
 
 
 def set_stdtranslation(domain="FormEncode", languages=None,
-                       localedir = get_localedir()):
+                       localedir=get_localedir()):
 
     t = gettext.translation(domain=domain,
                             languages=languages,
@@ -121,7 +121,7 @@ class Invalid(Exception):
         val = self.msg
         #if self.value:
         #    val += " (value: %s)" % repr(self.value)
-        return val    
+        return val
 
     def __unicode__(self):
         if isinstance(self.msg, unicode):
@@ -136,7 +136,7 @@ class Invalid(Exception):
         """
         Returns the error as a simple data structure -- lists,
         dictionaries, and strings.
-        
+
         If ``encode_variables`` is true, then this will return a flat
         dictionary, encoded with variable_encode
         """
@@ -191,7 +191,7 @@ class Validator(declarative.Declarative):
     gettextargs = {}
     use_builtins_gettext = True # In case you don't want to use __builtins__._
                                 # although it may be defined, set this to False
-    
+
     __singletonmethods__ = ('to_python', 'from_python', 'message', 'all_messages',
                             'subvalidators')
 
@@ -223,13 +223,13 @@ class Validator(declarative.Declarative):
                 if self.use_builtins_gettext:
                     import __builtin__
                     trans = __builtin__._
-                    
+
                 else:
                     trans = _stdtrans
- 
+
             except AttributeError:
                 trans = _stdtrans
- 
+
         if not callable(trans):
             trans = _stdtrans
 
@@ -299,10 +299,10 @@ class Validator(declarative.Declarative):
 
 
 class _Identity(Validator):
-    
+
     def __repr__(self):
         return 'validators.Identity'
-    
+
 Identity = _Identity()
 
 
@@ -314,7 +314,7 @@ class FancyValidator(Validator):
     There is no formal distinction made here.
 
     Validators have two important external methods:
-    
+
     * .to_python(value, state):
       Attempts to convert the value.  If there is a problem, or the
       value is not valid, an Invalid exception is raised.  The
@@ -327,7 +327,7 @@ class FancyValidator(Validator):
     There are five important methods for subclasses to override,
     however none of these *have* to be overridden, only the ones that
     are appropriate for the validator:
-    
+
     * __init__():
       if the `declarative.Declarative` model doesn't work for this.
 
@@ -354,12 +354,12 @@ class FancyValidator(Validator):
     reentrant.
 
     All subclasses can take the arguments/instance variables:
-    
+
     * if_empty:
       If set, then this value will be returned if the input evaluates
       to false (empty list, empty string, None, etc), but not the 0 or
       False objects.  This only applies to ``.to_python()``.
-      
+
     * not_empty:
       If true, then if an empty value is given raise an error.
       (Both with ``.to_python()`` and also ``.from_python()``
@@ -372,7 +372,7 @@ class FancyValidator(Validator):
     * if_invalid:
       If set, then when this validator would raise Invalid during
       ``.to_python()``, instead return this value.
-      
+
     * if_invalid_python:
       If set, when the Python value (converted with
       ``.from_python()``) is invalid, this value will be returned.
@@ -487,7 +487,7 @@ class FancyValidator(Validator):
         A validation method that doesn't do anything.
         """
         pass
-    
+
     validate_python = validate_other = _validate_noop
     _to_python = None
     _from_python = None
