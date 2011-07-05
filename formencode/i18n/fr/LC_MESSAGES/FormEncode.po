@@ -62,7 +62,7 @@ msgstr "%d chiffres"
 #: formencode/national.py:165
 #, python-format
 msgid "Please enter a zip code (%(format)s)"
-msgstr "Saisissez un code postal ((%(format)s)"
+msgstr "Saisissez un code postal (%(format)s)"
 
 #: formencode/national.py:229 formencode/national.py:263
 #, python-format
@@ -120,7 +120,7 @@ msgstr "Cette langue n'est pas mentionnée dans la norme ISO 639"
 #: formencode/schema.py:63
 #, python-format
 msgid "The input field %(name)s was not expected."
-msgstr "Le champ de saisi « %(name)s » n'était pas attendu."
+msgstr "Le champ de saisie « %(name)s » n'était pas attendu."
 
 #: formencode/schema.py:64
 msgid "Missing value"
