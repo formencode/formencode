@@ -148,7 +148,7 @@ they'll be specific to your application::
     ...         return value
 
 .. note::
-   :class:`formencode.FancyValidator` is the superclass for most
+   The class :class:`formencode.FancyValidator` is the superclass for most
    validators in FormEncode, and it provides a number of useful
    features that most validators can use -- for instance, you can pass
    ``strip=True`` into any of these validators, and they'll strip
