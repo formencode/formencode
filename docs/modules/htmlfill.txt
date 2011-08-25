@@ -7,8 +7,11 @@ Module Contents
 ---------------
 
 .. autofunction:: render
-.. autoclass:: html
+.. autoclass:: htmlliteral
 .. autofunction:: default_formatter
 .. autofunction: none_formatter
 .. autofunction:: escape_formatter
-
+.. autofunction:: escapenl_formatter
+.. autofunction:: ignore_formatter
+.. autofunction:: ignore_formatter
+.. autoclass:: FillingParser
