@@ -13,6 +13,7 @@ Contents:
    htmlfill
    history
    Design
+   modules
    download
    community
 
