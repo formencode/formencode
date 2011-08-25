@@ -115,7 +115,7 @@ Available Validators
 
 There's lots of validators.  The best way to read about the individual
 validators available in the ``formencode.validators`` module is to read
-about :mod:`formencode.validators` and :module:`formencode.national`.
+about :mod:`~formencode.validators` and :mod:`~formencode.national`.
 
 Compound Validators
 -------------------
