@@ -1,12 +1,12 @@
 /*
 :Author: David Goodger, Ian Bicking
 :Contact: ianb@colorstudy.com
-:date: $Date: 2003/11/01 20:35:45 $
-:version: $Revision: 1.3 $
+:date: 2003/11/01
+:version: 1.3
 :copyright: This stylesheet has been placed in the public domain.
 
 A modification of the default cascading style sheet (v.1.3) for the
-HTML output of Docutils.  
+HTML output of Docutils.
 */
 
 body {
@@ -145,7 +145,7 @@ h1 {
   border: medium solid black;
 }
 
-h1 a.toc-backref, h2 a.toc-backref { 
+h1 a.toc-backref, h2 a.toc-backref {
   color: #fff;
 }
 
@@ -160,8 +160,8 @@ h3, h4, h5, h6 {
   color: #000;
 }
 
-h3 a.toc-backref, h4 a.toc-backref, h5 a.toc-backref, 
-h6 a.toc-backref { 
+h3 a.toc-backref, h4 a.toc-backref, h5 a.toc-backref,
+h6 a.toc-backref {
   color: #000;
 }
 
@@ -323,7 +323,7 @@ ul.auto-toc {
  * Doctest embedded examples
  *****************************************/
 
-span.doctest-url { 
+span.doctest-url {
   background-color: #eee;
   border-top: 2px outset #666;
   border-left: 2px outset #666;
@@ -331,47 +331,47 @@ span.doctest-url {
   padding: 0.25em;
 }
 
-div.doctest-example { 
+div.doctest-example {
   border: outset 5px #666;
   background-color: #eee;
   font-family: default;
   padding: 0.5em;
 }
 
-div.doctest-example h1 { 
+div.doctest-example h1 {
   background-color: inherit;
   border: none;
   color: inherit;
   font-family: default;
 }
 
-div.doctest-example tt { 
+div.doctest-example tt {
   color: inherit;
 }
 
-div.doctest-status { 
+div.doctest-status {
   background-color: #060;
   color: #fff;
 }
 
-span.doctest-header { 
+span.doctest-header {
   background-color: #ccc;
   font-family: monospace;
 }
 
-pre.doctest-errors { 
+pre.doctest-errors {
   border: none;
   background-color: #333;
   color: #600;
 }
 
-div.source-code { 
+div.source-code {
   background-color: #000;
   border: inset #999 3px;
   overflow: auto;
 }
 
-pre.source-code { 
+pre.source-code {
   background-color: #000;
   border: inset #999 3px;
   overflow: auto;
@@ -379,7 +379,7 @@ pre.source-code {
   color: #fff;
 }
 
-span.source-filename { 
+span.source-filename {
   background-color: #000;
   border-top: 2px outset #999;
   border-left: 2px outset #999;
