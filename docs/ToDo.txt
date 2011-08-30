@@ -2,8 +2,8 @@
 Things To Do
 ++++++++++++
 
-:revision: $Rev$
-:date: $LastChangedDate$
+:version: |release|
+:date: |today|
 
 * Make a test fixture for validators, to make testing really easy.
 

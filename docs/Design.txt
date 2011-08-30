@@ -3,8 +3,8 @@ FormEncode Design
 +++++++++++++++++
 
 :author: Ian Bicking <ianb@colorstudy.com>
-:revision: $Rev$
-:date: $LastChangedDate$
+:version: |release|
+:date: |today|
 
 .. contents::
 
