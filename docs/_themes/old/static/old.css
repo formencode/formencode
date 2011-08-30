@@ -1,8 +1,8 @@
 /*
-:Author: David Goodger, Ian Bicking
+:Author: David Goodger, Ian Bicking, Christoph Zwerschke
 :Contact: ianb@colorstudy.com
-:date: 2003/11/01
-:version: 1.3
+:date: 2011/08/30
+:version: 1.4
 :copyright: This stylesheet has been placed in the public domain.
 
 A modification of the default cascading style sheet (v.1.3) for the
@@ -27,9 +27,14 @@ a.target {
   color: blue;
 }
 
-a.toc-backref {
+a.toc-backref, a.headerlink {
   text-decoration: none;
   color: black;
+}
+
+a.headerlink {
+  padding-left: 0.4em;
+  padding-right: 0.4em;
 }
 
 a.toc-backref:hover {
@@ -149,10 +154,18 @@ h1 a.toc-backref, h2 a.toc-backref {
   color: #fff;
 }
 
+h1 a.headerlink {
+  color: #449;
+}
+
 h2 {
   background-color: #666;
   color: #fff;
   border: medium solid black;
+}
+
+h2 a.headerlink {
+  color: #666;
 }
 
 h3, h4, h5, h6 {
@@ -388,3 +401,10 @@ span.source-filename {
   color: #fff
 }
 
+div.related h3 {
+  display: none
+}
+
+div.related ul li {
+  display: inline;
+}
