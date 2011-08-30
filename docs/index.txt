@@ -1,6 +1,7 @@
 FormEncode
 ==========
 
+
 Contents:
 
 .. toctree::
@@ -17,6 +18,7 @@ Contents:
    download
    community
 
+
 Introduction
 ------------
 
@@ -29,6 +31,7 @@ nestable.  It is separate from HTTP or any other input mechanism.
 
 .. _Ian Bicking: http://ianbicking.org
 
+
 Documentation
 -------------
 
@@ -38,9 +41,7 @@ Documentation
 * `To-Do list <ToDo.html>`_
 * `About FormEncode's design <Design.html>`_ and `history <history.html>`_
 * `i18n (internationalization) <i18n.html>`_
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+
 
 Other Links
 -----------
@@ -48,7 +49,26 @@ Other Links
 * `Community (mailing list, etc) <community.html>`_
 * `Download <download.html>`_
 
-.. image:: http://sourceforge.net/sflogo.php?group_id=91231&type=4
-   :height: 37
-   :width: 125
+
+Indices and Search
+------------------
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
+
+Project Hosting
+---------------
+
+.. image:: _static/sourceforge.png
+   :align: left
+   :height: 40
+   :width: 150
    :alt: Hosted by SourceForge
+
+.. image:: _static/bitbucket.png
+   :height: 40
+   :width: 127
+   :alt: Hosted by Bitbucket
+
