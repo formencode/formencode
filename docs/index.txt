@@ -38,6 +38,9 @@ Documentation
 * `To-Do list <ToDo.html>`_
 * `About FormEncode's design <Design.html>`_ and `history <history.html>`_
 * `i18n (internationalization) <i18n.html>`_
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 
 Other Links
 -----------
