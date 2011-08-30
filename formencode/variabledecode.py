@@ -17,7 +17,7 @@ explicitly ordered.
 If you want to change the character that determines when to split for
 a dict or list, both variable_decode and variable_encode take dict_char
 and list_char keyword args. For example, to have the GET/POST variables,
-``a_1=something`` as a list, you would use a list_char='_'.
+``a_1=something`` as a list, you would use a ``list_char='_'``.
 """
 
 import api
@@ -104,7 +104,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
             if len(to_sort) < known_lengths[key]:
                 to_sort.extend(['']*(known_lengths[key] - len(to_sort)))
         source[last_key] = to_sort
-        
+
     return result
 
 
@@ -144,7 +144,7 @@ class NestedVariables(api.FancyValidator):
 
     def _to_python(self, value, state):
         return variable_decode(value)
-    
+
     def _from_python(self, value, state):
         return variable_encode(value)
 
