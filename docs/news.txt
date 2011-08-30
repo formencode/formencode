@@ -3,6 +3,12 @@ News
 
 .. contents::
 
+1.2.5
+-----
+
+* New official BitBucket code repository at `formencode/official-formencode
+  <http://bitbucket.org/formencode/official-formencode>`_.
+
 1.2.4
 -----
 
@@ -11,13 +17,14 @@ News
 1.2.3
 -----
 
-* Moved to `BitBucket <http://bitbucket.org/ianb/formencode>`_.
+* Code repository moved to BitBucket at `ianb/formencode
+  <http://bitbucket.org/ianb/formencode>`_.
 
 * Allowed :class:`formencode.validators.UnicodeString` to use different
   encoding of input and output, or no encoding/decoding at all.
 
-* Fixes `#2666139 DateValidator bug happening only in March under Windows in Germany :)
-  <http://sourceforge.net/tracker/index.php?func=detail&aid=2666139&group_id=91231&atid=596418>`_
+* Fixes `#2666139 <http://sourceforge.net/tracker/index.php?func=detail&aid=2666139&group_id=91231&atid=596418>`_:
+  DateValidator bug happening only in March under Windows in Germany :)
 
 * Don't let :class:`formencode.compound.Any` shortcut validation when
   it gets an empty value (this same change had already been made to
@@ -25,9 +32,8 @@ News
 
 * Really updated German translation
 
-* Fixes `#2799713 force_defaults=False and <select> fields
-  <https://sourceforge.net/tracker/?func=detail&aid=2799713&group_id=91231&atid=596416>`_
-  (regarding :func:`formencode.htmlfill.render`)
+* Fixes `#2799713 <https://sourceforge.net/tracker/?func=detail&aid=2799713&group_id=91231&atid=596416>`_:
+  force_defaults=False and <select> fields, regarding :func:`formencode.htmlfill.render`.
   Thanks to w31rd0 for the bug report and patch to fix it.
 
 1.2.2

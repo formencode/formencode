@@ -6,4 +6,4 @@ Cheese Shop Page <http://cheeseshop.python.org/pypi/FormEncode>`_.
 
 The repository can be checked out with::
 
-    hg clone http://bitbucket.org/ianb/formencode
+    hg clone http://bitbucket.org/formencode/official-formencode
