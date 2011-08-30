@@ -9,17 +9,16 @@ from validators import Regex, Invalid, _
 
 try:
     import pycountry
-    has_pycountry = True
 except:
-    has_pycountry = False
+    pycountry = None
 try:
     from turbogears.i18n import format as tgformat
-    has_turbogears = True
 except:
-    has_turbogears = False
+    tg_format = None
 
-no_country = False
-if not (has_pycountry or has_turbogears):
+if pycountry or tgformat:
+    no_country = False
+else:
     import warnings
     no_country = ('Please easy_install pycountry or validators handling'
                   ' country names and/or languages will not work.')
@@ -42,7 +41,7 @@ fuzzy_countrynames = [
     ('CI', _('Cote de Ivoire')),
 ]
 
-if has_turbogears:
+if tgformat:
 
     def get_countries():
         c1 = tgformat.get_countries('en')
@@ -76,8 +75,8 @@ if has_turbogears:
         except KeyError:
             return tgformat.get_language(code, 'en')
 
-elif has_pycountry:
-    
+elif pycountry:
+
     # @@ mark: interestingly, common gettext notation does not work here
     import gettext
     gettext.bindtextdomain('iso3166', pycountry.LOCALES_DIR)
@@ -389,9 +388,9 @@ class PostalCodeInCountryFormat(FancyValidator):
 
     country_field = 'country'
     zip_field = 'zip'
-    
+
     __unpackargs__ = ('country_field', 'zip_field')
-    
+
     messages = dict(
         badFormat=_("Given postal code does not match the country's format."))
 

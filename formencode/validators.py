@@ -2247,7 +2247,7 @@ class StripField(FancyValidator):
         return False
 
 
-class StringBool(FancyValidator): # originally from TurboGears
+class StringBool(FancyValidator): # originally from TurboGears 1
     """
     Converts a string to a boolean.
 

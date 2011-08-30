@@ -11,8 +11,8 @@ Module Contents
 .. admonition:: Note
 
    To use CountryValidator and LanguageValidator, install either
-   `pycountry <http://pypi.python.org/pypi/pycountry/0.10>`__ or
-   `TurboGears <http://turbogears.org>`__.
+   `pycountry <http://pypi.python.org/pypi/pycountry/>`__ or
+   `TurboGears <http://turbogears.org>`__ Version 1.x.
 
 Country, State, and Postal Codes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
