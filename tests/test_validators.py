@@ -96,8 +96,8 @@ def test_unicode_encoding():
 
 def test_unicode_empty():
     iv = UnicodeString()
-    for input in [None, "", u""]:
-        result = iv.to_python(input)
+    for value in [None, "", u""]:
+        result = iv.to_python(value)
         assert u"" == result, result
         assert isinstance(result, unicode)
 
