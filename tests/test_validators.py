@@ -4,7 +4,7 @@ import datetime
 import unittest
 
 from formencode.validators import DateConverter, Int, Invalid, OpenId, \
-    String, TimeConverter, UnicodeString, XRI
+    String, TimeConverter, UnicodeString, XRI, URL
 from formencode.variabledecode import NestedVariables
 from formencode.schema import Schema
 from formencode.foreach import ForEach
@@ -380,3 +380,16 @@ class TestOpenIdValidator(unittest.TestCase):
                          "xri://=Gustavo")
         self.assertEqual(validator.to_python("!!1000"),
                          "xri://!!1000")
+
+class TestURLValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = URL()
+
+    def test_cojp(self):
+        self.assertEqual(self.validator.to_python('http://domain.co.jp'), 'http://domain.co.jp')
+
+    def test_1char_thirdlevel(self):
+        self.assertEqual(self.validator.to_python('http://c.somewhere.pl/wi16677/5050f81b001f9e5f45902c1b/'),
+                                                  'http://c.somewhere.pl/wi16677/5050f81b001f9e5f45902c1b/')
+
