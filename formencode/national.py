@@ -14,7 +14,7 @@ except:
 try:
     from turbogears.i18n import format as tgformat
 except:
-    tg_format = None
+    tgformat = None
 
 if pycountry or tgformat:
     no_country = False
