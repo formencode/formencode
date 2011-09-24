@@ -205,6 +205,12 @@ class Wrapper(FancyValidator):
     Unlike validators, the `state` argument is not used.  Functions
     like `int` can be used here, that take a single argument.
 
+    Note that as Wrapper will generate a FancyValidator, empty
+    values (those who pass ``FancyValidator.is_empty)`` will return ``None``.
+    To override this behavior you can use ``Wrapper(empty_value=callable)``.
+    For example passing ``Wrapper(empty_value=lambda val:val)`` will return
+    the value itelf when is considered empty.
+
     Examples::
 
         >>> def downcase(v):
@@ -214,9 +220,13 @@ class Wrapper(FancyValidator):
         'this'
         >>> wrap.from_python('This')
         'This'
-        >>> wrap2 = Wrapper(from_python=downcase)
+        >>> wrap.to_python('')
+        None
+        >>> wrap2 = Wrapper(from_python=downcase, empty_value=lambda val:val)
         >>> wrap2.from_python('This')
         'this'
+        >>> wrap2.to_python('')
+        ''
         >>> wrap2.from_python(1)
         Traceback (most recent call last):
           ...
