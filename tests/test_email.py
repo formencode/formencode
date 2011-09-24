@@ -40,6 +40,7 @@ def test_valid_email_addresses():
     valid_email_addresses = [
             # (email address, expected email address),
             (' test@foo.com ', 'test@foo.com'),
+            ('Test@foo.com', 'Test@foo.com'),
             ('nobody@xn--m7r7ml7t24h.com', 'nobody@xn--m7r7ml7t24h.com'),
             ('o*reilly@test.com', 'o*reilly@test.com'),
             ('foo+bar@example.com', 'foo+bar@example.com'),
