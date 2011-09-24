@@ -105,6 +105,17 @@ def test_xhtml():
     assert 'an error' in result
 
 
+def test_html5():
+    result = htmlfill.render('<input type="number" name="quantity">', {'quantity': '10'})
+    assert result == '<input type="number" name="quantity" value="10">'
+    try:
+        result = htmlfill.render('<input type="unknown" name="quantity">', {'quantity': '10'})
+    except AssertionError, e:
+        assert "I don't know about this kind of <input>: unknown at 1:0" in str(e)
+    result = htmlfill.render('<input type="unknown" name="quantity">', {'quantity': '10'}, text_as_default=True)
+    assert result == '<input type="unknown" name="quantity" value="10">'
+
+
 def test_trailing_error():
     assert (htmlfill.render('<input type="text" name="email">', errors={'email': 'error'},
                             prefix_error=False)
@@ -135,14 +146,14 @@ def test_iferror():
     try:
         htmlfill.render('<form:iferror noname="nothing">errors</form:iferror>')
     except AssertionError, e:
-        assert str(e) == "Name attribute in <iferror> required (1:0)"
-
+        assert str(e) == "Name attribute in <iferror> required at 1:0"
 
 
 def test_literal():
     assert (htmlfill.render('<form:error name="foo" />',
                             errors={'foo': htmlfill.htmlliteral('<test>')})
             == '<span class="error-message"><test></span><br />\n')
+
 
 def test_image_submit():
     assert (htmlfill.render('<input name="image-submit" type="image" src="foo.jpg" value="bar">',

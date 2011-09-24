@@ -23,8 +23,8 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
            error_class='error', prefix_error=True,
            force_defaults=True):
     """
-    Render the ``form`` (which should be a string) given the defaults
-    and errors.  Defaults are the values that go in the input fields
+    Render the ``form`` (which should be a string) given the ``defaults``
+    and ``errors``.  Defaults are the values that go in the input fields
     (overwriting any values that are there) and errors are displayed
     inline in the form (and also effect input classes).  Returns the
     rendered string.
@@ -55,7 +55,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     and adds a ``<br>``.
 
     If ``text_as_default`` is true (default false) then ``<input
-    type=unknown>`` will be treated as text inputs.
+    type="unknown">`` will be treated as text inputs.
 
     ``listener`` can be an object that watches fields pass; the only
     one currently is in ``htmlfill_schemabuilder.SchemaBuilder``
@@ -72,6 +72,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     be cleared, radio and select controls will have no value selected,
     and textareas will be emptied. This defaults to ``True``, which is
     appropriate the defaults are the result of a form submission.
+
     """
     if defaults is None:
         defaults = {}
@@ -191,6 +192,9 @@ class FillingParser(RewritingParser):
     """
 
     default_encoding = 'utf8'
+
+    text_input_types = set("text hidden search tel url email datetime date"
+        " month week time datetime-local number range color".split())
 
     def __init__(self, defaults, errors=None, use_all_keys=False,
                  error_formatters=None, error_class='error',
@@ -330,7 +334,7 @@ class FillingParser(RewritingParser):
     def handle_iferror(self, attrs):
         name = self.get_attr(attrs, 'name')
         assert name, (
-            "Name attribute in <iferror> required (%i:%i)" % self.getpos())
+            "Name attribute in <iferror> required at %i:%i" % self.getpos())
         notted = name.startswith('not ')
         if notted:
             name = name.split(None, 1)[1]
@@ -353,7 +357,7 @@ class FillingParser(RewritingParser):
             name = self.in_error
         assert name is not None, (
             "Name attribute in <form:error> required"
-            " if not contained in <form:iferror> (%i:%i)" % self.getpos())
+            " if not contained in <form:iferror> at %i:%i" % self.getpos())
         formatter = self.get_attr(attrs, 'format') or 'default'
         error = self.errors.get(name, '')
         if error:
@@ -381,7 +385,7 @@ class FillingParser(RewritingParser):
         if (self.error_class
                 and self.errors.get(self.get_attr(attrs, 'name'))):
             self.add_class(attrs, self.error_class)
-        if t in ('text', 'hidden'):
+        if t in self.text_input_types:
             if value is None and not self.force_defaults:
                 value = self.get_attr(attrs, 'value', '')
             self.set_attr(attrs, 'value', value)
@@ -439,7 +443,7 @@ class FillingParser(RewritingParser):
             self.add_key(name)
         else:
             assert False, ("I don't know about this kind of <input>:"
-                " %s (pos: %s)" % (t, self.getpos()))
+                " %s at %i:%i" % ((t,) + self.getpos()))
         if not self.prefix_error:
             self.write_marker(name)
 
@@ -492,8 +496,7 @@ class FillingParser(RewritingParser):
 
     def handle_option(self, attrs):
         assert self.in_select is not None, (
-            "<option> outside of <select>: line %i, column %i"
-            % self.getpos())
+            "<option> outside of <select> at %i:%i" % self.getpos())
         if self.in_select != False:
             if self.force_defaults or self.in_select in self.defaults:
                 if self.selected_multiple(self.defaults.get(self.in_select, ''),

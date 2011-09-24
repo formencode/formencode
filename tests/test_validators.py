@@ -149,7 +149,7 @@ def test_month_style():
     try:
         assert dc.to_python('12/Dec/2007') == d
     except Invalid, e:
-        assert 'Please enter a month from 1 to 12' in str(e)
+        assert 'Please enter the date in the form mm/dd/yyyy' in str(e)
     dc = DateConverter(month_style='dd/mm/yyyy')
     assert dc.month_style == 'dd/mm/yyyy'
     assert dc.to_python('20/12/2007') == d
@@ -163,7 +163,7 @@ def test_month_style():
     try:
         assert dc.to_python('Dec/12/2007') == d
     except Invalid, e:
-        assert 'Please enter a month from 1 to 12' in str(e)
+        assert 'Please enter the date in the form dd/mm/yyyy' in str(e)
 
 
 def test_date():
