@@ -2400,19 +2400,28 @@ class IPAddress(FancyValidator):
 
     messages = dict(
         badFormat=_('Please enter a valid IP address (a.b.c.d)'),
+        leadingZeros=_('The octets must not have leading zeros'),
         illegalOctets=_('The octets must be within the range of 0-255'
             ' (not %(octet)r)'))
 
+    leading_zeros = False
+
     def validate_python(self, value, state=None):
         try:
-            octets = (value or '').split('.', 5)
+            if not value:
+                raise ValueError
+            octets = value.split('.', 5)
             # Only 4 octets?
             if len(octets) != 4:
-                raise Invalid(
-                    self.message('badFormat', state, value=value),
-                    value, state)
+                raise ValueError
             # Correct octets?
             for octet in octets:
+                if octet.startswith('0') and octet != '0':
+                    if not self.leading_zeros:
+                        raise Invalid(
+                            self.message('leadingZeros', state), value, state)
+                    # strip zeros so this won't be an octal number
+                    octet = octet.lstrip('0')
                 if not 0 <= int(octet) < 256:
                     raise Invalid(
                         self.message('illegalOctets', state, octet=octet),
