@@ -135,10 +135,18 @@ def test_int_minmax_mandatory():
 
 
 def test_month_style():
+    d = datetime.date(2007, 12, 20)
+    dc = DateConverter()
+    assert dc.month_style == 'mm/dd/yyyy'
+    assert dc.to_python('12/20/2007') == d
+    assert dc.from_python(d) == '12/20/2007'
+    assert dc.to_python('Dec/20/2007') == d
+    assert dc.to_python('December/20/2007') == d
     dc = DateConverter(month_style='dd/mm/yyyy')
-    d = datetime.date(2007,12,20)
+    assert dc.month_style == 'dd/mm/yyyy'
     assert dc.to_python('20/12/2007') == d
     assert dc.from_python(d) == '20/12/2007'
+    #assert dc.to_python('20/Dec/2007') == d
     assert dc.to_python('20/December/2007') == d
 
 

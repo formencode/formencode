@@ -213,7 +213,7 @@ first passing validator in its list.
 
 ``chained_validators`` are validators that are run on the entire
 dictionary after other validation is done (``pre_validators`` are
-applied before the schema validation).  chained_validtors will also
+applied before the schema validation).  chained_validators will also
 allow for multiple validators to fail and report to the error_dict
 so, for example, if you have an email_confirm and a password_confirm
 fields and use FieldsMatch on both of them as follows:

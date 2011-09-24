@@ -208,8 +208,8 @@ class Wrapper(FancyValidator):
     Note that as Wrapper will generate a FancyValidator, empty
     values (those who pass ``FancyValidator.is_empty)`` will return ``None``.
     To override this behavior you can use ``Wrapper(empty_value=callable)``.
-    For example passing ``Wrapper(empty_value=lambda val:val)`` will return
-    the value itelf when is considered empty.
+    For example passing ``Wrapper(empty_value=lambda val: val)`` will return
+    the value itself when is considered empty.
 
     Examples::
 
@@ -222,7 +222,7 @@ class Wrapper(FancyValidator):
         'This'
         >>> wrap.to_python('')
         None
-        >>> wrap2 = Wrapper(from_python=downcase, empty_value=lambda val:val)
+        >>> wrap2 = Wrapper(from_python=downcase, empty_value=lambda val: val)
         >>> wrap2.from_python('This')
         'this'
         >>> wrap2.to_python('')
@@ -1876,9 +1876,6 @@ class DateConverter(FancyValidator):
     # datetime, or if not present mxDateTime)
     datetime_module = None
 
-    _day_date_re = re.compile(r'^\s*(\d\d?)[\-\./\\](\d\d?|jan|january|feb|febuary|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december)[\-\./\\](\d\d\d?\d?)\s*$', re.I)
-    _month_date_re = re.compile(r'^\s*(\d\d?|jan|january|feb|febuary|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december)[\-\./\\](\d\d\d?\d?)\s*$', re.I)
-
     _month_names = {
         'jan': 1, 'january': 1,
         'feb': 2, 'febuary': 2,
@@ -1893,6 +1890,10 @@ class DateConverter(FancyValidator):
         'nov': 11, 'november': 11,
         'dec': 12, 'december': 12,
         }
+
+    _day_month_date_re = re.compile(r'^\s*(\d\d?)[\-\./\\](\d\d?|%s)[\-\./\\](\d\d\d?\d?)\s*$' % '|'.join(_month_names), re.I)
+    _month_day_date_re = re.compile(r'^\s*(\d\d?|%s)[\-\./\\](\d\d?)[\-\./\\](\d\d\d?\d?)\s*$' % '|'.join(_month_names), re.I)
+    _month_date_re = re.compile(r'^\s*(\d\d?|%s)[\-\./\\](\d\d\d?\d?)\s*$' % '|'.join(_month_names), re.I)
 
     ## @@: Feb. should be leap-year aware (but mxDateTime does catch that)
     _monthDays = {
@@ -1923,19 +1924,21 @@ class DateConverter(FancyValidator):
 
     def convert_day(self, value, state):
         self.assert_string(value, state)
-        match = self._day_date_re.search(value)
+        day_month_style = self.month_style == 'dd/mm/yyyy'
+        match = (day_month_style and self._day_month_date_re
+            or self._month_day_date_re).search(value)
         if not match:
             raise Invalid(
                 self.message('badFormat', state,
                     format=self.month_style), value, state)
-        day = int(match.group(1))
+        month, day = match.group(1), match.group(2)
+        if day_month_style:
+            month, day = day, month
+        day = int(day)
         try:
-            month = int(match.group(2))
-        except (TypeError, ValueError):
-            month = self.make_month(match.group(2), state)
-        else:
-            if self.month_style == 'mm/dd/yyyy':
-                month, day = day, month
+            month = int(month)
+        except ValueError:
+            month = self.make_month(month, state)
         year = self.make_year(match.group(3), state)
         if not 1 <= month <= 12:
             raise Invalid(self.message('monthRange', state), value, state)
