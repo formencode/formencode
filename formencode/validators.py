@@ -2562,6 +2562,9 @@ class FormValidator(FancyValidator):
     def is_empty(self, value):
         return False
 
+    def field_is_empty(self, value):
+        return is_empty(value)
+
 
 class RequireIfMissing(FormValidator):
     """
@@ -2596,7 +2599,7 @@ class RequireIfMissing(FormValidator):
         class PhoneInput(Schema):
             phone = PhoneNumber()
             phone_type = String(if_missing=None)
-            chained_validators = [RequireifPresent('phone_type', present='phone')]
+            chained_validators = [RequireIfPresent('phone_type', present='phone')]
     """
 
     # Field that potentially is required:
@@ -2609,12 +2612,10 @@ class RequireIfMissing(FormValidator):
     __unpackargs__ = ('required',)
 
     def _to_python(self, value_dict, state):
-        is_required = False
-        if self.missing and not value_dict.get(self.missing):
-            is_required = True
-        if self.present and value_dict.get(self.present):
-            is_required = True
-        if is_required and not value_dict.get(self.required):
+        is_empty = self.field_is_empty
+        if is_empty(value_dict.get(self.required)) and (
+            (self.missing and is_empty(value_dict.get(self.missing)))
+            or (self.present and not is_empty(value_dict.get(self.present)))):
             raise Invalid(
                 _('You must give a value for %s') % self.required,
                 value_dict, state,

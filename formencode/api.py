@@ -14,7 +14,7 @@ except ImportError:
     resource_filename = None
 
 __all__ = ['NoDefault', 'Invalid', 'Validator', 'Identity',
-           'FancyValidator', 'is_validator']
+           'FancyValidator', 'is_empty', 'is_validator']
 
 
 def get_localedir():
@@ -72,7 +72,14 @@ class NoDefault(object):
     """A dummy value used for parameters with no default."""
 
 
+def is_empty(value):
+    """Check whether the given value should be considered "empty"."""
+    return value is None or value == '' or (
+        isinstance(value, (list, tuple, dict)) and not value)
+
+
 def is_validator(obj):
+    """Check whether obj is a Validator instance or class."""
     return (isinstance(obj, Validator) or
         (isinstance(obj, type) and issubclass(obj, Validator)))
 
@@ -462,9 +469,7 @@ class FancyValidator(Validator):
                 return self.if_invalid_python
 
     def is_empty(self, value):
-        # None and '' are "empty"
-        return value is None or value == '' or (
-            isinstance(value, (list, tuple, dict)) and not value)
+        return is_empty(value)
 
     def empty_value(self, value):
         return None

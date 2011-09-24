@@ -511,3 +511,32 @@ class TestURLValidator(unittest.TestCase):
             'http://c.somewhere.pl/wi16677/5050f81b001f9e5f45902c1b/'),
             'http://c.somewhere.pl/wi16677/5050f81b001f9e5f45902c1b/')
 
+
+class TestRequireIfMissingValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.RequireIfMissing
+
+    def test_missing(self):
+         v = self.validator('phone_type', missing='mail')
+         self.assertEqual(
+            validate(v, dict(phone_type='')),
+            dict(phone_type=u'Please enter a value'))
+         self.assertEqual(
+            validate(v, dict(phone_type='', mail='foo@bar.org')),
+            dict(phone_type='', mail='foo@bar.org'))
+
+    def test_present(self):
+         v = self.validator('phone_type', present='phone')
+         self.assertEqual(
+            validate(v, dict(phone_type='', phone='510 420  4577')),
+            dict(phone_type=u'Please enter a value'))
+         self.assertEqual(
+            validate(v, dict(phone='')), dict(phone=''))
+
+    def test_zero(self):
+         v = self.validator('operator', present='operand')
+         self.assertEqual(
+            validate(v, dict(operator='', operand=0)),
+            dict(operator=u'Please enter a value'))
+
