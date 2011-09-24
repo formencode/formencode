@@ -79,7 +79,7 @@ class Schema(FancyValidator):
         # for this subclass, looking for validators (both classes
         # and instances):
         for key, value in new_attrs.items():
-            if key in ('pre_validators', 'chained_validators', 'view'):
+            if key in ('pre_validators', 'chained_validators'):
                 continue
             if is_validator(value):
                 cls.fields[key] = value
@@ -93,7 +93,7 @@ class Schema(FancyValidator):
 
     def __initargs__(self, new_attrs):
         for key, value in new_attrs.items():
-            if key in ('pre_validators', 'chained_validators', 'view'):
+            if key in ('pre_validators', 'chained_validators'):
                 continue
             if is_validator(value):
                 self.fields[key] = value
