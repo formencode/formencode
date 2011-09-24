@@ -75,7 +75,7 @@ class _HTML:
         attr = attr.lower()
         if attr.endswith('_'):
             attr = attr[:-1]
-        if attr.find('__') != -1:
+        if '__' in attr:
             attr = attr.replace('__', ':')
         if attr == 'comment':
             return Element(ET.Comment, {})
@@ -127,7 +127,7 @@ class Element(ET._ElementInterface):
             if name.endswith('_'):
                 kw[name[:-1]] = value
                 del kw[name]
-            if name.find('__') != -1:
+            if '__' in name:
                 new_name = name.replace('__', ':')
                 kw[new_name] = value
                 del kw[name]
