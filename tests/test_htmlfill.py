@@ -6,7 +6,11 @@ import re
 import sys
 
 from htmlentitydefs import name2codepoint
-from xml.parsers.expat import ExpatError
+try:
+    from xml.etree.ElementTree import ParseError
+except ImportError: # Python < 2.7
+    from xml.parsers.expat import ExpatError as ParseError
+
 
 try:
     import xml.etree.ElementTree as ET
@@ -40,8 +44,7 @@ def run_filename(filename):
     if len(parts) == 3:
         data_content = parts[2].strip()
     elif len(parts) > 3:
-        print parts[3:]
-        assert False, "Too many sections"
+        assert False, "Too many sections: %s" % parts[3:]
     else:
         data_content = ''
     namespace = {}
@@ -67,7 +70,7 @@ def run_filename(filename):
     try:
         output_xml = ET.XML(output)
         expected_xml = ET.XML(expected)
-    except ExpatError:
+    except ParseError:
         comp = output.strip() == expected.strip()
     else:
         comp = xml_compare(output_xml, expected_xml, reporter)

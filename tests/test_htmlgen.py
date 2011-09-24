@@ -49,10 +49,18 @@ def test_quote():
 
 
 def test_comment():
-    assert str(html.comment('test')) == '<!-- test -->'
-    assert (str(html.comment(uni_value))
-            == '<!-- %s -->' % uni_value.encode('utf-8'))
-    assert str(html.comment('test')('this')) == '<!-- testthis -->'
+
+    def strip(s):
+        """ElementTree in Py < 2.7 adds whitespace, strip this."""
+        s = str(s).strip()
+        if s.startswith('<!--') and s.endswith('-->'):
+            s = '<!--%s-->' % s[4:-3].strip()
+        return s
+
+    assert strip(html.comment('test')) == '<!--test-->'
+    assert (strip(html.comment(uni_value))
+            == '<!--%s-->' % uni_value.encode('utf-8'))
+    assert strip(html.comment('test')('this')) == '<!--testthis-->'
 
 
 def test_none():
