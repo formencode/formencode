@@ -54,13 +54,13 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
 
     ``listener`` can be an object that watches fields pass; the only
     one currently is in ``htmlfill_schemabuilder.SchemaBuilder``
-    
-    ``encoding`` specifies an encoding to assume when mixing str and 
+
+    ``encoding`` specifies an encoding to assume when mixing str and
     unicode text in the template.
-    
+
     ``prefix_error`` specifies if the HTML created by auto_error_formatter is
     put before the input control (default) or after the control.
-    
+
     ``force_defaults`` specifies if a field default is not given in
     the ``defaults`` dictionary then the control associated with the
     field should be set as an unsuccessful control. So checkboxes will
@@ -87,7 +87,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     p.feed(form)
     p.close()
     return p.text()
-        
+
 
 class htmlliteral(object):
 
@@ -202,7 +202,7 @@ class FillingParser(RewritingParser):
         self.skip_textarea = False
         self.last_textarea_name = None
         self.in_select = None
-        self.skip_next = False        
+        self.skip_next = False
         self.errors = errors or {}
         if isinstance(self.errors, (str, unicode)):
             self.errors = {None: self.errors}
@@ -223,7 +223,7 @@ class FillingParser(RewritingParser):
         self.encoding = encoding
         self.prefix_error = prefix_error
         self.force_defaults = force_defaults
-    
+
     def str_compare(self, str1, str2):
         """
         Compare the two objects as strings (coercing to strings if necessary).
@@ -269,7 +269,7 @@ class FillingParser(RewritingParser):
                 for key in unused_errors.keys():
                     error_text.append("%s: %s" % (key, self.errors[key]))
                 assert False, (
-                    "These errors were not used in the form: %s" % 
+                    "These errors were not used in the form: %s" %
                     ', '.join(error_text))
         if self.encoding is not None:
             new_content = []
@@ -322,11 +322,11 @@ class FillingParser(RewritingParser):
 
     def handle_iferror(self, attrs):
         name = self.get_attr(attrs, 'name')
-        notted = False
-        if name.startswith('not '):
-            notted = True
+        assert name, (
+            "Name attribute in <iferror> required (%i:%i)" % self.getpos())
+        notted = name.startswith('not ')
+        if notted:
             name = name.split(None, 1)[1]
-        assert name, "Name attribute in <iferror> required (%s)" % self.getpos()
         self.in_error = name
         ok = self.errors.get(name)
         if notted:
@@ -342,12 +342,12 @@ class FillingParser(RewritingParser):
 
     def handle_error(self, attrs):
         name = self.get_attr(attrs, 'name')
-        formatter = self.get_attr(attrs, 'format') or 'default'
         if name is None:
             name = self.in_error
         assert name is not None, (
-            "Name attribute in <form:error> required if not contained in "
-            "<form:iferror> (%i:%i)" % self.getpos())
+            "Name attribute in <form:error> required"
+            " if not contained in <form:iferror> (%i:%i)" % self.getpos())
+        formatter = self.get_attr(attrs, 'format') or 'default'
         error = self.errors.get(name, '')
         if error:
             error = self.error_formatters[formatter](error)
@@ -364,7 +364,7 @@ class FillingParser(RewritingParser):
         if isinstance(name, unicode) and isinstance(value, str):
             value = value.decode(self.encoding or self.default_encoding)
         if name in self.add_attributes:
-            for attr_name, attr_value in self.add_attributes[name].iteritems():               
+            for attr_name, attr_value in self.add_attributes[name].iteritems():
                 if attr_name.startswith('+'):
                     attr_name = attr_name[1:]
                     self.set_attr(attrs, attr_name,
@@ -457,7 +457,7 @@ class FillingParser(RewritingParser):
         if self.skip_textarea:
             self.skip_textarea = False
         else:
-            self.write_text('</textarea>')            
+            self.write_text('</textarea>')
         self.in_textarea = False
         self.skip_next = True
         if not self.prefix_error:

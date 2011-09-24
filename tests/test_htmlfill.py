@@ -129,6 +129,11 @@ def test_iferror():
     assert (htmlfill.render('<form:iferror name="field1">errors</form:iferror><form:iferror name="not field1">no errors</form:iferror>',
                             errors={'field1': 'foo'}, auto_insert_errors=False)
             == 'errors')
+    try:
+        htmlfill.render('<form:iferror noname="nothing">errors</form:iferror>')
+    except AssertionError, e:
+        assert str(e) == "Name attribute in <iferror> required (1:0)"
+
 
 
 def test_literal():
