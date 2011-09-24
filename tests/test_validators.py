@@ -155,7 +155,8 @@ class TestDateConverterValidator(unittest.TestCase):
         try:
             dc.to_python('20/12/150')
         except Invalid, e:
-            self.failUnless('Please enter a four-digit year after 1899' in str(e))
+            self.failUnless(
+                'Please enter a four-digit year after 1899' in str(e))
         else:
             self.fail('Date should be invalid')
         try:
@@ -178,11 +179,15 @@ class TestDateConverterValidator(unittest.TestCase):
             self.assertEqual(dc.to_python('20/12/2007'), d)
         except Invalid, e:
             self.failUnless('Please enter a month from 1 to 12' in str(e))
+        else:
+            self.fail('Date should be invalid')
         try:
             self.assertEqual(dc.to_python('12/Dec/2007'), d)
         except Invalid, e:
             self.failUnless(
                 'Please enter the date in the form mm/dd/yyyy' in str(e))
+        else:
+            self.fail('Date should be invalid')
         dc = self.validator(month_style='dd/mm/yyyy')
         self.assertEqual(dc.month_style, 'dd/mm/yyyy')
         self.assertEqual(dc.to_python('20/12/2007'), d)
@@ -193,11 +198,15 @@ class TestDateConverterValidator(unittest.TestCase):
             self.assertEqual(dc.to_python('12/20/2007'), d)
         except Invalid, e:
             self.failUnless('Please enter a month from 1 to 12' in str(e))
+        else:
+            self.fail('Date should be invalid')
         try:
             self.assertEqual(dc.to_python('Dec/12/2007'), d)
         except Invalid, e:
             self.failUnless(
                 'Please enter the date in the form dd/mm/yyyy' in str(e))
+        else:
+            self.fail('Date should be invalid')
 
 
 class TestTimeConverterValidator(unittest.TestCase):
@@ -211,25 +220,29 @@ class TestTimeConverterValidator(unittest.TestCase):
         try:
             tc.to_python('25:30:15')
         except Invalid, e:
-            self.failUnless('You must enter an hour in the range 0-23' in str(e))
+            self.failUnless(
+                'You must enter an hour in the range 0-23' in str(e))
         else:
             self.fail('Time should be invalid')
         try:
             tc.to_python('20:75:15')
         except Invalid, e:
-            self.failUnless('You must enter a minute in the range 0-59' in str(e))
+            self.failUnless(
+                'You must enter a minute in the range 0-59' in str(e))
         else:
             self.fail('Time should be invalid')
         try:
             tc.to_python('20:30:75')
         except Invalid, e:
-            self.failUnless('You must enter a second in the range 0-59' in str(e))
+            self.failUnless(
+                'You must enter a second in the range 0-59' in str(e))
         else:
             self.fail('Time should be invalid')
         try:
             tc.to_python('20:30:zx')
         except Invalid, e:
-            self.failUnless('The second value you gave is not a number' in str(e))
+            self.failUnless(
+                'The second value you gave is not a number' in str(e))
             self.failUnless('zx' in str(e))
         else:
             self.fail('Time should be invalid')
@@ -439,19 +452,49 @@ class TestOpenIdValidator(unittest.TestCase):
 class TestIPAddressValidator(unittest.TestCase):
 
     def setUp(self):
-        self.validator = validators.IPAddress()
+        self.validator = validators.IPAddress
 
     def test_valid_address(self):
-        self.validator.validate_python('127.0.0.1')
+        self.validator().validate_python('127.0.0.1')
 
     def test_address_is_none(self):
-        self.assertRaises(Invalid, self.validator.validate_python, None)
+        self.assertRaises(Invalid, self.validator().validate_python, None)
 
     def test_invalid_address(self):
-        validate = self.validator.validate_python
+        validate = self.validator().validate_python
         self.assertRaises(Invalid, validate, '127.0.1')
         self.assertRaises(Invalid, validate, '271.0.0.1')
         self.assertRaises(Invalid, validate, '127.0.0.0.1')
+
+    def test_leading_zeros(self):
+        validate = self.validator().validate_python
+        try:
+            validate('1.2.3.037')
+        except Invalid, e:
+            self.failUnless('The octets must not have leading zeros' in str(e))
+        else:
+            self.fail('IP address octets with leading zeros should be invalid')
+        try:
+            validate('1.2.3.0377')
+        except Invalid, e:
+            self.failUnless('The octets must not have leading zeros' in str(e))
+        else:
+            self.fail('IP octets with leading zeros should be invalid')
+
+    def test_leading_zeros_allowed(self):
+        validate = self.validator(leading_zeros=True).validate_python
+        try:
+            validate('1.2.3.037')
+        except Invalid, e:
+            self.fail('IP address octets with leading zeros should be valid')
+        try:
+            validate('1.2.3.0377')
+        except Invalid, e:
+            self.failUnless("The octets must be within the range of 0-255"
+                " (not '377')" in str(e))
+        else:
+            self.fail(
+                'IP address octets should not be interpreted as octal numbers')
 
 
 class TestURLValidator(unittest.TestCase):
