@@ -3,8 +3,8 @@
 import datetime
 import unittest
 
-from formencode.validators import DateConverter, Int, Invalid, OpenId, \
-    String, TimeConverter, UnicodeString, XRI, URL
+from formencode import validators
+from formencode.validators import Invalid
 from formencode.variabledecode import NestedVariables
 from formencode.schema import Schema
 from formencode.foreach import ForEach
@@ -27,260 +27,290 @@ def validate_from(validator, value):
         return e.unpack_errors()
 
 
-messages = String().message
+class TestStringValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.String()
+        self.messages = self.validator.message
+
+    def test_sv_min(self):
+        sv = self.validator(min=2, accept_python=False)
+        self.assertEqual(sv.to_python("foo"), "foo")
+        self.assertEqual(validate(sv, "x"),
+            self.messages('tooShort', None, min=2))
+        self.assertEqual(validate(sv, None), self.messages('empty', None))
+        # should be completely invalid?
+        self.assertEqual(validate(sv, []), self.messages('empty', None, min=2))
+        self.assertEqual(sv.from_python(['x', 'y']), 'x, y')
+
+    def test_sv_not_empty(self):
+        sv = self.validator(not_empty=True)
+        self.assertEqual(validate(sv, ""), self.messages('empty', None))
+        self.assertEqual(validate(sv, None), self.messages('empty', None))
+        # should be completely invalid?
+        self.assertEqual(validate(sv, []), self.messages('empty', None))
+        self.assertEqual(validate(sv, {}), self.messages('empty', None))
+
+    def test_sv_string_conversion(self):
+        sv = self.validator(not_empty=False)
+        self.assertEqual(sv.from_python(2), "2")
+        self.assertEqual(sv.from_python([]), "")
 
 
-def test_sv_min():
-    sv = String(min=2, accept_python=False)
-    assert sv.to_python("foo") == "foo"
-    assert validate(sv, "x") == messages('tooShort', None, min=2)
-    assert validate(sv, None) == messages('empty', None)
-    # should be completely invalid?
-    assert validate(sv, []) == messages('empty', None, min=2)
-    assert sv.from_python(['x', 'y']) == 'x, y'
+class TestUnicodeStringValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.UnicodeString
+
+    def test_unicode(self):
+        un = self.validator()
+        self.assertEqual(un.to_python(12), u'12')
+        self.failUnless(type(un.to_python(12)) is unicode)
+        self.assertEqual(un.from_python(12), '12')
+        self.failUnless(type(un.from_python(12)) is str)
+
+    def test_unicode_encoding(self):
+        uv = self.validator()
+        us = u'käse'
+        u7s, u8s = us.encode('utf-7'), us.encode('utf-8')
+        self.assertEqual(uv.to_python(u8s), us)
+        self.failUnless(type(uv.to_python(u8s)) is unicode)
+        self.assertEqual(uv.from_python(us), u8s)
+        self.failUnless(type(uv.from_python(us)) is str)
+        uv = self.validator(encoding='utf-7')
+        self.assertEqual(uv.to_python(u7s), us)
+        self.failUnless(type(uv.to_python(u7s)) is unicode)
+        self.assertEqual(uv.from_python(us), u7s)
+        self.failUnless(type(uv.from_python(us)) is str)
+        uv = self.validator(inputEncoding='utf-7')
+        self.assertEqual(uv.to_python(u7s), us)
+        self.failUnless(type(uv.to_python(u7s)) is unicode)
+        uv = self.validator(outputEncoding='utf-7')
+        self.assertEqual(uv.from_python(us), u7s)
+        self.failUnless(type(uv.from_python(us)) is str)
+        uv = self.validator(inputEncoding=None)
+        self.assertEqual(uv.to_python(us), us)
+        self.failUnless(type(uv.to_python(us)) is unicode)
+        self.assertEqual(uv.from_python(us), u8s)
+        self.failUnless(type(uv.from_python(us)) is str)
+        uv = self.validator(outputEncoding=None)
+        self.assertEqual(uv.to_python(u8s), us)
+        self.failUnless(type(uv.to_python(u8s)) is unicode)
+        self.assertEqual(uv.from_python(us), us)
+        self.failUnless(type(uv.from_python(us)) is unicode)
+
+        def test_unicode_empty(self):
+            iv = self.validator()
+            for value in [None, "", u""]:
+                result = iv.to_python(value)
+                self.assertEqual(result, u"")
+                self.failUnless(isinstance(result, unicode))
 
 
-def test_sv_not_empty():
-    sv = String(not_empty=True)
-    assert validate(sv, "") == messages('empty', None)
-    assert validate(sv, None) == messages('empty', None)
-    # should be completely invalid?
-    assert validate(sv, []) == messages('empty', None)
-    assert validate(sv, {}) == messages('empty', None)
+class TestIntValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.Int
+        self.messages = self.validator.message
+
+    def test_int_min(self):
+        iv = self.validator(min=5)
+        self.assertEqual(iv.to_python("5"), 5)
+        self.assertEqual(validate(iv, "1"),
+            self.messages('tooLow', None, min=5))
+
+    def test_int_max(self):
+        iv = self.validator(max=10)
+        self.assertEqual(iv.to_python("10"), 10)
+        self.assertEqual(validate(iv, "15"),
+            self.messages('tooHigh', None, max=10))
+
+    def test_int_minmax_optional(self):
+        iv = self.validator(min=5, max=10, if_empty=None)
+        self.failUnless(iv.to_python("") is None)
+        self.failUnless(iv.to_python(None) is None)
+        self.assertEqual(iv.to_python('7'), 7)
+        self.assertEqual(validate(iv, "1"),
+            self.messages('tooLow', None, min=5))
+        self.assertEqual(validate(iv, "15"),
+            self.messages('tooHigh', None, max=10))
+
+    def test_int_minmax_mandatory(self):
+        iv = validators.Int(min=5, max=10, not_empty=True)
+        self.assertEqual(validate(iv, None),
+            self.messages('empty', None))
+        self.assertEqual(validate(iv, "1"),
+            self.messages('tooLow', None, min=5))
+        self.assertEqual(validate(iv, "15"),
+            self.messages('tooHigh', None, max=10))
 
 
-def test_sv_string_conversion():
-    sv = String(not_empty=False)
-    assert sv.from_python(2) == "2"
-    assert sv.from_python([]) == ""
+class TestDateConverterValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.DateConverter
+
+    def test_bad_dates(self):
+        dc = self.validator(month_style='dd/mm/yyyy')
+        try:
+            dc.to_python('20/12/150')
+        except Invalid, e:
+            self.failUnless('Please enter a four-digit year after 1899' in str(e))
+        else:
+            self.fail('Date should be invalid')
+        try:
+            dc.to_python('oh/happy/day')
+        except Invalid, e:
+            self.failUnless(
+                'Please enter the date in the form dd/mm/yyyy' in str(e))
+        else:
+            self.fail('Date should be invalid')
+
+    def test_month_style(self):
+        d = datetime.date(2007, 12, 20)
+        dc = self.validator()
+        self.assertEqual(dc.month_style, 'mm/dd/yyyy')
+        self.assertEqual(dc.to_python('12/20/2007'), d)
+        self.assertEqual(dc.from_python(d), '12/20/2007')
+        self.assertEqual(dc.to_python('Dec/20/2007'), d)
+        self.assertEqual(dc.to_python('December/20/2007'), d)
+        try:
+            self.assertEqual(dc.to_python('20/12/2007'), d)
+        except Invalid, e:
+            self.failUnless('Please enter a month from 1 to 12' in str(e))
+        try:
+            self.assertEqual(dc.to_python('12/Dec/2007'), d)
+        except Invalid, e:
+            self.failUnless(
+                'Please enter the date in the form mm/dd/yyyy' in str(e))
+        dc = self.validator(month_style='dd/mm/yyyy')
+        self.assertEqual(dc.month_style, 'dd/mm/yyyy')
+        self.assertEqual(dc.to_python('20/12/2007'), d)
+        self.assertEqual(dc.from_python(d), '20/12/2007')
+        self.assertEqual(dc.to_python('20/Dec/2007'), d)
+        self.assertEqual(dc.to_python('20/December/2007'), d)
+        try:
+            self.assertEqual(dc.to_python('12/20/2007'), d)
+        except Invalid, e:
+            self.failUnless('Please enter a month from 1 to 12' in str(e))
+        try:
+            self.assertEqual(dc.to_python('Dec/12/2007'), d)
+        except Invalid, e:
+            self.failUnless(
+                'Please enter the date in the form dd/mm/yyyy' in str(e))
 
 
-def test_unicode():
-    un = UnicodeString()
-    assert un.to_python(12) == u'12'
-    assert type(un.to_python(12)) is unicode
-    assert un.from_python(12) == '12'
-    assert type(un.from_python(12)) is str
+class TestTimeConverterValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.TimeConverter
+
+    def test_time(self):
+        tc = self.validator()
+        self.assertEqual(tc.to_python('20:30:15'), (20, 30, 15))
+        try:
+            tc.to_python('25:30:15')
+        except Invalid, e:
+            self.failUnless('You must enter an hour in the range 0-23' in str(e))
+        else:
+            self.fail('Time should be invalid')
+        try:
+            tc.to_python('20:75:15')
+        except Invalid, e:
+            self.failUnless('You must enter a minute in the range 0-59' in str(e))
+        else:
+            self.fail('Time should be invalid')
+        try:
+            tc.to_python('20:30:75')
+        except Invalid, e:
+            self.failUnless('You must enter a second in the range 0-59' in str(e))
+        else:
+            self.fail('Time should be invalid')
+        try:
+            tc.to_python('20:30:zx')
+        except Invalid, e:
+            self.failUnless('The second value you gave is not a number' in str(e))
+            self.failUnless('zx' in str(e))
+        else:
+            self.fail('Time should be invalid')
 
 
-def test_unicode_encoding():
-    uv = UnicodeString()
-    us = u'käse'
-    u7s, u8s = us.encode('utf-7'), us.encode('utf-8')
-    assert uv.to_python(u8s) == us
-    assert type(uv.to_python(u8s)) is unicode
-    assert uv.from_python(us) == u8s
-    assert type(uv.from_python(us)) is str
-    uv = UnicodeString(encoding='utf-7')
-    assert uv.to_python(u7s) == us
-    assert type(uv.to_python(u7s)) is unicode
-    assert uv.from_python(us) == u7s
-    assert type(uv.from_python(us)) is str
-    uv = UnicodeString(inputEncoding='utf-7')
-    assert uv.to_python(u7s) == us
-    assert type(uv.to_python(u7s)) is unicode
-    uv = UnicodeString(outputEncoding='utf-7')
-    assert uv.from_python(us) == u7s
-    assert type(uv.from_python(us)) is str
-    uv = UnicodeString(inputEncoding=None)
-    assert uv.to_python(us) == us
-    assert type(uv.to_python(us)) is unicode
-    assert uv.from_python(us) == u8s
-    assert type(uv.from_python(us)) is str
-    uv = UnicodeString(outputEncoding=None)
-    assert uv.to_python(u8s) == us
-    assert type(uv.to_python(u8s)) is unicode
-    assert uv.from_python(us) == us
-    assert type(uv.from_python(us)) is unicode
+class TestForEachValidator(unittest.TestCase):
 
+    def test_foreach_if_missing(self):
 
-def test_unicode_empty():
-    iv = UnicodeString()
-    for value in [None, "", u""]:
-        result = iv.to_python(value)
-        assert u"" == result, result
-        assert isinstance(result, unicode)
+        class SubSchema(Schema):
+            age = validators.Int()
+            name = validators.String(not_empty=True)
 
+        class MySchema(Schema):
+            pre_validators = [NestedVariables()]
+            people = ForEach(SubSchema(), if_missing=NoDefault,
+                messages={'missing': 'Please add a person'})
 
-def test_int_min():
-    messages = Int().message
-    iv = Int(min=5)
-    assert iv.to_python("5") == 5
-    assert validate(iv, "1") == messages('tooLow', None, min=5)
+        validator = MySchema()
 
+        self.failIf(validator.fields['people'].not_empty)
 
-def test_int_max():
-    messages = Int().message
-    iv = Int(max=10)
-    assert iv.to_python("10") == 10
-    assert validate(iv, "15") == messages('tooHigh', None, max=10)
+        class State:
+            pass
 
+        start_values = {}
+        state = State()
 
-def test_int_minmax_optional():
-    messages = Int().message
-    iv = Int(min=5, max=10, if_empty=None)
-    assert iv.to_python("") == None
-    assert iv.to_python(None) == None
-    assert iv.to_python('7') == 7
-    assert validate(iv, "1") == messages('tooLow', None, min=5)
-    assert validate(iv, "15") == messages('tooHigh', None, max=10)
-
-
-def test_int_minmax_mandatory():
-    messages = Int().message
-    iv = Int(min=5, max=10, not_empty=True)
-    assert validate(iv, None) == messages('empty', None)
-    assert validate(iv, "1") == messages('tooLow', None, min=5)
-    assert validate(iv, "15") == messages('tooHigh', None, max=10)
-
-
-def test_month_style():
-    d = datetime.date(2007, 12, 20)
-    dc = DateConverter()
-    assert dc.month_style == 'mm/dd/yyyy'
-    assert dc.to_python('12/20/2007') == d
-    assert dc.from_python(d) == '12/20/2007'
-    assert dc.to_python('Dec/20/2007') == d
-    assert dc.to_python('December/20/2007') == d
-    try:
-        assert dc.to_python('20/12/2007') == d
-    except Invalid, e:
-        assert 'Please enter a month from 1 to 12' in str(e)
-    try:
-        assert dc.to_python('12/Dec/2007') == d
-    except Invalid, e:
-        assert 'Please enter the date in the form mm/dd/yyyy' in str(e)
-    dc = DateConverter(month_style='dd/mm/yyyy')
-    assert dc.month_style == 'dd/mm/yyyy'
-    assert dc.to_python('20/12/2007') == d
-    assert dc.from_python(d) == '20/12/2007'
-    assert dc.to_python('20/Dec/2007') == d
-    assert dc.to_python('20/December/2007') == d
-    try:
-        assert dc.to_python('12/20/2007') == d
-    except Invalid, e:
-        assert 'Please enter a month from 1 to 12' in str(e)
-    try:
-        assert dc.to_python('Dec/12/2007') == d
-    except Invalid, e:
-        assert 'Please enter the date in the form dd/mm/yyyy' in str(e)
-
-
-def test_date():
-    dc = DateConverter(month_style='dd/mm/yyyy')
-    try:
-        dc.to_python('20/12/150')
-    except Invalid, e:
-        assert 'Please enter a four-digit year after 1899' in str(e)
-    else:
-        assert False, 'Date should be invalid'
-    try:
-        dc.to_python('oh/happy/day')
-    except Invalid, e:
-        assert 'Please enter the date in the form dd/mm/yyyy' in str(e)
-    else:
-        assert False, 'Date should be invalid'
-
-
-def test_time():
-    tc = TimeConverter()
-    assert tc.to_python('20:30:15') == (20, 30, 15)
-    try:
-        tc.to_python('25:30:15')
-    except Invalid, e:
-        assert 'You must enter an hour in the range 0-23' in str(e)
-    else:
-        assert False, 'Time should be invalid'
-    try:
-        tc.to_python('20:75:15')
-    except Invalid, e:
-        assert 'You must enter a minute in the range 0-59' in str(e)
-    else:
-        assert False, 'Time should be invalid'
-    try:
-        tc.to_python('20:30:75')
-    except Invalid, e:
-        assert 'You must enter a second in the range 0-59' in str(e)
-    else:
-        assert False, 'Time should be invalid'
-    try:
-        tc.to_python('20:30:zx')
-    except Invalid, e:
-        assert 'The second value you gave is not a number' in str(e)
-        assert 'zx' in str(e)
-    else:
-        assert False, 'Time should be invalid'
-
-
-def test_foreach_if_missing():
-
-    class SubSchema(Schema):
-        age = Int()
-        name = String(not_empty=True)
-
-    class MySchema(Schema):
-        pre_validators = [NestedVariables()]
-        people = ForEach(SubSchema(), if_missing=NoDefault, messages={'missing':'Please add a person'})
-
-    start_values = {}
-
-    class State:
-        pass
-
-    validator = MySchema()
-    assert validator.fields['people'].not_empty == False
-
-    state = State()
-
-    try:
-        values = validator.to_python(start_values, state)
-    except Invalid, e:
-        assert e.unpack_errors() == {'people': u'Please add a person'}
-    else:
-        raise Exception("Shouldn't be valid data", values, start_values)
+        try:
+            values = validator.to_python(start_values, state)
+        except Invalid, e:
+            self.assertEqual(e.unpack_errors(),
+                {'people': u'Please add a person'})
+        else:
+            raise Exception("Shouldn't be valid data", values, start_values)
 
 
 class TestXRIValidator(unittest.TestCase):
     """Generic tests for the XRI validator"""
 
+    def setUp(self):
+        self.validator = validators.XRI
+
     def test_creation_valid_params(self):
         """The creation of an XRI validator with valid parameters must
         succeed"""
-        XRI()
-        XRI(True, "i-name")
-        XRI(True, "i-number")
-        XRI(False, "i-name")
-        XRI(False, "i-number")
+        self.validator()
+        self.validator(True, "i-name")
+        self.validator(True, "i-number")
+        self.validator(False, "i-name")
+        self.validator(False, "i-number")
 
     def test_creation_invalid_xri(self):
         """Only "i-name" and "i-number" are valid XRIs"""
-        self.assertRaises(AssertionError, XRI, True, 'i-something')
+        self.assertRaises(AssertionError, self.validator, True, 'i-something')
 
     def test_valid_simple_individual_iname_without_type(self):
         """XRIs must start with either an equals sign or an at sign"""
-        validator = XRI(True, "i-name")
+        validator = self.validator(True, "i-name")
         self.assertRaises(Invalid, validator.validate_python, 'Gustavo')
 
     def test_valid_iname_with_schema(self):
         """XRIs may have their schema in the beggining"""
-        validator = XRI()
+        validator = self.validator()
         self.assertEqual(validator.to_python('xri://=Gustavo'),
                          'xri://=Gustavo')
 
     def test_schema_is_added_if_asked(self):
         """The schema must be added to an XRI if explicitly asked"""
-        validator = XRI(True)
+        validator = self.validator(True)
         self.assertEqual(validator.to_python('=Gustavo'),
                          'xri://=Gustavo')
 
     def test_schema_not_added_if_not_asked(self):
         """The schema must not be added to an XRI unless explicitly asked"""
-        validator = XRI()
+        validator = self.validator()
         self.assertEqual(validator.to_python('=Gustavo'), '=Gustavo')
 
     def test_spaces_are_trimmed(self):
         """Spaces at the beggining or end of the XRI are removed"""
-        validator = XRI()
+        validator = self.validator()
         self.assertEqual(validator.to_python('    =Gustavo  '), '=Gustavo')
 
 
@@ -288,7 +318,7 @@ class TestINameValidator(unittest.TestCase):
     """Tests for the XRI i-names validator"""
 
     def setUp(self):
-        self.validator = XRI(xri_type="i-name")
+        self.validator = validators.XRI(xri_type="i-name")
 
     def test_valid_global_individual_iname(self):
         """Global & valid individual i-names must pass validation"""
@@ -348,7 +378,7 @@ class TestINumberValidator(unittest.TestCase):
     """Tests for the XRI i-number validator"""
 
     def setUp(self):
-        self.validator = XRI(xri_type="i-number")
+        self.validator = validators.XRI(xri_type="i-number")
 
     def test_valid_global_personal_inumber(self):
         """Global & valid personal i-numbers must pass validation"""
@@ -379,7 +409,7 @@ class TestOpenIdValidator(unittest.TestCase):
     """Tests for the OpenId validator"""
 
     def setUp(self):
-        self.validator = OpenId(add_schema=False)
+        self.validator = validators.OpenId(add_schema=False)
 
     def test_url(self):
         self.assertEqual(self.validator.to_python('http://example.org'),
@@ -397,7 +427,7 @@ class TestOpenIdValidator(unittest.TestCase):
                           "wait@busstop.com")
 
     def test_prepending_schema(self):
-        validator = OpenId(add_schema=True)
+        validator = validators.OpenId(add_schema=True)
         self.assertEqual(validator.to_python("example.org"),
                          "http://example.org")
         self.assertEqual(validator.to_python("=Gustavo"),
@@ -405,15 +435,36 @@ class TestOpenIdValidator(unittest.TestCase):
         self.assertEqual(validator.to_python("!!1000"),
                          "xri://!!1000")
 
+
+class TestIPAddressValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.IPAddress()
+
+    def test_valid_address(self):
+        self.validator.validate_python('127.0.0.1')
+
+    def test_address_is_none(self):
+        self.assertRaises(Invalid, self.validator.validate_python, None)
+
+    def test_invalid_address(self):
+        validate = self.validator.validate_python
+        self.assertRaises(Invalid, validate, '127.0.1')
+        self.assertRaises(Invalid, validate, '271.0.0.1')
+        self.assertRaises(Invalid, validate, '127.0.0.0.1')
+
+
 class TestURLValidator(unittest.TestCase):
 
     def setUp(self):
-        self.validator = URL()
+        self.validator = validators.URL()
 
     def test_cojp(self):
-        self.assertEqual(self.validator.to_python('http://domain.co.jp'), 'http://domain.co.jp')
+        self.assertEqual(self.validator.to_python('http://domain.co.jp'),
+                         'http://domain.co.jp')
 
     def test_1char_thirdlevel(self):
-        self.assertEqual(self.validator.to_python('http://c.somewhere.pl/wi16677/5050f81b001f9e5f45902c1b/'),
-                                                  'http://c.somewhere.pl/wi16677/5050f81b001f9e5f45902c1b/')
+        self.assertEqual(self.validator.to_python(
+            'http://c.somewhere.pl/wi16677/5050f81b001f9e5f45902c1b/'),
+            'http://c.somewhere.pl/wi16677/5050f81b001f9e5f45902c1b/')
 

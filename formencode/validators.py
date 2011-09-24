@@ -2403,9 +2403,9 @@ class IPAddress(FancyValidator):
         illegalOctets=_('The octets must be within the range of 0-255'
             ' (not %(octet)r)'))
 
-    def validate_python(self, value, state):
+    def validate_python(self, value, state=None):
         try:
-            octets = value.split('.')
+            octets = (value or '').split('.', 5)
             # Only 4 octets?
             if len(octets) != 4:
                 raise Invalid(

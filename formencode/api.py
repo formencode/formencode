@@ -482,7 +482,7 @@ class FancyValidator(Validator):
         """
         return value.encode('base64').strip().replace('\n', '')
 
-    def _validate_noop(self, value, state):
+    def _validate_noop(self, value, state=None):
         """
         A validation method that doesn't do anything.
         """
