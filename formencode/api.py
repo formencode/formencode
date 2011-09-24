@@ -241,7 +241,7 @@ class Validator(declarative.Declarative):
             raise KeyError(
                 "Key not found (%s) for %r=%r %% %r (from: %s)"
                 % (e, msgName, self._messages.get(msgName), kw,
-                   ', '.join(self._messages.keys())))
+                   ', '.join(self._messages)))
 
     def all_messages(self):
         """

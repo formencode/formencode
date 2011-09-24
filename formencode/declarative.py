@@ -109,7 +109,7 @@ class Declarative(object):
     __metaclass__ = DeclarativeMeta
 
     __singletonmethods__ = ()
-    
+
     counter = count()
 
     def __classinit__(cls, new_attrs):
@@ -213,6 +213,7 @@ class Declarative(object):
         if 'declarative_count' in v:
             name = '%s %i' % (name, v.pop('declarative_count'))
         names = v.keys()
+        names.sort()
         args = []
         for n in self._repr_vars(names):
             args.append('%s=%r' % (n, v[n]))

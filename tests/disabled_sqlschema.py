@@ -13,7 +13,7 @@ def setup_module(module):
     import __builtin__
     __builtin__._ = notranslation
 
-    
+
 
 def teardown_module(module):
     """Remove translation function
@@ -45,7 +45,7 @@ class EventObjectSchema(SQLSchema):
 def get_error(inp, schema):
     try:
         result = schema.to_python(inp)
-        assert 0, (
+        assert False, (
             "Got %r from %r instead of an Invalid exception"
             % (result, inp))
     except validators.Invalid, e:
@@ -62,7 +62,7 @@ def test_validate():
     assert obj.name == 'test1'
     assert obj.date == date(2010, 11, 10)
     assert obj.description == 'test'
-    
+
 
 def test_update():
     obj = EventObject(name='foobar', date=date(2020, 10, 1),
@@ -112,6 +112,6 @@ def test_sign():
     print 'after ', res2['id'], res2['id'].split()[0].decode('base64')
     try:
         s.to_python(res2)
-        assert 0
+        assert False
     except validators.Invalid, e:
         assert str(e) == 'Signature is not correct'

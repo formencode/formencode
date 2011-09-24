@@ -4,6 +4,11 @@ Parser for HTML forms, that fills in defaults and errors.  See ``render``.
 
 import re
 
+try:
+    set
+except NameError: # Python < 2.4
+    from sets import Set as set
+
 from formencode.rewritingparser import RewritingParser, html_quote
 
 __all__ = ['render', 'htmlliteral', 'default_formatter',
@@ -209,8 +214,8 @@ class FillingParser(RewritingParser):
         self.in_error = None
         self.skip_error = False
         self.use_all_keys = use_all_keys
-        self.used_keys = {}
-        self.used_errors = {}
+        self.used_keys = set()
+        self.used_errors = set()
         if error_formatters is None:
             self.error_formatters = default_formatter_dict
         else:
@@ -246,7 +251,7 @@ class FillingParser(RewritingParser):
         self.handle_misc(None)
         RewritingParser.close(self)
         unused_errors = self.errors.copy()
-        for key in self.used_errors.keys():
+        for key in self.used_errors:
             if key in unused_errors:
                 del unused_errors[key]
         if self.auto_error_formatter:
@@ -258,7 +263,7 @@ class FillingParser(RewritingParser):
             unused_errors = {}
         if self.use_all_keys:
             unused = self.defaults.copy()
-            for key in self.used_keys.keys():
+            for key in self.used_keys:
                 if key in unused:
                     del unused[key]
             assert not unused, (
@@ -266,7 +271,9 @@ class FillingParser(RewritingParser):
                 % unused.keys())
             if unused_errors:
                 error_text = []
-                for key in unused_errors.keys():
+                error_keys = unused_errors.keys()
+                error_keys.sort()
+                for key in error_keys:
                     error_text.append("%s: %s" % (key, self.errors[key]))
                 assert False, (
                     "These errors were not used in the form: %s" %
@@ -284,7 +291,7 @@ class FillingParser(RewritingParser):
         return (self.in_textarea and self.skip_textarea) or self.skip_error
 
     def add_key(self, key):
-        self.used_keys[key] = 1
+        self.used_keys.add(key)
 
     def handle_starttag(self, tag, attrs, startend=False):
         self.write_pos()
@@ -353,7 +360,7 @@ class FillingParser(RewritingParser):
             error = self.error_formatters[formatter](error)
             self.write_text(error)
         self.skip_next = True
-        self.used_errors[name] = 1
+        self.used_errors.add(name)
 
     def handle_input(self, attrs, startend):
         t = (self.get_attr(attrs, 'type') or 'text').lower()
@@ -431,8 +438,8 @@ class FillingParser(RewritingParser):
             self.skip_next = True
             self.add_key(name)
         else:
-            assert 0, "I don't know about this kind of <input>: %s (pos: %s)" \
-                   % (t, self.getpos())
+            assert False, ("I don't know about this kind of <input>:"
+                " %s (pos: %s)" % (t, self.getpos()))
         if not self.prefix_error:
             self.write_marker(name)
 

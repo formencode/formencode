@@ -33,7 +33,7 @@ def test_unicode():
     except ValueError:
         pass
     else:
-        assert 0, (
+        assert False, (
             "We need something that can't be ASCII-encoded: %r (%r)"
             % (uni_value, uni_value.encode('ascii')))
     assert (str(html.b(uni_value))

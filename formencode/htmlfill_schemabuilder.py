@@ -34,7 +34,7 @@ def get_messages(cls, message):
     if not message:
         return {}
     else:
-        return dict([(k, message) for k in cls._messages.keys()])
+        return dict([(k, message) for k in cls._messages])
 
 
 def to_bool(value):

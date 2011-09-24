@@ -73,7 +73,7 @@ class RewritingParser(HTMLParser.HTMLParser):
     handle_pi = handle_misc
     unknown_decl = handle_misc
     handle_endtag = handle_misc
-    
+
     def write_tag(self, tag, attrs, startend=False):
         attr_text = ''.join([' %s="%s"' % (n, html_quote(v))
                              for (n, v) in attrs
@@ -117,15 +117,15 @@ class RewritingParser(HTMLParser.HTMLParser):
         return default
 
     def set_attr(self, attr, name, value):
-        for i in range(len(attr)):
-            if attr[i][0].lower() == name:
+        for i, a in enumerate(attr):
+            if a[0].lower() == name:
                 attr[i] = (name, value)
                 return
         attr.append((name, value))
 
     def del_attr(self, attr, name):
-        for i in range(len(attr)):
-            if attr[i][0].lower() == name:
+        for i, a in enumerate(attr):
+            if a[0].lower() == name:
                 del attr[i]
                 break
 
@@ -133,7 +133,7 @@ class RewritingParser(HTMLParser.HTMLParser):
         current = self.get_attr(attr, 'class', '')
         new = current + ' ' + class_name
         self.set_attr(attr, 'class', new.strip())
-            
+
     def text(self):
         try:
             return self._text

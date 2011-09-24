@@ -41,7 +41,7 @@ def run_filename(filename):
         data_content = parts[2].strip()
     elif len(parts) > 3:
         print parts[3:]
-        assert 0, "Too many sections"
+        assert False, "Too many sections"
     else:
         data_content = ''
     namespace = {}
@@ -76,7 +76,7 @@ def run_filename(filename):
         print output
         print '---- Expected: ----'
         print expected
-        assert 0
+        assert False
     checker(p, listener.schema())
     checker(p, htmlfill_schemabuilder.parse_schema(template))
 

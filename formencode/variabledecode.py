@@ -20,6 +20,11 @@ and list_char keyword args. For example, to have the GET/POST variables,
 ``a_1=something`` as a list, you would use a ``list_char='_'``.
 """
 
+try:
+    set
+except NameError: # Python < 2.4
+    from sets import Set as set
+
 import api
 
 __all__ = ['variable_decode', 'variable_encode', 'NestedVariables']
@@ -30,7 +35,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
     Decode the flat dictionary d into a nested structure.
     """
     result = {}
-    dicts_to_sort = {}
+    dicts_to_sort = set()
     known_lengths = {}
     for key, value in d.items():
         keys = key.split(dict_char)
@@ -46,7 +51,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
             elif list_char in key:
                 key, index = key.split(list_char)
                 new_keys.append(key)
-                dicts_to_sort[tuple(new_keys)] = 1
+                dicts_to_sort.add(tuple(new_keys))
                 new_keys.append(int(index))
             else:
                 new_keys.append(key)
@@ -80,11 +85,11 @@ def variable_decode(d, dict_char='.', list_char='-'):
             place[new_keys[-1]] = value
 
     try:
-        to_sort_keys = sorted(dicts_to_sort, key=len, reverse=True)
+        to_sort_list = sorted(dicts_to_sort, key=len, reverse=True)
     except NameError: # Python < 2.4
-        to_sort_keys = dicts_to_sort.keys()
-        to_sort_keys.sort(lambda a, b: -cmp(len(a), len(b)))
-    for key in to_sort_keys:
+        to_sort_list = list(dicts_to_sort)
+        to_sort_list.sort(lambda a, b: -cmp(len(a), len(b)))
+    for key in to_sort_list:
         to_sort = result
         source = None
         last_key = None
@@ -126,8 +131,8 @@ def variable_encode(d, prepend='', result=None, add_repetitions=True,
             variable_encode(value, name, result, add_repetitions,
                             dict_char=dict_char, list_char=list_char)
     elif isinstance(d, list):
-        for i in range(len(d)):
-            variable_encode(d[i], "%s%s%i" % (prepend, list_char, i), result,
+        for i, value in enumerate(d):
+            variable_encode(value, "%s%s%i" % (prepend, list_char, i), result,
                             add_repetitions, dict_char=dict_char, list_char=list_char)
         if add_repetitions:
             if prepend:

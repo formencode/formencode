@@ -12,7 +12,7 @@ def setup_module(module):
     import __builtin__
     __builtin__._ = notranslation
 
-    
+
 
 def teardown_module(module):
     """Remove translation function
@@ -77,7 +77,7 @@ class BadCase(DecodeCase):
             actual = e.unpack_errors()
             assert actual == self.output
         else:
-            assert 0, "Exception expected"
+            assert False, "Exception expected"
 
 
 class Name(Schema):
@@ -133,7 +133,7 @@ BadCase(AddressesForm,
         'addresses-1.name.fname=&addresses-1.name.lname=x&'
         'addresses-1.email=x@domain.com',
         addresses=[d(name=d(fname="Please enter a value"))])
-        
+
 BadCase(AddressesForm,
         'whatever=nothing',
         text="The input field 'whatever' was not expected.")
@@ -180,7 +180,7 @@ def test_multiple_chained_validators_errors():
     except Invalid, e:
         pass
     else:
-        assert 0
+        assert False
 
 
 def test_SimpleFormValidator_doc():
@@ -201,18 +201,18 @@ def test_SimpleFormValidator_doc():
 
 class TestAtLeastOneCheckboxIsChecked(object):
     """ tests to address sourceforge bug #1777245
-        
+
         The reporter is trying to enforce agreement to a Terms of Service
         agreement, with failure to check the 'I agree' checkbox handled as
         a validation failure. The tests below illustrate a working approach.
     """
-    
+
     def setup(self):
         self.not_empty_messages = {'missing': 'a missing value message'}
         class CheckForCheckboxSchema(Schema):
             agree = validators.StringBool(messages=self.not_empty_messages)
         self.schema = CheckForCheckboxSchema()
-    
+
     def test_Schema_with_input_present(self):
         # <input type="checkbox" name="agree" value="yes" checked="checked">
         result = self.schema.to_python({'agree': 'yes'})

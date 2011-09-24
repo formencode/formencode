@@ -658,7 +658,9 @@ class DictConverter(FancyValidator):
             if self.hideDict:
                 raise Invalid(self.message('keyNotFound', state), value, state)
             else:
-                items = '; '.join(map(repr, self.dict.keys()))
+                items = self.dict.keys()
+                items.sort()
+                items = '; '.join(map(repr, items))
                 raise Invalid(
                     self.message('chooseKey', state, items=items), value, state)
 
@@ -720,8 +722,8 @@ class IndexListConverter(FancyValidator):
             raise Invalid(self.message('outOfRange', state), value, state)
 
     def _from_python(self, value, state):
-        for i in range(len(self.list)):
-            if self.list[i] == value:
+        for i, v in enumerate(self.list):
+            if v == value:
                 return i
         raise Invalid(
             self.message('notFound', state, value=repr(value)), value, state)

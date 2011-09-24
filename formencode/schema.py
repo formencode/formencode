@@ -104,7 +104,7 @@ class Schema(FancyValidator):
                 del self.fields[key]
         for name, value in self.fields.items():
             self.add_field(name, value)
-    
+
     def assert_dict(self, value, state):
         """
         Helper to assure we have proper input
@@ -114,7 +114,7 @@ class Schema(FancyValidator):
             raise Invalid(
                 self.message('badDictType', state,
                     type=type(value), value=value), value, state)
-            
+
     def _to_python(self, value_dict, state):
         if not value_dict:
             if self.if_empty is not NoDefault:
@@ -126,7 +126,7 @@ class Schema(FancyValidator):
             value_dict = validator.to_python(value_dict, state)
 
         self.assert_dict(value_dict, state)
-        
+
         new = {}
         errors = {}
         unused = self.fields.keys()
@@ -261,7 +261,7 @@ class Schema(FancyValidator):
                 new = validator.from_python(new, state)
 
             return new
-            
+
         finally:
             if state is not None:
                 state.key = previous_key
@@ -338,7 +338,7 @@ def format_compound_error(v, indent=0):
     elif isinstance(v, basestring):
         return v
     else:
-        assert 0, "I didn't expect something like %s" % repr(v)
+        assert False, "I didn't expect something like %s" % repr(v)
 
 
 def merge_dicts(d1, d2):
