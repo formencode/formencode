@@ -2614,13 +2614,14 @@ class RequireIfMissing(FormValidator):
     def _to_python(self, value_dict, state):
         is_empty = self.field_is_empty
         if is_empty(value_dict.get(self.required)) and (
-            (self.missing and is_empty(value_dict.get(self.missing)))
-            or (self.present and not is_empty(value_dict.get(self.present)))):
+                (self.missing and is_empty(value_dict.get(self.missing))) or
+                (self.present and not is_empty(value_dict.get(self.present)))):
             raise Invalid(
                 _('You must give a value for %s') % self.required,
                 value_dict, state,
                 error_dict={self.required:
-                    Invalid(self.message('empty', state), value_dict, state)})
+                    Invalid(self.message('empty', state),
+                        value_dict.get(self.required), state)})
         return value_dict
 
 RequireIfPresent = RequireIfMissing
