@@ -1278,7 +1278,7 @@ class Email(FancyValidator):
     resolve_domain = False
     resolve_timeout = 10 # timeout in seconds when resolving domains
 
-    usernameRE = re.compile(r"^[^ \t\n\r@<>()]+$", re.I)
+    usernameRE = re.compile(r"^[\w!#$%&'*+\-/=?^`{|}~.]+$")
     domainRE = re.compile(r'''
         ^(?:[a-z0-9][a-z0-9\-]{,62}\.)+ # (sub)domain - alpha followed by 62max chars (63 total)
         [a-z]{2,}$                       # TLD
