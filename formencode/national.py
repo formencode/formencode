@@ -319,19 +319,19 @@ class CountryValidator(FancyValidator):
     ::
 
         >>> CountryValidator.to_python('Germany')
-        'DE'
+        u'DE'
         >>> CountryValidator.to_python('Finland')
-        'FI'
+        u'FI'
         >>> CountryValidator.to_python('UNITED STATES')
-        'US'
+        u'US'
         >>> CountryValidator.to_python('Krakovia')
         Traceback (most recent call last):
             ...
         Invalid: That country is not listed in ISO 3166
         >>> CountryValidator.from_python('DE')
-        'Germany'
+        u'Germany'
         >>> CountryValidator.from_python('FI')
-        'Finland'
+        u'Finland'
     """
 
     key_ok = True
@@ -708,17 +708,17 @@ class LanguageValidator(FancyValidator):
 
         >>> l = LanguageValidator()
         >>> l.to_python('German')
-        'de'
+        u'de'
         >>> l.to_python('Chinese')
-        'zh'
+        u'zh'
         >>> l.to_python('Klingonian')
         Traceback (most recent call last):
             ...
         Invalid: That language is not listed in ISO 639
         >>> l.from_python('de')
-        'German'
+        u'German'
         >>> l.from_python('zh')
-        'Chinese'
+        u'Chinese'
     """
 
     key_ok = True

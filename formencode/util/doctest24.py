@@ -45,6 +45,15 @@ of doctest's default behaviors.  See the Library Reference Manual for
 details.
 """
 
+from sys import version_info
+if version_info >= (2, 4):
+    try:
+        from nose.plugins.skip import SkipTest
+    except ImportError:
+        pass
+    else:
+        raise SkipTest
+
 __docformat__ = 'reStructuredText en'
 
 __all__ = [

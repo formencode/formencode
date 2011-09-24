@@ -220,8 +220,8 @@ class Wrapper(FancyValidator):
         'this'
         >>> wrap.from_python('This')
         'This'
-        >>> wrap.to_python('')
-        None
+        >>> wrap.to_python('') is None
+        True
         >>> wrap2 = Wrapper(from_python=downcase, empty_value=lambda val: val)
         >>> wrap2.from_python('This')
         'this'
@@ -1391,7 +1391,7 @@ class URL(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: You must start your URL with http://, https://, etc
-        >>> u.to_python('http://formencode.org/doesnotexist.html')
+        >>> u.to_python('http://www.formencode.org/does/not/exist/page.html')
         Traceback (most recent call last):
             ...
         Invalid: The server responded that the page could not be found
