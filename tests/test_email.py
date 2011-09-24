@@ -7,7 +7,7 @@ def _validate(validator, *args):
     try:
         return validator.to_python(*args)
     except Invalid, e:
-        return str(e)
+        return unicode(e)
 
 
 def test_invalid_email_addresses():
