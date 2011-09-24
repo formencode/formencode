@@ -3,6 +3,8 @@ from interfaces import *
 from api import *
 from api import _
 import declarative
+import warnings
+from formencode.exc import FERuntimeWarning
 
 __all__ = ['Schema']
 
@@ -80,6 +82,10 @@ class Schema(FancyValidator):
         # and instances):
         for key, value in new_attrs.items():
             if key in ('pre_validators', 'chained_validators'):
+                if is_validator(value):
+                    msg = "Any validator with the name %s will be ignored." % \
+                            (key,)
+                    warnings.warn(msg, FERuntimeWarning)
                 continue
             if is_validator(value):
                 cls.fields[key] = value
@@ -94,6 +100,10 @@ class Schema(FancyValidator):
     def __initargs__(self, new_attrs):
         for key, value in new_attrs.items():
             if key in ('pre_validators', 'chained_validators'):
+                if is_validator(value):
+                    msg = "Any validator with the name %s will be ignored." % \
+                            (key,)
+                    warnings.warn(msg, FERuntimeWarning)
                 continue
             if is_validator(value):
                 self.fields[key] = value
