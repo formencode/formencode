@@ -4,7 +4,7 @@ from api import *
 from api import _
 import declarative
 import warnings
-from formencode.exc import FERuntimeWarning
+from exc import FERuntimeWarning
 
 __all__ = ['Schema']
 
