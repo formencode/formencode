@@ -45,6 +45,15 @@ of doctest's default behaviors.  See the Library Reference Manual for
 details.
 """
 
+from sys import version_info
+if version_info >= (2, 4):
+    try:
+        from nose.plugins.skip import SkipTest
+    except ImportError:
+        pass
+    else:
+        raise SkipTest
+
 __docformat__ = 'reStructuredText en'
 
 __all__ = [
@@ -2245,7 +2254,10 @@ class DocTestCase(unittest.TestCase):
     __str__ = __repr__
 
     def shortDescription(self):
-        return "Doctest: " + self._dt_test.name
+        try:
+            return "Doctest: " + self._dt_test.name
+        except AttributeError:
+            return "Doctest: " + str(self._dt_test)
 
 def DocTestSuite(module=None, globs=None, extraglobs=None, test_finder=None,
                  **options):
@@ -2316,7 +2328,10 @@ class DocFileCase(DocTestCase):
         return '_'.join(self._dt_test.name.split('.'))
 
     def __repr__(self):
-        return self._dt_test.filename
+        try:
+            return self._dt_test.filename
+        except AttributeError:
+            return str(self._dt_test)
     __str__ = __repr__
 
     def format_failure(self, err):
