@@ -1,4 +1,4 @@
-What's New In FormEncode 0 to 1.2.5
+What's New In FormEncode 0 to 1.2.4
 ===================================
 
 .. contents::
