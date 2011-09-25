@@ -66,9 +66,16 @@ class CompoundValidator(FancyValidator):
 
 class Any(CompoundValidator):
     """
-    This class is like an 'or' operator for validators.  The first
-    validator/converter that validates the value will be used.  (You
-    can pass in lists of validators, which will be ANDed)
+    This class is like an 'or' operator for validators.  The first 
+    validator/converter in the order of evaluation that validates the value
+    will be used.
+
+    The order of evaluation differs depending on if you are validating to
+    python or from python as follows:
+
+    The validators are evaluated right to left when validating to python.
+
+    The validators are evaluated left to right when validating from python.
     """
 
     def attempt_convert(self, value, state, validate):
@@ -103,7 +110,33 @@ class All(CompoundValidator):
     """
     This class is like an 'and' operator for validators.  All
     validators must work, and the results are passed in turn through
-    all validators for conversion.
+    all validators for conversion in the order of evaluation. All
+    is the same as `Pipe` but operates in the reverse order.
+
+    The order of evaluation differs depending on if you are validating to
+    python or from python as follows:
+
+    The validators are evaluated right to left when validating to python.
+
+    The validators are evaluated left to right when validating from python.
+
+    `Pipe` is more intuitive when predominatenly validating to python.
+
+    ::
+
+        >>> from validators import DictConverter
+        >>> pv = Pipe(validators=[DictConverter({1: 2}), DictConverter({2: 3}), DictConverter({3: 4})])
+        >>> pv.to_python(4)
+        1
+        >>> pv.to_python(4)
+        1
+        >>> pv.from_python(1)
+        4
+        >>> pv.from_python(1)
+        4
+        >>> pv.to_python(4)
+        1
+
     """
 
     def __repr__(self):
@@ -177,9 +210,17 @@ class All(CompoundValidator):
 
 class Pipe(All):
     """
-    This class works like 'All', all validators muss pass, but the result
-    of one validation pass is handled over to the next validator. A behaviour
+    This class works like `All` but the order of evaluation is opposite. All
+    validators must work, and the results are passed in turn through
+    each validator for conversion in the order of evaluation.  A behaviour
     known to Unix and GNU users as 'pipe'.
+
+    The order of evaluation differs depending on if you are validating to
+    python or from python as follows:
+
+    The validators are evaluated left to right when validating to python.
+
+    The validators are evaluated right to left when validating from python.
 
     ::
 
