@@ -24,8 +24,9 @@ text_files = [
 
 from formencode import validators
 from formencode import schema
+from formencode import compound
 
-modules = [validators, schema]
+modules = [validators, schema, compound]
 
 if __name__ == '__main__':
     args = sys.argv[1:]

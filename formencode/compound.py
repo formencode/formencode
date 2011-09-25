@@ -122,20 +122,14 @@ class All(CompoundValidator):
 
     `Pipe` is more intuitive when predominatenly validating to python.
 
-    ::
+    Examples::
 
-        >>> from validators import DictConverter
-        >>> pv = Pipe(validators=[DictConverter({1: 2}), DictConverter({2: 3}), DictConverter({3: 4})])
-        >>> pv.to_python(4)
+        >>> from formencode.validators import DictConverter
+        >>> av = All(validators=[DictConverter({2: 1}), DictConverter({3: 2}), DictConverter({4: 3})])
+        >>> av.to_python(4)
         1
-        >>> pv.to_python(4)
-        1
-        >>> pv.from_python(1)
+        >>> av.from_python(1)
         4
-        >>> pv.from_python(1)
-        4
-        >>> pv.to_python(4)
-        1
 
     """
 
@@ -222,20 +216,14 @@ class Pipe(All):
 
     The validators are evaluated right to left when validating from python.
 
-    ::
+    Examples::
 
-        >>> from validators import DictConverter
+        >>> from formencode.validators import DictConverter
         >>> pv = Pipe(validators=[DictConverter({1: 2}), DictConverter({2: 3}), DictConverter({3: 4})])
         >>> pv.to_python(1)
         4
-        >>> pv.to_python(1)
-        4
         >>> pv.from_python(4)
         1
-        >>> pv.from_python(4)
-        1
-        >>> pv.to_python(1)
-        4
 
     """
 
