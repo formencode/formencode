@@ -2,23 +2,6 @@ FormEncode
 ==========
 
 
-Contents:
-
-.. toctree::
-   :maxdepth: 1
-
-   news
-   ToDo
-   Validator
-   i18n
-   htmlfill
-   history
-   Design
-   modules
-   download
-   community
-
-
 Introduction
 ------------
 
@@ -32,22 +15,39 @@ nestable.  It is separate from HTTP or any other input mechanism.
 .. _Ian Bicking: http://ianbicking.org
 
 
+What's New
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   whatsnew-1.2.5
+   whatsnew-0-to-1.2.4
+
+
 Documentation
 -------------
 
-* `News <news.html>`_
-* `Validation Documentation <Validator.html>`_
-* `htmlfill <htmlfill.html>`_
-* `To-Do list <ToDo.html>`_
-* `About FormEncode's design <Design.html>`_ and `history <history.html>`_
-* `i18n (internationalization) <i18n.html>`_
+.. toctree::
+   :maxdepth: 1
+
+   Validator
+   htmlfill
+   ToDo
+   Design
+   history
+   i18n
+   modules
 
 
 Other Links
 -----------
 
-* `Community (mailing list, etc) <community.html>`_
-* `Download <download.html>`_
+.. toctree::
+   :maxdepth: 1
+
+   community
+   download
 
 
 Indices and Search

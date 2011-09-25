@@ -1,13 +1,7 @@
-News
-====
+What's New In FormEncode 0 to 1.2.5
+===================================
 
 .. contents::
-
-1.2.5
------
-
-* New official BitBucket code repository at `formencode/official-formencode
-  <http://bitbucket.org/formencode/official-formencode>`_.
 
 1.2.4
 -----
