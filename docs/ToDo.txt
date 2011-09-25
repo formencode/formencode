@@ -5,6 +5,9 @@ Things To Do
 :version: |release|
 :date: |today|
 
+* Add a parallel to Pipe for the Any compound validator that performs
+  validation for each validator to python from left to right.
+
 * Make a test fixture for validators, to make testing really easy.
 
 * Consider moving htmlfill to ElementTree or another DOM-ish
