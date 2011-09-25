@@ -1,0 +1,10 @@
+:mod:`formencode.htmlfill_schemabuilder` -- Read a Schema from an HTML Form
+===========================================================================
+
+.. automodule:: formencode.htmlfill_schemabuilder
+
+Module Contents
+---------------
+
+.. autofunction:: parse_schema
+.. autoclass:: SchemaBuilder

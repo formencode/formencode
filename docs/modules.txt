@@ -11,6 +11,7 @@ Reference
     modules/foreach
     modules/htmlrename
     modules/htmlfill
+    modules/htmlfill_schemabuilder
     modules/htmlgen
     modules/national
     modules/schema
