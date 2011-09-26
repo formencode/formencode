@@ -1,13 +1,16 @@
 import os
 import sys
 
-from formencode import validators
-from formencode import schema
-from formencode import compound
 from formencode import doctest_xml_compare
+from formencode import compound
+from formencode import htmlfill
+from formencode import htmlgen
+from formencode import national
+from formencode import schema
+from formencode import validators
 
 
-modules = [validators, schema, compound]
+modules = [compound, htmlfill, htmlgen, national, schema, validators]
 " Modules that will have their doctests tested. "
 
 
