@@ -160,7 +160,10 @@ class Declarative(object):
     def singleton(cls):
         name = '_%s__singleton' % cls.__name__
         if not hasattr(cls, name):
-            setattr(cls, name, cls(declarative_count=cls.declarative_count))
+            try:
+                setattr(cls, name, cls(declarative_count=cls.declarative_count))
+            except TypeError: # takes arguments
+                setattr(cls, name, cls)
         return getattr(cls, name)
     singleton = classmethod(singleton)
 

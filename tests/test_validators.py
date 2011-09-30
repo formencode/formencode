@@ -27,6 +27,20 @@ def validate_from(validator, value):
         return e.unpack_errors()
 
 
+class TestValidators(unittest.TestCase):
+
+    def testHelp(self):
+        from pydoc import text, plain
+        s = plain(text.document(validators))
+        self.assert_('Validator/Converters for use with FormEncode.' in s)
+        self.assert_('class Bool' in s)
+        self.assert_('Always Valid, returns True or False' in s)
+        self.assert_('class Email' in s)
+        self.assert_('Validate an email address.' in s)
+        self.assert_('class FieldsMatch' in s)
+        self.assert_('Tests that the given fields match' in s)
+
+
 class TestStringValidator(unittest.TestCase):
 
     def setUp(self):
