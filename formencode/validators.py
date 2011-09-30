@@ -1,5 +1,6 @@
 ## FormEncode, a  Form processor
 ## Copyright (C) 2003, Ian Bicking <ianb@colorstudy.com>
+
 """
 Validator/Converters for use with FormEncode.
 """
@@ -1280,8 +1281,8 @@ class Email(FancyValidator):
 
     usernameRE = re.compile(r"^[\w!#$%&'*+\-/=?^`{|}~.]+$")
     domainRE = re.compile(r'''
-        ^(?:[a-z0-9][a-z0-9\-]{,62}\.)+ # (sub)domain - alpha followed by 62max chars (63 total)
-        [a-z]{2,}$                       # TLD
+        ^(?:[a-z0-9][a-z0-9\-]{,62}\.)+        # subdomain
+        (?:[a-z]{2,63}|xn--[a-z0-9\-]{2,59})$  # top level domain
     ''', re.I | re.VERBOSE)
 
     messages = dict(
@@ -1364,6 +1365,8 @@ class URL(FancyValidator):
         'http://hahaha.ha/bar.html'
         >>> u.to_python('http://xn--m7r7ml7t24h.com')
         'http://xn--m7r7ml7t24h.com'
+        >>> u.to_python('http://xn--c1aay4a.xn--p1ai')
+        'http://xn--c1aay4a.xn--p1ai'
         >>> u.to_python('http://foo.com/test?bar=baz&fleem=morx')
         'http://foo.com/test?bar=baz&fleem=morx'
         >>> u.to_python('http://foo.com/login?came_from=http%3A%2F%2Ffoo.com%2Ftest')
@@ -1406,19 +1409,35 @@ class URL(FancyValidator):
         >>> URL(require_tld=False).to_python('http://localhost')
         'http://localhost'
 
+    By default, internationalized domain names (IDNA) in Unicode will be
+    accepted and encoded to ASCII using Punycode (as described in RFC 3490).
+    You may set allow_idna to False to change this behavior::
+
+        >>> URL(allow_idna=True).to_python(
+        ... u'http://\u0433\u0443\u0433\u043b.\u0440\u0444')
+        'http://xn--c1aay4a.xn--p1ai'
+        >>> URL(allow_idna=True, add_http=True).to_python(
+        ... u'\u0433\u0443\u0433\u043b.\u0440\u0444')
+        'http://xn--c1aay4a.xn--p1ai'
+        >>> URL(allow_idna=False).to_python(
+        ... u'http://\u0433\u0443\u0433\u043b.\u0440\u0444')
+        Traceback (most recent call last):
+        ...
+        Invalid: That is not a valid URL
+
     """
 
-    check_exists = False
     add_http = True
+    allow_idna = True
+    check_exists = False
     require_tld = True
 
     url_re = re.compile(r'''
         ^(http|https)://
-        (?:[%:\w]*@)?                           # authenticator
-        (?P<domain>[a-z0-9][a-z0-9\-]{,62}\.)*  # (sub)domain - alpha followed by 62max chars (63 total)
-        (?P<tld>[a-z]{2,})                      # TLD
-        (?::[0-9]+)?                            # port
-
+        (?:[%:\w]*@)?                              # authenticator
+        (?P<domain>[a-z0-9][a-z0-9\-]{,62}\.)*     # subdomain
+        (?P<tld>[a-z]{2,63}|xn--[a-z0-9\-]{2,59})  # top level domain
+        (?::[0-9]{1,5})?                           # port
         # files/delims/etc
         (?P<path>/[a-z0-9\-\._~:/\?#\[\]@!%\$&\'\(\)\*\+,;=]*)?
         $
@@ -1442,6 +1461,8 @@ class URL(FancyValidator):
         if self.add_http:
             if not self.scheme_re.search(value):
                 value = 'http://' + value
+        if self.allow_idna:
+            value = self._encode_idna(value)
         match = self.scheme_re.search(value)
         if not match:
             raise Invalid(self.message('noScheme', state), value, state)
@@ -1458,6 +1479,18 @@ class URL(FancyValidator):
             self._check_url_exists(value, state)
         return value
 
+    def _encode_idna(self, url):
+        global urlparse
+        if urlparse is None:
+            import urlparse
+        scheme, netloc, path, params, query, fragment = urlparse.urlparse(
+            url)
+        try:
+            return str(urlparse.urlunparse((scheme, netloc.encode('idna'),
+                path, params, query, fragment)))
+        except UnicodeError:
+            return url
+
     def _check_url_exists(self, url, state):
         global httplib, urlparse, socket
         if httplib is None:
@@ -1468,10 +1501,10 @@ class URL(FancyValidator):
             import socket
         scheme, netloc, path, params, query, fragment = urlparse.urlparse(
             url, 'http')
-        if scheme == 'http':
-            ConnClass = httplib.HTTPConnection
-        else:
+        if scheme == 'https':
             ConnClass = httplib.HTTPSConnection
+        else:
+            ConnClass = httplib.HTTPConnection
         try:
             conn = ConnClass(netloc)
             if params:
