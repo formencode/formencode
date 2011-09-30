@@ -3,3 +3,4 @@ FormEncode.egg-info
 docs/_build
 docs/_static
 dist/
+\.tox

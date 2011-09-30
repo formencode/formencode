@@ -8,3 +8,4 @@ Module Contents
 
 .. autoclass:: All
 .. autoclass:: Any
+.. autoclass:: Pipe

@@ -1,9 +1,15 @@
-:mod:`formencode.htmlfill_schemabuilder` -- Read a Schema from an HTML Form
+:mod:`formencode.api` -- Core classes for validation
 ===========================================================================
 
-.. automodule:: formencode.htmlfill_schemabuilder
+.. automodule:: formencode.api
 
 Module Contents
 ---------------
 
-.. autofunction:: parse_schema
+.. autofunction:: is_empty
+.. autofunction:: is_validator
+.. autoclass:: NoDefault
+.. autoclass:: Invalid
+.. autoclass:: Validator
+.. autoclass:: Identity
+.. autoclass:: FancyValidator
