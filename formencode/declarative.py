@@ -216,11 +216,15 @@ class Declarative(object):
         names.sort()
         args = []
         for n in self._repr_vars(names):
-            args.append('%s=%r' % (n, v[n]))
+            if v[n] is self:
+                args.append('%s=self' % n)
+            else:
+                args.append('%s=%r' % (n, v[n]))
         if not args:
             return '<%s>' % name
         else:
             return '<%s %s>' % (name, ' '.join(args))
+    __repr__ = classinstancemethod(__repr__)
 
     def _repr_vars(dictNames):
         names = [n for n in dictNames
@@ -228,6 +232,4 @@ class Declarative(object):
         names.sort()
         return names
     _repr_vars = staticmethod(_repr_vars)
-
-    __repr__ = classinstancemethod(__repr__)
 
