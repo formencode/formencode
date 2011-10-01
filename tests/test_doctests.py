@@ -1,5 +1,10 @@
 import os
 import sys
+try:
+    import doctest
+    doctest.OutputChecker
+except (AttributeError, ImportError): # Python < 2.4
+    import util.doctest24 as doctest
 
 from formencode import compound
 from formencode import htmlfill
@@ -24,13 +29,6 @@ text_files = [
 base = os.path.dirname(
         os.path.dirname(os.path.abspath(__file__)))
 " Used to resolve text files to absolute paths. """
-
-
-try:
-    import doctest
-    doctest.OutputChecker
-except (AttributeError, ImportError): # Python < 2.4
-    import util.doctest24 as doctest
 
 
 def doctest_file(document, verbose, raise_error):
