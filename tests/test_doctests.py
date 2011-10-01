@@ -1,7 +1,6 @@
 import os
 import sys
 
-from formencode import doctest_xml_compare
 from formencode import compound
 from formencode import htmlfill
 from formencode import htmlgen
@@ -32,14 +31,6 @@ try:
     doctest.OutputChecker
 except (AttributeError, ImportError): # Python < 2.4
     import util.doctest24 as doctest
-
-
-#
-#TODO Put this in setup/teardown.
-# Or better yet, find a way to do this with the newer doctest API.
-# Patches doctest.OutputChecker with our own OutputChecker.
-#
-#doctest_xml_compare.install()
 
 
 def doctest_file(document, verbose, raise_error):
@@ -84,8 +75,7 @@ def test_doctests():
 
 
 if __name__ == '__main__':
-    # Call this file directly if you want to test doctests with the xml_compare
-    # monkey patch.
+    # Call this file directly if you want to test doctests.
     args = sys.argv[1:]
     verbose = False
     if '-v' in args:
