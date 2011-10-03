@@ -506,7 +506,7 @@ msgid ""
 "%(length)s characters"
 msgstr ""
 "Une adresse MAC doit contenir 12 chiffres et lettres comprisent entre A "
-"et F ; la valuer saisie a %(length)s caractères"
+"et F ; la valeur saisie a %(length)s caractères"
 
 #: formencode/validators.py:2479
 #, python-format
