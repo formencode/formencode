@@ -965,8 +965,6 @@ class Number(RangeValidator):
         Traceback (most recent call last):
             ...
         Invalid: Please enter a number that is 10.5 or smaller
-        >>> Number().to_python('infinity')
-        inf
 
     """
 

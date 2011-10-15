@@ -159,6 +159,8 @@ class Schema(FancyValidator):
                         continue
                 validator = self.fields[name]
 
+                if state is not None:
+                    state.key = name
                 try:
                     new[name] = validator.to_python(value, state)
                 except Invalid, e:
@@ -180,6 +182,8 @@ class Schema(FancyValidator):
                             message = self.message('missingValue', state)
                         errors[name] = Invalid(message, None, state)
                     else:
+                        if state is not None:
+                            state.key = name
                         try:
                             new[name] = validator.to_python(self.if_key_missing, state)
                         except Invalid, e:
@@ -187,6 +191,8 @@ class Schema(FancyValidator):
                 else:
                     new[name] = validator.if_missing
 
+            if state is not None:
+                state.key = previous_key
             for validator in self.chained_validators:
                 if (not hasattr(validator, 'validate_partial')
                     or not getattr(validator, 'validate_partial_form', False)):
@@ -245,6 +251,8 @@ class Schema(FancyValidator):
                     if not self.filter_extra_fields:
                         new[name] = value
                 else:
+                    if state is not None:
+                        state.key = name
                     try:
                         new[name] = self.fields[name].from_python(value, state)
                     except Invalid, e:
@@ -254,6 +262,8 @@ class Schema(FancyValidator):
 
             for name in unused:
                 validator = self.fields[name]
+                if state is not None:
+                    state.key = name
                 try:
                     new[name] = validator.from_python(None, state)
                 except Invalid, e:
@@ -266,6 +276,9 @@ class Schema(FancyValidator):
 
             pre = self.pre_validators[:]
             pre.reverse()
+            if state is not None:
+                state.key = previous_key
+
             for validator in pre:
                 __traceback_info__ = 'for_python pre_validator %s' % validator
                 new = validator.from_python(new, state)

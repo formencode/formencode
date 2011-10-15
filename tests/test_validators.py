@@ -2,6 +2,7 @@
 
 import datetime
 import unittest
+from nose.plugins.skip import SkipTest
 
 from formencode import validators
 from formencode.validators import Invalid
@@ -157,6 +158,21 @@ class TestIntValidator(unittest.TestCase):
             self.messages('tooLow', None, min=5))
         self.assertEqual(validate(iv, "15"),
             self.messages('tooHigh', None, max=10))
+
+
+class TestNumberValidator(unittest.TestCase):
+    def setUp(self):
+        self.validator = validators.Number
+
+    def test_inf(self):
+        """ Validate infinity if system supports it. """
+        # Ability to convert to infinity depends on your C
+        # Float library as well as the python version.
+        try:
+            inf = float('infinity')
+        except ValueError:
+            raise SkipTest
+        self.assertEqual(self.validator.to_python('infinity'), inf)
 
 
 class TestDateConverterValidator(unittest.TestCase):
