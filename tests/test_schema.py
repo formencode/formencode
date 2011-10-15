@@ -199,6 +199,53 @@ def test_SimpleFormValidator_doc():
     assert f.__doc__ == g.__doc__, "Docstrings don't match!"
 
 
+class State(object):
+    pass
+
+def test_state_manipulation():
+    """
+    Verify that full_dict push and pop works
+    """
+    state = State()
+    old_dict = state.full_dict = {'a': 1}
+    old_key = state.key = 'a'
+    new_dict = {'b': 2 }
+
+    class MyValidator(Validator):
+        check_key = None
+        pre_validator = False
+        post_validator = False
+        __unpackargs__ = ('check_key',)
+        def to_python(self, value, state):
+            if not self.pre_validator:
+                assert getattr(state, 'full_dict', {}) == new_dict, "full_dict not added"
+            assert state.key == self.check_key, "key not updated"
+
+            return value
+
+        def from_python(self, value, state):
+            if not self.post_validator:
+                assert getattr(state, 'full_dict', {}) == new_dict, "full_dict not added"
+            assert state.key == self.check_key, "key not updated"
+
+            return value
+
+    s = Schema(if_key_missing = None, b = MyValidator('b'), c = MyValidator('c'), 
+               pre_validators=[MyValidator('a', pre_validator=True)], 
+               chained_validators=[MyValidator('a', post_validator=True)])
+
+    s.to_python(new_dict, state)
+
+
+    assert state.full_dict == old_dict, "full_dict not restored"
+    assert state.key == old_key, "key not restored"
+
+    s.from_python(new_dict, state)
+
+    assert state.full_dict == old_dict, "full_dict not restored"
+    assert state.key == old_key, "key not restored"
+
+
 class TestAtLeastOneCheckboxIsChecked(object):
     """ tests to address sourceforge bug #1777245
 
