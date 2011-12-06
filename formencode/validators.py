@@ -277,9 +277,10 @@ class Constant(FancyValidator):
 
     This is only really useful for funny situations, like::
 
-      fromEmailValidator = ValidateAny(
-                               ValidEmailAddress(),
-                               Constant('unknown@localhost'))
+      # Any evaluates sub validators in reverse order for to_python
+      fromEmailValidator = Any( 
+                            Constant('unknown@localhost'),
+                               Email())
 
     In this case, the if the email is not valid
     ``'unknown@localhost'`` will be used instead.  Of course, you
