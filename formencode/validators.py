@@ -18,8 +18,10 @@ except NameError: # Python < 2.4
 try:
     import DNS
     DNS.DiscoverNameServers()
+    # DNS.DiscoverNameServers() raises IOError when network isn't available
+    #  on BSD/Mac OS X
     have_dns = True
-except ImportError:
+except (IOError, ImportError):
     have_dns = False
 
 # These are only imported when needed
@@ -278,7 +280,7 @@ class Constant(FancyValidator):
     This is only really useful for funny situations, like::
 
       # Any evaluates sub validators in reverse order for to_python
-      fromEmailValidator = Any( 
+      fromEmailValidator = Any(
                             Constant('unknown@localhost'),
                                Email())
 
