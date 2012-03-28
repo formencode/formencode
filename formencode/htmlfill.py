@@ -325,6 +325,8 @@ class FillingParser(RewritingParser):
             self.handle_end_textarea()
         elif tag == 'select':
             self.handle_end_select()
+        elif tag == 'form:error':
+            self.handle_end_error()
         elif tag == 'form:iferror':
             self.handle_end_iferror()
 
@@ -365,6 +367,9 @@ class FillingParser(RewritingParser):
             self.write_text(error)
         self.skip_next = True
         self.used_errors.add(name)
+
+    def handle_end_error(self):
+        self.skip_next = True
 
     def handle_input(self, attrs, startend):
         t = (self.get_attr(attrs, 'type') or 'text').lower()
