@@ -8,7 +8,7 @@ formencode-discuss@lists.sf.net:
   <http://lists.sourceforge.net/mailman/listinfo/formencode-discuss>`__
 
 * `Archives
-  <http://webwareforpython.org/archives/list/formencode-discuss.en.html>`__
+  <http://sourceforge.net/mailarchive/forum.php?forum_name=formencode-discuss>`__
 
 Updates to the repository are emailed to the (inaccurately named)
 mailing list formencode-cvs@lists.sf.net:

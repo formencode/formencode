@@ -160,6 +160,25 @@ def test_image_submit():
                             defaults={'image-submit': 'blahblah'})
             == '<input name="image-submit" type="image" src="foo.jpg" value="bar">')
 
+def test_checkbox():
+    assert (htmlfill.render('<input name="checkbox" type="checkbox" value="bar">',
+                            defaults={'checkbox': 'bar'})
+            == '<input name="checkbox" type="checkbox" value="bar" checked="checked">')
+    assert (htmlfill.render('<input name="checkbox" type="checkbox">',
+                            defaults={'checkbox': ''})
+            == '<input name="checkbox" type="checkbox">')
+    assert (htmlfill.render('<input name="checkbox" type="checkbox">',
+                            defaults={'checkbox': ''}, checkbox_checked_if_present=True)
+            == '<input name="checkbox" type="checkbox" checked="checked">')
+    assert (htmlfill.render('<input name="checkbox" type="checkbox" value="bar">',
+                            defaults={'checkbox': ''}, checkbox_checked_if_present=True)
+            == '<input name="checkbox" type="checkbox" value="bar">')
+    assert (htmlfill.render('<input name="checkbox" type="checkbox" value="">',
+                            defaults={'checkbox': ''}, checkbox_checked_if_present=True)
+            == '<input name="checkbox" type="checkbox" value="" checked="checked">')
+    assert (htmlfill.render('<input name="checkbox" type="checkbox" value="">',
+                            defaults={'checkbox': ''})
+            == '<input name="checkbox" type="checkbox" value="">')
 
 def test_unicode():
     assert (htmlfill.render(u'<input type="checkbox" name="tags" value="2" />',
