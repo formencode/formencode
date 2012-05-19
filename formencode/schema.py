@@ -432,8 +432,8 @@ class SimpleFormValidator(FancyValidator):
       Traceback (most recent call last):
           ...
       Invalid: state: You must enter a state
-      >>> validator.to_python({'state': 'IL'}, None)
-      {'country': 'US', 'state': 'IL'}
+      >>> sorted(validator.to_python({'state': 'IL'}, None).items())
+      [('country', 'US'), ('state', 'IL')]
 
     The validate function can either return a single error message
     (that applies to the whole form), a dictionary that applies to the
