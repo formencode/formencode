@@ -110,6 +110,12 @@ class RewritingParser(HTMLParser.HTMLParser):
     def write_text(self, text):
         self._content.append(text)
 
+    def has_attr(self, attr, name):
+        for n, value in attr:
+            if n.lower() == name:
+                return True
+        return False
+
     def get_attr(self, attr, name, default=None):
         for n, value in attr:
             if n.lower() == name:

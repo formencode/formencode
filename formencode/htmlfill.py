@@ -19,9 +19,10 @@ __all__ = ['render', 'htmlliteral', 'default_formatter',
 def render(form, defaults=None, errors=None, use_all_keys=False,
            error_formatters=None, add_attributes=None,
            auto_insert_errors=True, auto_error_formatter=None,
-           text_as_default=False, listener=None, encoding=None,
+           text_as_default=False, checkbox_checked_if_present=False,
+           listener=None, encoding=None,
            error_class='error', prefix_error=True,
-           force_defaults=True):
+           force_defaults=True,):
     """
     Render the ``form`` (which should be a string) given the ``defaults``
     and ``errors``.  Defaults are the values that go in the input fields
@@ -57,6 +58,16 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     If ``text_as_default`` is true (default false) then ``<input
     type="unknown">`` will be treated as text inputs.
 
+    If ``checkbox_checked_if_present`` is true (default false) then
+    ``<input type="checkbox">`` will be set to ``checked`` if any
+    corresponding key is found in the ``defaults`` dictionary, even
+    a value that evaluates to False (like an empty string).  This
+    can be used to support pre-filling of checkboxes that do not have
+    a ``value`` attribute, since browsers typically will only send
+    the name of the checkbox in the form submission if the checkbox
+    is checked, so simply the presence of the key would mean the box
+    should be checked.
+
     ``listener`` can be an object that watches fields pass; the only
     one currently is in ``htmlfill_schemabuilder.SchemaBuilder``
 
@@ -85,6 +96,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
         add_attributes=add_attributes,
         auto_error_formatter=auto_error_formatter,
         text_as_default=text_as_default,
+        checkbox_checked_if_present=checkbox_checked_if_present,
         listener=listener, encoding=encoding,
         prefix_error=prefix_error,
         error_class=error_class,
@@ -200,7 +212,8 @@ class FillingParser(RewritingParser):
                  error_formatters=None, error_class='error',
                  add_attributes=None, listener=None,
                  auto_error_formatter=None,
-                 text_as_default=False, encoding=None, prefix_error=True,
+                 text_as_default=False, checkbox_checked_if_present=False,
+                 encoding=None, prefix_error=True,
                  force_defaults=True):
         RewritingParser.__init__(self)
         self.source = None
@@ -229,6 +242,7 @@ class FillingParser(RewritingParser):
         self.listener = listener
         self.auto_error_formatter = auto_error_formatter
         self.text_as_default = text_as_default
+        self.checkbox_checked_if_present = checkbox_checked_if_present
         self.encoding = encoding
         self.prefix_error = prefix_error
         self.force_defaults = force_defaults
@@ -403,7 +417,10 @@ class FillingParser(RewritingParser):
             else:
                 selected = self.get_attr(attrs, 'checked')
             if not self.get_attr(attrs, 'value'):
-                selected = value
+                if self.checkbox_checked_if_present:
+                    selected = name in self.defaults
+                else:
+                    selected = value
             elif self.selected_multiple(value,
                                         self.get_attr(attrs, 'value', '')):
                 selected = True

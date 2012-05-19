@@ -373,17 +373,17 @@ class PostalCodeInCountryFormat(FancyValidator):
     ::
 
         >>> fs = PostalCodeInCountryFormat('country', 'zip')
-        >>> fs.to_python(dict(country='DE', zip='30167'))
-        {'country': 'DE', 'zip': '30167'}
+        >>> sorted(fs.to_python(dict(country='DE', zip='30167')).items())
+        [('country', 'DE'), ('zip', '30167')]
         >>> fs.to_python(dict(country='DE', zip='3008'))
         Traceback (most recent call last):
             ...
         Invalid: Given postal code does not match the country's format.
-        >>> fs.to_python(dict(country='PL', zip='34343'))
-        {'country': 'PL', 'zip': '34-343'}
+        >>> sorted(fs.to_python(dict(country='PL', zip='34343')).items())
+        [('country', 'PL'), ('zip', '34-343')]
         >>> fs = PostalCodeInCountryFormat('staat', 'plz')
-        >>> fs.to_python(dict(staat='GB', plz='l1a 3gr'))
-        {'staat': 'GB', 'plz': 'L1A 3GR'}
+        >>> sorted(fs.to_python(dict(staat='GB', plz='l1a 3gr')).items())
+        [('plz', 'L1A 3GR'), ('staat', 'GB')]
     """
 
     country_field = 'country'

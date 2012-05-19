@@ -6,7 +6,7 @@ version = '1.2.4'
 if not '2.3' <= sys.version < '3.0':
     raise ImportError('Python version not supported')
 
-tests_require = ['nose']
+tests_require = ['nose', 'pycountry', 'pyDNS']
 if sys.version < '2.5':
     tests_require.append('elementtree')
 
@@ -19,9 +19,7 @@ FormEncode validates and converts nested structures.  It allows for
 a declarative form of defining the validation, and decoupled processes
 for filling and generating forms.
 
-It has a `subversion repository
-<http://svn.formencode.org/FormEncode/trunk#egg=FormEncode-dev>`_ that
-you can install from with ``easy_install FormEncode==dev``
+The official repo is at BitBucket: https://bitbucket.org/formencode/official-formencode/
 """,
       classifiers=["Development Status :: 4 - Beta",
                    "Intended Audience :: Developers",

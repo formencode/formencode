@@ -2670,8 +2670,8 @@ class FieldsMatch(FormValidator):
     ::
 
         >>> f = FieldsMatch('pass', 'conf')
-        >>> f.to_python({'pass': 'xx', 'conf': 'xx'})
-        {'conf': 'xx', 'pass': 'xx'}
+        >>> sorted(f.to_python({'pass': 'xx', 'conf': 'xx'}).items())
+        [('conf', 'xx'), ('pass', 'xx')]
         >>> f.to_python({'pass': 'xx', 'conf': 'yy'})
         Traceback (most recent call last):
             ...
@@ -2739,8 +2739,8 @@ class CreditCardValidator(FormValidator):
     ::
 
         >>> cc = CreditCardValidator()
-        >>> cc.to_python({'ccType': 'visa', 'ccNumber': '4111111111111111'})
-        {'ccNumber': '4111111111111111', 'ccType': 'visa'}
+        >>> sorted(cc.to_python({'ccType': 'visa', 'ccNumber': '4111111111111111'}).items())
+        [('ccNumber', '4111111111111111'), ('ccType', 'visa')]
         >>> cc.to_python({'ccType': 'visa', 'ccNumber': '411111111111111'})
         Traceback (most recent call last):
             ...
@@ -2863,8 +2863,8 @@ class CreditCardExpires(FormValidator):
     ::
 
         >>> ed = CreditCardExpires()
-        >>> ed.to_python({'ccExpiresMonth': '11', 'ccExpiresYear': '2250'})
-        {'ccExpiresYear': '2250', 'ccExpiresMonth': '11'}
+        >>> sorted(ed.to_python({'ccExpiresMonth': '11', 'ccExpiresYear': '2250'}).items())
+        [('ccExpiresMonth', '11'), ('ccExpiresYear', '2250')]
         >>> ed.to_python({'ccExpiresMonth': '10', 'ccExpiresYear': '2005'})
         Traceback (most recent call last):
             ...
@@ -2942,8 +2942,8 @@ class CreditCardSecurityCode(FormValidator):
     ::
 
         >>> code = CreditCardSecurityCode()
-        >>> code.to_python({'ccType': 'visa', 'ccCode': '111'})
-        {'ccType': 'visa', 'ccCode': '111'}
+        >>> sorted(code.to_python({'ccType': 'visa', 'ccCode': '111'}).items())
+        [('ccCode', '111'), ('ccType', 'visa')]
         >>> code.to_python({'ccType': 'visa', 'ccCode': '1111'})
         Traceback (most recent call last):
             ...
