@@ -478,6 +478,13 @@ class TestOpenIdValidator(unittest.TestCase):
         self.assertEqual(validator.to_python("!!1000"),
                          "xri://!!1000")
 
+class TestOneOfValidator(unittest.TestCase):
+    def test_unicode_list(self):
+        o = validators.OneOf([u'ö', u'a'])
+        self.assertRaises(Invalid, o.to_python, u"ä")
+    def test_ascii_list(self):
+        o = validators.OneOf(['a', 'b'])
+        self.assertRaises(Invalid, o.to_python, 'c')
 
 class TestIPAddressValidator(unittest.TestCase):
 
