@@ -1,6 +1,6 @@
 FormEncode.egg-info
-\.pyc
+*.pyc
 docs/_build
 docs/_static
 dist/
-\.tox
+*.tox
