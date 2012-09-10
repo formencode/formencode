@@ -68,7 +68,12 @@ Project Hosting
    :alt: Hosted by SourceForge
 
 .. image:: _static/bitbucket.png
+   :align: left
    :height: 40
    :width: 127
    :alt: Hosted by Bitbucket
 
+.. image:: _static/bitbucket.png
+   :height: 40
+   :width: 90
+   :alt: Hosted by GitHub
