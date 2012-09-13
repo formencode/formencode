@@ -1,3 +1,5 @@
+import unittest
+
 from formencode import validators, foreach
 from formencode.schema import Schema, merge_dicts, SimpleFormValidator
 from formencode.api import *
@@ -73,7 +75,7 @@ class BadCase(DecodeCase):
         print repr(self.raw_input)
         try:
             print repr(self.schema.to_python(self.input))
-        except Invalid, e:
+        except Invalid as e:
             actual = e.unpack_errors()
             assert actual == self.output
         else:
@@ -173,11 +175,11 @@ def test_multiple_chained_validators_errors():
     s = ChainedTest()
     try:
         s.to_python({'a':'1', 'a_confirm':'2', 'b':'3', 'b_confirm':'4'})
-    except Invalid, e:
+    except Invalid as e:
         assert 'a_confirm' in e.error_dict and 'b_confirm' in e.error_dict
     try:
         s.to_python({})
-    except Invalid, e:
+    except Invalid as e:
         pass
     else:
         assert False
@@ -269,9 +271,52 @@ class TestAtLeastOneCheckboxIsChecked(object):
         # <input type="checkbox" name="agree" value="yes">
         try:
             self.schema.to_python({})
-        except Invalid, exc:
+        except Invalid as exc:
             error_message = exc.error_dict['agree'].msg
             assert self.not_empty_messages['missing'] == error_message, \
                 error_message
         else:
             assert False, 'missing input not detected'
+
+
+class TestStrictSchemaWithMultipleEqualInputFields(unittest.TestCase):
+    """Tests to address github bug #13"""
+    
+    def setUp(self):
+        
+        class StrictSchema(Schema):
+            allow_extra_fields = False
+        
+        class IntegerTestSchema(StrictSchema):
+            field = validators.Int(not_empty=True)
+        
+        class StringTestSchema(StrictSchema):
+            field = validators.UnicodeString(not_empty=True)
+        
+        class CorrectStringTestSchema(StrictSchema):
+            field = foreach.ForEach(validators.UnicodeString(not_empty=True))
+            
+        self.int_schema = IntegerTestSchema()
+        self.string_schema = StringTestSchema()
+        self.correct_schema = CorrectStringTestSchema
+    
+    
+    def test_single_integer_value(self):
+        params = cgi_parse('field=111')
+        data = self.int_schema.to_python(params)
+    
+    def test_multiple_integer_value(self):
+        params = cgi_parse('field=111&field=222')
+        self.assertRaises(Invalid, self.int_schema.to_python, params)
+        
+    def test_single_string_value(self):
+        params = cgi_parse('field=string')
+        data = self.string_schema.to_python(params)
+    
+    def test_multiple_string_value(self):
+        params = cgi_parse('field=string1&field=string2')
+        self.assertRaises(Invalid, self.string_schema.to_python, params)
+    
+    def test_correct_multiple_string_value(self):
+        params = cgi_parse('field=string1&field=string2')
+        data = self.correct_schema.to_python(params)

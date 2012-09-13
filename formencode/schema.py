@@ -1,10 +1,13 @@
+import warnings
 
 from interfaces import *
 from api import *
 from api import _
+import foreach
 import declarative
-import warnings
 from exc import FERuntimeWarning
+
+
 
 __all__ = ['Schema']
 
@@ -65,7 +68,8 @@ class Schema(FancyValidator):
         notExpected=_('The input field %(name)s was not expected.'),
         missingValue=_('Missing value'),
         badDictType=_('The input must be dict-like'
-            ' (not a %(type)s: %(value)r)'))
+            ' (not a %(type)s: %(value)r)'),
+        singleValueExpected=_('Please provide only one value'),)
 
     __mutableattributes__ = ('fields', 'chained_validators',
                              'pre_validators')
@@ -158,12 +162,38 @@ class Schema(FancyValidator):
                             new[name] = value
                         continue
                 validator = self.fields[name]
+                
+                # Some data types require an extra check to be performed
+                # in order to guarantee unambiguous connection between 
+                # input and output data.
+                # Let's say we have to validate two different URLS:
+                # 1. "site.com/?username=['John', 'Mike']" and
+                # 2. "site.com/?username=John&username=Mike"
+                # Without the following check,
+                # formencode.validators.String (and all other inherited validators)
+                # will set the username value to "['John', 'Mike']" for both URLs.
+                # In terms of URL design, it is considered bad if the same
+                # resource is accessible by two different URLs.
+                # Therefore, if you really want to validate a field with multiple
+                # values, you have to set self.allow_extra_fields to True or
+                # wrap the username validator with formencode.validators.ForEach()
+                if not self.allow_extra_fields and isinstance(value, (list, tuple)):
+                    try:
+                        bad_type = not issubclass(validator, foreach.ForEach)
+                    except TypeError:
+                        # TypeError: issubclass() arg 1 must be a class
+                        bad_type = not isinstance(validator, foreach.ForEach)
+                    if bad_type:
+                        raise Invalid(
+                            self.message('singleValueExpected', state),
+                            value_dict, state
+                            )
 
                 if state is not None:
                     state.key = name
                 try:
                     new[name] = validator.to_python(value, state)
-                except Invalid, e:
+                except Invalid as e:
                     errors[name] = e
 
             for name in unused:
@@ -186,7 +216,7 @@ class Schema(FancyValidator):
                             state.key = name
                         try:
                             new[name] = validator.to_python(self.if_key_missing, state)
-                        except Invalid, e:
+                        except Invalid as e:
                             errors[name] = e
                 else:
                     new[name] = validator.if_missing
@@ -199,7 +229,7 @@ class Schema(FancyValidator):
                     continue
                 try:
                     validator.validate_partial(value_dict, state)
-                except Invalid, e:
+                except Invalid as e:
                     sub_errors = e.unpack_errors()
                     if not isinstance(sub_errors, dict):
                         # Can't do anything here
@@ -255,7 +285,7 @@ class Schema(FancyValidator):
                         state.key = name
                     try:
                         new[name] = self.fields[name].from_python(value, state)
-                    except Invalid, e:
+                    except Invalid as e:
                         errors[name] = e
 
             del __traceback_info__
@@ -266,7 +296,7 @@ class Schema(FancyValidator):
                     state.key = name
                 try:
                     new[name] = validator.from_python(None, state)
-                except Invalid, e:
+                except Invalid as e:
                     errors[name] = e
 
             if errors:
