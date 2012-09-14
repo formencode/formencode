@@ -6,7 +6,7 @@ import re
 
 try:
     set
-except NameError: # Python < 2.4
+except NameError:  # Python < 2.4
     from sets import Set as set
 
 from formencode.rewritingparser import RewritingParser, html_quote
@@ -474,7 +474,7 @@ class FillingParser(RewritingParser):
         if self.prefix_error:
             self.write_marker(name)
         if (self.error_class
-            and self.errors.get(name)):
+                and self.errors.get(name)):
             self.add_class(attrs, self.error_class)
         value = self.defaults.get(name, '')
         if value or self.force_defaults:
@@ -502,7 +502,7 @@ class FillingParser(RewritingParser):
         if name and self.prefix_error:
             self.write_marker(name)
         if (self.error_class
-            and self.errors.get(name)):
+                and self.errors.get(name)):
             self.add_class(attrs, self.error_class)
         self.in_select = self.get_attr(attrs, 'name', False)
         self.write_tag('select', attrs)
@@ -519,7 +519,7 @@ class FillingParser(RewritingParser):
     def handle_option(self, attrs):
         assert self.in_select is not None, (
             "<option> outside of <select> at %i:%i" % self.getpos())
-        if self.in_select != False:
+        if self.in_select is not False:
             if self.force_defaults or self.in_select in self.defaults:
                 if self.selected_multiple(self.defaults.get(self.in_select),
                                           self.get_attr(attrs, 'value', '')):

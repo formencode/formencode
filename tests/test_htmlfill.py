@@ -8,12 +8,14 @@ import sys
 from htmlentitydefs import name2codepoint
 try:
     from xml.etree.ElementTree import ParseError
-except ImportError: # Python < 2.7
+    assert ParseError  # silence pyflakes
+except ImportError:  # Python < 2.7
     from xml.parsers.expat import ExpatError as ParseError
 
 
 try:
     import xml.etree.ElementTree as ET
+    assert ET  # silence pyflakes
 except ImportError:
     import elementtree.ElementTree as ET
 
@@ -65,8 +67,10 @@ def run_filename(filename):
     p.feed(template)
     p.close()
     output = p.text()
+
     def reporter(v):
         print v
+
     try:
         output_xml = ET.XML(output)
         expected_xml = ET.XML(expected)
@@ -160,6 +164,7 @@ def test_image_submit():
                             defaults={'image-submit': 'blahblah'})
             == '<input name="image-submit" type="image" src="foo.jpg" value="bar">')
 
+
 def test_checkbox():
     assert (htmlfill.render('<input name="checkbox" type="checkbox" value="bar">',
                             defaults={'checkbox': 'bar'})
@@ -179,6 +184,7 @@ def test_checkbox():
     assert (htmlfill.render('<input name="checkbox" type="checkbox" value="">',
                             defaults={'checkbox': ''})
             == '<input name="checkbox" type="checkbox" value="">')
+
 
 def test_unicode():
     assert (htmlfill.render(u'<input type="checkbox" name="tags" value="2" />',
@@ -388,6 +394,7 @@ def test_force_defaults_select():
     rendered_html = htmlfill.render(html, defaults=dict())
     assert expected_html == rendered_html, rendered_html
 
+
 def test_select_empty_option_value_selected():
     html = """
 <select name="select-1" class="my_select">
@@ -401,6 +408,7 @@ def test_select_empty_option_value_selected():
 """
     rendered_html = htmlfill.render(html, defaults={"select-1": ""})
     assert expected_html == rendered_html, rendered_html
+
 
 def test_select_empty_option_value_not_selected():
     html = """
