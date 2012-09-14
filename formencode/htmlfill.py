@@ -521,7 +521,7 @@ class FillingParser(RewritingParser):
             "<option> outside of <select> at %i:%i" % self.getpos())
         if self.in_select != False:
             if self.force_defaults or self.in_select in self.defaults:
-                if self.selected_multiple(self.defaults.get(self.in_select, ''),
+                if self.selected_multiple(self.defaults.get(self.in_select),
                                           self.get_attr(attrs, 'value', '')):
                     self.set_attr(attrs, 'selected', 'selected')
                     self.add_key(self.in_select)
@@ -537,7 +537,7 @@ class FillingParser(RewritingParser):
         identity is used.
         """
         if obj is None:
-            return value == ""
+            return False
         if isinstance(obj, (str, unicode)):
             return obj == value
         if hasattr(obj, '__contains__'):

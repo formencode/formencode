@@ -388,6 +388,34 @@ def test_force_defaults_select():
     rendered_html = htmlfill.render(html, defaults=dict())
     assert expected_html == rendered_html, rendered_html
 
+def test_select_empty_option_value_selected():
+    html = """
+<select name="select-1" class="my_select">
+  <option value="">this is option-1</option>
+</select>
+"""
+    expected_html = """
+<select name="select-1" class="my_select">
+  <option value="" selected="selected">this is option-1</option>
+</select>
+"""
+    rendered_html = htmlfill.render(html, defaults={"select-1": ""})
+    assert expected_html == rendered_html, rendered_html
+
+def test_select_empty_option_value_not_selected():
+    html = """
+<select name="select-1" class="my_select">
+  <option value="">this is option-1</option>
+</select>
+"""
+    expected_html = """
+<select name="select-1" class="my_select">
+  <option value="">this is option-1</option>
+</select>
+"""
+    rendered_html = htmlfill.render(html, defaults={})
+    assert expected_html == rendered_html, rendered_html
+
 
 def test_script_quoting():
     html = """
