@@ -73,7 +73,7 @@ Project Hosting
    :width: 127
    :alt: Hosted by Bitbucket
 
-.. image:: _static/bitbucket.png
+.. image:: _static/github.png
    :height: 40
    :width: 90
    :alt: Hosted by GitHub
