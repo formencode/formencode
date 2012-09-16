@@ -1,6 +1,6 @@
 import unittest
 
-from formencode import validators, foreach
+from formencode import validators, foreach, compound
 from formencode.schema import Schema, merge_dicts, SimpleFormValidator
 from formencode.api import *
 from formencode.variabledecode import NestedVariables
@@ -293,12 +293,21 @@ class TestStrictSchemaWithMultipleEqualInputFields(unittest.TestCase):
         class StringTestSchema(StrictSchema):
             field = validators.UnicodeString(not_empty=True)
         
-        class CorrectStringTestSchema(StrictSchema):
+        class CorrectForEachStringTestSchema(StrictSchema):
             field = foreach.ForEach(validators.UnicodeString(not_empty=True))
+            
+        class CorrectSetTestSchema(StrictSchema):
+            field = validators.Set(not_empty=True)
+
+        class CorrectSetTestPipeSchema(StrictSchema):
+            field = compound.Pipe(validators.Set(not_empty=True), foreach.ForEach(validators.UnicodeString(not_empty=True)))
+         
             
         self.int_schema = IntegerTestSchema()
         self.string_schema = StringTestSchema()
-        self.correct_schema = CorrectStringTestSchema
+        self.foreach_schema = CorrectForEachStringTestSchema()
+        self.set_schema = CorrectSetTestSchema()
+        self.pipe_schema = CorrectSetTestPipeSchema()
     
     
     def test_single_integer_value(self):
@@ -317,6 +326,14 @@ class TestStrictSchemaWithMultipleEqualInputFields(unittest.TestCase):
         params = cgi_parse('field=string1&field=string2')
         self.assertRaises(Invalid, self.string_schema.to_python, params)
     
-    def test_correct_multiple_string_value(self):
+    def test_correct_multiple_string_value_foreach(self):
         params = cgi_parse('field=string1&field=string2')
-        data = self.correct_schema.to_python(params)
+        data = self.foreach_schema.to_python(params)
+        
+    def test_correct_multiple_string_value_set(self):
+        params = cgi_parse('field=string1&field=string2')
+        data = self.set_schema.to_python(params)
+
+    def test_correct_multiple_string_value_pipe(self):
+        params = cgi_parse('field=string1&field=string2')
+        data = self.pipe_schema.to_python(params)

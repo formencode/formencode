@@ -10,5 +10,7 @@ dist/
 # When you run ``python setup.py [test|nosetests]``
 # from project's root tree, the script checks [and downloads, if necessary] 
 # packages which are specified in setup.py -> tests_require.
-# Therefore we must explicitly ignore all downloaded *.egg packages.
+# Therefore we must explicitly ignore all downloaded *.egg packages
+# as well as all coverage-related files.
 *.egg
+*coverage*
