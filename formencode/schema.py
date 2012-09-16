@@ -385,11 +385,6 @@ class Schema(FancyValidator):
                 accept_list = self.if_validator_accepts_list(validator, isinstance)
                 if accept_list:
                     self.fields_accept_list_values.add(name)
-                else:
-                    try:
-                        self.fields_accept_list_values.remove(name)
-                    except KeyError:
-                        pass
             else:
                 self.fields_accept_list_values.add(name)
             
@@ -399,11 +394,6 @@ class Schema(FancyValidator):
                 accept_list = cls.if_validator_accepts_list(validator, isinstance)
                 if accept_list:
                     cls.fields_accept_list_values.add(name)
-                else:
-                    try:
-                        cls.fields_accept_list_values.remove(name)
-                    except KeyError:
-                        pass
             else:
                 cls.fields_accept_list_values.add(name)
 
