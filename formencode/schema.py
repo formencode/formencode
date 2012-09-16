@@ -380,7 +380,6 @@ class Schema(FancyValidator):
         if self is not None:
             if self.fields is cls.fields:
                 self.fields = cls.fields.copy()
-                self.accept_list_values = cls.fields_accept_list_values.copy()
             self.fields[name] = validator
             if not self.allow_extra_fields:
                 accept_list = self.if_validator_accepts_list(validator, isinstance)
