@@ -16,10 +16,9 @@ except NameError: # Python < 2.4
     from sets import Set as set
 
 try:
-    import DNS
-    DNS.DiscoverNameServers()
-    # DNS.DiscoverNameServers() raises IOError when network isn't available
-    #  on BSD/Mac OS X
+    import dns.resolver
+    import dns.exception
+    from encodings import idna
     have_dns = True
 except (IOError, ImportError):
     have_dns = False
@@ -1226,7 +1225,7 @@ class Email(FancyValidator):
 
     If you pass ``resolve_domain=True``, then it will try to resolve
     the domain name to make sure it's valid.  This takes longer, of
-    course.  You must have the `pyDNS <http://pydns.sf.net>`__ modules
+    course. You must have the `dnspython <http://www.dnspython.org/>`__ modules
     installed to look up DNS (MX and A) records.
 
     ::
@@ -1265,7 +1264,7 @@ class Email(FancyValidator):
         'doesnotexist@colorstudy.com'
         >>> e.to_python('test@nyu.edu')
         'test@nyu.edu'
-        >>> # NOTE: If you do not have PyDNS installed this example won't work:
+        >>> # NOTE: If you do not have dnspython installed this example won't work:
         >>> e.to_python('test@thisdomaindoesnotexistithinkforsure.com')
         Traceback (most recent call last):
             ...
@@ -1303,10 +1302,10 @@ class Email(FancyValidator):
         if self.resolve_domain:
             if not have_dns:
                 warnings.warn(
-                    "pyDNS <http://pydns.sf.net> is not installed on"
-                    " your system (or the DNS package cannot be found)."
-                    "  I cannot resolve domain names in addresses")
-                raise ImportError("no module named DNS")
+                    "dnspython <http://www.dnspython.org/> is not installed on"
+                    " your system (or the dns.resolver package cannot be found)."
+                    " I cannot resolve domain names in addresses")
+                raise ImportError("no module named dns.resolver")
 
     def validate_python(self, value, state):
         if not value:
@@ -1321,29 +1320,40 @@ class Email(FancyValidator):
             raise Invalid(
                 self.message('badUsername', state, username=username),
                 value, state)
-        if not self.domainRE.search(domain):
+        try:
+            idna_domain = '.'.join([idna.ToASCII(l) for l in domain.split('.')])
+        except UnicodeError:
+            # UnicodeError: label empty or too long
+            # This exception might happen if we have an invalid domain name part 
+            # (for example test@.foo.bar.com)
+            raise Invalid(
+                self.message('badDomain', state, domain=domain),
+                value, state)
+        if not self.domainRE.search(idna_domain):
             raise Invalid(
                 self.message('badDomain', state, domain=domain),
                 value, state)
         if self.resolve_domain:
-            assert have_dns, "pyDNS should be available"
+            assert have_dns, "dnspython should be available"
             global socket
             if socket is None:
                 import socket
             try:
-                answers = DNS.DnsRequest(domain, qtype='a',
-                    timeout=self.resolve_timeout).req().answers
-                if answers:
-                    answers = DNS.DnsRequest(domain, qtype='mx',
-                        timeout=self.resolve_timeout).req().answers
-            except (socket.error, DNS.DNSError), e:
+                try:
+                    a = dns.resolver.query(domain, 'MX')
+                except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer), e:
+                    try:
+                        a = dns.resolver.query(domain, 'A')
+                    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer), e:
+                        raise Invalid(
+                            self.message('domainDoesNotExist', state, domain=domain),
+                            value, state
+                        )
+            except (socket.error, dns.exception.DNSException), e:
                 raise Invalid(
                     self.message('socketError', state, error=e),
-                    value, state)
-            if not answers:
-                raise Invalid(
-                    self.message('domainDoesNotExist', state, domain=domain),
-                    value, state)
+                    value, state
+                )
 
     def _to_python(self, value, state):
         return value.strip()

@@ -6,7 +6,7 @@ version = '1.2.4'
 if not '2.3' <= sys.version < '3.0':
     raise ImportError('Python version not supported')
 
-tests_require = ['nose', 'pycountry', 'pyDNS']
+tests_require = ['nose', 'pycountry', 'dnspython']
 if sys.version < '2.5':
     tests_require.append('elementtree')
 
