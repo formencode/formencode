@@ -438,6 +438,11 @@ Then a form <input type="text" name="name" value="foo">
     assert expected_html == rendered_html, rendered_html
 
 
+def test_error_class_textarea():
+    assert (htmlfill.render('<textarea name="content"></textarea>', errors={'content': 'error'})
+            == '<!-- for: content -->\n<span class="error-message">error</span><br />\n<textarea name="content" class="error"></textarea>')
+
+
 def test_mix_str_and_unicode():
     html = '<input type="text" name="cheese">'
     uhtml = unicode(html)
