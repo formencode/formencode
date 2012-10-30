@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # FormEncode documentation build configuration file, created by
-# sphinx-quickstart on Tue Aug 30 08:48:54 2011.
+# sphinx-quickstart on Tue Aug 30 2011.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
