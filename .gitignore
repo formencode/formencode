@@ -4,11 +4,13 @@ docs/_build
 dist/
 *.tox
 
-# PyCharm users, please keep your data locally.
+# IDE users, please keep your data locally
 .idea/
+.project
+.pydevproject
 
 # When you run ``python setup.py [test|nosetests]``
-# from project's root tree, the script checks [and downloads, if necessary] 
+# from project's root tree, the script checks [and downloads, if necessary]
 # packages which are specified in setup.py -> tests_require.
 # Therefore we must explicitly ignore all downloaded *.egg packages.
 *.egg

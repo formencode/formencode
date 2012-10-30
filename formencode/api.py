@@ -90,25 +90,25 @@ class Invalid(Exception):
     This is raised in response to invalid input.  It has several
     public attributes:
 
-    msg:
+    ``msg``:
         The message, *without* values substituted.  For instance, if
         you want HTML quoting of values, you can apply that.
-    substituteArgs:
-        The arguments (a dictionary) to go with `msg`.
-    str(self):
+    ``substituteArgs``:
+        The arguments (a dictionary) to go with ``msg``.
+    ``str(self)``:
         The message describing the error, with values substituted.
-    value:
+    ``value``:
         The offending (invalid) value.
-    state:
+    ``state``:
         The state that went with this validator.  This is an
         application-specific object.
-    error_list:
+    ``error_list``:
         If this was a compound validator that takes a repeating value,
         and sub-validator(s) had errors, then this is a list of those
         exceptions.  The list will be the same length as the number of
         values -- valid values will have None instead of an exception.
-    error_dict:
-        Like `error_list`, but for dictionary compound validators.
+    ``error_dict``:
+        Like ``error_list``, but for dictionary compound validators.
     """
 
     def __init__(self, msg,
@@ -167,9 +167,9 @@ class Invalid(Exception):
                     result[name] = item.unpack_errors()
             if encode_variables:
                 import variabledecode
-                result = variabledecode.variable_encode(result, add_repetitions=False,
-                                                        dict_char=dict_char,
-                                                        list_char=list_char)
+                result = variabledecode.variable_encode(
+                    result, add_repetitions=False,
+                    dict_char=dict_char, list_char=list_char)
                 for key in result.keys():
                     if not result[key]:
                         del result[key]
@@ -187,8 +187,8 @@ class Invalid(Exception):
 class Validator(declarative.Declarative):
 
     """
-    The base class of most validators.  See `IValidator` for more, and
-    `FancyValidator` for the more common (and more featureful) class.
+    The base class of most validators.  See ``IValidator`` for more, and
+    ``FancyValidator`` for the more common (and more featureful) class.
     """
 
     _messages = {}
@@ -299,8 +299,8 @@ class Validator(declarative.Declarative):
         doc.append('\n\n**Messages**\n\n')
         for name, default in messages:
             default = re.sub(r'(%\(.*?\)[rsifcx])', r'``\1``', default)
-            doc.append('``'+name+'``:\n')
-            doc.append('  '+default+'\n\n')
+            doc.append('``' + name + '``:\n')
+            doc.append('  ' + default + '\n\n')
         cls.__doc__ = ''.join(doc)
     _initialize_docstring = classmethod(_initialize_docstring)
 
@@ -322,39 +322,45 @@ class FancyValidator(Validator):
 
     Validators have two important external methods:
 
-    * .to_python(value, state):
+    ``.to_python(value, state)``:
       Attempts to convert the value.  If there is a problem, or the
       value is not valid, an Invalid exception is raised.  The
       argument for this exception is the (potentially HTML-formatted)
       error message to give the user.
 
-    * .from_python(value, state):
-      Reverses to_python.
+    ``.from_python(value, state)``:
+      Reverses ``.to_python()``.
 
-    There are five important methods for subclasses to override,
-    however none of these *have* to be overridden, only the ones that
-    are appropriate for the validator:
+    These two external methods make use of the following four
+    important internal methods that can be overridden.  However,
+    none of these *have* to be overridden, only the ones that
+    are appropriate for the validator.
 
-    * __init__():
-      if the `declarative.Declarative` model doesn't work for this.
+    ``._to_python(value, state)``:
+      This method converts the source to a Python value.  It returns
+      the converted value, or raises an Invalid exception if the
+      conversion cannot be done.  The argument to this exception
+      should be the error message.  Contrary to ``.to_python()`` it is
+      only meant to convert the value, not to fully validate it.
 
-    * .validate_python(value, state):
-      This should raise an error if necessary.  The value is a Python
-      object, either the result of to_python, or the input to
-      from_python.
-
-    * .validate_other(value, state):
-      Validates the source, before to_python, or after from_python.
-      It's more common to use `.validate_python()` however.
-
-    * ._to_python(value, state):
-      This returns the converted value, or raises an Invalid
-      exception if there is an error.  The argument to this exception
-      should be the error message.
-
-    * ._from_python(value, state):
-      Should undo .to_python() in some reasonable way, returning
+    ``._from_python(value, state)``:
+      Should undo ``._to_python()`` in some reasonable way, returning
       a string.
+
+    ``.validate_other(value, state)``:
+      Validates the source, before ``._to_python()``, or after
+      ``._from_python()``.  It's usually more convenient to use
+      ``.validate_python()`` however.
+
+    ``.validate_python(value, state)``:
+      Validates a Python value, either the result of ``._to_python()``,
+      or the input to ``._from_python()``.
+
+    You should make sure that all possible validation errors are
+    raised in at least one these four methods, not matter which.
+
+    Subclasses can also override the ``__init__()`` method
+    if the ``declarative.Declarative`` model doesn't work for this.
 
     Validators should have no internal state besides the
     values given at instantiation.  They should be reusable and
@@ -362,32 +368,38 @@ class FancyValidator(Validator):
 
     All subclasses can take the arguments/instance variables:
 
-    * if_empty:
+    ``if_empty``:
       If set, then this value will be returned if the input evaluates
       to false (empty list, empty string, None, etc), but not the 0 or
       False objects.  This only applies to ``.to_python()``.
 
-    * not_empty:
+    ``not_empty``:
       If true, then if an empty value is given raise an error.
       (Both with ``.to_python()`` and also ``.from_python()``
       if ``.validate_python`` is true).
 
-    * strip:
+    ``strip``:
       If true and the input is a string, strip it (occurs before empty
       tests).
 
-    * if_invalid:
+    ``if_invalid``:
       If set, then when this validator would raise Invalid during
       ``.to_python()``, instead return this value.
 
-    * if_invalid_python:
+    ``if_invalid_python``:
       If set, when the Python value (converted with
       ``.from_python()``) is invalid, this value will be returned.
 
-    * accept_python:
+    ``accept_python``:
       If True (the default), then ``.validate_python()`` and
       ``.validate_other()`` will not be called when
       ``.from_python()`` is used.
+
+    These parameters are handled at the level of the external
+    methods ``.to_python()`` and ``.from_python`` already;
+    if you overwrite one of the internal methods, you usually
+    don't need to care about them.
+
     """
 
     if_invalid = NoDefault
@@ -496,4 +508,3 @@ class FancyValidator(Validator):
     validate_python = validate_other = _validate_noop
     _to_python = None
     _from_python = None
-
