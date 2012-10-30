@@ -203,7 +203,7 @@ get information about all of them.
 Most validators (anything that subclasses
 :class:`formencode.FancyValidator`) will take a certain standard
 set of constructor keyword arguments.  See
-:class:`formencode.FancyValidator` for more -- here we use
+:class:`formencode.api.FancyValidator` for more -- here we use
 ``not_empty=True``.
 
 Another notable validator is :class:`formencode.compound.All` -- this
