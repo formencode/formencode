@@ -1,10 +1,15 @@
+import warnings
 
 from interfaces import *
 from api import *
 from api import _
+import foreach
+import compound
+from validators import Set
 import declarative
-import warnings
 from exc import FERuntimeWarning
+
+
 
 __all__ = ['Schema']
 
@@ -60,12 +65,14 @@ class Schema(FancyValidator):
     compound = True
     fields = {}
     order = []
+    fields_accept_list_values = set()
 
     messages = dict(
         notExpected=_('The input field %(name)s was not expected.'),
         missingValue=_('Missing value'),
         badDictType=_('The input must be dict-like'
-            ' (not a %(type)s: %(value)r)'))
+            ' (not a %(type)s: %(value)r)'),
+        singleValueExpected=_('Please provide only one value'),)
 
     __mutableattributes__ = ('fields', 'chained_validators',
                              'pre_validators')
@@ -94,6 +101,8 @@ class Schema(FancyValidator):
             # from a superclass:
             elif key in cls.fields:
                 del cls.fields[key]
+        
+        cls.fields_accept_list_values = set()
         for name, value in cls.fields.items():
             cls.add_field(name, value)
 
@@ -112,6 +121,8 @@ class Schema(FancyValidator):
             # from a superclass:
             elif key in self.fields:
                 del self.fields[key]
+        
+        self.fields_accept_list_values = set()
         for name, value in self.fields.items():
             self.add_field(name, value)
 
@@ -158,6 +169,25 @@ class Schema(FancyValidator):
                             new[name] = value
                         continue
                 validator = self.fields[name]
+                
+                # Some data types require an extra check to be performed
+                # in order to guarantee unambiguous connection between 
+                # input and output data.
+                # Let's say we have to validate two different URLS:
+                # 1. "site.com/?username=['John', 'Mike']" and
+                # 2. "site.com/?username=John&username=Mike"
+                # Without the following check,
+                # formencode.validators.String (and all other inherited validators)
+                # will set the username value to "['John', 'Mike']" for both URLs.
+                # In terms of URL design, it is considered bad if the same
+                # resource is accessible by two different URLs.
+                # Therefore, if you really want to validate a field with multiple
+                # values, you have to set self.allow_extra_fields to True or
+                # wrap the username validator with formencode.validators.ForEach()
+                if isinstance(value, (list, tuple)):
+                    if name not in self.fields_accept_list_values:
+                        raise Invalid(self.message('singleValueExpected', state),
+                                      value_dict, state)
 
                 if state is not None:
                     state.key = name
@@ -301,13 +331,71 @@ class Schema(FancyValidator):
     add_chained_validator = declarative.classinstancemethod(
         add_chained_validator)
 
+    def if_validator_accepts_list(self, cls, validator, type_check):
+        these_accept_list = (foreach.ForEach, Set)
+        we_need_to_go_deeper = (compound.All, compound.Pipe)
+        
+        if type_check(validator, these_accept_list):
+            return True
+        
+        elif type_check(validator, compound.Any):
+            # Any() validator is valid if at least one of its sub-validators is valid
+            for sub_validator in validator.validators:
+                if type_check(sub_validator, these_accept_list):
+                    return True
+                elif type_check(sub_validator, we_need_to_go_deeper):
+                    return cls.if_validator_accepts_list(sub_validator, type_check)
+            return False
+            
+        elif type_check(validator, we_need_to_go_deeper):
+            # We have to check sub-sub-...-validators
+            sub_validators = validator.validators
+            if sub_validators:
+                # We need to check only the first validator.
+                # All() evaluates its sub-validators in reverse order.
+                significant_validator = type_check(validator, compound.All) and sub_validators[-1] or sub_validators[0]  
+                if type_check(significant_validator, these_accept_list):
+                    return True
+                elif type_check(significant_validator, we_need_to_go_deeper):
+                    return cls.if_validator_accepts_list(significant_validator, type_check)
+                return False
+            return False
+        
+        elif type_check(validator, declarative.DeclarativeMeta):
+            # Cases like
+            # class SiteForm(Schema):
+            #     class addresses(foreach.ForEach):
+            #         class schema(Schema):
+            #             name = Name()
+            #             email = validators.Email()
+            #
+            # require a subclass-based check to be performed instead of instance-based.
+            return cls.if_validator_accepts_list(validator, issubclass)
+        
+        return False
+    if_validator_accepts_list = declarative.classinstancemethod(if_validator_accepts_list)
+            
+
     def add_field(self, cls, name, validator):
         if self is not None:
             if self.fields is cls.fields:
                 self.fields = cls.fields.copy()
             self.fields[name] = validator
+            if not self.allow_extra_fields:
+                accept_list = self.if_validator_accepts_list(validator, isinstance)
+                if accept_list:
+                    self.fields_accept_list_values.add(name)
+            else:
+                self.fields_accept_list_values.add(name)
+            
         else:
             cls.fields[name] = validator
+            if not cls.allow_extra_fields:
+                accept_list = cls.if_validator_accepts_list(validator, isinstance)
+                if accept_list:
+                    cls.fields_accept_list_values.add(name)
+            else:
+                cls.fields_accept_list_values.add(name)
 
     add_field = declarative.classinstancemethod(add_field)
 
