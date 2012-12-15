@@ -15,4 +15,5 @@ dist/
 # Therefore we must explicitly ignore all downloaded *.egg packages
 # as well as all coverage-related files.
 *.egg
-*coverage*
+.coverage
+coverage/
