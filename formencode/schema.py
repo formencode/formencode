@@ -1,10 +1,15 @@
+import warnings
 
 from interfaces import *
 from api import *
 from api import _
+import foreach
+import compound
+from validators import Set
 import declarative
-import warnings
 from exc import FERuntimeWarning
+
+
 
 __all__ = ['Schema']
 
@@ -60,12 +65,14 @@ class Schema(FancyValidator):
     compound = True
     fields = {}
     order = []
+    accept_iterator = True
 
     messages = dict(
         notExpected=_('The input field %(name)s was not expected.'),
         missingValue=_('Missing value'),
         badDictType=_('The input must be dict-like'
-            ' (not a %(type)s: %(value)r)'))
+            ' (not a %(type)s: %(value)r)'),
+        singleValueExpected=_('Please provide only one value'),)
 
     __mutableattributes__ = ('fields', 'chained_validators',
                              'pre_validators')
@@ -94,6 +101,7 @@ class Schema(FancyValidator):
             # from a superclass:
             elif key in cls.fields:
                 del cls.fields[key]
+        
         for name, value in cls.fields.items():
             cls.add_field(name, value)
 
@@ -112,8 +120,6 @@ class Schema(FancyValidator):
             # from a superclass:
             elif key in self.fields:
                 del self.fields[key]
-        for name, value in self.fields.items():
-            self.add_field(name, value)
 
     def assert_dict(self, value, state):
         """
@@ -158,6 +164,11 @@ class Schema(FancyValidator):
                             new[name] = value
                         continue
                 validator = self.fields[name]
+
+                # are iterators (list, tuple, set, etc) allowed?
+                if self._value_is_iterator(value) and not getattr(validator, 'accept_iterator', False):
+                    errors[name] = Invalid(self.message('singleValueExpected', state),
+                                  value_dict, state)
 
                 if state is not None:
                     state.key = name
@@ -306,6 +317,7 @@ class Schema(FancyValidator):
             if self.fields is cls.fields:
                 self.fields = cls.fields.copy()
             self.fields[name] = validator
+            
         else:
             cls.fields[name] = validator
 
@@ -334,6 +346,20 @@ class Schema(FancyValidator):
 
     def empty_value(self, value):
         return {}
+
+    def _value_is_iterator(self, value):
+        if isinstance(value, (str, unicode)):
+            return False
+        elif isinstance(value, (list, tuple)):
+            return True
+
+        try:
+            for n in value:
+                break
+            return True
+        ## @@: Should this catch any other errors?:
+        except TypeError:
+            return False
 
 
 def format_compound_error(v, indent=0):

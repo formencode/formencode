@@ -195,6 +195,7 @@ class Validator(declarative.Declarative):
     if_missing = NoDefault
     repeating = False
     compound = False
+    accept_iterator = False
     gettextargs = {}
     use_builtins_gettext = True # In case you don't want to use __builtins__._
                                 # although it may be defined, set this to False

@@ -22,6 +22,7 @@ def from_python(validator, value, state):
 class CompoundValidator(FancyValidator):
 
     if_invalid = NoDefault
+    accept_iterator = False
 
     validators = []
 
@@ -104,6 +105,13 @@ class Any(CompoundValidator):
     def is_empty(self, value):
         # sub-validators should handle emptiness.
         return False
+
+    def accept_iterator__get(self):
+        accept_iterator = False
+        for validator in self.validators:
+            accept_iterator = accept_iterator or getattr(validator, 'accept_iterator', False)
+        return accept_iterator
+    accept_iterator = property(accept_iterator__get)
 
 
 class All(CompoundValidator):
@@ -200,6 +208,13 @@ class All(CompoundValidator):
     def is_empty(self, value):
         # sub-validators should handle emptiness.
         return False
+
+    def accept_iterator__get(self):
+        accept_iterator = True
+        for validator in self.validators:
+            accept_iterator = accept_iterator and getattr(validator, 'accept_iterator', False)
+        return accept_iterator
+    accept_iterator = property(accept_iterator__get)
 
 
 class Pipe(All):

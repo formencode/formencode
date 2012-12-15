@@ -49,6 +49,7 @@ class ForEach(CompoundValidator):
 
     convert_to_list = True
     if_empty = NoDefault
+    accept_iterator = True
     repeating = True
     _if_missing = ()
     
