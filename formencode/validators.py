@@ -1191,6 +1191,7 @@ class Set(FancyValidator):
     use_set = False
 
     if_missing = ()
+    accept_iterator = True
 
     def _to_python(self, value, state):
         if self.use_set:
