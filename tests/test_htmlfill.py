@@ -153,6 +153,19 @@ def test_iferror():
         assert str(e) == "Name attribute in <iferror> required at 1:0"
 
 
+def test_error():
+    # classic
+    assert ( htmlfill.render('<form:error name="field1"/>', errors={'field1': 'foo'} )
+            == '<span class="error-message">foo</span><br />\n')
+    assert ( htmlfill.render('<form:error name="field1"/><a href="#">Next Tag</a>', errors={'field1': 'foo'} )
+            == '<span class="error-message">foo</span><br />\n<a href="#">Next Tag</a>')
+    # html5
+    assert ( htmlfill.render('<form:error name="field1"></form:error>', errors={'field1': 'foo'} )
+            == '<span class="error-message">foo</span><br />\n')
+    assert ( htmlfill.render('<form:error name="field1"></form:error><a href="#">Next Tag</a>', errors={'field1': 'foo'} )
+            == '<span class="error-message">foo</span><br />\n<a href="#">Next Tag</a>')
+
+
 def test_literal():
     assert (htmlfill.render('<form:error name="foo" />',
                             errors={'foo': htmlfill.htmlliteral('<test>')})
