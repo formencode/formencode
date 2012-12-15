@@ -10,5 +10,8 @@
 *.py text
 *.rst text
 *.txt text
+*.po text
+*.pot text
 
+*.mo binary
 *.png binary
