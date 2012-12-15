@@ -3,12 +3,10 @@ from setuptools import setup
 
 version = '1.3.0dev'
 
-if not '2.3' <= sys.version < '3.0':
+if not '2.6' <= sys.version < '3.0' and not '3.2' <= sys.version
     raise ImportError('Python version not supported')
 
 tests_require = ['nose', 'pycountry', 'dnspython']
-if sys.version < '2.5':
-    tests_require.append('elementtree')
 
 setup(name="FormEncode",
       version=version,
