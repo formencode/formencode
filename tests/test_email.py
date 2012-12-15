@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from unittest import TestCase
 from nose.tools import assert_equal
 from formencode.validators import Email, Invalid
@@ -69,3 +70,15 @@ def test_valid_email_addresses():
 
     for email, expected in valid_email_addresses:
         yield assert_equal, _validate(validator, email), expected
+
+
+class TestUnicodeEmailWithResolveDomain(TestCase):
+    
+    def setUp(self):
+        self.validator = Email(resolve_domain=True)
+
+    def test_unicode_ascii_subgroup(self):
+        self.assertEqual(self.validator.to_python(u'foo@yandex.com'), 'foo@yandex.com')
+    
+    def test_cyrillic_email(self):
+        self.assertEqual(self.validator.to_python(u'me@письмо.рф'), u'me@письмо.рф')
