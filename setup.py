@@ -1,7 +1,7 @@
 import sys
 from setuptools import setup
 
-version = '1.2.4'
+version = '1.2.5'
 
 if not '2.3' <= sys.version < '3.0':
     raise ImportError('Python version not supported')

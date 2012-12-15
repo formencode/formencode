@@ -27,6 +27,9 @@ Backwards Incompatibilities
     validators now use the same empty/missing logic as the `is_empty` method of
     :class:`formencode.api.FancyValidator`.
 
+- Validators can say if they accept containers (list, tuple, set, etc) and schema will
+    actively refuse those values if a validator does not allow them.
+
 Documentation Enhancements
 --------------------------
 
