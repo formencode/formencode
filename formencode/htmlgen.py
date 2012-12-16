@@ -134,7 +134,7 @@ class Element(ET._ElementInterface):
         el.attrib.update(kw)
         el.text = self.text
         last = None
-        for item in self.getchildren():
+        for item in list(self):
             last = item
             el.append(item)
         for arg in flatten(args):
