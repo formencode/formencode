@@ -485,6 +485,14 @@ class TestOneOfValidator(unittest.TestCase):
     def test_ascii_list(self):
         o = validators.OneOf(['a', 'b'])
         self.assertRaises(Invalid, o.to_python, 'c')
+    def test_int_list_list(self):
+        class foo(Schema):
+            bar = validators.OneOf((1,2,3), testValueList=True)
+        
+        expected = {'bar':(1,2,3)}
+        value = foo.to_python(expected)
+
+        self.assertEqual(expected, value)
 
 class TestIPAddressValidator(unittest.TestCase):
 
