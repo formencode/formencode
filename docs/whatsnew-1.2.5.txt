@@ -1,8 +1,8 @@
-What's New In FormEncode 1.2.5
-==============================
+What's New In FormEncode 1.2
+============================
 
 This article explains the latest changes in `FormEncode` version 1.2.5 as
-compared to its predecessor, `FormEncode` 1.2.4.
+compared to its predecessor, `FormEncode` 1.2.4. Further releases in the 1.2.x series will be solely bug fix releases. The next major version will be the 1.3.x series.
 
 Project Changes
 ---------------
