@@ -440,12 +440,11 @@ class FancyValidator(Validator):
             vp = self.validate_python
             if vp and vp is not self._validate_noop:
                 vp(value, state)
-            return value
         except Invalid:
-            if self.if_invalid is NoDefault:
+            value = self.if_invalid
+            if value is NoDefault:
                 raise
-            else:
-                return self.if_invalid
+        return value
 
     def from_python(self, value, state=None):
         try:
@@ -467,19 +466,17 @@ class FancyValidator(Validator):
                 vo = self.validate_other
                 if vo and vo is not self._validate_noop:
                     vo(value, state)
-                return value
             else:
                 if self.is_empty(value):
                     return self.empty_value(value)
                 fp = self._from_python
                 if fp:
-                    value = self._from_python(value, state)
-                return value
+                    value = fp(value, state)
         except Invalid:
-            if self.if_invalid_python is NoDefault:
+            value = self.if_invalid_python
+            if value is NoDefault:
                 raise
-            else:
-                return self.if_invalid_python
+        return value
 
     def is_empty(self, value):
         return is_empty(value)
