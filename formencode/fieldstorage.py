@@ -6,6 +6,7 @@ Wrapper class for use with cgi.FieldStorage types for file uploads
 
 import cgi
 
+
 def convert_fieldstorage(fs):
     if fs.filename:
         return fs

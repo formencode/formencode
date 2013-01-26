@@ -3,7 +3,7 @@ import sys
 try:
     import doctest
     doctest.OutputChecker
-except (AttributeError, ImportError): # Python < 2.4
+except (AttributeError, ImportError):  # Python < 2.4
     import util.doctest24 as doctest
 
 from formencode import compound
@@ -14,40 +14,42 @@ from formencode import schema
 from formencode import validators
 
 
+"""Modules that will have their doctests tested."""
 modules = [compound, htmlfill, htmlgen, national, schema, validators]
-" Modules that will have their doctests tested. "
 
 
+"""Text files that will have their doctests tested."""
 text_files = [
     'docs/htmlfill.txt',
     'docs/Validator.txt',
     'tests/non_empty.txt',
     ]
-" Text files that will have their doctests tested. "
 
 
+"""Used to resolve text files to absolute paths."""
 base = os.path.dirname(
         os.path.dirname(os.path.abspath(__file__)))
-" Used to resolve text files to absolute paths. """
 
 
 def doctest_file(document, verbose, raise_error):
-    (failure_count, test_count) = doctest.testfile(document,
+    failure_count, test_count = doctest.testfile(document,
             module_relative=False, optionflags=doctest.ELLIPSIS,
             verbose=verbose)
     if raise_error:
+        assert test_count > 0
         assert failure_count == 0
 
 
 def doctest_module(document, verbose, raise_error):
-    (failure_count, test_count) = doctest.testmod(document,
+    failure_count, test_count = doctest.testmod(document,
             optionflags=doctest.ELLIPSIS, verbose=verbose)
     if raise_error:
+        assert test_count > 0
         assert failure_count == 0
 
 
 def set_func_description(fn, description):
-    """ Wrap function and set description attr for nosetests to display. """
+    """Wrap function and set description attr for nosetests to display."""
     def _wrapper(*a_test_args):
         fn(*a_test_args)
     _wrapper.description = description
@@ -55,8 +57,8 @@ def set_func_description(fn, description):
 
 
 def test_doctests():
-    """ Generate each doctest. """
-    #TODO Can we resolve this from nose?
+    """Generate each doctest."""
+    # TODO Can we resolve this from nose?
     verbose = False
     raise_error = True
     for document in text_files + modules:

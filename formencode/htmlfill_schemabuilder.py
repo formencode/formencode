@@ -85,7 +85,7 @@ class SchemaBuilder(object):
             if type_attr == "submit":
                 v.validators.append(validators.Bool())
             elif type_attr == "checkbox":
-                v.validators.append(validators.Wrapper(to_python = force_list))
+                v.validators.append(validators.Wrapper(to_python=force_list))
             elif type_attr == "file":
                 add_to_end = validators.FieldStorageUploadConverter()
         message = get_attr(attrs, 'form:message')
@@ -103,7 +103,7 @@ class SchemaBuilder(object):
             pos = v_type.find(':')
             if pos != -1:
                 # @@: should parse args
-                args = (v_type[pos+1:],)
+                args = (v_type[pos + 1:],)
                 v_type = v_type[:pos]
             else:
                 args = ()
@@ -111,7 +111,7 @@ class SchemaBuilder(object):
             v_class = self.validators.get(v_type)
             if not v_class:
                 raise ValueError("Invalid validation type: %r" % v_type)
-            kw_args={'messages': get_messages(v_class, message)}
+            kw_args = {'messages': get_messages(v_class, message)}
             v_inst = v_class(
                 *args, **kw_args)
             v.validators.append(v_inst)

@@ -1,7 +1,7 @@
 try:
     import doctest
     doctest.OutputChecker
-except (AttributeError, ImportError): # Python < 2.4
+except (AttributeError, ImportError):  # Python < 2.4
     import util.doctest24 as doctest
 try:
     import xml.etree.ElementTree as ET
@@ -134,4 +134,3 @@ def make_string(xml):
 
 def install():
     doctest.OutputChecker = HTMLOutputChecker
-

@@ -81,6 +81,6 @@ if __name__ == '__main__':
         if name.startswith('test'):
             print name
             value()
-    import htmlgen
+    from formencode import htmlgen
     doctest.testmod(htmlgen)
     print 'doctest'

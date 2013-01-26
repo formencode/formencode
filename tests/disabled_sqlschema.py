@@ -1,40 +1,41 @@
 from datetime import date
 
-from sqlobject import *
+import sqlobject
 
 from formencode.sqlschema import *
 from formencode import validators
 
 
-def setup_module(module):
-    """Disable i18n translation
-    """
-    def notranslation(s): return s
-    import __builtin__
-    __builtin__._ = notranslation
+def _notranslation(s):
+    return s
 
+
+def setup_module(module):
+    """Disable i18n translation"""
+    import __builtin__
+    __builtin__._ = _notranslation
 
 
 def teardown_module(module):
-    """Remove translation function
-    """
+    """Remove translation function"""
     import __builtin__
     del __builtin__._
 
 
-sqlhub.processConnection = connectionForURI('sqlite:/:memory:')
+sqlobject.sqlhub.processConnection = sqlobject.connectionForURI(
+    'sqlite:/:memory:')
 
 
-class EventObject(SQLObject):
+class EventObject(sqlobject.SQLObject):
 
-    name = StringCol(alternateID=True)
-    date = DateCol(notNull=True)
-    description = StringCol()
+    name = sqlobject.StringCol(alternateID=True)
+    date = sqlobject.DateCol(notNull=True)
+    description = sqlobject.StringCol()
 
 EventObject.createTable()
 
 
-class EventObjectSchema(SQLSchema):
+class EventObjectSchema(sqlobject.SQLSchema):
 
     wrap = EventObject
     # All other columns are inherited...
@@ -69,7 +70,8 @@ def test_update():
                       description=None)
     inp = dict(id=obj.id, date=None)
     objschema = EventObjectSchema(wrap=obj)
-    assert str(get_error(inp, objschema)) == 'date: You may not provide None for that value'
+    assert str(get_error(inp, objschema)
+        ) == 'date: You may not provide None for that value'
     inp = dict(id=obj.id, name='test2')
     print str(objschema.to_python(inp))
     assert objschema.to_python(inp) is obj
@@ -107,11 +109,10 @@ def test_sign():
     res2 = s.from_python(obj)
     assert res['id'] != res2['id']
     # Futz up the signature:
-    print 'before', res2['id'], res2['id'].split()[0].decode('base64')
-    res2['id'] = res2['id'][:2]+'XXX'+res2['id'][5:]
-    print 'after ', res2['id'], res2['id'].split()[0].decode('base64')
+    res2['id'] = res2['id'][:2] + 'XXX' + res2['id'][5:]
     try:
         s.to_python(res2)
-        assert False
     except validators.Invalid, e:
         assert str(e) == 'Signature is not correct'
+    else:
+        assert False

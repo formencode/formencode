@@ -10,7 +10,7 @@ tests_require = ['nose', 'pycountry', 'dnspython']
 
 setup(name="FormEncode",
       version=version,
-      #requires_python=]'>=2.3,<3', # PEP345
+      # requires_python='>=2.3,<3', # PEP345
       description="HTML form validation, generation, and conversion package",
       long_description="""\
 FormEncode validates and converts nested structures.  It allows for
@@ -19,12 +19,13 @@ for filling and generating forms.
 
 The official repo is at GitHub: https://github.com/formencode/formencode
 """,
-      classifiers=["Development Status :: 4 - Beta",
-                   "Intended Audience :: Developers",
-                   "License :: OSI Approved :: Python Software Foundation License",
-                   "Programming Language :: Python",
-                   "Topic :: Software Development :: Libraries :: Python Modules",
-                   ],
+      classifiers=[
+          "Development Status :: 4 - Beta",
+           "Intended Audience :: Developers",
+           "License :: OSI Approved :: Python Software Foundation License",
+           "Programming Language :: Python",
+           "Topic :: Software Development :: Libraries :: Python Modules",
+           ],
       author="Ian Bicking",
       author_email="ianb@colorstudy.com",
       url="http://formencode.org",

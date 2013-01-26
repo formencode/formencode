@@ -7,18 +7,19 @@ from formencode.variabledecode import NestedVariables
 import cgi
 
 
-def setup_module(module):
-    """Disable i18n translation
-    """
-    def notranslation(s): return s
-    import __builtin__
-    __builtin__._ = notranslation
+def _notranslation(s):
+    return s
 
+
+def setup_module(module):
+    """Disable i18n translation"""
+
+    import __builtin__
+    __builtin__._ = _notranslation
 
 
 def teardown_module(module):
-    """Remove translation function
-    """
+    """Remove translation function"""
     import __builtin__
     del __builtin__._
 
@@ -26,10 +27,9 @@ def teardown_module(module):
 def d(**kw):
     return kw
 
+
 def cgi_parse(qs):
-    """
-    Parses a query string and returns the usually dictionary.
-    """
+    """Parse a query string and returns the usually dictionary."""
     d = {}
     for key, value in cgi.parse_qsl(qs, 1):
         if key in d:
@@ -109,8 +109,11 @@ BadCase(Name, '',
 
 
 class AddressesForm(Schema):
+
     pre_validators = [NestedVariables()]
+
     class addresses(foreach.ForEach):
+
         class schema(Schema):
             name = Name()
             email = validators.Email()
@@ -174,7 +177,7 @@ class ChainedTest(Schema):
 def test_multiple_chained_validators_errors():
     s = ChainedTest()
     try:
-        s.to_python({'a':'1', 'a_confirm':'2', 'b':'3', 'b_confirm':'4'})
+        s.to_python({'a': '1', 'a_confirm': '2', 'b': '3', 'b_confirm': '4'})
     except Invalid, e:
         assert 'a_confirm' in e.error_dict and 'b_confirm' in e.error_dict
     try:
@@ -204,6 +207,7 @@ def test_SimpleFormValidator_doc():
 class State(object):
     pass
 
+
 def test_state_manipulation():
     """
     Verify that full_dict push and pop works
@@ -211,33 +215,35 @@ def test_state_manipulation():
     state = State()
     old_dict = state.full_dict = {'a': 1}
     old_key = state.key = 'a'
-    new_dict = {'b': 2 }
+    new_dict = {'b': 2}
 
     class MyValidator(Validator):
         check_key = None
         pre_validator = False
         post_validator = False
         __unpackargs__ = ('check_key',)
+
         def to_python(self, value, state):
             if not self.pre_validator:
-                assert getattr(state, 'full_dict', {}) == new_dict, "full_dict not added"
+                assert getattr(
+                    state, 'full_dict', {}) == new_dict, "full_dict not added"
             assert state.key == self.check_key, "key not updated"
 
             return value
 
         def from_python(self, value, state):
             if not self.post_validator:
-                assert getattr(state, 'full_dict', {}) == new_dict, "full_dict not added"
+                assert getattr(
+                    state, 'full_dict', {}) == new_dict, "full_dict not added"
             assert state.key == self.check_key, "key not updated"
 
             return value
 
-    s = Schema(if_key_missing = None, b = MyValidator('b'), c = MyValidator('c'), 
-               pre_validators=[MyValidator('a', pre_validator=True)], 
+    s = Schema(if_key_missing=None, b=MyValidator('b'), c=MyValidator('c'),
+               pre_validators=[MyValidator('a', pre_validator=True)],
                chained_validators=[MyValidator('a', post_validator=True)])
 
     s.to_python(new_dict, state)
-
 
     assert state.full_dict == old_dict, "full_dict not restored"
     assert state.key == old_key, "key not restored"
@@ -249,17 +255,20 @@ def test_state_manipulation():
 
 
 class TestAtLeastOneCheckboxIsChecked(object):
-    """ tests to address sourceforge bug #1777245
+    """Tests to address SourceForge bug #1777245
 
-        The reporter is trying to enforce agreement to a Terms of Service
-        agreement, with failure to check the 'I agree' checkbox handled as
-        a validation failure. The tests below illustrate a working approach.
+    The reporter is trying to enforce agreement to a Terms of Service
+    agreement, with failure to check the 'I agree' checkbox handled as
+    a validation failure. The tests below illustrate a working approach.
+
     """
 
     def setup(self):
         self.not_empty_messages = {'missing': 'a missing value message'}
+
         class CheckForCheckboxSchema(Schema):
             agree = validators.StringBool(messages=self.not_empty_messages)
+
         self.schema = CheckForCheckboxSchema()
 
     def test_Schema_with_input_present(self):
@@ -281,59 +290,63 @@ class TestAtLeastOneCheckboxIsChecked(object):
 
 class TestStrictSchemaWithMultipleEqualInputFields(unittest.TestCase):
     """Tests to address github bug #13"""
-    
+
     def setUp(self):
-        
+
         class StrictSchema(Schema):
             allow_extra_fields = False
-        
+
         class IntegerTestSchema(StrictSchema):
             field = validators.Int(not_empty=True)
-        
+
         class StringTestSchema(StrictSchema):
             field = validators.UnicodeString(not_empty=True)
-        
+
         class CorrectForEachStringTestSchema(StrictSchema):
             field = foreach.ForEach(validators.UnicodeString(not_empty=True))
-            
+
         class CorrectSetTestSchema(StrictSchema):
             field = validators.Set(not_empty=True)
 
         class CorrectSetTestPipeSchema(StrictSchema):
-            field = compound.Pipe(validators.Set(not_empty=True), foreach.ForEach(validators.UnicodeString(not_empty=True)))
-         
-            
+            field = compound.Pipe(validators.Set(not_empty=True),
+                foreach.ForEach(validators.UnicodeString(not_empty=True)))
+
         self.int_schema = IntegerTestSchema()
         self.string_schema = StringTestSchema()
         self.foreach_schema = CorrectForEachStringTestSchema()
         self.set_schema = CorrectSetTestSchema()
         self.pipe_schema = CorrectSetTestPipeSchema()
-    
-    
+
     def test_single_integer_value(self):
         params = cgi_parse('field=111')
         data = self.int_schema.to_python(params)
-    
+        self.assertEqual(data, dict(field=111))
+
     def test_multiple_integer_value(self):
         params = cgi_parse('field=111&field=222')
         self.assertRaises(Invalid, self.int_schema.to_python, params)
-        
+
     def test_single_string_value(self):
         params = cgi_parse('field=string')
         data = self.string_schema.to_python(params)
-    
+        self.assertEqual(data, dict(field='string'))
+
     def test_multiple_string_value(self):
         params = cgi_parse('field=string1&field=string2')
         self.assertRaises(Invalid, self.string_schema.to_python, params)
-    
+
     def test_correct_multiple_string_value_foreach(self):
         params = cgi_parse('field=string1&field=string2')
         data = self.foreach_schema.to_python(params)
-        
+        self.assertEqual(data, dict(field=['string1', 'string2']))
+
     def test_correct_multiple_string_value_set(self):
         params = cgi_parse('field=string1&field=string2')
         data = self.set_schema.to_python(params)
+        self.assertEqual(data, dict(field=['string1', 'string2']))
 
     def test_correct_multiple_string_value_pipe(self):
         params = cgi_parse('field=string1&field=string2')
         data = self.pipe_schema.to_python(params)
+        self.assertEqual(data, dict(field=['string1', 'string2']))

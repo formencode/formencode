@@ -96,30 +96,30 @@ class RewritingParser(HTMLParser.HTMLParser):
             return
         if cur_line == self.source_pos[0]:
             self.write_text(
-                self.lines[cur_line-1][self.source_pos[1]:cur_offset])
+                self.lines[cur_line - 1][self.source_pos[1]:cur_offset])
         else:
             self.write_text(
-                self.lines[self.source_pos[0]-1][self.source_pos[1]:])
+                self.lines[self.source_pos[0] - 1][self.source_pos[1]:])
             self.write_text('\n')
-            for i in range(self.source_pos[0]+1, cur_line):
-                self.write_text(self.lines[i-1])
+            for i in range(self.source_pos[0] + 1, cur_line):
+                self.write_text(self.lines[i - 1])
                 self.write_text('\n')
-            self.write_text(self.lines[cur_line-1][:cur_offset])
+            self.write_text(self.lines[cur_line - 1][:cur_offset])
         self.source_pos = self.getpos()
 
     def write_text(self, text):
         self._content.append(text)
 
     def has_attr(self, attr, name):
-        for n, value in attr:
-            if n.lower() == name:
+        for a in attr:
+            if a[0].lower() == name:
                 return True
         return False
 
     def get_attr(self, attr, name, default=None):
-        for n, value in attr:
-            if n.lower() == name:
-                return value
+        for a in attr:
+            if a[0].lower() == name:
+                return a[1]
         return default
 
     def set_attr(self, attr, name, value):

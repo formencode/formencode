@@ -8,6 +8,7 @@ dist/
 .idea/
 .project
 .pydevproject
+.settings
 
 # When you run ``python setup.py [test|nosetests]``
 # from project's root tree, the script checks [and downloads, if necessary]

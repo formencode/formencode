@@ -161,8 +161,9 @@ class Declarative(object):
         name = '_%s__singleton' % cls.__name__
         if not hasattr(cls, name):
             try:
-                setattr(cls, name, cls(declarative_count=cls.declarative_count))
-            except TypeError: # takes arguments
+                setattr(cls, name, cls(
+                    declarative_count=cls.declarative_count))
+            except TypeError:  # takes arguments
                 setattr(cls, name, cls)
         return getattr(cls, name)
     singleton = classmethod(singleton)
@@ -235,4 +236,3 @@ class Declarative(object):
         names.sort()
         return names
     _repr_vars = staticmethod(_repr_vars)
-

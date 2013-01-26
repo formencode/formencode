@@ -12,7 +12,7 @@ import warnings
 
 try:
     set
-except NameError: # Python < 2.4
+except NameError:  # Python < 2.4
     from sets import Set as set
 
 try:
@@ -261,11 +261,13 @@ class Wrapper(FancyValidator):
     def wrap(self, func):
         if not func:
             return None
+
         def result(value, state, func=func):
             try:
                 return func(value)
             except Exception, e:
                 raise Invalid(str(e), value, state)
+
         return result
 
 
@@ -678,8 +680,8 @@ class DictConverter(FancyValidator):
                 items = self.dict.keys()
                 items.sort()
                 items = '; '.join(map(repr, items))
-                raise Invalid(
-                    self.message('chooseKey', state, items=items), value, state)
+                raise Invalid(self.message('chooseKey',
+                    state, items=items), value, state)
 
     def _from_python(self, value, state):
         for k, v in self.dict.items():
@@ -1092,6 +1094,7 @@ class String(FancyValidator):
     def empty_value(self, value):
         return ''
 
+
 class UnicodeString(String):
     """
     Converts things to unicode string, this is a specialization of
@@ -1163,6 +1166,7 @@ class UnicodeString(String):
     def empty_value(self, value):
         return u''
 
+
 class Set(FancyValidator):
     """
     This is for when you think you may return multiple values for a
@@ -1224,6 +1228,7 @@ class Set(FancyValidator):
         else:
             return []
 
+
 class Email(FancyValidator):
     r"""
     Validate an email address.
@@ -1282,7 +1287,7 @@ class Email(FancyValidator):
     """
 
     resolve_domain = False
-    resolve_timeout = 10 # timeout in seconds when resolving domains
+    resolve_timeout = 10  # timeout in seconds when resolving domains
 
     usernameRE = re.compile(r"^[\w!#$%&'*+\-/=?^`{|}~.]+$")
     domainRE = re.compile(r'''
@@ -1318,7 +1323,7 @@ class Email(FancyValidator):
         value = value.strip()
         splitted = value.split('@', 1)
         try:
-            username, domain=splitted
+            username, domain = splitted
         except ValueError:
             raise Invalid(self.message('noAt', state), value, state)
         if not self.usernameRE.search(username):
@@ -1595,8 +1600,7 @@ class XRI(FancyValidator):
     (\.[\w]+)*             # An i-name with dots
     (\*[\w]+(\.[\w]+)*)*   # A community i-name
     $
-    """, re.VERBOSE|re.UNICODE)
-
+    """, re.VERBOSE | re.UNICODE)
 
     iname_invalid_start = re.compile(r"^[\d\.-]", re.UNICODE)
     """@cvar: These characters must not be at the beggining of the i-name"""
@@ -1611,7 +1615,7 @@ class XRI(FancyValidator):
     [\dA-F]{1,4}(\.[\dA-F]{1,4}){0,3}       # A global i-number
     (![\dA-F]{1,4}(\.[\dA-F]{1,4}){0,3})*   # Zero or more sub i-numbers
     $
-    """, re.VERBOSE|re.IGNORECASE)
+    """, re.VERBOSE | re.IGNORECASE)
 
     messages = dict(
         noType=_('The type of i-name is not defined;'
@@ -2314,7 +2318,7 @@ class StripField(FancyValidator):
         return False
 
 
-class StringBool(FancyValidator): # originally from TurboGears 1
+class StringBool(FancyValidator):  # originally from TurboGears 1
     """
     Converts a string to a boolean.
 
@@ -2386,7 +2390,7 @@ class SignedString(FancyValidator):
         if not sha1:
             try:
                 from hashlib import sha1
-            except ImportError: # Python < 2.5
+            except ImportError:  # Python < 2.5
                 from sha import sha as sha1
         assert self.secret is not None, (
             "You must give a secret")
@@ -2398,7 +2402,7 @@ class SignedString(FancyValidator):
         rest = rest.decode('base64')
         nonce = rest[:self.nonce_length]
         rest = rest[self.nonce_length:]
-        expected = sha1(str(self.secret)+nonce+rest).digest()
+        expected = sha1(str(self.secret) + nonce + rest).digest()
         if expected != sig:
             raise Invalid(self.message('badsig', state), value, state)
         return rest
@@ -2412,8 +2416,8 @@ class SignedString(FancyValidator):
                 from sha import sha as sha1
         nonce = self.make_nonce()
         value = str(value)
-        digest = sha1(self.secret+nonce+value).digest()
-        return self.encode(digest)+' '+self.encode(nonce+value)
+        digest = sha1(self.secret + nonce + value).digest()
+        return self.encode(digest) + ' ' + self.encode(nonce + value)
 
     def encode(self, value):
         return value.encode('base64').strip().replace('\n', '')
@@ -2424,7 +2428,7 @@ class SignedString(FancyValidator):
             import random
         return ''.join([
             chr(random.randrange(256))
-            for i in range(self.nonce_length)])
+            for _i in range(self.nonce_length)])
 
 
 class IPAddress(FancyValidator):
@@ -2516,9 +2520,9 @@ class CIDR(IPAddress):
     def validate_python(self, value, state):
         try:
             # Split into octets and bits
-            if '/' in value: # a.b.c.d/e
+            if '/' in value:  # a.b.c.d/e
                 addr, bits = value.split('/')
-            else: # a.b.c.d
+            else:  # a.b.c.d
                 addr, bits = value, 32
             # Use IPAddress validator to validate the IP part
             IPAddress.validate_python(self, addr, state)
@@ -2565,7 +2569,7 @@ class MACAddress(FancyValidator):
             ' (and optionally :), not %(char)r'))
 
     def _to_python(self, value, state):
-        address = value.replace(':', '').lower() # remove colons
+        address = value.replace(':', '').lower()  # remove colons
         if len(address) != 12:
             raise Invalid(
                 self.message('badLength', state,
@@ -3015,11 +3019,9 @@ class CreditCardSecurityCode(FormValidator):
     _cardInfo = dict(visa=3, mastercard=3, discover=3, amex=4)
 
 
-
 def validators():
     """Return the names of all validators in this module."""
     return [name for name, value in globals().items()
         if isinstance(value, type) and issubclass(value, Validator)]
 
 __all__ = ['Invalid'] + validators()
-
