@@ -10,7 +10,7 @@ class TestAllCompoundValidator(unittest.TestCase):
 
     def setUp(self):
         self.validator = compound.All(
-            validators=[DictConverter({2:1}), DictConverter({3:2})])
+            validators=[DictConverter({2: 1}), DictConverter({3: 2})])
 
     def test_to_python(self):
         self.assertEqual(self.validator.to_python(3), 1)
@@ -23,7 +23,8 @@ class TestAnyCompoundValidator(unittest.TestCase):
 
     def setUp(self):
         self.validator = compound.Any(
-            validators=[DictConverter({2:'c'}), DictConverter({2:'b'}), DictConverter({1:'b'})])
+            validators=[DictConverter({2: 'c'}), DictConverter({2: 'b'}),
+                DictConverter({1: 'b'})])
 
     def test_to_python(self):
         # Should stop before 'c' coming from the right.

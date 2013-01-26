@@ -1,5 +1,6 @@
-from unittest import TestCase
+
 from nose.tools import assert_equal
+
 from formencode.validators import Email, Invalid
 
 
@@ -25,7 +26,8 @@ def test_invalid_email_addresses():
 
     def expected_message(validator, message_name, username, domain):
         email = '@'.join((username, domain))
-        return validator.message(message_name, email, username=username, domain=domain)
+        return validator.message(
+            message_name, email, username=username, domain=domain)
 
     validator = Email()
 
@@ -63,7 +65,8 @@ def test_valid_email_addresses():
 
     def expected_message(validator, message_name, username, domain):
         email = '@'.join((username, domain))
-        return validator.message(message_name, email, username=username, domain=domain)
+        return validator.message(
+            message_name, email, username=username, domain=domain)
 
     validator = Email()
 

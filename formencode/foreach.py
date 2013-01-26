@@ -6,7 +6,7 @@ import warnings
 
 try:
     set
-except NameError: # Python < 2.4
+except NameError:  # Python < 2.4
     from sets import Set as set
 
 filters = warnings.filters[:]
@@ -52,7 +52,7 @@ class ForEach(CompoundValidator):
     accept_iterator = True
     repeating = True
     _if_missing = ()
-    
+
     def attempt_convert(self, value, state, validate):
         if self.convert_to_list:
             value = self._convert_to_list(value)
@@ -95,11 +95,9 @@ class ForEach(CompoundValidator):
                     new_list = set(new_list)
                 return new_list
             else:
-                raise Invalid(
-                    'Errors:\n%s' % '\n'.join([unicode(e) for e in errors if e]),
-                    value,
-                    state,
-                    error_list=errors)
+                raise Invalid('Errors:\n%s'
+                        % '\n'.join([unicode(e) for e in errors if e]),
+                    value, state, error_list=errors)
         finally:
             if state is not None:
                 if previous_index is NoDefault:
@@ -121,6 +119,7 @@ class ForEach(CompoundValidator):
         return []
 
     class _IfMissing(object):
+
         def __get__(self, obj, type=None):
             if obj is None:
                 return []
@@ -128,8 +127,10 @@ class ForEach(CompoundValidator):
                 return []
             else:
                 return obj._if_missing
+
         def __set__(self, obj, value):
             obj._if_missing = value
+
         def __delete__(self, obj):
             obj._if_missing = NoDefault
 
@@ -144,7 +145,7 @@ class ForEach(CompoundValidator):
         elif isinstance(value, (list, tuple)):
             return value
         try:
-            for n in value:
+            for _n in value:
                 break
             return value
         ## @@: Should this catch any other errors?:

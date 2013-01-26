@@ -54,7 +54,7 @@ def _test_lang(language, notemptytext):
     except formencode.api.Invalid, e:
         assert unicode(e) == notemptytext
 
-    formencode.api.set_stdtranslation() # set back to defaults
+    formencode.api.set_stdtranslation()  # set back to defaults
 
 
 def test_de():
@@ -74,15 +74,15 @@ def test_zh_TW():
 
 
 def test_sk():
-    _test_lang("sk",u"Zadajte hodnotu, prosím")
+    _test_lang("sk", u"Zadajte hodnotu, prosím")
 
 
 def test_ru():
-    _test_lang("ru",u"Необходимо ввести значение")
+    _test_lang("ru", u"Необходимо ввести значение")
 
 
 def test_sl():
-    _test_lang("sl",u"Prosim, izpolnite polje")
+    _test_lang("sl", u"Prosim, izpolnite polje")
 
 
 def test_pt_PT():

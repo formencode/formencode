@@ -34,8 +34,8 @@ def test_fail():
     res1 = c3.set(a=1)
     res2 = c3.set(b=2)
     assert_raises(ContextRestoreError, res1.restore)
-    assert c3.b==2
-    assert c3.a==1
+    assert c3.b == 2
+    assert c3.a == 1
     res2.restore()
     res1.restore()
 
@@ -52,4 +52,3 @@ def test_default():
     assert con.a == 2
     res.restore()
     assert con.a == 4
-    

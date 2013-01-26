@@ -11,6 +11,7 @@ __all__ = ['Any', 'All', 'Pipe']
 ## Compound Validators
 ############################################################
 
+
 def to_python(validator, value, state):
     return validator.to_python(value, state)
 
@@ -38,7 +39,7 @@ class CompoundValidator(FancyValidator):
                 # @@: Should we really delete too?
                 delattr(cls, name)
         toAdd.sort()
-        cls.validators.extend([v for n, v in toAdd])
+        cls.validators.extend([value for _name, value in toAdd])
 
     def __init__(self, *args, **kw):
         Validator.__init__(self, *args, **kw)
@@ -51,12 +52,12 @@ class CompoundValidator(FancyValidator):
     _reprVars = staticmethod(_reprVars)
 
     def attempt_convert(self, value, state, convertFunc):
-        raise NotImplementedError, "Subclasses must implement attempt_convert"
+        raise NotImplementedError("Subclasses must implement attempt_convert")
 
     def _to_python(self, value, state=None):
         return self.attempt_convert(value, state,
                                     to_python)
-    
+
     def _from_python(self, value, state=None):
         return self.attempt_convert(value, state,
                                     from_python)
@@ -67,16 +68,16 @@ class CompoundValidator(FancyValidator):
 
 class Any(CompoundValidator):
     """
-    This class is like an 'or' operator for validators.  The first 
+    This class is like an 'or' operator for validators.  The first
     validator/converter in the order of evaluation that validates the value
     will be used.
 
     The order of evaluation differs depending on if you are validating to
     python or from python as follows:
 
-    The validators are evaluated right to left when validating to python.
+    The validators are evaluated right to left when validating to Python.
 
-    The validators are evaluated left to right when validating from python.
+    The validators are evaluated left to right when validating from Python.
     """
 
     def attempt_convert(self, value, state, validate):
@@ -109,7 +110,8 @@ class Any(CompoundValidator):
     def accept_iterator__get(self):
         accept_iterator = False
         for validator in self.validators:
-            accept_iterator = accept_iterator or getattr(validator, 'accept_iterator', False)
+            accept_iterator = accept_iterator or getattr(
+                validator, 'accept_iterator', False)
         return accept_iterator
     accept_iterator = property(accept_iterator__get)
 
@@ -133,7 +135,8 @@ class All(CompoundValidator):
     Examples::
 
         >>> from formencode.validators import DictConverter
-        >>> av = All(validators=[DictConverter({2: 1}), DictConverter({3: 2}), DictConverter({4: 3})])
+        >>> av = All(validators=[DictConverter({2: 1}),
+        ... DictConverter({3: 2}), DictConverter({4: 3})])
         >>> av.to_python(4)
         1
         >>> av.from_python(1)
@@ -212,7 +215,8 @@ class All(CompoundValidator):
     def accept_iterator__get(self):
         accept_iterator = True
         for validator in self.validators:
-            accept_iterator = accept_iterator and getattr(validator, 'accept_iterator', False)
+            accept_iterator = accept_iterator and getattr(
+                validator, 'accept_iterator', False)
         return accept_iterator
     accept_iterator = property(accept_iterator__get)
 
@@ -234,7 +238,8 @@ class Pipe(All):
     Examples::
 
         >>> from formencode.validators import DictConverter
-        >>> pv = Pipe(validators=[DictConverter({1: 2}), DictConverter({2: 3}), DictConverter({3: 4})])
+        >>> pv = Pipe(validators=[DictConverter({1: 2}),
+        ... DictConverter({2: 3}), DictConverter({3: 4})])
         >>> pv.to_python(1)
         4
         >>> pv.from_python(4)

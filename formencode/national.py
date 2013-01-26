@@ -145,22 +145,22 @@ class DelimitedDigitsPostalCode(Regex):
         if len(partition_lengths) == 1:
             return _('%d digits') % partition_lengths[0]
         else:
-            return delimiter.join(['n'*l for l in partition_lengths])
+            return delimiter.join(['n' * l for l in partition_lengths])
 
     def assembly_regex(self, partition_lengths, delimiter):
         mg = [r'(\d{%d})' % l for l in partition_lengths]
         rd = r'\%s?' % delimiter
         return rd.join(mg)
 
-    def __init__(self, partition_lengths, delimiter = None,
+    def __init__(self, partition_lengths, delimiter=None,
                  *args, **kw):
-        if type(partition_lengths) == type(1):
+        if isinstance(partition_lengths, (int, long)):
             partition_lengths = [partition_lengths]
         if not delimiter:
             delimiter = ''
         self.format = self.assembly_formatstring(partition_lengths, delimiter)
         self.regex = self.assembly_regex(partition_lengths, delimiter)
-        (self.partition_lengths, self.delimiter) = (partition_lengths, delimiter)
+        self.partition_lengths, self.delimiter = partition_lengths, delimiter
         Regex.__init__(self, *args, **kw)
 
     messages = dict(
@@ -348,10 +348,11 @@ class CountryValidator(FancyValidator):
         upval = value.upper()
         if self.key_ok:
             try:
-                c = get_country(upval)
-                return upval
-            except:
+                get_country(upval)
+            except Exception:
                 pass
+            else:
+                return upval
         for k, v in get_countries():
             if v.upper() == upval:
                 return k
@@ -672,14 +673,16 @@ class InternationalPhoneNumber(FancyValidator):
         for f, t in [('  ', ' '),
                 ('--', '-'), (' - ', '-'), ('- ', '-'), (' -', '-')]:
             value = value.replace(f, t)
-        value = self._perform_rex_transformation(value, self._preTransformations)
+        value = self._perform_rex_transformation(
+            value, self._preTransformations)
         if self.default_cc:
             if callable(self.default_cc):
                 cc = self.default_cc()
             else:
                 cc = self.default_cc
             value = self._prepend_country_code(value, self._ccIncluder, cc)
-        value = self._perform_rex_transformation(value, self._postTransformations)
+        value = self._perform_rex_transformation(
+            value, self._postTransformations)
         value = value.replace(' ', '')
         # did we successfully transform that phone number? Thus, is it valid?
         if not self._phoneIsSane.search(value):

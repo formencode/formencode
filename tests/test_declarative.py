@@ -44,4 +44,3 @@ class TestDeclarative(unittest.TestCase):
         print repr(obj)
         self.assert_(re.match("<Declarative object \d+"
             " bar=self foo='bar'>", repr(obj)))
-

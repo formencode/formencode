@@ -18,12 +18,12 @@ __all__ = ['NoDefault', 'Invalid', 'Validator', 'Identity',
 
 
 def get_localedir():
-    """
-    Retrieve the location of locales.
+    """Retrieve the location of locales.
 
     If we're built as an egg, we need to find the resource within the egg.
     Otherwise, we need to look for the locales on the filesystem or in the
     system message catalog.
+
     """
     locale_dir = ''
     # Check the egg first
@@ -197,11 +197,12 @@ class Validator(declarative.Declarative):
     compound = False
     accept_iterator = False
     gettextargs = {}
-    use_builtins_gettext = True # In case you don't want to use __builtins__._
-                                # although it may be defined, set this to False
+    # In case you don't want to use __builtins__._
+    # although it may be defined, set use_builtins_gettext to False:
+    use_builtins_gettext = True
 
-    __singletonmethods__ = ('to_python', 'from_python', 'message', 'all_messages',
-                            'subvalidators')
+    __singletonmethods__ = (
+        'to_python', 'from_python', 'message', 'all_messages', 'subvalidators')
 
     def __classinit__(cls, new_attrs):
         if 'messages' in new_attrs:

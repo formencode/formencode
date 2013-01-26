@@ -165,7 +165,7 @@ class TestNumberValidator(unittest.TestCase):
         self.validator = validators.Number
 
     def test_inf(self):
-        """ Validate infinity if system supports it. """
+        """Validate infinity if system supports it."""
         # Ability to convert to infinity depends on your C
         # Float library as well as the python version.
         try:
@@ -478,21 +478,27 @@ class TestOpenIdValidator(unittest.TestCase):
         self.assertEqual(validator.to_python("!!1000"),
                          "xri://!!1000")
 
+
 class TestOneOfValidator(unittest.TestCase):
+
     def test_unicode_list(self):
         o = validators.OneOf([u'ö', u'a'])
         self.assertRaises(Invalid, o.to_python, u"ä")
+
     def test_ascii_list(self):
         o = validators.OneOf(['a', 'b'])
         self.assertRaises(Invalid, o.to_python, 'c')
+
     def test_int_list_list(self):
+
         class foo(Schema):
-            bar = validators.OneOf((1,2,3), testValueList=True)
-        
-        expected = {'bar':(1,2,3)}
+            bar = validators.OneOf((1, 2, 3), testValueList=True)
+
+        expected = {'bar': (1, 2, 3)}
         value = foo.to_python(expected)
 
         self.assertEqual(expected, value)
+
 
 class TestIPAddressValidator(unittest.TestCase):
 
@@ -568,25 +574,24 @@ class TestRequireIfMissingValidator(unittest.TestCase):
         self.validator = validators.RequireIfMissing
 
     def test_missing(self):
-         v = self.validator('phone_type', missing='mail')
-         self.assertEqual(
+        v = self.validator('phone_type', missing='mail')
+        self.assertEqual(
             validate(v, dict(phone_type='')),
             dict(phone_type=u'Please enter a value'))
-         self.assertEqual(
+        self.assertEqual(
             validate(v, dict(phone_type='', mail='foo@bar.org')),
             dict(phone_type='', mail='foo@bar.org'))
 
     def test_present(self):
-         v = self.validator('phone_type', present='phone')
-         self.assertEqual(
+        v = self.validator('phone_type', present='phone')
+        self.assertEqual(
             validate(v, dict(phone_type='', phone='510 420  4577')),
             dict(phone_type=u'Please enter a value'))
-         self.assertEqual(
+        self.assertEqual(
             validate(v, dict(phone='')), dict(phone=''))
 
     def test_zero(self):
-         v = self.validator('operator', present='operand')
-         self.assertEqual(
+        v = self.validator('operator', present='operand')
+        self.assertEqual(
             validate(v, dict(operator='', operand=0)),
             dict(operator=u'Please enter a value'))
-

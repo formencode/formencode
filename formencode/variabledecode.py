@@ -22,7 +22,7 @@ and list_char keyword args. For example, to have the GET/POST variables,
 
 try:
     set
-except NameError: # Python < 2.4
+except NameError:  # Python < 2.4
     from sets import Set as set
 
 import api
@@ -59,7 +59,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
             continue
 
         place = result
-        for i in range(len(new_keys)-1):
+        for i in range(len(new_keys) - 1):
             try:
                 if not isinstance(place[new_keys[i]], dict):
                     place[new_keys[i]] = {None: place[new_keys[i]]}
@@ -86,7 +86,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
 
     try:
         to_sort_list = sorted(dicts_to_sort, key=len, reverse=True)
-    except NameError: # Python < 2.4
+    except NameError:  # Python < 2.4
         to_sort_list = list(dicts_to_sort)
         to_sort_list.sort(lambda a, b: -cmp(len(a), len(b)))
     for key in to_sort_list:
@@ -104,10 +104,10 @@ def variable_decode(d, dict_char='.', list_char='-'):
         else:
             to_sort = to_sort.items()
         to_sort.sort()
-        to_sort = [v for k, v in to_sort]
+        to_sort = [x[1] for x in to_sort]
         if key in known_lengths:
             if len(to_sort) < known_lengths[key]:
-                to_sort.extend(['']*(known_lengths[key] - len(to_sort)))
+                to_sort.extend([''] * (known_lengths[key] - len(to_sort)))
         source[last_key] = to_sort
 
     return result
@@ -133,7 +133,7 @@ def variable_encode(d, prepend='', result=None, add_repetitions=True,
     elif isinstance(d, list):
         for i, value in enumerate(d):
             variable_encode(value, "%s%s%i" % (prepend, list_char, i), result,
-                            add_repetitions, dict_char=dict_char, list_char=list_char)
+                add_repetitions, dict_char=dict_char, list_char=list_char)
         if add_repetitions:
             if prepend:
                 repName = '%s--repetitions' % prepend

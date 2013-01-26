@@ -82,7 +82,7 @@ class Context(object):
             stack = self._local.stack
         except AttributeError:
             stack = []
-        for i in range(len(stack)-1, -1, -1):
+        for i in range(len(stack) - 1, -1, -1):
             if attr in stack[i][0]:
                 return stack[i][0][attr]
         if self._default is NoDefault:
@@ -94,7 +94,7 @@ class Context(object):
     def __setattr__(self, attr, value):
         raise AttributeError(
             "You can only write attribute on context object with the .set() method")
-    
+
     def set(self, **kw):
         state_id = _restore_ids.next()
         try:
@@ -138,15 +138,15 @@ class Context(object):
         if not stack:
             return '<%s %s (empty)>' % (self.__class__.__name__, myid)
         cur = {}
-        for vars, state_id in stack:
-            cur.update(vars)
+        for kw, _state_id in stack:
+            cur.update(kw)
         keys = cur.keys()
         keys.sort()
         varlist = []
         for key in keys:
             rep = repr(cur[key])
             if len(rep) > 10:
-                rep = rep[:9]+'...'+rep[-1]
+                rep = rep[:9] + '...' + rep[-1]
             varlist.append('%s=%s' % (key, rep))
         return '<%s %s %s>' % (
             self.__class__.__name__, myid, ' '.join(varlist))
@@ -165,4 +165,3 @@ class RestoreState(object):
             return
         self.context._restore(self.state_id)
         self.restored = True
-        

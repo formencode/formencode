@@ -9,8 +9,6 @@ from validators import Set
 import declarative
 from exc import FERuntimeWarning
 
-
-
 __all__ = ['Schema']
 
 
@@ -101,7 +99,7 @@ class Schema(FancyValidator):
             # from a superclass:
             elif key in cls.fields:
                 del cls.fields[key]
-        
+
         for name, value in cls.fields.items():
             cls.add_field(name, value)
 
@@ -156,9 +154,8 @@ class Schema(FancyValidator):
                     unused.remove(name)
                 except ValueError:
                     if not self.allow_extra_fields:
-                        raise Invalid(
-                            self.message('notExpected', state, name=repr(name)),
-                            value_dict, state)
+                        raise Invalid(self.message('notExpected',
+                            state, name=repr(name)), value_dict, state)
                     else:
                         if not self.filter_extra_fields:
                             new[name] = value
@@ -166,9 +163,10 @@ class Schema(FancyValidator):
                 validator = self.fields[name]
 
                 # are iterators (list, tuple, set, etc) allowed?
-                if self._value_is_iterator(value) and not getattr(validator, 'accept_iterator', False):
-                    errors[name] = Invalid(self.message('singleValueExpected', state),
-                                  value_dict, state)
+                if self._value_is_iterator(value) and not getattr(
+                        validator, 'accept_iterator', False):
+                    errors[name] = Invalid(self.message(
+                        'singleValueExpected', state), value_dict, state)
 
                 if state is not None:
                     state.key = name
@@ -196,7 +194,8 @@ class Schema(FancyValidator):
                         if state is not None:
                             state.key = name
                         try:
-                            new[name] = validator.to_python(self.if_key_missing, state)
+                            new[name] = validator.to_python(
+                                self.if_key_missing, state)
                         except Invalid, e:
                             errors[name] = e
                 else:
@@ -205,8 +204,8 @@ class Schema(FancyValidator):
             if state is not None:
                 state.key = previous_key
             for validator in self.chained_validators:
-                if (not hasattr(validator, 'validate_partial')
-                    or not getattr(validator, 'validate_partial_form', False)):
+                if (not hasattr(validator, 'validate_partial') or not getattr(
+                        validator, 'validate_partial_form', False)):
                     continue
                 try:
                     validator.validate_partial(value_dict, state)
@@ -237,7 +236,9 @@ class Schema(FancyValidator):
         chained.reverse()
         finished = []
         for validator in chained:
-            __traceback_info__ = 'for_python chained_validator %s (finished %s)' % (validator, ', '.join(map(repr, finished)) or 'none')
+            __traceback_info__ = (
+                'for_python chained_validator %s (finished %s)') % (
+                validator, ', '.join(map(repr, finished)) or 'none')
             finished.append(validator)
             value_dict = validator.from_python(value_dict, state)
         self.assert_dict(value_dict, state)
@@ -256,9 +257,8 @@ class Schema(FancyValidator):
                     unused.remove(name)
                 except ValueError:
                     if not self.allow_extra_fields:
-                        raise Invalid(
-                            self.message('notExpected', state, name=repr(name)),
-                            value_dict, state)
+                        raise Invalid(self.message('notExpected',
+                            state, name=repr(name)), value_dict, state)
                     if not self.filter_extra_fields:
                         new[name] = value
                 else:
@@ -317,7 +317,6 @@ class Schema(FancyValidator):
             if self.fields is cls.fields:
                 self.fields = cls.fields.copy()
             self.fields[name] = validator
-            
         else:
             cls.fields[name] = validator
 
@@ -354,7 +353,7 @@ class Schema(FancyValidator):
             return True
 
         try:
-            for n in value:
+            for _v in value:
                 break
             return True
         ## @@: Should this catch any other errors?:
@@ -375,12 +374,12 @@ def format_compound_error(v, indent=0):
     elif isinstance(v, dict):
         l = v.items()
         l.sort()
-        return ('%s\n' % (' '*indent)).join(
-            ["%s: %s" % (k, format_compound_error(value, indent=len(k)+2))
+        return ('%s\n' % (' ' * indent)).join(
+            ["%s: %s" % (k, format_compound_error(value, indent=len(k) + 2))
              for k, value in l
              if value is not None])
     elif isinstance(v, list):
-        return ('%s\n' % (' '*indent)).join(
+        return ('%s\n' % (' ' * indent)).join(
             ['%s' % (format_compound_error(value, indent=indent))
              for value in v
              if value is not None])
@@ -415,9 +414,9 @@ def merge_values(v1, v2):
 
 def merge_lists(l1, l2):
     if len(l1) < len(l2):
-        l1 = l1 + [None]*(len(l2)-len(l1))
+        l1 = l1 + [None] * (len(l2) - len(l1))
     elif len(l2) < len(l1):
-        l2 = l2 + [None]*(len(l1)-len(l2))
+        l2 = l2 + [None] * (len(l1) - len(l2))
     result = []
     for l1item, l2item in zip(l1, l2):
         item = None
