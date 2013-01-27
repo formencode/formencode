@@ -4,11 +4,6 @@ Parser for HTML forms, that fills in defaults and errors.  See ``render``.
 
 import re
 
-try:
-    set
-except NameError:  # Python < 2.4
-    from sets import Set as set
-
 from formencode.rewritingparser import RewritingParser, html_quote
 
 __all__ = ['render', 'htmlliteral', 'default_formatter',

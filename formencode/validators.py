@@ -11,17 +11,13 @@ import re
 import warnings
 
 try:
-    set
-except NameError:  # Python < 2.4
-    from sets import Set as set
-
-try:
     import dns.resolver
     import dns.exception
     from encodings import idna
-    have_dns = True
 except (IOError, ImportError):
     have_dns = False
+else:
+    have_dns = True
 
 # These are only imported when needed
 httplib = None
@@ -56,7 +52,7 @@ mxDateTime_module = None
 
 def import_datetime(module_type):
     global datetime_module, mxDateTime_module
-    module_type = module_type and module_type.lower() or 'datetime'
+    module_type = module_type.lower() if module_type else 'datetime'
     if module_type == 'datetime':
         if datetime_module is None:
             import datetime as datetime_module
@@ -1498,8 +1494,7 @@ class URL(FancyValidator):
             raise Invalid(
                 self.message('noTLD', state, domain=match.group('tld')),
                 value, state)
-        if self.check_exists and (
-                value.startswith('http://') or value.startswith('https://')):
+        if self.check_exists and value.startswith(('http://', 'https://')):
             self._check_url_exists(value, state)
         return value
 
@@ -2388,12 +2383,8 @@ class SignedString(FancyValidator):
     def _to_python(self, value, state):
         global sha1
         if not sha1:
-            try:
-                from hashlib import sha1
-            except ImportError:  # Python < 2.5
-                from sha import sha as sha1
-        assert self.secret is not None, (
-            "You must give a secret")
+            from hashlib import sha1
+        assert self.secret is not None, "You must give a secret"
         parts = value.split(None, 1)
         if not parts or len(parts) == 1:
             raise Invalid(self.message('malformed', state), value, state)
@@ -2410,10 +2401,7 @@ class SignedString(FancyValidator):
     def _from_python(self, value, state):
         global sha1
         if not sha1:
-            try:
-                from hashlib import sha1
-            except ImportError:
-                from sha import sha as sha1
+            from hashlib import sha1
         nonce = self.make_nonce()
         value = str(value)
         digest = sha1(self.secret + nonce + value).digest()
@@ -2827,10 +2815,9 @@ class CreditCardValidator(FormValidator):
         for prefix, length in self._cardInfo[ccType]:
             if len(number) == length:
                 validLength = True
-            if (len(number) == length
-                    and number.startswith(prefix)):
-                foundValid = True
-                break
+                if number.startswith(prefix):
+                    foundValid = True
+                    break
         if not validLength:
             return {self.cc_number_field: self.message('badLength', state)}
         if not foundValid:

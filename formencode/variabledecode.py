@@ -20,11 +20,6 @@ and list_char keyword args. For example, to have the GET/POST variables,
 ``a_1=something`` as a list, you would use a ``list_char='_'``.
 """
 
-try:
-    set
-except NameError:  # Python < 2.4
-    from sets import Set as set
-
 import api
 
 __all__ = ['variable_decode', 'variable_encode', 'NestedVariables']
@@ -84,11 +79,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
         else:
             place[new_keys[-1]] = value
 
-    try:
-        to_sort_list = sorted(dicts_to_sort, key=len, reverse=True)
-    except NameError:  # Python < 2.4
-        to_sort_list = list(dicts_to_sort)
-        to_sort_list.sort(lambda a, b: -cmp(len(a), len(b)))
+    to_sort_list = sorted(dicts_to_sort, key=len, reverse=True)
     for key in to_sort_list:
         to_sort = result
         source = None

@@ -4,11 +4,6 @@ Validator for repeating items.
 
 import warnings
 
-try:
-    set
-except NameError:  # Python < 2.4
-    from sets import Set as set
-
 filters = warnings.filters[:]
 warnings.simplefilter('ignore', DeprecationWarning)
 warnings.filters = filters
