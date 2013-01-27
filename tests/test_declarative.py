@@ -23,8 +23,8 @@ class TestDeclarative(unittest.TestCase):
         D = declarative.Declarative
         obj_bar = D(foo='bar', woo='par')
         obj_baz = obj_bar(foo='baz')
-        self.assert_(type(obj_bar) is type(obj_baz))
-        self.assert_(obj_bar is not obj_baz)
+        self.assertTrue(type(obj_bar) is type(obj_baz))
+        self.assertTrue(obj_bar is not obj_baz)
         self.assertEqual(obj_baz.foo, 'baz')
         self.assertEqual(obj_baz.woo, 'par')
 
@@ -33,7 +33,7 @@ class TestDeclarative(unittest.TestCase):
         obj_bar = D(foo='bar')
         obj_baz = D(foo='baz')
         obj = D(bar=obj_bar, baz=obj_baz)
-        self.assert_(re.match("<Declarative object \d+"
+        self.assertTrue(re.match("<Declarative object \d+"
             " bar=<Declarative object \d+ foo='bar'>"
             " baz=<Declarative object \d+ foo='baz'>>", repr(obj)))
 
@@ -41,6 +41,5 @@ class TestDeclarative(unittest.TestCase):
         D = declarative.Declarative
         obj = D(foo='bar')
         obj.bar = obj
-        print repr(obj)
-        self.assert_(re.match("<Declarative object \d+"
+        self.assertTrue(re.match("<Declarative object \d+"
             " bar=self foo='bar'>", repr(obj)))
