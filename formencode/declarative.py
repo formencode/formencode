@@ -19,7 +19,7 @@ will be called when the class is created (including subclasses).
 """
 
 import copy
-import new
+import types
 
 from itertools import count
 
@@ -35,30 +35,30 @@ class classinstancemethod(object):
     def __init__(self, func):
         self.func = func
 
-    def __get__(self, obj, type=None):
-        return _methodwrapper(self.func, obj=obj, type=type)
+    def __get__(self, obj, cls=None):
+        return _methodwrapper(self.func, obj=obj, cls=cls)
 
 
 class _methodwrapper(object):
 
-    def __init__(self, func, obj, type):
+    def __init__(self, func, obj, cls):
         self.func = func
         self.obj = obj
-        self.type = type
+        self.cls = cls
 
     def __call__(self, *args, **kw):
         assert 'self' not in kw and 'cls' not in kw, (
             "You cannot use 'self' or 'cls' arguments to a "
             "classinstancemethod")
-        return self.func(*((self.obj, self.type) + args), **kw)
+        return self.func(*((self.obj, self.cls) + args), **kw)
 
     def __repr__(self):
         if self.obj is None:
             return ('<bound class method %s.%s>'
-                    % (self.type.__name__, self.func.func_name))
+                    % (self.cls.__name__, self.func.func_name))
         else:
             return ('<bound method %s.%s of %r>'
-                    % (self.type.__name__, self.func.func_name, self.obj))
+                    % (self.cls.__name__, self.func.func_name, self.obj))
 
 
 class DeclarativeMeta(type):
@@ -92,12 +92,12 @@ class singletonmethod(object):
     def __init__(self, func):
         self.func = func
 
-    def __get__(self, obj, type=None):
+    def __get__(self, obj, cls=None):
         if obj is None:
-            obj = type.singleton()
-        if type is None:
-            type = obj.__class__
-        return new.instancemethod(self.func, obj, type)
+            obj = cls.singleton()
+        if cls is None:
+            cls = obj.__class__
+        return types.MethodType(self.func, obj, cls)
 
 
 class Declarative(object):
