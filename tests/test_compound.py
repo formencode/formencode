@@ -6,11 +6,35 @@ from formencode import compound, Invalid
 from formencode.validators import DictConverter
 
 
+class TestCompoundValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = compound.CompoundValidator()
+
+    def test_repr(self):
+        r = repr(self.validator)
+        self.failIf('validatorArgs' in r)
+        self.failUnless('validators=[]' in r)
+
+    def test_to_python(self):
+        self.assertRaises(NotImplementedError,
+            self.validator.to_python, 1)
+
+    def test_from_python(self):
+        self.assertRaises(NotImplementedError,
+            self.validator.from_python, 1)
+
+
 class TestAllCompoundValidator(unittest.TestCase):
 
     def setUp(self):
         self.validator = compound.All(
             validators=[DictConverter({2: 1}), DictConverter({3: 2})])
+
+    def test_repr(self):
+        r = repr(self.validator)
+        self.failIf('validatorArgs' in r)
+        self.assertEqual(r.count('DictConverter'), 2)
 
     def test_to_python(self):
         self.assertEqual(self.validator.to_python(3), 1)
@@ -25,6 +49,11 @@ class TestAnyCompoundValidator(unittest.TestCase):
         self.validator = compound.Any(
             validators=[DictConverter({2: 'c'}), DictConverter({2: 'b'}),
                 DictConverter({1: 'b'})])
+
+    def test_repr(self):
+        r = repr(self.validator)
+        self.failIf('validatorArgs' in r)
+        self.assertEqual(r.count('DictConverter'), 3)
 
     def test_to_python(self):
         # Should stop before 'c' coming from the right.
@@ -48,6 +77,11 @@ class TestPipeCompoundValidator(unittest.TestCase):
     def setUp(self):
         self.validator = compound.Pipe(
             validators=[DictConverter({1: 2}), DictConverter({2: 3})])
+
+    def test_repr(self):
+        r = repr(self.validator)
+        self.failIf('validatorArgs' in r)
+        self.assertEqual(r.count('DictConverter'), 2)
 
     def test_to_python(self):
         self.assertEqual(self.validator.to_python(1), 3)

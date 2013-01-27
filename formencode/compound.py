@@ -47,10 +47,10 @@ class CompoundValidator(FancyValidator):
         self.validators = self.validators[:]
         self.validators.extend(self.validatorArgs)
 
-    def _reprVars(names):
-        return [n for n in Validator._reprVars(names)
+    def _repr_vars(names):
+        return [n for n in Validator._repr_vars(names)
                 if n != 'validatorArgs']
-    _reprVars = staticmethod(_reprVars)
+    _repr_vars = staticmethod(_repr_vars)
 
     def attempt_convert(self, value, state, convertFunc):
         raise NotImplementedError("Subclasses must implement attempt_convert")
