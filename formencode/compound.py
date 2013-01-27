@@ -21,6 +21,7 @@ def from_python(validator, value, state):
 
 
 class CompoundValidator(FancyValidator):
+    """Base class for all compound validators."""
 
     if_invalid = NoDefault
     accept_iterator = False
@@ -67,17 +68,29 @@ class CompoundValidator(FancyValidator):
 
 
 class Any(CompoundValidator):
-    """
+    """Check if any of the specified validators is valid.
+
     This class is like an 'or' operator for validators.  The first
     validator/converter in the order of evaluation that validates the value
     will be used.
 
     The order of evaluation differs depending on if you are validating to
-    python or from python as follows:
+    Python or from Python as follows:
 
     The validators are evaluated right to left when validating to Python.
 
     The validators are evaluated left to right when validating from Python.
+
+    Examples::
+
+        >>> from formencode.validators import DictConverter
+        >>> av = Any(validators=[DictConverter({2: 1}),
+        ... DictConverter({3: 2}), DictConverter({4: 3})])
+        >>> av.to_python(3)
+        2
+        >>> av.from_python(2)
+        3
+
     """
 
     def attempt_convert(self, value, state, validate):
@@ -117,20 +130,21 @@ class Any(CompoundValidator):
 
 
 class All(CompoundValidator):
-    """
+    """Check if all of the specified validators are valid.
+
     This class is like an 'and' operator for validators.  All
     validators must work, and the results are passed in turn through
     all validators for conversion in the order of evaluation. All
     is the same as `Pipe` but operates in the reverse order.
 
     The order of evaluation differs depending on if you are validating to
-    python or from python as follows:
+    Python or from Python as follows:
 
-    The validators are evaluated right to left when validating to python.
+    The validators are evaluated right to left when validating to Python.
 
-    The validators are evaluated left to right when validating from python.
+    The validators are evaluated left to right when validating from Python.
 
-    `Pipe` is more intuitive when predominatenly validating to python.
+    `Pipe` is more intuitive when predominantly validating to Python.
 
     Examples::
 
@@ -149,7 +163,7 @@ class All(CompoundValidator):
 
     def attempt_convert(self, value, state, validate):
         # To preserve the order of the transformations, we do them
-        # differently when we are converting to and from python.
+        # differently when we are converting to and from Python.
         if validate is to_python:
             validators = list(self.validators)
             validators.reverse()
@@ -165,7 +179,8 @@ class All(CompoundValidator):
             return self.if_invalid
 
     def with_validator(self, validator):
-        """
+        """Add another validator.
+
         Adds the validator (or list of validators) to a copy of
         this validator.
         """
@@ -177,7 +192,8 @@ class All(CompoundValidator):
         return self.__class__(*new, **dict(if_invalid=self.if_invalid))
 
     def join(cls, *validators):
-        """
+        """Join the specified validators.
+
         Joins several validators together as a single validator,
         filtering out None and trying to keep `All` validators from
         being nested (which isn't needed).
@@ -222,18 +238,19 @@ class All(CompoundValidator):
 
 
 class Pipe(All):
-    """
+    """Pipe value through all specified validators.
+
     This class works like `All` but the order of evaluation is opposite. All
     validators must work, and the results are passed in turn through
     each validator for conversion in the order of evaluation.  A behaviour
     known to Unix and GNU users as 'pipe'.
 
     The order of evaluation differs depending on if you are validating to
-    python or from python as follows:
+    Python or from Python as follows:
 
-    The validators are evaluated left to right when validating to python.
+    The validators are evaluated left to right when validating to Python.
 
-    The validators are evaluated right to left when validating from python.
+    The validators are evaluated right to left when validating from Python.
 
     Examples::
 
