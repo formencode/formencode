@@ -48,6 +48,11 @@ class TestStringValidator(unittest.TestCase):
         self.validator = validators.String()
         self.messages = self.validator.message
 
+    def test_docstring(self):
+        doc = self.validator.__doc__
+        self.failUnless(
+            'Enter a value not more than ``%(max)i`` characters long' in doc)
+
     def test_sv_min(self):
         sv = self.validator(min=2, accept_python=False)
         self.assertEqual(sv.to_python("foo"), "foo")
@@ -76,6 +81,10 @@ class TestUnicodeStringValidator(unittest.TestCase):
 
     def setUp(self):
         self.validator = validators.UnicodeString
+
+    def test_docstring(self):
+        doc = self.validator.__doc__
+        self.failUnless('Invalid data or incorrect encoding' in doc)
 
     def test_unicode(self):
         un = self.validator()
@@ -127,6 +136,10 @@ class TestIntValidator(unittest.TestCase):
     def setUp(self):
         self.validator = validators.Int
         self.messages = self.validator.message
+
+    def test_docstring(self):
+        doc = self.validator.__doc__
+        self.failUnless('Please enter an integer value' in doc)
 
     def test_int_min(self):
         iv = self.validator(min=5)
@@ -480,6 +493,11 @@ class TestOpenIdValidator(unittest.TestCase):
 
 
 class TestOneOfValidator(unittest.TestCase):
+
+    def test_docstring(self):
+        doc = validators.OneOf.__doc__
+        self.failUnless(
+            'Value must be one of: ``%(items)s`` (not ``%(value)r``)' in doc)
 
     def test_unicode_list(self):
         o = validators.OneOf([u'ö', u'a'])
