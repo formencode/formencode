@@ -90,9 +90,8 @@ class ForEach(CompoundValidator):
                     new_list = set(new_list)
                 return new_list
             else:
-                raise Invalid('Errors:\n%s'
-                        % '\n'.join([unicode(e) for e in errors if e]),
-                    value, state, error_list=errors)
+                raise Invalid('Errors:\n%s' % '\n'.join(unicode(e)
+                    for e in errors if e), value, state, error_list=errors)
         finally:
             if state is not None:
                 if previous_index is NoDefault:
@@ -115,7 +114,7 @@ class ForEach(CompoundValidator):
 
     class _IfMissing(object):
 
-        def __get__(self, obj, type=None):
+        def __get__(self, obj, cls=None):
             if obj is None:
                 return []
             elif obj._if_missing is ForEach._if_missing:
@@ -133,7 +132,7 @@ class ForEach(CompoundValidator):
     del _IfMissing
 
     def _convert_to_list(self, value):
-        if isinstance(value, (str, unicode)):
+        if isinstance(value, basestring):
             return [value]
         elif value is None:
             return []

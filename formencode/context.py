@@ -140,8 +140,7 @@ class Context(object):
         cur = {}
         for kw, _state_id in stack:
             cur.update(kw)
-        keys = cur.keys()
-        keys.sort()
+        keys = sorted(cur)
         varlist = []
         for key in keys:
             rep = repr(cur[key])

@@ -95,10 +95,9 @@ class Any(CompoundValidator):
 
     def attempt_convert(self, value, state, validate):
         lastException = None
+        validators = self.validators
         if validate is to_python:
-            validators = self.validators[::-1]
-        else:
-            validators = self.validators
+            validators = reversed(validators)
         for validator in validators:
             try:
                 return validate(validator, value, state)
@@ -106,8 +105,7 @@ class Any(CompoundValidator):
                 lastException = e
         if self.if_invalid is NoDefault:
             raise lastException
-        else:
-            return self.if_invalid
+        return self.if_invalid
 
     @property
     def not_empty(self):
@@ -164,19 +162,17 @@ class All(CompoundValidator):
     def attempt_convert(self, value, state, validate):
         # To preserve the order of the transformations, we do them
         # differently when we are converting to and from Python.
+        validators = self.validators
         if validate is to_python:
-            validators = list(self.validators)
-            validators.reverse()
-        else:
-            validators = self.validators
+            validators = reversed(validators)
         try:
             for validator in validators:
                 value = validate(validator, value, state)
-            return value
         except Invalid:
             if self.if_invalid is NoDefault:
                 raise
             return self.if_invalid
+        return value
 
     def with_validator(self, validator):
         """Add another validator.
@@ -185,7 +181,7 @@ class All(CompoundValidator):
         this validator.
         """
         new = self.validators[:]
-        if isinstance(validator, list) or isinstance(validator, tuple):
+        if isinstance(validator, (list, tuple)):
             new.extend(validator)
         else:
             new.append(validator)
@@ -204,10 +200,9 @@ class All(CompoundValidator):
             return Identity
         if len(validators) == 1:
             return validators[0]
-        elif isinstance(validators[0], All):
+        if isinstance(validators[0], All):
             return validators[0].with_validator(validators[1:])
-        else:
-            return cls(*validators)
+        return cls(*validators)
 
     @property
     def if_missing(self):
@@ -270,16 +265,14 @@ class Pipe(All):
     def attempt_convert(self, value, state, validate):
         # To preserve the order of the transformations, we do them
         # differently when we are converting to and from Python.
+        validators = self.validators
         if validate is from_python:
-            validators = list(self.validators)
-            validators.reverse()
-        else:
-            validators = self.validators
+            validators = reversed(self.validators)
         try:
             for validator in validators:
                 value = validate(validator, value, state)
-            return value
         except Invalid:
             if self.if_invalid is NoDefault:
                 raise
             return self.if_invalid
+        return value

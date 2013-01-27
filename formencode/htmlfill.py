@@ -221,7 +221,7 @@ class FillingParser(RewritingParser):
         self.in_select = None
         self.skip_next = False
         self.errors = errors or {}
-        if isinstance(self.errors, (str, unicode)):
+        if isinstance(self.errors, basestring):
             self.errors = {None: self.errors}
         self.in_error = None
         self.skip_error = False
@@ -283,11 +283,8 @@ class FillingParser(RewritingParser):
                 "These keys from defaults were not used in the form: %s"
                 % unused.keys())
             if unused_errors:
-                error_text = []
-                error_keys = unused_errors.keys()
-                error_keys.sort()
-                for key in error_keys:
-                    error_text.append("%s: %s" % (key, self.errors[key]))
+                error_text = ['%s: %s' % (key, self.errors[key])
+                    for key in sorted(unused_errors)]
                 assert False, (
                     "These errors were not used in the form: %s" %
                     ', '.join(error_text))
@@ -533,7 +530,7 @@ class FillingParser(RewritingParser):
         """
         if obj is None:
             return False
-        if isinstance(obj, (str, unicode)):
+        if isinstance(obj, basestring):
             return obj == value
         if hasattr(obj, '__contains__'):
             if value in obj:

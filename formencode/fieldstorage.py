@@ -8,7 +8,4 @@ import cgi
 
 
 def convert_fieldstorage(fs):
-    if fs.filename:
-        return fs
-    else:
-        return None
+    return fs if fs.filename else None

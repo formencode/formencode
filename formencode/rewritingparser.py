@@ -9,16 +9,15 @@ from htmlentitydefs import name2codepoint
 def html_quote(v):
     if v is None:
         return ''
-    elif hasattr(v, '__html__'):
+    if hasattr(v, '__html__'):
         return v.__html__()
-    elif isinstance(v, basestring):
+    if isinstance(v, basestring):
         return cgi.escape(v, 1)
+    if hasattr(v, '__unicode__'):
+        v = unicode(v)
     else:
-        if hasattr(v, '__unicode__'):
-            v = unicode(v)
-        else:
-            v = str(v)
-        return cgi.escape(v, 1)
+        v = str(v)
+    return cgi.escape(v, 1)
 
 
 class RewritingParser(HTMLParser.HTMLParser):
@@ -75,9 +74,8 @@ class RewritingParser(HTMLParser.HTMLParser):
     handle_endtag = handle_misc
 
     def write_tag(self, tag, attrs, startend=False):
-        attr_text = ''.join([' %s="%s"' % (n, html_quote(v))
-                             for (n, v) in attrs
-                             if not n.startswith('form:')])
+        attr_text = ''.join(' %s="%s"' % (n, html_quote(v))
+            for (n, v) in attrs if not n.startswith('form:'))
         if startend:
             attr_text += " /"
         self.write_text('<%s%s>' % (tag, attr_text))
@@ -150,8 +148,8 @@ class RewritingParser(HTMLParser.HTMLParser):
 
     def _get_text(self):
         try:
-            return ''.join([
-                t for t in self._content if not isinstance(t, tuple)])
+            return ''.join(
+                t for t in self._content if not isinstance(t, tuple))
         except UnicodeDecodeError, e:
             if self.data_is_str:
                 e.reason += (

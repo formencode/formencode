@@ -90,12 +90,11 @@ def variable_decode(d, dict_char='.', list_char='-'):
             to_sort = to_sort[sub_key]
         if None in to_sort:
             noneVals = [(0, x) for x in to_sort.pop(None)]
-            noneVals.extend(to_sort.items())
+            noneVals.extend(to_sort.iteritems())
             to_sort = noneVals
         else:
-            to_sort = to_sort.items()
-        to_sort.sort()
-        to_sort = [x[1] for x in to_sort]
+            to_sort = to_sort.iteritems()
+        to_sort = [x[1] for x in sorted(to_sort)]
         if key in known_lengths:
             if len(to_sort) < known_lengths[key]:
                 to_sort.extend([''] * (known_lengths[key] - len(to_sort)))
@@ -126,10 +125,8 @@ def variable_encode(d, prepend='', result=None, add_repetitions=True,
             variable_encode(value, "%s%s%i" % (prepend, list_char, i), result,
                 add_repetitions, dict_char=dict_char, list_char=list_char)
         if add_repetitions:
-            if prepend:
-                repName = '%s--repetitions' % prepend
-            else:
-                repName = '__repetitions__'
+            repName = ('%s--repetitions' % prepend
+                if prepend else '__repetitions__')
             result[repName] = str(len(d))
     else:
         result[prepend] = d

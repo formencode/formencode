@@ -133,8 +133,7 @@ class Schema(FancyValidator):
         if not value_dict:
             if self.if_empty is not NoDefault:
                 return self.if_empty
-            else:
-                value_dict = {}
+            value_dict = {}
 
         for validator in self.pre_validators:
             value_dict = validator.to_python(value_dict, state)
@@ -156,10 +155,9 @@ class Schema(FancyValidator):
                     if not self.allow_extra_fields:
                         raise Invalid(self.message('notExpected',
                             state, name=repr(name)), value_dict, state)
-                    else:
-                        if not self.filter_extra_fields:
-                            new[name] = value
-                        continue
+                    if not self.filter_extra_fields:
+                        new[name] = value
+                    continue
                 validator = self.fields[name]
 
                 # are iterators (list, tuple, set, etc) allowed?
@@ -343,7 +341,7 @@ class Schema(FancyValidator):
         return {}
 
     def _value_is_iterator(self, value):
-        if isinstance(value, (str, unicode)):
+        if isinstance(value, basestring):
             return False
         elif isinstance(value, (list, tuple)):
             return True
@@ -368,17 +366,13 @@ def format_compound_error(v, indent=0):
             # enough
             return unicode(v)
     elif isinstance(v, dict):
-        l = v.items()
-        l.sort()
         return ('%s\n' % (' ' * indent)).join(
-            ["%s: %s" % (k, format_compound_error(value, indent=len(k) + 2))
-             for k, value in l
-             if value is not None])
+            '%s: %s' % (k, format_compound_error(value, indent=len(k) + 2))
+            for k, value in sorted(v.iteritems()) if value is not None)
     elif isinstance(v, list):
         return ('%s\n' % (' ' * indent)).join(
-            ['%s' % (format_compound_error(value, indent=indent))
-             for value in v
-             if value is not None])
+            '%s' % (format_compound_error(value, indent=indent))
+            for value in v if value is not None)
     elif isinstance(v, basestring):
         return v
     else:
@@ -387,19 +381,14 @@ def format_compound_error(v, indent=0):
 
 def merge_dicts(d1, d2):
     for key in d2:
-        if key in d1:
-            d1[key] = merge_values(d1[key], d2[key])
-        else:
-            d1[key] = d2[key]
+        d1[key] = merge_values(d1[key], d2[key]) if key in d1 else d2[key]
     return d1
 
 
 def merge_values(v1, v2):
-    if (isinstance(v1, (str, unicode))
-        and isinstance(v2, (str, unicode))):
+    if isinstance(v1, basestring) and isinstance(v2, basestring):
         return v1 + '\n' + v2
-    elif (isinstance(v1, (list, tuple))
-          and isinstance(v2, (list, tuple))):
+    elif isinstance(v1, (list, tuple)) and isinstance(v2, (list, tuple)):
         return merge_lists(v1, v2)
     elif isinstance(v1, dict) and isinstance(v2, dict):
         return merge_dicts(v1, v2)

@@ -145,7 +145,7 @@ class DelimitedDigitsPostalCode(Regex):
         if len(partition_lengths) == 1:
             return _('%d digits') % partition_lengths[0]
         else:
-            return delimiter.join(['n' * l for l in partition_lengths])
+            return delimiter.join('n' * l for l in partition_lengths)
 
     def assembly_regex(self, partition_lengths, delimiter):
         mg = [r'(\d{%d})' % l for l in partition_lengths]

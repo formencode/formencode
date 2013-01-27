@@ -151,20 +151,13 @@ class Invalid(Exception):
             assert not encode_variables, (
                 "You can only encode dictionary errors")
             assert not self.error_dict
-            result = []
-            for item in self.error_list:
-                if not item:
-                    result.append(item)
-                else:
-                    result.append(item.unpack_errors())
-            return result
-        elif self.error_dict:
+            return [item.unpack_errors() if item else item
+                for item in self.error_list]
+        if self.error_dict:
             result = {}
             for name, item in self.error_dict.items():
-                if isinstance(item, (str, unicode)):
-                    result[name] = item
-                else:
-                    result[name] = item.unpack_errors()
+                result[name] = item if isinstance(
+                    item, basestring) else item.unpack_errors()
             if encode_variables:
                 import variabledecode
                 result = variabledecode.variable_encode(
@@ -174,10 +167,9 @@ class Invalid(Exception):
                     if not result[key]:
                         del result[key]
             return result
-        else:
-            assert not encode_variables, (
-                "You can only encode dictionary errors")
-            return self.msg
+        assert not encode_variables, (
+            "You can only encode dictionary errors")
+        return self.msg
 
 
 ############################################################
@@ -232,10 +224,8 @@ class Validator(declarative.Declarative):
                 if self.use_builtins_gettext:
                     import __builtin__
                     trans = __builtin__._
-
                 else:
                     trans = _stdtrans
-
             except AttributeError:
                 trans = _stdtrans
 
@@ -297,8 +287,7 @@ class Validator(declarative.Declarative):
         """
         doc = cls.__doc__ or ''
         doc = [textwrap.dedent(doc).rstrip()]
-        messages = cls._messages.items()
-        messages.sort()
+        messages = sorted(cls._messages.iteritems())
         doc.append('\n\n**Messages**\n\n')
         for name, default in messages:
             default = re.sub(r'(%\(.*?\)[rsifcx])', r'``\1``', default)
@@ -419,7 +408,7 @@ class FancyValidator(Validator):
 
     def to_python(self, value, state=None):
         try:
-            if self.strip and isinstance(value, (str, unicode)):
+            if self.strip and isinstance(value, basestring):
                 value = value.strip()
             elif hasattr(value, 'mixed'):
                 # Support Paste's MultiDict
@@ -427,11 +416,9 @@ class FancyValidator(Validator):
             if self.is_empty(value):
                 if self.not_empty:
                     raise Invalid(self.message('empty', state), value, state)
-                else:
-                    if self.if_empty is not NoDefault:
-                        return self.if_empty
-                    else:
-                        return self.empty_value(value)
+                if self.if_empty is not NoDefault:
+                    return self.if_empty
+                return self.empty_value(value)
             vo = self.validate_other
             if vo and vo is not self._validate_noop:
                 vo(value, state)
@@ -449,15 +436,14 @@ class FancyValidator(Validator):
 
     def from_python(self, value, state=None):
         try:
-            if self.strip and isinstance(value, (str, unicode)):
+            if self.strip and isinstance(value, basestring):
                 value = value.strip()
             if not self.accept_python:
                 if self.is_empty(value):
                     if self.not_empty:
                         raise Invalid(self.message('empty', state),
                                       value, state)
-                    else:
-                        return self.empty_value(value)
+                    return self.empty_value(value)
                 vp = self.validate_python
                 if vp and vp is not self._validate_noop:
                     vp(value, state)
@@ -486,7 +472,7 @@ class FancyValidator(Validator):
         return None
 
     def assert_string(self, value, state):
-        if not isinstance(value, (str, unicode)):
+        if not isinstance(value, basestring):
             raise Invalid(self.message('badType', state,
                                        type=type(value), value=value),
                           value, state)

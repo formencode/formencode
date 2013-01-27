@@ -120,7 +120,7 @@ def make_xml(s):
 
 
 def make_string(xml):
-    if isinstance(xml, (str, unicode)):
+    if isinstance(xml, basestring):
         xml = make_xml(xml)
     s = ET.tostring(xml)
     if s == '<xml />':

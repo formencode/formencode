@@ -673,8 +673,7 @@ class DictConverter(FancyValidator):
             if self.hideDict:
                 raise Invalid(self.message('keyNotFound', state), value, state)
             else:
-                items = self.dict.keys()
-                items.sort()
+                items = sorted(self.dict)
                 items = '; '.join(map(repr, items))
                 raise Invalid(self.message('chooseKey',
                     state, items=items), value, state)
@@ -1058,8 +1057,8 @@ class String(FancyValidator):
             value = ''
         elif not isinstance(value, basestring):
             if isinstance(value, (list, tuple)):
-                value = self.list_joiner.join([
-                    self._from_python(v, state) for v in value])
+                value = self.list_joiner.join(
+                    self._from_python(v, state) for v in value)
             try:
                 value = str(value)
             except UnicodeEncodeError:
@@ -1327,7 +1326,7 @@ class Email(FancyValidator):
                 self.message('badUsername', state, username=username),
                 value, state)
         try:
-            idna_domain = '.'.join([idna.ToASCII(l) for l in domain.split('.')])
+            idna_domain = '.'.join(idna.ToASCII(p) for p in domain.split('.'))
         except UnicodeError:
             # UnicodeError: label empty or too long
             # This exception might happen if we have an invalid domain name part 
@@ -1346,20 +1345,17 @@ class Email(FancyValidator):
                 import socket
             try:
                 try:
-                    a = dns.resolver.query(domain, 'MX')
+                    dns.resolver.query(domain, 'MX')
                 except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer), e:
                     try:
-                        a = dns.resolver.query(domain, 'A')
+                        dns.resolver.query(domain, 'A')
                     except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer), e:
                         raise Invalid(
-                            self.message('domainDoesNotExist', state, domain=domain),
-                            value, state
-                        )
+                            self.message('domainDoesNotExist',
+                                state, domain=domain), value, state)
             except (socket.error, dns.exception.DNSException), e:
                 raise Invalid(
-                    self.message('socketError', state, error=e),
-                    value, state
-                )
+                    self.message('socketError', state, error=e), value, state)
 
     def _to_python(self, value, state):
         return value.strip()
@@ -1845,10 +1841,7 @@ class FileUploadKeeper(FancyValidator):
             content = upload
         if not content and static:
             filename, content = static.split(None, 1)
-            if filename == '-':
-                filename = ''
-            else:
-                filename = filename.decode('base64')
+            filename = '' if filename == '-' else filename.decode('base64')
             content = content.decode('base64')
         return {'filename': filename, 'content': content}
 
@@ -1968,10 +1961,8 @@ class DateConverter(FancyValidator):
             raise TypeError('Bad month_style: %r' % self.month_style)
 
     def _to_python(self, value, state):
-        if self.accept_day:
-            return self.convert_day(value, state)
-        else:
-            return self.convert_month(value, state)
+        return (self.convert_day
+            if self.accept_day else self.convert_month)(value, state)
 
     def convert_day(self, value, state):
         self.assert_string(value, state)
@@ -2048,17 +2039,13 @@ class DateConverter(FancyValidator):
     def _from_python(self, value, state):
         if self.if_empty is not NoDefault and not value:
             return ''
-        if self.accept_day:
-            return self.unconvert_day(value, state)
-        else:
-            return self.unconvert_month(value, state)
+        return (self.unconvert_day
+            if self.accept_day else self.unconvert_month)(value, state)
 
     def unconvert_day(self, value, state):
         # @@ ib: double-check, improve
-        if self.month_style == 'mm/dd/yyyy':
-            return value.strftime('%m/%d/%Y')
-        else:
-            return value.strftime('%d/%m/%Y')
+        return value.strftime('%m/%d/%Y'
+            if self.month_style == 'mm/dd/yyyy' else '%d/%m/%Y')
 
     def unconvert_month(self, value, state):
         # @@ ib: double-check, improve
@@ -2169,18 +2156,14 @@ class TimeConverter(FancyValidator):
             if last_two not in ('am', 'pm'):
                 if self.use_ampm != 'optional':
                     raise Invalid(self.message('noAMPM', state), value, state)
-                else:
-                    offset = 0
+                offset = 0
             else:
                 explicit_ampm = True
-                if last_two == 'pm':
-                    offset = 12
-                else:
-                    offset = 0
+                offset = 12 if last_two == 'pm' else 0
                 time = time[:-2]
         else:
             offset = 0
-        parts = time.split(':')
+        parts = time.split(':', 3)
         if len(parts) > 3:
             raise Invalid(self.message('tooManyColon', state), value, state)
         if len(parts) == 3 and not self.use_seconds:
@@ -2355,10 +2338,7 @@ class StringBool(FancyValidator):  # originally from TurboGears 1
         return bool(value)
 
     def _from_python(self, value, state):
-        if value:
-            return self.true_values[0]
-        else:
-            return self.false_values[0]
+        return (self.true_values if value else self.false_values)[0]
 
 # Should deprecate:
 StringBoolean = StringBool
@@ -2414,9 +2394,8 @@ class SignedString(FancyValidator):
         global random
         if not random:
             import random
-        return ''.join([
-            chr(random.randrange(256))
-            for _i in range(self.nonce_length)])
+        return ''.join(chr(random.randrange(256))
+            for _i in xrange(self.nonce_length))
 
 
 class IPAddress(FancyValidator):
@@ -2727,10 +2706,9 @@ class FieldsMatch(FormValidator):
                 else:
                     errors[name] = self.message('invalidNoMatch', state)
         if errors:
-            error_list = errors.items()
-            error_list.sort()
+            error_list = sorted(errors.iteritems())
             error_message = '<br>\n'.join(
-                ['%s: %s' % (name, value) for name, value in error_list])
+                '%s: %s' % (name, value) for name, value in error_list)
             raise Invalid(error_message, field_dict, state, error_dict=errors)
 
 
@@ -2787,11 +2765,10 @@ class CreditCardValidator(FormValidator):
     def validate_python(self, field_dict, state):
         errors = self._validateReturn(field_dict, state)
         if errors:
-            error_list = errors.items()
-            error_list.sort()
+            error_list = sorted(errors.iteritems())
             raise Invalid(
-                '<br>\n'.join(["%s: %s" % (name, value)
-                               for name, value in error_list]),
+                '<br>\n'.join('%s: %s' % (name, value)
+                    for name, value in error_list),
                 field_dict, state, error_dict=errors)
 
     def _validateReturn(self, field_dict, state):
@@ -2829,7 +2806,7 @@ class CreditCardValidator(FormValidator):
     def _validateMod10(self, s):
         """Check string with the mod 10 algorithm (aka "Luhn formula")."""
         checksum, factor = 0, 1
-        for c in s[::-1]:
+        for c in reversed(s):
             for c in str(factor * int(c)):
                 checksum += int(c)
             factor = 3 - factor
@@ -2903,11 +2880,10 @@ class CreditCardExpires(FormValidator):
     def validate_python(self, field_dict, state):
         errors = self._validateReturn(field_dict, state)
         if errors:
-            error_list = errors.items()
-            error_list.sort()
+            error_list = sorted(errors.iteritems())
             raise Invalid(
-                '<br>\n'.join(["%s: %s" % (name, value)
-                               for name, value in error_list]),
+                '<br>\n'.join('%s: %s' % (name, value)
+                    for name, value in error_list),
                 field_dict, state, error_dict=errors)
 
     def _validateReturn(self, field_dict, state):
@@ -2920,11 +2896,10 @@ class CreditCardExpires(FormValidator):
             dt_mod = import_datetime(self.datetime_module)
             now = datetime_now(dt_mod)
             today = datetime_makedate(dt_mod, now.year, now.month, now.day)
-            next_month = (ccExpiresMonth % 12) + 1
+            next_month = ccExpiresMonth % 12 + 1
+            next_month_year = ccExpiresYear
             if next_month == 1:
-                next_month_year = ccExpiresYear + 1
-            else:
-                next_month_year = ccExpiresYear
+                next_month_year += 1
             expires_date = datetime_makedate(
                 dt_mod, next_month_year, next_month, 1)
             assert expires_date > today
@@ -2971,35 +2946,29 @@ class CreditCardSecurityCode(FormValidator):
         badLength=_('Invalid credit card security code length'))
 
     def validate_partial(self, field_dict, state):
-        if not field_dict.get(self.cc_type_field, None) \
-           or not field_dict.get(self.cc_code_field, None):
+        if (not field_dict.get(self.cc_type_field, None)
+                or not field_dict.get(self.cc_code_field, None)):
             return None
         self.validate_python(field_dict, state)
 
     def validate_python(self, field_dict, state):
         errors = self._validateReturn(field_dict, state)
         if errors:
-            error_list = errors.items()
-            error_list.sort()
+            error_list = sorted(errors.iteritems())
             raise Invalid(
-                '<br>\n'.join(["%s: %s" % (name, value)
-                               for name, value in error_list]),
+                '<br>\n'.join('%s: %s' % (name, value)
+                    for name, value in error_list),
                 field_dict, state, error_dict=errors)
 
     def _validateReturn(self, field_dict, state):
         ccType = str(field_dict[self.cc_type_field]).strip()
         ccCode = str(field_dict[self.cc_code_field]).strip()
-
         try:
             int(ccCode)
         except ValueError:
             return {self.cc_code_field: self.message('notANumber', state)}
-
         length = self._cardInfo[ccType]
-        validLength = False
-        if len(ccCode) == length:
-            validLength = True
-        if not validLength:
+        if len(ccCode) != length:
             return {self.cc_code_field: self.message('badLength', state)}
 
     # key = credit card type, value = length of security code

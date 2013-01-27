@@ -56,9 +56,8 @@ class _methodwrapper(object):
         if self.obj is None:
             return ('<bound class method %s.%s>'
                     % (self.cls.__name__, self.func.func_name))
-        else:
-            return ('<bound method %s.%s of %r>'
-                    % (self.cls.__name__, self.func.func_name, self.obj))
+        return ('<bound method %s.%s of %r>'
+                % (self.cls.__name__, self.func.func_name, self.obj))
 
 
 class DeclarativeMeta(type):
@@ -171,27 +170,26 @@ class Declarative(object):
     def __sourcerepr__(self, source, binding=None):
         if binding and len(self.__dict__) > 3:
             return self._source_repr_class(source, binding=binding)
-        else:
-            vals = self.__dict__.copy()
-            if 'declarative_count' in vals:
-                del vals['declarative_count']
-            args = []
-            if (self.__unpackargs__ and self.__unpackargs__[0] == '*'
-                    and self.__unpackargs__[1] in vals):
-                v = vals[self.__unpackargs__[1]]
-                if isinstance(v, (list, int)):
-                    args.extend(map(source.makeRepr, v))
-                    del v[self.__unpackargs__[1]]
-            for name in self.__unpackargs__:
-                if name in vals:
-                    args.append(source.makeRepr(vals[name]))
-                    del vals[name]
-                else:
-                    break
-            args.extend(['%s=%s' % (name, source.makeRepr(value))
-                         for (name, value) in vals.items()])
-            return '%s(%s)' % (self.__class__.__name__,
-                               ', '.join(args))
+        vals = self.__dict__.copy()
+        if 'declarative_count' in vals:
+            del vals['declarative_count']
+        args = []
+        if (self.__unpackargs__ and self.__unpackargs__[0] == '*'
+                and self.__unpackargs__[1] in vals):
+            v = vals[self.__unpackargs__[1]]
+            if isinstance(v, (list, int)):
+                args.extend(map(source.makeRepr, v))
+                del v[self.__unpackargs__[1]]
+        for name in self.__unpackargs__:
+            if name in vals:
+                args.append(source.makeRepr(vals[name]))
+                del vals[name]
+            else:
+                break
+        args.extend(['%s=%s' % (name, source.makeRepr(value))
+                     for (name, value) in vals.items()])
+        return '%s(%s)' % (self.__class__.__name__,
+                           ', '.join(args))
 
     def _source_repr_class(self, source, binding=None):
         d = self.__dict__.copy()
@@ -217,22 +215,14 @@ class Declarative(object):
             v = cls.__dict__.copy()
         if 'declarative_count' in v:
             name = '%s %i' % (name, v.pop('declarative_count'))
-        names = v.keys()
-        names.sort()
-        args = []
-        for n in self._repr_vars(names):
-            if v[n] is self:
-                args.append('%s=self' % n)
-            else:
-                args.append('%s=%r' % (n, v[n]))
+        names = sorted(v)
+        args = ['%s=self' % n if v[n] is self else '%s=%r' % (n, v[n])
+            for n in self._repr_vars(names)]
         if not args:
             return '<%s>' % name
-        else:
-            return '<%s %s>' % (name, ' '.join(args))
+        return '<%s %s>' % (name, ' '.join(args))
 
     @staticmethod
     def _repr_vars(dictNames):
-        names = [n for n in dictNames
-                 if not n.startswith('_') and n != 'declarative_count']
-        names.sort()
-        return names
+        return sorted(n for n in dictNames
+            if not n.startswith('_') and n != 'declarative_count')
