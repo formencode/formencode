@@ -1,13 +1,10 @@
+
+import doctest
+import xml.etree.ElementTree as ET
 try:
-    import doctest
-    doctest.OutputChecker
-except (AttributeError, ImportError):  # Python < 2.4
-    import util.doctest24 as doctest
-try:
-    import xml.etree.ElementTree as ET
-except ImportError:
-    import elementtree.ElementTree as ET
-from xml.parsers.expat import ExpatError as XMLParseError
+    XMLParseError = ET.ParseError
+except AttributeError:  # Python < 2.7
+    from xml.parsers.expat import ExpatError as XMLParseError
 
 RealOutputChecker = doctest.OutputChecker
 

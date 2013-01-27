@@ -8,9 +8,9 @@ if not '2.6' <= sys.version < '3.0' and not '3.2' <= sys.version:
 
 tests_require = ['nose', 'pycountry', 'dnspython']
 
-setup(name="FormEncode",
+setup(name='FormEncode',
       version=version,
-      # requires_python='>=2.3,<3', # PEP345
+      # requires_python='>=2.6,!=3.0,!=3.1', # PEP345
       description="HTML form validation, generation, and conversion package",
       long_description="""\
 FormEncode validates and converts nested structures.  It allows for
@@ -26,12 +26,12 @@ The official repo is at GitHub: https://github.com/formencode/formencode
            "Programming Language :: Python",
            "Topic :: Software Development :: Libraries :: Python Modules",
            ],
-      author="Ian Bicking",
-      author_email="ianb@colorstudy.com",
-      url="http://formencode.org",
-      license="PSF",
+      author='Ian Bicking',
+      author_email='ianb@colorstudy.com',
+      url='http://formencode.org',
+      license='PSF',
       zip_safe=False,
-      packages=["formencode", "formencode.util"],
+      packages=['formencode'],
       include_package_data=True,
       test_suite='nose.collector',
       tests_require=tests_require,

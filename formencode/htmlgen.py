@@ -56,11 +56,9 @@ Examples::
 
 """
 
+import xml.etree.ElementTree as ET
 from cgi import escape
-try:
-    import xml.etree.ElementTree as ET
-except ImportError:  # Python < 2.5
-    import elementtree.ElementTree as ET
+
 
 __all__ = ['html']
 

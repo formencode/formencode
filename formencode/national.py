@@ -9,11 +9,11 @@ from validators import Regex, Invalid, _
 
 try:
     import pycountry
-except:
+except ImportError:
     pycountry = None
 try:
     from turbogears.i18n import format as tgformat
-except:
+except ImportError:
     tgformat = None
 
 if pycountry or tgformat:
@@ -738,10 +738,11 @@ class LanguageValidator(FancyValidator):
         upval = value.upper()
         if self.key_ok:
             try:
-                c = get_language(value)
-                return value
-            except:
+                get_language(value)
+            except Exception:
                 pass
+            else:
+                return value
         for k, v in get_languages():
             if v.upper() == upval:
                 return k

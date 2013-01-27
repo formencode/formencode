@@ -1,10 +1,6 @@
 import os
 import sys
-try:
-    import doctest
-    doctest.OutputChecker
-except (AttributeError, ImportError):  # Python < 2.4
-    import util.doctest24 as doctest
+import doctest
 
 from formencode import compound
 from formencode import htmlfill

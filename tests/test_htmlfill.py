@@ -5,19 +5,13 @@ import os
 import re
 import sys
 
+import xml.etree.ElementTree as ET
+try:
+    XMLParseError = ET.ParseError
+except AttributeError:  # Python < 2.7
+    from xml.parsers.expat import ExpatError as XMLParseError
+
 from htmlentitydefs import name2codepoint
-try:
-    from xml.etree.ElementTree import ParseError
-    assert ParseError  # silence pyflakes
-except ImportError:  # Python < 2.7
-    from xml.parsers.expat import ExpatError as ParseError
-
-
-try:
-    import xml.etree.ElementTree as ET
-    assert ET  # silence pyflakes
-except ImportError:
-    import elementtree.ElementTree as ET
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__))))
@@ -74,7 +68,7 @@ def run_filename(filename):
     try:
         output_xml = ET.XML(output)
         expected_xml = ET.XML(expected)
-    except ParseError:
+    except XMLParseError:
         comp = output.strip() == expected.strip()
     else:
         comp = xml_compare(output_xml, expected_xml, reporter)

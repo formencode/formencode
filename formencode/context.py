@@ -52,9 +52,9 @@ When Python 2.5 comes out, this syntax would certainly be useful::
 And ``page`` will be set to ``'view'`` only inside that ``with`` block.
 """
 
-from itertools import count
+import threading
 
-from formencode.util import threadinglocal
+from itertools import count
 
 __all__ = ['Context', 'ContextRestoreError']
 
@@ -72,7 +72,7 @@ class ContextRestoreError(Exception):
 class Context(object):
 
     def __init__(self, default=NoDefault):
-        self.__dict__['_local'] = threadinglocal.local()
+        self.__dict__['_local'] = threading.local()
         self.__dict__['_default'] = default
 
     def __getattr__(self, attr):

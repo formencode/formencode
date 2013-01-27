@@ -1927,7 +1927,7 @@ class DateConverter(FancyValidator):
     accept_day = True
     # also allowed: 'dd/mm/yyyy'
     month_style = 'mm/dd/yyyy'
-    # Use 'datetime' to force the Python 2.3+ datetime module, or
+    # Use 'datetime' to force the Python datetime module, or
     # 'mxDateTime' to force the mxDateTime module (None means use
     # datetime, or if not present mxDateTime)
     datetime_module = None
