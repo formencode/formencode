@@ -47,10 +47,10 @@ class CompoundValidator(FancyValidator):
         self.validators = self.validators[:]
         self.validators.extend(self.validatorArgs)
 
+    @staticmethod
     def _repr_vars(names):
         return [n for n in Validator._repr_vars(names)
                 if n != 'validatorArgs']
-    _repr_vars = staticmethod(_repr_vars)
 
     def attempt_convert(self, value, state, convertFunc):
         raise NotImplementedError("Subclasses must implement attempt_convert")
@@ -109,24 +109,24 @@ class Any(CompoundValidator):
         else:
             return self.if_invalid
 
-    def not_empty__get(self):
+    @property
+    def not_empty(self):
         not_empty = True
         for validator in self.validators:
             not_empty = not_empty and getattr(validator, 'not_empty', False)
         return not_empty
-    not_empty = property(not_empty__get)
 
     def is_empty(self, value):
         # sub-validators should handle emptiness.
         return False
 
-    def accept_iterator__get(self):
+    @property
+    def accept_iterator(self):
         accept_iterator = False
         for validator in self.validators:
             accept_iterator = accept_iterator or getattr(
                 validator, 'accept_iterator', False)
         return accept_iterator
-    accept_iterator = property(accept_iterator__get)
 
 
 class All(CompoundValidator):
@@ -191,6 +191,7 @@ class All(CompoundValidator):
             new.append(validator)
         return self.__class__(*new, **dict(if_invalid=self.if_invalid))
 
+    @classmethod
     def join(cls, *validators):
         """Join the specified validators.
 
@@ -207,34 +208,33 @@ class All(CompoundValidator):
             return validators[0].with_validator(validators[1:])
         else:
             return cls(*validators)
-    join = classmethod(join)
 
-    def if_missing__get(self):
+    @property
+    def if_missing(self):
         for validator in self.validators:
             v = validator.if_missing
             if v is not NoDefault:
                 return v
         return NoDefault
-    if_missing = property(if_missing__get)
 
-    def not_empty__get(self):
+    @property
+    def not_empty(self):
         not_empty = False
         for validator in self.validators:
             not_empty = not_empty or getattr(validator, 'not_empty', False)
         return not_empty
-    not_empty = property(not_empty__get)
 
     def is_empty(self, value):
         # sub-validators should handle emptiness.
         return False
 
-    def accept_iterator__get(self):
+    @property
+    def accept_iterator(self):
         accept_iterator = True
         for validator in self.validators:
             accept_iterator = accept_iterator and getattr(
                 validator, 'accept_iterator', False)
         return accept_iterator
-    accept_iterator = property(accept_iterator__get)
 
 
 class Pipe(All):

@@ -609,9 +609,9 @@ class OneOf(FancyValidator):
                         self.message('notIn', state,
                             items=items, value=value), value, state)
 
-    def accept_iterator__get(self):
+    @property
+    def accept_iterator(self):
         return self.testValueList
-    accept_iterator = property(accept_iterator__get)
 
 
 class DictConverter(FancyValidator):

@@ -301,6 +301,7 @@ class Schema(FancyValidator):
                 state.key = previous_key
                 state.full_dict = previous_full_dict
 
+    @declarative.classinstancemethod
     def add_chained_validator(self, cls, validator):
         if self is not None:
             if self.chained_validators is cls.chained_validators:
@@ -309,9 +310,7 @@ class Schema(FancyValidator):
         else:
             cls.chained_validators.append(validator)
 
-    add_chained_validator = declarative.classinstancemethod(
-        add_chained_validator)
-
+    @declarative.classinstancemethod
     def add_field(self, cls, name, validator):
         if self is not None:
             if self.fields is cls.fields:
@@ -320,8 +319,7 @@ class Schema(FancyValidator):
         else:
             cls.fields[name] = validator
 
-    add_field = declarative.classinstancemethod(add_field)
-
+    @declarative.classinstancemethod
     def add_pre_validator(self, cls, validator):
         if self is not None:
             if self.pre_validators is cls.pre_validators:
@@ -329,8 +327,6 @@ class Schema(FancyValidator):
             self.pre_validators.append(validator)
         else:
             cls.pre_validators.append(validator)
-
-    add_pre_validator = declarative.classinstancemethod(add_pre_validator)
 
     def subvalidators(self):
         result = []
@@ -507,9 +503,8 @@ class SimpleFormValidator(FancyValidator):
 
     validate_partial = to_python
 
+    @classmethod
     def decorate(cls, **kw):
         def decorator(func):
             return cls(func, **kw)
         return decorator
-
-    decorate = classmethod(decorate)

@@ -289,6 +289,7 @@ class Validator(declarative.Declarative):
         """
         return []
 
+    @classmethod
     def _initialize_docstring(cls):
         """
         This changes the class's docstring to include information
@@ -304,7 +305,6 @@ class Validator(declarative.Declarative):
             doc.append('``' + name + '``:\n')
             doc.append('  ' + default + '\n\n')
         cls.__doc__ = ''.join(doc)
-    _initialize_docstring = classmethod(_initialize_docstring)
 
 
 class _Identity(Validator):

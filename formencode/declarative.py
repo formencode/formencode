@@ -157,6 +157,7 @@ class Declarative(object):
         current.update(kw)
         return self.__class__(*args, **current)
 
+    @classmethod
     def singleton(cls):
         name = '_%s__singleton' % cls.__name__
         if not hasattr(cls, name):
@@ -166,7 +167,6 @@ class Declarative(object):
             except TypeError:  # takes arguments
                 setattr(cls, name, cls)
         return getattr(cls, name)
-    singleton = classmethod(singleton)
 
     def __sourcerepr__(self, source, binding=None):
         if binding and len(self.__dict__) > 3:
@@ -200,13 +200,14 @@ class Declarative(object):
         return source.makeClass(self, binding, d,
                                 (self.__class__,))
 
+    @classmethod
     def __classsourcerepr__(cls, source, binding=None):
         d = cls.__dict__.copy()
         del d['declarative_count']
         return source.makeClass(cls, binding or cls.__name__, d,
                                 cls.__bases__)
-    __classsourcerepr__ = classmethod(__classsourcerepr__)
 
+    @classinstancemethod
     def __repr__(self, cls):
         if self:
             name = '%s object' % self.__class__.__name__
@@ -228,11 +229,10 @@ class Declarative(object):
             return '<%s>' % name
         else:
             return '<%s %s>' % (name, ' '.join(args))
-    __repr__ = classinstancemethod(__repr__)
 
+    @staticmethod
     def _repr_vars(dictNames):
         names = [n for n in dictNames
                  if not n.startswith('_') and n != 'declarative_count']
         names.sort()
         return names
-    _repr_vars = staticmethod(_repr_vars)
