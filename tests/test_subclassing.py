@@ -14,24 +14,24 @@ class CustomValidator(FancyValidator):
         'custom': "%(number)s is invalid",
     }
 
-    def _to_python(self, value, state):
+    def _convert_to_python(self, value, state):
         if value == '1':
             raise Invalid(self.message(
                 'custom', state, number='one'), value, state)
         return int(value)
 
-    def _from_python(self, value, state):
+    def _convert_from_python(self, value, state):
         if value == 2:
             raise Invalid(self.message(
                 'custom', state, number='two'), value, state)
         return str(value)
 
-    def validate_other(self, value, state):
+    def _validate_other(self, value, state):
         if value == '3':
             raise Invalid(self.message(
                 'custom', state, number='three'), value, state)
 
-    def validate_python(self, value, state):
+    def _validate_python(self, value, state):
         if value == 4:
             raise Invalid(self.message(
                 'custom', state, number='four'), value, state)
@@ -122,8 +122,8 @@ class NotOneValidator(Int):
 
     number = 1
 
-    def _to_python(self, value, state):
-        value = super(NotOneValidator, self)._to_python(value, state)
+    def _convert_to_python(self, value, state):
+        value = super(NotOneValidator, self)._convert_to_python(value, state)
         if value == self.number:
             raise Invalid(self.message(
                 'custom', state, number=self.number), value, state)
@@ -186,7 +186,7 @@ class TestNotOneValidator(unittest.TestCase):
 class CustomCompoundValidator(CompoundValidator):
     """A custom validator based directly on CompoundValidator."""
 
-    def attempt_convert(self, value, state, validate):
+    def _attempt_convert(self, value, state, validate):
         return validate(self.validators[1], value, state)
 
 
@@ -216,8 +216,8 @@ class AllAndNotOneValidator(All):
 
     number = 1
 
-    def attempt_convert(self, value, state, validate):
-        value = super(AllAndNotOneValidator, self).attempt_convert(
+    def _attempt_convert(self, value, state, validate):
+        value = super(AllAndNotOneValidator, self)._attempt_convert(
             value, state, validate)
         if value == self.number:
             raise Invalid(self.message(

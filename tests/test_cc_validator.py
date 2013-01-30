@@ -6,7 +6,7 @@ cc = CreditCardValidator()
 
 def validate(cctype, ccnumber):
     try:
-        cc.validate_python({'ccNumber': ccnumber,
+        cc.to_python({'ccNumber': ccnumber,
                             'ccType': cctype}, None)
     except Invalid, e:
         return e.unpack_errors()['ccNumber']

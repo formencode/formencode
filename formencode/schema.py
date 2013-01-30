@@ -75,6 +75,7 @@ class Schema(FancyValidator):
     __mutableattributes__ = ('fields', 'chained_validators',
                              'pre_validators')
 
+    @staticmethod
     def __classinit__(cls, new_attrs):
         FancyValidator.__classinit__(cls, new_attrs)
         # Don't bother doing anything if this is the most parent
@@ -129,7 +130,7 @@ class Schema(FancyValidator):
                 self.message('badDictType', state,
                     type=type(value), value=value), value, state)
 
-    def _to_python(self, value_dict, state):
+    def _convert_to_python(self, value_dict, state):
         if not value_dict:
             if self.if_empty is not NoDefault:
                 return self.if_empty
@@ -229,7 +230,7 @@ class Schema(FancyValidator):
                 state.key = previous_key
                 state.full_dict = previous_full_dict
 
-    def _from_python(self, value_dict, state):
+    def _convert_from_python(self, value_dict, state):
         chained = self.chained_validators[:]
         chained.reverse()
         finished = []

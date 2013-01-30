@@ -2,13 +2,6 @@
 Validator for repeating items.
 """
 
-import warnings
-
-filters = warnings.filters[:]
-warnings.simplefilter('ignore', DeprecationWarning)
-warnings.filters = filters
-
-
 from api import NoDefault, Invalid
 from compound import CompoundValidator, from_python
 
@@ -48,7 +41,7 @@ class ForEach(CompoundValidator):
     repeating = True
     _if_missing = ()
 
-    def attempt_convert(self, value, state, validate):
+    def _attempt_convert(self, value, state, validate):
         if self.convert_to_list:
             value = self._convert_to_list(value)
         if self.if_empty is not NoDefault and not value:

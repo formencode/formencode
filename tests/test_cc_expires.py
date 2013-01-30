@@ -5,7 +5,7 @@ ed = CreditCardExpires()
 
 def validate(month, year):
     try:
-        ed.validate_python({'ccExpiresMonth': month,
+        ed.to_python({'ccExpiresMonth': month,
                             'ccExpiresYear': year}, None)
     except Invalid, e:
         return e.unpack_errors()['ccExpiresMonth']
