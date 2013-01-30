@@ -33,6 +33,7 @@ class CompoundValidator(FancyValidator):
     __mutableattributes__ = ('validators',)
 
     def __classinit__(cls, new_attrs):
+        FancyValidator.__classinit__(cls, new_attrs)
         toAdd = []
         for name, value in new_attrs.items():
             if is_validator(value) and value is not Identity:
