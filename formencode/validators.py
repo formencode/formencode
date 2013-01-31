@@ -10,7 +10,7 @@ import locale
 import re
 import warnings
 
-try:
+try:  # import dnspython
     import dns.resolver
     import dns.exception
     from encodings import idna
@@ -1144,9 +1144,10 @@ class UnicodeString(String):
             if hasattr(value, '__unicode__'):
                 value = unicode(value)
                 return value
-            else:
+            if not (unicode is str  # Python 3
+                    and isinstance(value, bytes) and self.inputEncoding):
                 value = str(value)
-        if self.inputEncoding:
+        if self.inputEncoding and not isinstance(value, unicode):
             try:
                 value = unicode(value, self.inputEncoding)
             except UnicodeDecodeError:
@@ -1335,7 +1336,10 @@ class Email(FancyValidator):
                 self.message('badUsername', state, username=username),
                 value, state)
         try:
-            idna_domain = '.'.join(idna.ToASCII(p) for p in domain.split('.'))
+            idna_domain = [idna.ToASCII(p) for p in domain.split('.')]
+            if unicode is str:  # Python 3
+                idna_domain = [p.decode('ascii') for p in idna_domain]
+            idna_domain = '.'.join(idna_domain)
         except UnicodeError:
             # UnicodeError: label empty or too long
             # This exception might happen if we have an invalid domain name part 
@@ -1510,7 +1514,10 @@ class URL(FancyValidator):
         scheme, netloc, path, params, query, fragment = urlparse.urlparse(
             url)
         try:
-            return str(urlparse.urlunparse((scheme, netloc.encode('idna'),
+            netloc = netloc.encode('idna')
+            if unicode is str:  # Python 3
+                netloc = netloc.decode('ascii')
+            return str(urlparse.urlunparse((scheme, netloc,
                 path, params, query, fragment)))
         except UnicodeError:
             return url

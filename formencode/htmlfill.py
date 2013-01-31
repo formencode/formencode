@@ -383,7 +383,8 @@ class FillingParser(RewritingParser):
         if self.prefix_error:
             self.write_marker(name)
         value = self.defaults.get(name)
-        if isinstance(name, unicode) and isinstance(value, str):
+        if (unicode is not str  # Python 2
+                and isinstance(name, unicode) and isinstance(value, str)):
             value = value.decode(self.encoding or self.default_encoding)
         if name in self.add_attributes:
             for attr_name, attr_value in self.add_attributes[name].iteritems():

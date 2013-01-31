@@ -94,9 +94,7 @@ class singletonmethod(object):
     def __get__(self, obj, cls=None):
         if obj is None:
             obj = cls.singleton()
-        if cls is None:
-            cls = obj.__class__
-        return types.MethodType(self.func, obj, cls)
+        return types.MethodType(self.func, obj)
 
 
 class Declarative(object):

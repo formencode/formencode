@@ -8,7 +8,7 @@ from formencode.compound import CompoundValidator, All
 from formencode.validators import Int
 
 
-with warnings.catch_warnings(True) as custom_warnings:
+with warnings.catch_warnings(record=True) as custom_warnings:
 
     class DeprecatedCustomValidator(FancyValidator):
         """A custom validator based directly on FancyValidator."""
@@ -127,7 +127,7 @@ class TestDeprecatedCustomValidator(unittest.TestCase):
         self.assertEqual(cv.from_python(5), '5')
 
 
-with warnings.catch_warnings(True) as not_one_warnings:
+with warnings.catch_warnings(record=True) as not_one_warnings:
 
     class DeprecatedNotOneValidator(Int):
         """A custom validator based on an existing validator."""
@@ -150,7 +150,7 @@ with warnings.catch_warnings(True) as not_one_warnings:
 class TestDeprecatedNotOneValidator(unittest.TestCase):
 
     def test_1_warnings(self):  # must run first
-        with warnings.catch_warnings(True) as runtime_warnings:
+        with warnings.catch_warnings(record=True) as runtime_warnings:
             DeprecatedNotOneValidator().to_python('2')
         for output in runtime_warnings, not_one_warnings:
             output = '\n'.join(map(str, output))
@@ -208,7 +208,7 @@ class TestDeprecatedNotOneValidator(unittest.TestCase):
         self.assertRaises(Invalid, nov.to_python, '50')
 
 
-with warnings.catch_warnings(True) as custom_compound_warnings:
+with warnings.catch_warnings(record=True) as custom_compound_warnings:
 
     class DeprecatedCustomCompoundValidator(CompoundValidator):
         """A custom validator based directly on CompoundValidator."""
@@ -233,14 +233,14 @@ class TestDeprecatedCustomCompoundValidator(unittest.TestCase):
         self.assertTrue(is_validator(self.validator))
 
     def test_to_python(self):
-        with warnings.catch_warnings(True) as _ignore:
+        with warnings.catch_warnings(record=True) as _ignore:
             ccv = self.validator
             self.assertEqual(ccv.to_python('2'), 2)
             self.assertEqual(ccv.to_python('4'), 4)
             self.assertRaises(Invalid, ccv.to_python, '6')
 
 
-with warnings.catch_warnings(True) as all_and_not_one_warnings:
+with warnings.catch_warnings(record=True) as all_and_not_one_warnings:
 
     class DeprecatedAllAndNotOneValidator(All):
         """A custom validator based on an existing CompoundValidator."""
@@ -267,7 +267,7 @@ class TestDeprecatedAllAndNotOneValidator(unittest.TestCase):
             validators=[Int(min=3), Int(max=5)], number=4)
 
     def test_1_warnings(self):  # must run first
-        with warnings.catch_warnings(True) as runtime_warnings:
+        with warnings.catch_warnings(record=True) as runtime_warnings:
             self.validator.to_python('3')
         for output in runtime_warnings, all_and_not_one_warnings:
             output = '\n'.join(map(str, output))

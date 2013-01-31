@@ -11,6 +11,9 @@ from formencode.schema import Schema
 from formencode.foreach import ForEach
 from formencode.api import NoDefault
 
+if unicode is not str:  # Python 3
+    bytes = str
+
 
 def validate(validator, value):
     try:
@@ -90,8 +93,8 @@ class TestUnicodeStringValidator(unittest.TestCase):
         un = self.validator()
         self.assertEqual(un.to_python(12), u'12')
         self.assertTrue(type(un.to_python(12)) is unicode)
-        self.assertEqual(un.from_python(12), '12')
-        self.assertTrue(type(un.from_python(12)) is str)
+        self.assertEqual(un.from_python(12), u'12'.encode('ascii'))
+        self.assertTrue(type(un.from_python(12)) is bytes)
 
     def test_unicode_encoding(self):
         uv = self.validator()
@@ -100,23 +103,23 @@ class TestUnicodeStringValidator(unittest.TestCase):
         self.assertEqual(uv.to_python(u8s), us)
         self.assertTrue(type(uv.to_python(u8s)) is unicode)
         self.assertEqual(uv.from_python(us), u8s)
-        self.assertTrue(type(uv.from_python(us)) is str)
+        self.assertTrue(type(uv.from_python(us)) is bytes)
         uv = self.validator(encoding='utf-7')
         self.assertEqual(uv.to_python(u7s), us)
         self.assertTrue(type(uv.to_python(u7s)) is unicode)
         self.assertEqual(uv.from_python(us), u7s)
-        self.assertTrue(type(uv.from_python(us)) is str)
+        self.assertTrue(type(uv.from_python(us)) is bytes)
         uv = self.validator(inputEncoding='utf-7')
         self.assertEqual(uv.to_python(u7s), us)
         self.assertTrue(type(uv.to_python(u7s)) is unicode)
         uv = self.validator(outputEncoding='utf-7')
         self.assertEqual(uv.from_python(us), u7s)
-        self.assertTrue(type(uv.from_python(us)) is str)
+        self.assertTrue(type(uv.from_python(us)) is bytes)
         uv = self.validator(inputEncoding=None)
         self.assertEqual(uv.to_python(us), us)
         self.assertTrue(type(uv.to_python(us)) is unicode)
         self.assertEqual(uv.from_python(us), u8s)
-        self.assertTrue(type(uv.from_python(us)) is str)
+        self.assertTrue(type(uv.from_python(us)) is bytes)
         uv = self.validator(outputEncoding=None)
         self.assertEqual(uv.to_python(u8s), us)
         self.assertTrue(type(uv.to_python(u8s)) is unicode)
