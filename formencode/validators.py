@@ -26,9 +26,10 @@ sha1 = None
 socket = None
 urlparse = None
 
-from interfaces import *
 from api import (FancyValidator, Identity, Invalid, NoDefault, Validator,
     deprecation_warning, is_empty)
+
+assert Identity and Invalid and NoDefault  # silence unused import warnings
 
 # Dummy i18n translation function, nothing is translated here.
 # Instead this is actually done in api.message.

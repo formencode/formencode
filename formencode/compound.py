@@ -3,10 +3,9 @@ Validators for applying validations in sequence.
 """
 
 from api import (FancyValidator, Identity, Invalid, NoDefault, Validator,
-    deprecated, deprecation_warning, is_validator)
+    is_validator)
 
-# @@ ianb 2005-05: should CompoundValidator be included?
-__all__ = ['Any', 'All', 'Pipe']
+__all__ = ['CompoundValidator', 'Any', 'All', 'Pipe']
 
 ############################################################
 ## Compound Validators

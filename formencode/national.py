@@ -753,3 +753,11 @@ class LanguageValidator(FancyValidator):
             return get_language(value.lower())
         except KeyError:
             return value
+
+
+def validators():
+    """Return the names of all validators in this module."""
+    return [name for name, value in globals().items()
+        if isinstance(value, type) and issubclass(value, FancyValidator)]
+
+__all__ = ['Invalid'] + validators()

@@ -1,11 +1,6 @@
 import warnings
 
-from interfaces import *
-from api import *
-from api import _
-import foreach
-import compound
-from validators import Set
+from api import _, is_validator, FancyValidator, Invalid, NoDefault
 import declarative
 from exc import FERuntimeWarning
 

@@ -7,7 +7,10 @@ You can either pass ``SchemaBuilder`` to ``htmlfill.render`` (the
 ``Schema`` object.
 """
 
-import validators, schema, compound, htmlfill
+import validators
+import schema
+import compound
+import htmlfill
 
 __all__ = ['parse_schema', 'SchemaBuilder']
 
