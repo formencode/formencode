@@ -7,6 +7,7 @@ import gettext
 import os
 import re
 import textwrap
+import warnings
 
 try:
     from pkg_resources import resource_filename
@@ -66,6 +67,24 @@ set_stdtranslation()
 # the strings automatically.
 # If you run pygettext with this source comment this function out temporarily.
 _ = lambda s: s
+
+
+def deprecation_warning(old, new=None, stacklevel=3):
+    """Show a deprecation warning."""
+    msg = '%s is deprecated' % old
+    if new:
+        msg += '; use %s instead' % new
+    warnings.warn(msg, DeprecationWarning, stacklevel=stacklevel)
+
+
+def deprecated(old=None, new=None):
+    """A decorator which can be used to mark functions as deprecated."""
+    def outer(func):
+        def inner(*args, **kwargs):
+            deprecation_warning(old or func.__name__, new)
+            return func(*args, **kwargs)
+        return inner
+    return outer
 
 
 class NoDefault(object):
@@ -196,6 +215,7 @@ class Validator(declarative.Declarative):
     __singletonmethods__ = (
         'to_python', 'from_python', 'message', 'all_messages', 'subvalidators')
 
+    @staticmethod
     def __classinit__(cls, new_attrs):
         if 'messages' in new_attrs:
             cls._messages = cls._messages.copy()
@@ -327,25 +347,25 @@ class FancyValidator(Validator):
     none of these *have* to be overridden, only the ones that
     are appropriate for the validator.
 
-    ``._to_python(value, state)``:
+    ``._convert_to_python(value, state)``:
       This method converts the source to a Python value.  It returns
       the converted value, or raises an Invalid exception if the
       conversion cannot be done.  The argument to this exception
       should be the error message.  Contrary to ``.to_python()`` it is
       only meant to convert the value, not to fully validate it.
 
-    ``._from_python(value, state)``:
-      Should undo ``._to_python()`` in some reasonable way, returning
+    ``._convert_from_python(value, state)``:
+      Should undo ``._convert_to_python()`` in some reasonable way, returning
       a string.
 
-    ``.validate_other(value, state)``:
-      Validates the source, before ``._to_python()``, or after
-      ``._from_python()``.  It's usually more convenient to use
-      ``.validate_python()`` however.
+    ``._validate_other(value, state)``:
+      Validates the source, before ``._convert_to_python()``, or after
+      ``._convert_from_python()``.  It's usually more convenient to use
+      ``._validate_python()`` however.
 
-    ``.validate_python(value, state)``:
-      Validates a Python value, either the result of ``._to_python()``,
-      or the input to ``._from_python()``.
+    ``._validate_python(value, state)``:
+      Validates a Python value, either the result of ``._convert_to_python()``,
+      or the input to ``._convert_from_python()``.
 
     You should make sure that all possible validation errors are
     raised in at least one these four methods, not matter which.
@@ -367,7 +387,7 @@ class FancyValidator(Validator):
     ``not_empty``:
       If true, then if an empty value is given raise an error.
       (Both with ``.to_python()`` and also ``.from_python()``
-      if ``.validate_python`` is true).
+      if ``._validate_python`` is true).
 
     ``strip``:
       If true and the input is a string, strip it (occurs before empty
@@ -382,8 +402,8 @@ class FancyValidator(Validator):
       ``.from_python()``) is invalid, this value will be returned.
 
     ``accept_python``:
-      If True (the default), then ``.validate_python()`` and
-      ``.validate_other()`` will not be called when
+      If True (the default), then ``._validate_python()`` and
+      ``._validate_other()`` will not be called when
       ``.from_python()`` is used.
 
     These parameters are handled at the level of the external
@@ -400,11 +420,35 @@ class FancyValidator(Validator):
     accept_python = True
     strip = False
 
-    messages = {
-        'empty': _("Please enter a value"),
-        'badType': _("The input must be a string (not a %(type)s: %(value)r)"),
-        'noneType': _("The input must be a string (not None)"),
-        }
+    messages = dict(
+        empty=_("Please enter a value"),
+        badType=_("The input must be a string (not a %(type)s: %(value)r)"),
+        noneType=_("The input must be a string (not None)"))
+
+    _inheritance_level = 0
+    _deprecated_methods = (
+        ('_to_python', '_convert_to_python'),
+        ('_from_python', '_convert_from_python'),
+        ('validate_python', '_validate_python'),
+        ('validate_other', '_validate_other'))
+
+    @staticmethod
+    def __classinit__(cls, new_attrs):
+        Validator.__classinit__(cls, new_attrs)
+        # account for deprecated methods
+        cls._inheritance_level += 1
+        if '_deprecated_methods' in new_attrs:
+            cls._deprecated_methods = cls._deprecated_methods + new_attrs[
+                '_deprecated_methods']
+        for old, new in cls._deprecated_methods:
+            if old in new_attrs:
+                if new not in new_attrs:
+                    deprecation_warning(old, new,
+                        stacklevel=cls._inheritance_level + 2)
+                    setattr(cls, new, new_attrs[old])
+            elif new in new_attrs:
+                    setattr(cls, old, deprecated(old=old, new=new)(
+                        new_attrs[new]))
 
     def to_python(self, value, state=None):
         try:
@@ -419,13 +463,13 @@ class FancyValidator(Validator):
                 if self.if_empty is not NoDefault:
                     return self.if_empty
                 return self.empty_value(value)
-            vo = self.validate_other
+            vo = self._validate_other
             if vo and vo is not self._validate_noop:
                 vo(value, state)
-            tp = self._to_python
+            tp = self._convert_to_python
             if tp:
                 value = tp(value, state)
-            vp = self.validate_python
+            vp = self._validate_python
             if vp and vp is not self._validate_noop:
                 vp(value, state)
         except Invalid:
@@ -444,19 +488,19 @@ class FancyValidator(Validator):
                         raise Invalid(self.message('empty', state),
                                       value, state)
                     return self.empty_value(value)
-                vp = self.validate_python
+                vp = self._validate_python
                 if vp and vp is not self._validate_noop:
                     vp(value, state)
-                fp = self._from_python
+                fp = self._convert_from_python
                 if fp:
                     value = fp(value, state)
-                vo = self.validate_other
+                vo = self._validate_other
                 if vo and vo is not self._validate_noop:
                     vo(value, state)
             else:
                 if self.is_empty(value):
                     return self.empty_value(value)
-                fp = self._from_python
+                fp = self._convert_from_python
                 if fp:
                     value = fp(value, state)
         except Invalid:
@@ -490,6 +534,6 @@ class FancyValidator(Validator):
         """
         pass
 
-    validate_python = validate_other = _validate_noop
-    _to_python = None
-    _from_python = None
+    _validate_python = _validate_other = _validate_noop
+    _convert_to_python = _convert_from_python = None
+

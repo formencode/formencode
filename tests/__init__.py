@@ -8,5 +8,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 # in this case you must set it manually before running the tests).
 os.environ['LANGUAGE'] = 'C'
 
+# Enable deprecation warnings (disabled by default in Python > 2.6).
+import warnings
+warnings.simplefilter('default')
+
 import pkg_resources
 pkg_resources.require('FormEncode')

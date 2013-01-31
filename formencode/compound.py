@@ -2,7 +2,8 @@
 Validators for applying validations in sequence.
 """
 
-from api import *
+from api import (FancyValidator, Identity, Invalid, NoDefault, Validator,
+    deprecated, deprecation_warning, is_validator)
 
 # @@ ianb 2005-05: should CompoundValidator be included?
 __all__ = ['Any', 'All', 'Pipe']
@@ -32,6 +33,10 @@ class CompoundValidator(FancyValidator):
 
     __mutableattributes__ = ('validators',)
 
+    _deprecated_methods = (
+        ('attempt_convert', '_attempt_convert'),)
+
+    @staticmethod
     def __classinit__(cls, new_attrs):
         FancyValidator.__classinit__(cls, new_attrs)
         toAdd = []
@@ -53,15 +58,15 @@ class CompoundValidator(FancyValidator):
         return [n for n in Validator._repr_vars(names)
                 if n != 'validatorArgs']
 
-    def attempt_convert(self, value, state, convertFunc):
-        raise NotImplementedError("Subclasses must implement attempt_convert")
+    def _attempt_convert(self, value, state, convertFunc):
+        raise NotImplementedError("Subclasses must implement _attempt_convert")
 
-    def _to_python(self, value, state=None):
-        return self.attempt_convert(value, state,
+    def _convert_to_python(self, value, state=None):
+        return self._attempt_convert(value, state,
                                     to_python)
 
-    def _from_python(self, value, state=None):
-        return self.attempt_convert(value, state,
+    def _convert_from_python(self, value, state=None):
+        return self._attempt_convert(value, state,
                                     from_python)
 
     def subvalidators(self):
@@ -94,7 +99,7 @@ class Any(CompoundValidator):
 
     """
 
-    def attempt_convert(self, value, state, validate):
+    def _attempt_convert(self, value, state, validate):
         lastException = None
         validators = self.validators
         if validate is to_python:
@@ -160,7 +165,7 @@ class All(CompoundValidator):
     def __repr__(self):
         return '<All %s>' % self.validators
 
-    def attempt_convert(self, value, state, validate):
+    def _attempt_convert(self, value, state, validate):
         # To preserve the order of the transformations, we do them
         # differently when we are converting to and from Python.
         validators = self.validators
@@ -263,7 +268,7 @@ class Pipe(All):
     def __repr__(self):
         return '<Pipe %s>' % self.validators
 
-    def attempt_convert(self, value, state, validate):
+    def _attempt_convert(self, value, state, validate):
         # To preserve the order of the transformations, we do them
         # differently when we are converting to and from Python.
         validators = self.validators

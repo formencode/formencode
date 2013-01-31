@@ -345,7 +345,7 @@ class TestXRIValidator(unittest.TestCase):
     def test_valid_simple_individual_iname_without_type(self):
         """XRIs must start with either an equals sign or an at sign"""
         validator = self.validator(True, "i-name")
-        self.assertRaises(Invalid, validator.validate_python, 'Gustavo')
+        self.assertRaises(Invalid, validator.to_python, 'Gustavo')
 
     def test_valid_iname_with_schema(self):
         """XRIs may have their schema in the beggining"""
@@ -378,56 +378,56 @@ class TestINameValidator(unittest.TestCase):
 
     def test_valid_global_individual_iname(self):
         """Global & valid individual i-names must pass validation"""
-        self.validator.validate_python('=Gustavo')
+        self.validator.to_python('=Gustavo')
 
     def test_valid_global_organizational_iname(self):
         """Global & valid organizational i-names must pass validation"""
-        self.validator.validate_python('@Canonical')
+        self.validator.to_python('@Canonical')
 
     def test_invalid_iname(self):
         """Non-string i-names are rejected"""
-        self.assertRaises(Invalid, self.validator.validate_python, None)
+        self.assertRaises(Invalid, self.validator._validate_python, None)
 
     def test_exclamation_in_inames(self):
         """Exclamation marks at the beggining of XRIs is something specific
         to i-numbers and must be rejected in i-names"""
-        self.assertRaises(Invalid, self.validator.validate_python,
+        self.assertRaises(Invalid, self.validator.to_python,
                           "!!1000!de21.4536.2cb2.8074")
 
     def test_repeated_characters(self):
         """Dots and dashes must not be consecutively repeated in i-names"""
-        self.assertRaises(Invalid, self.validator.validate_python,
+        self.assertRaises(Invalid, self.validator.to_python,
                           "=Gustavo--Narea")
-        self.assertRaises(Invalid, self.validator.validate_python,
+        self.assertRaises(Invalid, self.validator.to_python,
                           "=Gustavo..Narea")
 
     def test_punctuation_marks_at_beggining(self):
         """Punctuation marks at the beggining of i-names are forbidden"""
-        self.assertRaises(Invalid, self.validator.validate_python,
+        self.assertRaises(Invalid, self.validator.to_python,
                           "=.Gustavo")
-        self.assertRaises(Invalid, self.validator.validate_python,
+        self.assertRaises(Invalid, self.validator.to_python,
                           "=-Gustavo.Narea")
 
     def test_numerals_at_beggining(self):
         """Numerals at the beggining of i-names are forbidden"""
-        self.assertRaises(Invalid, self.validator.validate_python,
+        self.assertRaises(Invalid, self.validator.to_python,
                           "=1Gustavo")
 
     def test_non_english_inames(self):
         """i-names with non-English characters are valid"""
-        self.validator.validate_python(u'=Gustavo.Narea.García')
-        self.validator.validate_python(u'@名前.例')
+        self.validator.to_python(u'=Gustavo.Narea.García')
+        self.validator.to_python(u'@名前.例')
 
     def test_inames_plus_paths(self):
         """i-names with paths are valid but not supported"""
-        self.assertRaises(Invalid, self.validator.validate_python,
+        self.assertRaises(Invalid, self.validator.to_python,
                           "=Gustavo/(+email)")
 
     def test_communities(self):
         """i-names may have so-called 'communities'"""
-        self.validator.validate_python(u'=María*Yolanda*Liliana*Gustavo')
-        self.validator.validate_python(u'=Gustavo*Andreina')
-        self.validator.validate_python(u'@IBM*Lenovo')
+        self.validator.to_python(u'=María*Yolanda*Liliana*Gustavo')
+        self.validator.to_python(u'=Gustavo*Andreina')
+        self.validator.to_python(u'@IBM*Lenovo')
 
 
 class TestINumberValidator(unittest.TestCase):
@@ -438,27 +438,27 @@ class TestINumberValidator(unittest.TestCase):
 
     def test_valid_global_personal_inumber(self):
         """Global & valid personal i-numbers must pass validation"""
-        self.validator.validate_python('=!1000.a1b2.93d2.8c73')
+        self.validator.to_python('=!1000.a1b2.93d2.8c73')
 
     def test_valid_global_organizational_inumber(self):
         """Global & valid organizational i-numbers must pass validation"""
-        self.validator.validate_python('@!1000.a1b2.93d2.8c73')
+        self.validator.to_python('@!1000.a1b2.93d2.8c73')
 
     def test_valid_global_network_inumber(self):
         """Global & valid network i-numbers must pass validation"""
-        self.validator.validate_python('!!1000')
+        self.validator.to_python('!!1000')
 
     def test_valid_community_personal_inumbers(self):
         """Community & valid personal i-numbers must pass validation"""
-        self.validator.validate_python('=!1000.a1b2.93d2.8c73!3ae2!1490')
+        self.validator.to_python('=!1000.a1b2.93d2.8c73!3ae2!1490')
 
     def test_valid_community_organizational_inumber(self):
         """Community & valid organizational i-numbers must pass validation"""
-        self.validator.validate_python('@!1000.9554.fabd.129c!2847.df3c')
+        self.validator.to_python('@!1000.9554.fabd.129c!2847.df3c')
 
     def test_valid_community_network_inumber(self):
         """Community & valid network i-numbers must pass validation"""
-        self.validator.validate_python('!!1000!de21.4536.2cb2.8074')
+        self.validator.to_python('!!1000!de21.4536.2cb2.8074')
 
 
 class TestOpenIdValidator(unittest.TestCase):
@@ -524,19 +524,19 @@ class TestIPAddressValidator(unittest.TestCase):
         self.validator = validators.IPAddress
 
     def test_valid_address(self):
-        self.validator().validate_python('127.0.0.1')
+        self.validator().to_python('127.0.0.1')
 
     def test_address_is_none(self):
-        self.assertRaises(Invalid, self.validator().validate_python, None)
+        self.assertRaises(Invalid, self.validator()._validate_python, None)
 
     def test_invalid_address(self):
-        validate = self.validator().validate_python
+        validate = self.validator().to_python
         self.assertRaises(Invalid, validate, '127.0.1')
         self.assertRaises(Invalid, validate, '271.0.0.1')
         self.assertRaises(Invalid, validate, '127.0.0.0.1')
 
     def test_leading_zeros(self):
-        validate = self.validator().validate_python
+        validate = self.validator().to_python
         try:
             validate('1.2.3.037')
         except Invalid, e:
@@ -551,7 +551,7 @@ class TestIPAddressValidator(unittest.TestCase):
             self.fail('IP octets with leading zeros should be invalid')
 
     def test_leading_zeros_allowed(self):
-        validate = self.validator(leading_zeros=True).validate_python
+        validate = self.validator(leading_zeros=True).to_python
         try:
             validate('1.2.3.037')
         except Invalid, e:

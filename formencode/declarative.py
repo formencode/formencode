@@ -67,8 +67,8 @@ class DeclarativeMeta(type):
         for name in cls.__mutableattributes__:
             setattr(cls, name, copy.copy(getattr(cls, name)))
         cls.declarative_count = cls.counter.next()
-        if ('__classinit__' in new_attrs
-                and not isinstance(cls.__classinit__, staticmethod)):
+        if ('__classinit__' in new_attrs and not isinstance(cls.__classinit__,
+                (staticmethod, types.FunctionType))):
             setattr(cls, '__classinit__',
                     staticmethod(cls.__classinit__.im_func))
         cls.__classinit__(cls, new_attrs)
@@ -111,6 +111,7 @@ class Declarative(object):
 
     counter = count()
 
+    @staticmethod
     def __classinit__(cls, new_attrs):
         pass
 

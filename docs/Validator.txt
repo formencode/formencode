@@ -140,7 +140,7 @@ they'll be specific to your application::
     >>> # We don't really have a database of users, so we'll fake it:
     >>> usernames = []
     >>> class UniqueUsername(formencode.FancyValidator):
-    ...     def _to_python(self, value, state):
+    ...     def _convert_to_python(self, value, state):
     ...         if value in usernames:
     ...             raise formencode.Invalid(
     ...                 'That username already exists',
@@ -154,13 +154,13 @@ they'll be specific to your application::
    ``strip=True`` into any of these validators, and they'll strip
    whitespace from the incoming value before any other validation.
 
-This overrides the internal :meth:`_to_python()` method:
+This overrides the internal :meth:`_convert_to_python()` method:
 :class:`formencode.FancyValidator` adds a number of extra features, and then
-calls the internal :meth:`_to_python` method, which is the method you'll
+calls the internal :meth:`_convert_to_python` method, which is the method you'll
 typically write.  Contrary to the external method :meth:`to_python`, its
 only concern is the conversion part, not the validation part.  If further
 validation is necessary, this can be done in two other internal methods,
-either :meth:`validate_python()` or :meth:`validate_other()`.  We will give
+either :meth:`_validate_python()` or :meth:`_validate_other()`.  We will give
 an example for that later.  When a validator finds an error, it raises an
 exception (:class:`formencode.Invalid`), with the error message and the
 value and "state" objects.  We'll talk about state_ later. Here's the
@@ -169,7 +169,7 @@ standard Unix word file::
 
     >>> class SecurePassword(formencode.FancyValidator):
     ...     words_filename = '/usr/share/dict/words'
-    ...     def _to_python(self, value, state):
+    ...     def _convert_to_python(self, value, state):
     ...         f = open(self.words_filename)
     ...         lower = value.strip().lower()
     ...         for line in f:
@@ -314,13 +314,13 @@ that a little more.  Here's a more complete implementation of
     ...                      'characters in your password',
     ...         }
     ...
-    ...     def _to_python(self, value, state):
-    ...         # _to_python gets run before validate_python.  Here we
-    ...         # strip whitespace off the password, because leading and
-    ...         # trailing whitespace in a password is too elite.
+    ...     def _convert_to_python(self, value, state):
+    ...         # _convert_to_python gets run before _validate_python.
+    ...         # Here we strip whitespace off the password, because leading
+    ...         # and trailing whitespace in a password is too elite.
     ...         return value.strip()
     ...
-    ...     def validate_python(self, value, state):
+    ...     def _validate_python(self, value, state):
     ...         if len(value) < self.min:
     ...             raise Invalid(self.message("too_few", state,
     ...                                        min=self.min),
@@ -337,16 +337,16 @@ be a minimum-five-character validator.  This makes it easy to also
 subclass other validators, giving different default values.
 
 Unlike the previous implementation we use the already mentioned
-:meth:`validate_python` method, which is another internal method
-:class:`FancyValidator` allows us to override.  :meth:`validate_python`
+:meth:`_validate_python` method, which is another internal method
+:class:`FancyValidator` allows us to override.  :meth:`_validate_python`
 doesn't have any return value, it simply raises an exception if it
 needs to.  It validates the value *after* it has been converted
-(by :meth:`_to_python`).  :meth:`validate_other` validates before
+(by :meth:`_convert_to_python`).  :meth:`_validate_other` validates before
 conversion, but that's usually not that useful.  The external method
 :meth:`to_python` cares about the extra features such as the
 :attr:`if_empty` parameter, and uses the internal methods to do the
-actual conversion and validation; first it calls :meth:`validate_other`,
-then :meth:`_to_python` and at last :meth:`validate_python`.
+actual conversion and validation; first it calls :meth:`_validate_other`,
+then :meth:`_convert_to_python` and at last :meth:`_validate_python`.
 
 The use of ``self.message(...)`` is meant to make the messages easy to
 format for different environments, and replacable (with translations,
@@ -404,8 +404,8 @@ own validators, if you subclass from :class:`formencode.FancyValidator`):
       ``.from_python()``) is invalid, this value will be returned.
 
 :attr:`accept_python``:
-      If True (the default), then ``.validate_python()`` and
-      ``.validate_other()`` will not be called when
+      If True (the default), then ``._validate_python()`` and
+      ``._validate_other()`` will not be called when
       ``.from_python()`` is used.
 
 :attr:`if_missing``:
@@ -498,7 +498,7 @@ use the :meth:`message` method, like::
         'key': 'my message (with a %(substitution)s)',
         }
 
-    def validate_python(self, value, state):
+    def _validate_python(self, value, state):
         raise Invalid(self.message('key', state, substitution='apples'),
                       value, state)
 
