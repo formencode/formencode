@@ -9,6 +9,7 @@ from formencode.validators import Int
 
 
 with warnings.catch_warnings(record=True) as custom_warnings:
+    warnings.simplefilter('default')
 
     class DeprecatedCustomValidator(FancyValidator):
         """A custom validator based directly on FancyValidator."""
@@ -128,6 +129,7 @@ class TestDeprecatedCustomValidator(unittest.TestCase):
 
 
 with warnings.catch_warnings(record=True) as not_one_warnings:
+    warnings.simplefilter('default')
 
     class DeprecatedNotOneValidator(Int):
         """A custom validator based on an existing validator."""
@@ -151,6 +153,7 @@ class TestDeprecatedNotOneValidator(unittest.TestCase):
 
     def test_1_warnings(self):  # must run first
         with warnings.catch_warnings(record=True) as runtime_warnings:
+            warnings.simplefilter('default')
             DeprecatedNotOneValidator().to_python('2')
         for output in runtime_warnings, not_one_warnings:
             output = '\n'.join(map(str, output))
@@ -209,6 +212,7 @@ class TestDeprecatedNotOneValidator(unittest.TestCase):
 
 
 with warnings.catch_warnings(record=True) as custom_compound_warnings:
+    warnings.simplefilter('default')
 
     class DeprecatedCustomCompoundValidator(CompoundValidator):
         """A custom validator based directly on CompoundValidator."""
@@ -241,6 +245,7 @@ class TestDeprecatedCustomCompoundValidator(unittest.TestCase):
 
 
 with warnings.catch_warnings(record=True) as all_and_not_one_warnings:
+    warnings.simplefilter('default')
 
     class DeprecatedAllAndNotOneValidator(All):
         """A custom validator based on an existing CompoundValidator."""
@@ -268,6 +273,7 @@ class TestDeprecatedAllAndNotOneValidator(unittest.TestCase):
 
     def test_1_warnings(self):  # must run first
         with warnings.catch_warnings(record=True) as runtime_warnings:
+            warnings.simplefilter('default')
             self.validator.to_python('3')
         for output in runtime_warnings, all_and_not_one_warnings:
             output = '\n'.join(map(str, output))
