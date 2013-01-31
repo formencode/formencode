@@ -2,6 +2,7 @@ recursive-include . *.py
 recursive-include docs *.html *.txt *.css
 recursive-include formencode/javascript *.js
 recursive-include formencode/i18n *.py *.pot *.po *.mo
+recursive-include formencode/tests *.txt
 recursive-exclude . *.pyc *.pyo *~
 prune docs/_build
 prune **/.svn

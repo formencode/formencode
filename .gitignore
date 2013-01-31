@@ -1,8 +1,12 @@
-FormEncode.egg-info
+*.egg
+*.egg-info
 *.pyc
-docs/_build
-dist/
+*.pyo
 *.tox
+
+build
+dist/
+docs/_build
 
 # IDE users, please keep your data locally
 .idea/
@@ -10,11 +14,5 @@ dist/
 .pydevproject
 .settings
 
-# When you run ``python setup.py [test|nosetests]``
-# from project's root tree, the script checks [and downloads, if necessary]
-# packages which are specified in setup.py -> tests_require.
-# Therefore we must explicitly ignore all downloaded *.egg packages
-# as well as all coverage-related files.
-*.egg
 .coverage
 coverage/

@@ -18,13 +18,13 @@ modules = [compound, htmlfill, htmlgen, national, schema, validators]
 text_files = [
     'docs/htmlfill.txt',
     'docs/Validator.txt',
-    'tests/non_empty.txt',
+    'formencode/tests/non_empty.txt',
     ]
 
 
 """Used to resolve text files to absolute paths."""
-base = os.path.dirname(
-        os.path.dirname(os.path.abspath(__file__)))
+base = os.path.dirname(os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__))))
 
 
 def doctest_file(document, verbose, raise_error):

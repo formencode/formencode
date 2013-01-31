@@ -57,7 +57,10 @@ def set_stdtranslation(domain="FormEncode", languages=None,
                             languages=languages,
                             localedir=localedir, fallback=True)
     global _stdtrans
-    _stdtrans = t.ugettext
+    try:
+        _stdtrans = t.ugettext
+    except AttributeError:  # Python 3
+        _stdtrans = t.gettext
 
 set_stdtranslation()
 
