@@ -1,10 +1,11 @@
 import unittest
 
+from urlparse import parse_qsl
+
 from formencode import validators, foreach, compound
 from formencode.schema import Schema, merge_dicts, SimpleFormValidator
 from formencode.api import *
 from formencode.variabledecode import NestedVariables
-import cgi
 
 
 def _notranslation(s):
@@ -31,7 +32,7 @@ def d(**kw):
 def cgi_parse(qs):
     """Parse a query string and returns the usually dictionary."""
     d = {}
-    for key, value in cgi.parse_qsl(qs, 1):
+    for key, value in parse_qsl(qs, True):
         if key in d:
             if isinstance(d[key], list):
                 d[key].append(value)

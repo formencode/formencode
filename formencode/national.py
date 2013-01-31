@@ -166,7 +166,7 @@ class DelimitedDigitsPostalCode(Regex):
     messages = dict(
         invalid=_('Please enter a zip code (%(format)s)'))
 
-    def _to_python(self, value, state):
+    def _convert_to_python(self, value, state):
         self.assert_string(value, state)
         match = self.regex.search(value)
         if not match:
@@ -230,7 +230,7 @@ class ArgentinianPostalCode(Regex):
     messages = dict(
         invalid=_('Please enter a zip code (%s)') % _('LnnnnLLL'))
 
-    def _to_python(self, value, state):
+    def _convert_to_python(self, value, state):
         self.assert_string(value, state)
         match = self.regex.search(value)
         if not match:
@@ -264,7 +264,7 @@ class CanadianPostalCode(Regex):
     messages = dict(
         invalid=_('Please enter a zip code (%s)') % _('LnL nLn'))
 
-    def _to_python(self, value, state):
+    def _convert_to_python(self, value, state):
         self.assert_string(value, state)
         match = self.regex.search(value)
         if not match:
@@ -298,7 +298,7 @@ class UKPostalCode(Regex):
     messages = dict(
         invalid=_('Please enter a valid postal code (for format see BS 7666)'))
 
-    def _to_python(self, value, state):
+    def _convert_to_python(self, value, state):
         self.assert_string(value, state)
         match = self.regex.search(value)
         if not match:
@@ -344,7 +344,7 @@ class CountryValidator(FancyValidator):
         if no_country:
             warnings.warn(no_country, Warning, 2)
 
-    def _to_python(self, value, state):
+    def _convert_to_python(self, value, state):
         upval = value.upper()
         if self.key_ok:
             try:
@@ -358,7 +358,7 @@ class CountryValidator(FancyValidator):
                 return k
         raise Invalid(self.message('valueNotFound', state), value, state)
 
-    def _from_python(self, value, state):
+    def _convert_from_python(self, value, state):
         try:
             return get_country(value.upper())
         except KeyError:
@@ -435,7 +435,7 @@ class PostalCodeInCountryFormat(FancyValidator):
         'UY': lambda: DelimitedDigitsPostalCode(5),
     }
 
-    def validate_python(self, fields_dict, state):
+    def _validate_python(self, fields_dict, state):
         if fields_dict[self.country_field] in self._vd:
             try:
                 zip_validator = self._vd[fields_dict[self.country_field]]()
@@ -488,7 +488,7 @@ class USStateProvince(FancyValidator):
         wrongLength=_('Please enter a state code with TWO letters'),
         invalid=_('That is not a valid state code'))
 
-    def validate_python(self, value, state):
+    def _validate_python(self, value, state):
         value = str(value).strip().upper()
         if not value:
             raise Invalid(
@@ -504,7 +504,7 @@ class USStateProvince(FancyValidator):
                 self.message('invalid', state),
                 value, state)
 
-    def _to_python(self, value, state):
+    def _convert_to_python(self, value, state):
         return str(value).strip().upper()
 
 
@@ -542,7 +542,7 @@ class USPhoneNumber(FancyValidator):
         phoneFormat=_('Please enter a number, with area code,'
             ' in the form ###-###-####, optionally with "ext.####"'))
 
-    def _to_python(self, value, state):
+    def _convert_to_python(self, value, state):
         self.assert_string(value, state)
         match = self._phoneRE.search(value)
         if not match:
@@ -551,7 +551,7 @@ class USPhoneNumber(FancyValidator):
                 value, state)
         return value
 
-    def _from_python(self, value, state):
+    def _convert_from_python(self, value, state):
         self.assert_string(value, state)
         match = self._phoneRE.search(value)
         if not match:
@@ -663,7 +663,7 @@ class InternationalPhoneNumber(FancyValidator):
                 return trf % ((country_code,)+match.groups())
         return value
 
-    def _to_python(self, value, state):
+    def _convert_to_python(self, value, state):
         self.assert_string(value, state)
         try:
             value = value.encode('ascii', 'replace')
@@ -734,7 +734,7 @@ class LanguageValidator(FancyValidator):
         if no_country:
             warnings.warn(no_country, Warning, 2)
 
-    def _to_python(self, value, state):
+    def _convert_to_python(self, value, state):
         upval = value.upper()
         if self.key_ok:
             try:
@@ -748,7 +748,7 @@ class LanguageValidator(FancyValidator):
                 return k
         raise Invalid(self.message('valueNotFound', state), value, state)
 
-    def _from_python(self, value, state):
+    def _convert_from_python(self, value, state):
         try:
             return get_language(value.lower())
         except KeyError:
