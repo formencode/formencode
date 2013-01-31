@@ -38,7 +38,6 @@ class TestEmail(unittest.TestCase):
             email = '@'.join(el for el in (username, domain) if el)
             error = self.validate(email)
             expected = self.message(message_name, username, domain)
-            assert 0
             self.assertEqual(error, expected)
 
     def test_valid_email_addresses(self):
