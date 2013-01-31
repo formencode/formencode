@@ -1,20 +1,30 @@
 # -*- coding: utf-8 -*-
-from unittest import TestCase
-from nose.tools import assert_equal
 
-from formencode.validators import Email, Invalid
+import unittest
 
-
-def _validate(validator, *args):
-    try:
-        return validator.to_python(*args)
-    except Invalid, e:
-        return unicode(e)
+from formencode import Invalid
+from formencode.validators import Email
 
 
-def test_invalid_email_addresses():
-    invalid_usernames = [
-            # (email, message_name),
+class TestEmail(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = Email()
+
+    def validate(self, *args):
+        try:
+            return self.validator.to_python(*args)
+        except Invalid, e:
+            return unicode(e)
+
+    def message(self, message_name, username, domain):
+        email = '@'.join((username, domain))
+        return self.validator.message(
+            message_name, email, username=username, domain=domain)
+
+    def test_invalid_email_addresses(self):
+        invalid_usernames = [
+            # (username, domain, message_name),
             ('foo\tbar', 'formencode.org', 'badUsername'),
             ('foo\nbar', 'formencode.org', 'badUsername'),
             ('test', '', 'noAt'),
@@ -22,25 +32,17 @@ def test_invalid_email_addresses():
             ('test', 'foobar.5', 'badDomain'),
             ('test', 'foo..bar.com', 'badDomain'),
             ('test', '.foo.bar.com', 'badDomain'),
-            ('foo,bar', 'formencode.org', 'badUsername'),
-    ]
+            ('foo,bar', 'formencode.org', 'badUsername')]
 
-    def expected_message(validator, message_name, username, domain):
-        email = '@'.join((username, domain))
-        return validator.message(
-            message_name, email, username=username, domain=domain)
+        for username, domain, message_name in invalid_usernames:
+            email = '@'.join(el for el in (username, domain) if el)
+            error = self.validate(email)
+            expected = self.message(message_name, username, domain)
+            assert 0
+            self.assertEqual(error, expected)
 
-    validator = Email()
-
-    for username, domain, message_name in invalid_usernames:
-        email = '@'.join(el for el in (username, domain) if el)
-        error = _validate(validator, email)
-        expected = expected_message(validator, message_name, username, domain)
-        yield assert_equal, error, expected
-
-
-def test_valid_email_addresses():
-    valid_email_addresses = [
+    def test_valid_email_addresses(self):
+        valid_email_addresses = [
             # (email address, expected email address),
             (' test@foo.com ', 'test@foo.com'),
             ('Test@foo.com', 'Test@foo.com'),
@@ -50,7 +52,6 @@ def test_valid_email_addresses():
             ('foo.bar@example.com', 'foo.bar@example.com'),
             ('foo!bar@example.com', 'foo!bar@example.com'),
             ('foo{bar}@example.com', 'foo{bar}@example.com'),
-
             # examples from RFC 3696
             #   punting on the difficult and extremely uncommon ones
             #('"Abc\@def"@example.com', '"Abc\@def"@example.com'),
@@ -61,27 +62,21 @@ def test_valid_email_addresses():
                 'customer/department=shipping@example.com'),
             ('$A12345@example.com', '$A12345@example.com'),
             ('!def!xyz%abc@example.com', '!def!xyz%abc@example.com'),
-            ('_somename@example.com', '_somename@example.com'),
-    ]
+            ('_somename@example.com', '_somename@example.com')]
 
-    def expected_message(validator, message_name, username, domain):
-        email = '@'.join((username, domain))
-        return validator.message(
-            message_name, email, username=username, domain=domain)
-
-    validator = Email()
-
-    for email, expected in valid_email_addresses:
-        yield assert_equal, _validate(validator, email), expected
+        for email, expected in valid_email_addresses:
+            self.assertEqual(self.validate(email), expected)
 
 
-class TestUnicodeEmailWithResolveDomain(TestCase):
-    
+class TestUnicodeEmailWithResolveDomain(unittest.TestCase):
+
     def setUp(self):
         self.validator = Email(resolve_domain=True)
 
     def test_unicode_ascii_subgroup(self):
-        self.assertEqual(self.validator.to_python(u'foo@yandex.com'), 'foo@yandex.com')
-    
+        self.assertEqual(self.validator.to_python(
+            u'foo@yandex.com'), 'foo@yandex.com')
+
     def test_cyrillic_email(self):
-        self.assertEqual(self.validator.to_python(u'me@письмо.рф'), u'me@письмо.рф')
+        self.assertEqual(self.validator.to_python(
+            u'me@письмо.рф'), u'me@письмо.рф')

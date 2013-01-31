@@ -536,4 +536,3 @@ class FancyValidator(Validator):
 
     _validate_python = _validate_other = _validate_noop
     _convert_to_python = _convert_from_python = None
-
