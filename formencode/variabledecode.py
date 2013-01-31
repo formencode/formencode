@@ -32,7 +32,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
     result = {}
     dicts_to_sort = set()
     known_lengths = {}
-    for key, value in d.items():
+    for key, value in d.iteritems():
         keys = key.split(dict_char)
         new_keys = []
         was_repetition_count = False
@@ -111,7 +111,7 @@ def variable_encode(d, prepend='', result=None, add_repetitions=True,
     if result is None:
         result = {}
     if isinstance(d, dict):
-        for key, value in d.items():
+        for key, value in d.iteritems():
             if key is None:
                 name = prepend
             elif not prepend:

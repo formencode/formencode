@@ -687,13 +687,13 @@ class DictConverter(FancyValidator):
                     state, items=items), value, state)
 
     def _convert_from_python(self, value, state):
-        for k, v in self.dict.items():
+        for k, v in self.dict.iteritems():
             if value == v:
                 return k
         if self.hideDict:
             raise Invalid(self.message('valueNotFound', state), value, state)
         else:
-            items = '; '.join(map(repr, self.dict.values()))
+            items = '; '.join(map(repr, self.dict.itervalues()))
             raise Invalid(
                 self.message('chooseValue', state,
                     value=repr(value), items=items), value, state)
@@ -2983,7 +2983,7 @@ class CreditCardSecurityCode(FormValidator):
 
 def validators():
     """Return the names of all validators in this module."""
-    return [name for name, value in globals().items()
+    return [name for name, value in globals().iteritems()
         if isinstance(value, type) and issubclass(value, Validator)]
 
 __all__ = ['Invalid'] + validators()

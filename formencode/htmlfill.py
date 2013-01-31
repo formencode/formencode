@@ -268,7 +268,7 @@ class FillingParser(RewritingParser):
             if key in unused_errors:
                 del unused_errors[key]
         if self.auto_error_formatter:
-            for key, value in unused_errors.items():
+            for key, value in unused_errors.iteritems():
                 error_message = self.auto_error_formatter(value)
                 error_message = '<!-- for: %s -->\n%s' % (key, error_message)
                 self.insert_at_marker(
@@ -281,13 +281,13 @@ class FillingParser(RewritingParser):
                     del unused[key]
             assert not unused, (
                 "These keys from defaults were not used in the form: %s"
-                % unused.keys())
+                % ', '.join(unused))
             if unused_errors:
                 error_text = ['%s: %s' % (key, self.errors[key])
                     for key in sorted(unused_errors)]
                 assert False, (
-                    "These errors were not used in the form: %s" %
-                    ', '.join(error_text))
+                    "These errors were not used in the form: %s"
+                    % ', '.join(error_text))
         if self.encoding is not None:
             new_content = []
             for item in self._content:

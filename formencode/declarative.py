@@ -143,7 +143,7 @@ class Declarative(object):
         for name in self.__mutableattributes__:
             if name not in kw:
                 setattr(self, name, copy.copy(getattr(self, name)))
-        for name, value in kw.items():
+        for name, value in kw.iteritems():
             setattr(self, name, value)
         if 'declarative_count' not in kw:
             self.declarative_count = self.counter.next()
@@ -187,8 +187,8 @@ class Declarative(object):
                 del vals[name]
             else:
                 break
-        args.extend(['%s=%s' % (name, source.makeRepr(value))
-                     for (name, value) in vals.items()])
+        args.extend('%s=%s' % (name, source.makeRepr(value))
+                     for (name, value) in vals.iteritems())
         return '%s(%s)' % (self.__class__.__name__,
                            ', '.join(args))
 

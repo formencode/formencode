@@ -174,7 +174,7 @@ class Invalid(Exception):
                 for item in self.error_list]
         if self.error_dict:
             result = {}
-            for name, item in self.error_dict.items():
+            for name, item in self.error_dict.iteritems():
                 result[name] = item if isinstance(
                     item, basestring) else item.unpack_errors()
             if encode_variables:

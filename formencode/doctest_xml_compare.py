@@ -69,7 +69,7 @@ def xml_compare(x1, x2, reporter=None):
         if reporter:
             reporter('Tags do not match: %s and %s' % (x1.tag, x2.tag))
         return False
-    for name, value in x1.attrib.items():
+    for name, value in x1.attrib.iteritems():
         if x2.attrib.get(name) != value:
             if reporter:
                 reporter('Attributes do not match: %s=%r, %s=%r'

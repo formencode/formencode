@@ -77,7 +77,7 @@ def test_namespace():
 
 if __name__ == '__main__':
     # It's like a super-mini py.test...
-    for name, value in globals().items():
+    for name, value in globals().iteritems():
         if name.startswith('test'):
             print name
             value()

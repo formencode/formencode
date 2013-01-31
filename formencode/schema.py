@@ -81,7 +81,7 @@ class Schema(FancyValidator):
         # Scan through the class variables we've defined *just*
         # for this subclass, looking for validators (both classes
         # and instances):
-        for key, value in new_attrs.items():
+        for key, value in new_attrs.iteritems():
             if key in ('pre_validators', 'chained_validators'):
                 if is_validator(value):
                     msg = "Any validator with the name %s will be ignored." % \
@@ -96,11 +96,11 @@ class Schema(FancyValidator):
             elif key in cls.fields:
                 del cls.fields[key]
 
-        for name, value in cls.fields.items():
+        for name, value in cls.fields.iteritems():
             cls.add_field(name, value)
 
     def __initargs__(self, new_attrs):
-        for key, value in new_attrs.items():
+        for key, value in new_attrs.iteritems():
             if key in ('pre_validators', 'chained_validators'):
                 if is_validator(value):
                     msg = "Any validator with the name %s will be ignored." % \
@@ -245,7 +245,7 @@ class Schema(FancyValidator):
             state.full_dict = value_dict
         try:
             __traceback_info__ = None
-            for name, value in value_dict.items():
+            for name, value in value_dict.iteritems():
                 __traceback_info__ = 'for_python in %s' % name
                 try:
                     unused.remove(name)
@@ -326,7 +326,7 @@ class Schema(FancyValidator):
         result = []
         result.extend(self.pre_validators)
         result.extend(self.chained_validators)
-        result.extend(self.fields.values())
+        result.extend(self.fields.itervalues())
         return result
 
     def is_empty(self, value):

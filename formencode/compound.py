@@ -39,7 +39,7 @@ class CompoundValidator(FancyValidator):
     def __classinit__(cls, new_attrs):
         FancyValidator.__classinit__(cls, new_attrs)
         toAdd = []
-        for name, value in new_attrs.items():
+        for name, value in new_attrs.iteritems():
             if is_validator(value) and value is not Identity:
                 toAdd.append((name, value))
                 # @@: Should we really delete too?
