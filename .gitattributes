@@ -1,6 +1,7 @@
 # Set default behaviour, in case users don't have core.autocrlf set.
 * text=auto
 
+*.bat text eol=crlf
 *.cfg text
 *.conf text
 *.css text
@@ -9,6 +10,7 @@
 *.ini text
 *.py text
 *.rst text
+*.sh text eol=lf
 *.txt text
 *.po text
 *.pot text
