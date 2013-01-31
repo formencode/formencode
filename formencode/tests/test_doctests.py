@@ -29,7 +29,8 @@ base = os.path.dirname(os.path.dirname(os.path.dirname(
 
 def doctest_file(document, verbose, raise_error):
     failure_count, test_count = doctest.testfile(document,
-            module_relative=False, optionflags=doctest.ELLIPSIS,
+            module_relative=False,
+            optionflags=doctest.ELLIPSIS | doctest.IGNORE_EXCEPTION_DETAIL,
             verbose=verbose)
     if raise_error:
         assert test_count > 0
@@ -38,7 +39,8 @@ def doctest_file(document, verbose, raise_error):
 
 def doctest_module(document, verbose, raise_error):
     failure_count, test_count = doctest.testmod(document,
-            optionflags=doctest.ELLIPSIS, verbose=verbose)
+            optionflags=doctest.ELLIPSIS | doctest.IGNORE_EXCEPTION_DETAIL,
+            verbose=verbose)
     if raise_error:
         assert test_count > 0
         assert failure_count == 0
