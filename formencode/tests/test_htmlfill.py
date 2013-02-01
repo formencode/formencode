@@ -54,7 +54,7 @@ def run_filename(filename):
         def checker(p, s):
             pass
     for name in data.keys():
-        if name.startswith('_') or hasattr(__builtin__, name):
+        if name.startswith('_') or hasattr('__builtin__', name):
             del data[name]
     listener = htmlfill_schemabuilder.SchemaBuilder()
     p = htmlfill.FillingParser(listener=listener, **data)
