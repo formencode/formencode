@@ -666,9 +666,11 @@ class InternationalPhoneNumber(FancyValidator):
     def _convert_to_python(self, value, state):
         self.assert_string(value, state)
         try:
-            value = value.encode('ascii', 'replace')
-        except:
+            value = value.encode('ascii', 'strict')
+        except UnicodeEncodeError:
             raise Invalid(self.message('phoneFormat', state), value, state)
+        if unicode is str:  # Python 3
+            value = value.decode('ascii')
         value = self._mark_chars_re.sub('-', value)
         for f, t in [('  ', ' '),
                 ('--', '-'), (' - ', '-'), ('- ', '-'), (' -', '-')]:

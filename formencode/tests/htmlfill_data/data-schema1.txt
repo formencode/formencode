@@ -20,6 +20,5 @@
 ----
 def check(parser, schema):
     assert schema
-    names = schema.fields.keys()
-    names.sort()
+    names = sorted(schema.fields)
     assert names == 'birth email username v v2 whatever'.split()

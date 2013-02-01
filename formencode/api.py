@@ -148,17 +148,17 @@ class Invalid(Exception):
 
     def __str__(self):
         val = self.msg
-        #if self.value:
-        #    val += " (value: %s)" % repr(self.value)
         return val
 
-    def __unicode__(self):
-        if isinstance(self.msg, unicode):
-            return self.msg
-        elif isinstance(self.msg, str):
-            return self.msg.decode('utf8')
-        else:
-            return unicode(self.msg)
+    if unicode is not str:  # Python 2
+
+        def __unicode__(self):
+            if isinstance(self.msg, unicode):
+                return self.msg
+            elif isinstance(self.msg, str):
+                return self.msg.decode('utf8')
+            else:
+                return unicode(self.msg)
 
     def unpack_errors(self, encode_variables=False, dict_char='.',
                       list_char='-'):

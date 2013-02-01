@@ -65,6 +65,8 @@ sort of feedback.  Like:
     ...     return value
     >>> raw_input_input.extend(['ten', '10'])
     >>> raw_input_input.extend(['bob', 'bob@nowhere.com'])
+    >>> if unicode is str:  # Python 3
+    ...    input = raw_input
 
 ::
 

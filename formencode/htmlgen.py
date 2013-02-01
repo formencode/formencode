@@ -15,8 +15,8 @@ useful because keywords have to come after all non-keyword arguments,
 which is non-intuitive).  Or you can chain them, adding the keywords
 with one call, then the body with a second call, like::
 
-    >>> print html.a(href='http://yahoo.com')('<Yahoo>')
-    <a href=\"http://yahoo.com\">&lt;Yahoo&gt;</a>
+    >>> str(html.a(href='http://yahoo.com')('<Yahoo>'))
+    '<a href="http://yahoo.com">&lt;Yahoo&gt;</a>'
 
 Note that strings will be quoted; only tags given explicitly will
 remain unquoted.
@@ -24,9 +24,9 @@ remain unquoted.
 If the value of an attribute is None, then no attribute
 will be inserted.  So::
 
-    >>> print html.a(href='http://www.yahoo.com', name=None,
-    ...              c='Click Here')
-    <a href=\"http://www.yahoo.com\">Click Here</a>
+    >>> str(html.a(href='http://www.yahoo.com', name=None,
+    ...              c='Click Here'))
+    '<a href="http://www.yahoo.com">Click Here</a>'
 
 If the value is None, then the empty string is used.  Otherwise str()
 is called on the value.
@@ -42,22 +42,26 @@ arguments (because they wouldn't mean anything).
 
 Examples::
 
-    >>> print html.html(
-    ...    html.head(html.title(\"Page Title\")),
+    >>> str(html.html(
+    ...    html.head(html.title("Page Title")),
     ...    html.body(
     ...    bgcolor='#000066',
     ...    text='#ffffff',
     ...    c=[html.h1('Page Title'),
     ...       html.p('Hello world!')],
-    ...    ))
-    <html><head><title>Page Title</title></head><body bgcolor=\"#000066\" text=\"#ffffff\"><h1>Page Title</h1><p>Hello world!</p></body></html>
-    >>> print html.a(href='#top')('return to top')
-    <a href=\"#top\">return to top</a>
+    ...    )))
+    '<html><head><title>Page Title</title></head><body bgcolor="#000066" text="#ffffff"><h1>Page Title</h1><p>Hello world!</p></body></html>'
+    >>> str(html.a(href='#top')('return to top'))
+    '<a href="#top">return to top</a>'
 
 """
 
 import xml.etree.ElementTree as ET
-from cgi import escape
+
+try:
+    from html import escape
+except ImportError:  # Python < 3.2
+    from cgi import escape
 
 
 __all__ = ['html']
@@ -86,26 +90,32 @@ class _HTML:
     def quote(self, arg):
         if arg is None:
             return ''
-        return escape(unicode(arg).encode(default_encoding), 1)
+        if unicode is not str:  # Python 2
+            arg = unicode(arg).encode(default_encoding)
+        return escape(arg, True)
 
     def str(self, arg, encoding=None):
-        if isinstance(arg, str):
+        if isinstance(arg, basestring):
+            if not isinstance(arg, str):
+                arg = arg.encode(default_encoding)
             return arg
         elif arg is None:
             return ''
-        elif isinstance(arg, unicode):
-            return arg.encode(default_encoding)
         elif isinstance(arg, (list, tuple)):
             return ''.join(map(self.str, arg))
         elif isinstance(arg, Element):
             return str(arg)
         else:
-            return unicode(arg).encode(default_encoding)
+            arg = unicode(arg)
+            if not isinstance(arg, str):  # Python 2
+                arg = arg.encode(default_encoding)
+            return arg
 
 html = _HTML()
 
 
-class Element(ET._ElementInterface):
+class Element(ET.Element
+        if isinstance(ET.Element, type) else ET._ElementInterface):
 
     def __call__(self, *args, **kw):
         el = self.__class__(self.tag, self.attrib)
@@ -154,12 +164,20 @@ class Element(ET._ElementInterface):
                 el.append(last)
         return el
 
-    def __str__(self):
-        return ET.tostring(self, default_encoding)
+    if unicode is str:  # Python 3
 
-    def __unicode__(self):
-        # This is lame!
-        return str(self).decode(default_encoding)
+        def __str__(self):
+            return ET.tostring(
+                self, default_encoding).decode(default_encoding)
+
+    else:
+
+        def __str__(self):
+            return ET.tostring(self, default_encoding)
+
+        def __unicode__(self):
+            # This is lame!
+            return str(self).decode(default_encoding)
 
     def __repr__(self):
         content = str(self)

@@ -291,7 +291,8 @@ class FillingParser(RewritingParser):
         if self.encoding is not None:
             new_content = []
             for item in self._content:
-                if isinstance(item, str):
+                if (unicode is not str  # Python 2
+                        and isinstance(item, str)):
                     item = item.decode(self.encoding)
                 new_content.append(item)
             self._content = new_content

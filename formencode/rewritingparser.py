@@ -1,7 +1,11 @@
 
-import cgi
 import HTMLParser
 import re
+
+try:
+    from html import escape
+except ImportError:  # Python < 3.2
+    from cgi import escape
 
 from htmlentitydefs import name2codepoint
 
@@ -12,12 +16,12 @@ def html_quote(v):
     if hasattr(v, '__html__'):
         return v.__html__()
     if isinstance(v, basestring):
-        return cgi.escape(v, 1)
+        return escape(v, True)
     if hasattr(v, '__unicode__'):
         v = unicode(v)
     else:
         v = str(v)
-    return cgi.escape(v, 1)
+    return escape(v, True)
 
 
 class RewritingParser(HTMLParser.HTMLParser):

@@ -5,6 +5,7 @@ from formencode.htmlgen import html
 
 # A test value that can't be encoded as ascii:
 uni_value = u'\xff'
+str_value = uni_value.encode('utf-8') if str is not unicode else uni_value
 
 
 def test_basic():
@@ -36,13 +37,12 @@ def test_unicode():
         assert False, (
             "We need something that can't be ASCII-encoded: %r (%r)"
             % (uni_value, uni_value.encode('ascii')))
-    assert (str(html.b(uni_value))
-            == ('<b>%s</b>' % uni_value).encode('utf-8'))
+    assert unicode(html.b(uni_value)) == u'<b>%s</b>' % uni_value
 
 
 def test_quote():
     assert html.quote('<hey>!') == '&lt;hey&gt;!'
-    assert html.quote(uni_value) == uni_value.encode('utf-8')
+    assert html.quote(uni_value) == str_value
     assert html.quote(None) == ''
     assert html.str(None) == ''
     assert str(html.b('<hey>')) == '<b>&lt;hey&gt;</b>'
@@ -58,8 +58,7 @@ def test_comment():
         return s
 
     assert strip(html.comment('test')) == '<!--test-->'
-    assert (strip(html.comment(uni_value))
-            == '<!--%s-->' % uni_value.encode('utf-8'))
+    assert strip(html.comment(uni_value)) == '<!--%s-->' % str_value
     assert strip(html.comment('test')('this')) == '<!--testthis-->'
 
 
