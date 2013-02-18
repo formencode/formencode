@@ -184,13 +184,13 @@ standard Unix word file::
 And here's a schema::
 
     >>> class Registration(formencode.Schema):
-    ...     first_name = validators.String(not_empty=True)
-    ...     last_name = validators.String(not_empty=True)
+    ...     first_name = validators.ByteString(not_empty=True)
+    ...     last_name = validators.ByteString(not_empty=True)
     ...     email = validators.Email(resolve_domain=True)
     ...     username = formencode.All(validators.PlainText(),
     ...                               UniqueUsername())
     ...     password = SecurePassword()
-    ...     password_confirm = validators.String()
+    ...     password_confirm = validators.ByteString()
     ...     chained_validators = [validators.FieldsMatch(
     ...         'password', 'password_confirm')]
 
@@ -282,7 +282,7 @@ is for::
 
     >>> class BookSchema(formencode.Schema):
     ...     id = validators.Int()
-    ...     title = validators.String(not_empty=True)
+    ...     title = validators.ByteString(not_empty=True)
     >>> validator = formencode.ForEach(BookSchema())
 
 The :obj:`validator` we've created will take a list of dictionaries as

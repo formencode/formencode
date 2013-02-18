@@ -11,9 +11,6 @@ from formencode.schema import Schema
 from formencode.foreach import ForEach
 from formencode.api import NoDefault
 
-if unicode is not str:  # Python 3
-    bytes = str
-
 
 def validate(validator, value):
     try:
@@ -45,11 +42,15 @@ class TestValidators(unittest.TestCase):
         self.assertTrue('Tests that the given fields match' in s)
 
 
-class TestStringValidator(unittest.TestCase):
+class TestByteStringValidator(unittest.TestCase):
 
     def setUp(self):
-        self.validator = validators.String()
+        self.validator = validators.ByteString
         self.messages = self.validator.message
+
+    def test_alias(self):
+        if str is not unicode:  # Python 2
+            self.assertTrue(self.validator is validators.String)
 
     def test_docstring(self):
         doc = self.validator.__doc__
@@ -84,6 +85,10 @@ class TestUnicodeStringValidator(unittest.TestCase):
 
     def setUp(self):
         self.validator = validators.UnicodeString
+
+    def test_alias(self):
+        if str is unicode:  # Python 3
+            self.assertTrue(self.validator is validators.String)
 
     def test_docstring(self):
         doc = self.validator.__doc__

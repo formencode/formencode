@@ -11,13 +11,13 @@ Module Contents
 Basic Types
 ~~~~~~~~~~~
 
+.. autoclass:: ByteString
 .. autoclass:: StringBool
 .. autoclass:: Bool
 .. autoclass:: Int
 .. autoclass:: Number
 .. autoclass:: UnicodeString
 .. autoclass:: Set
-.. autoclass:: String
 
 Basic Validator/Converters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

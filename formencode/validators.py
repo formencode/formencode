@@ -998,9 +998,10 @@ class Number(RangeValidator):
             raise Invalid(self.message('number', state), value, state)
 
 
-class String(FancyValidator):
-    """
-    Converts things to string, but treats empty things as the empty string.
+class ByteString(FancyValidator):
+    """Convert to byte string, treating empty things as the empty string.
+
+    Under Python 2.x you can also use the alias `String` for this validator.
 
     Also takes a `max` and `min` argument, and the string length must fall
     in that range.
@@ -1011,25 +1012,25 @@ class String(FancyValidator):
 
     ::
 
-        >>> String(min=2).to_python('a')
+        >>> ByteString(min=2).to_python('a')
         Traceback (most recent call last):
             ...
         Invalid: Enter a value 2 characters long or more
-        >>> String(max=10).to_python('xxxxxxxxxxx')
+        >>> ByteString(max=10).to_python('xxxxxxxxxxx')
         Traceback (most recent call last):
             ...
         Invalid: Enter a value not more than 10 characters long
-        >>> String().from_python(None)
+        >>> ByteString().from_python(None)
         ''
-        >>> String().from_python([])
+        >>> ByteString().from_python([])
         ''
-        >>> String().to_python(None)
+        >>> ByteString().to_python(None)
         ''
-        >>> String(min=3).to_python(None)
+        >>> ByteString(min=3).to_python(None)
         Traceback (most recent call last):
             ...
         Invalid: Please enter a value
-        >>> String(min=1).to_python('')
+        >>> ByteString(min=1).to_python('')
         Traceback (most recent call last):
             ...
         Invalid: Please enter a value
@@ -1055,7 +1056,7 @@ class String(FancyValidator):
             value = ''
         elif not isinstance(value, basestring):
             try:
-                value = str(value)
+                value = bytes(value)
             except UnicodeEncodeError:
                 value = unicode(value)
         if self.encoding is not None and isinstance(value, unicode):
@@ -1100,10 +1101,12 @@ class String(FancyValidator):
         return ''
 
 
-class UnicodeString(String):
-    """
-    Converts things to unicode string, this is a specialization of
-    the String class.
+class UnicodeString(ByteString):
+    """Convert things to unicode string.
+
+    This is implamented as a specialization of the ByteString class.
+
+    Under Python 3.x you can also use the alias `String` for this validator.
 
     In addition to the String arguments, an encoding argument is also
     accepted. By default the encoding will be utf-8. You can overwrite
@@ -1130,7 +1133,7 @@ class UnicodeString(String):
         badEncoding=_('Invalid data or incorrect encoding'))
 
     def __init__(self, **kw):
-        String.__init__(self, **kw)
+        ByteString.__init__(self, **kw)
         if self.inputEncoding is NoDefault:
             self.inputEncoding = self.encoding
         if self.outputEncoding is NoDefault:
@@ -1171,6 +1174,11 @@ class UnicodeString(String):
 
     def empty_value(self, value):
         return u''
+
+
+# Provide proper alias for native strings
+
+String = UnicodeString if str is unicode else ByteString
 
 
 class Set(FancyValidator):
