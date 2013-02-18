@@ -107,8 +107,8 @@ elif pycountry:
 class DelimitedDigitsPostalCode(Regex):
     """
     Abstraction of common postal code formats, such as 55555, 55-555 etc.
-    With constant amount of digits. By providing a single digit as partition you
-    can obtain a trivial 'x digits' postal code validator.
+    With constant amount of digits. By providing a single digit as partition
+    you can obtain a trivial 'x digits' postal code validator.
 
     ::
 
@@ -292,7 +292,10 @@ class UKPostalCode(Regex):
         Invalid: Please enter a valid postal code (for format see BS 7666)
     """
 
-    regex = re.compile(r'^((ASCN|BBND|BIQQ|FIQQ|PCRN|SIQQ|STHL|TDCU|TKCA) 1ZZ|BFPO (c\/o )?[1-9]{1,4}|GIR 0AA|[A-PR-UWYZ]([0-9]{1,2}|([A-HK-Y][0-9]|[A-HK-Y][0-9]([0-9]|[ABEHMNPRV-Y]))|[0-9][A-HJKS-UW]) [0-9][ABD-HJLNP-UW-Z]{2})$', re.I)
+    regex = re.compile(r'^((ASCN|BBND|BIQQ|FIQQ|PCRN|SIQQ|STHL|TDCU|TKCA)'
+        ' 1ZZ|BFPO (c\/o )?[1-9]{1,4}|GIR 0AA|[A-PR-UWYZ]'
+        '([0-9]{1,2}|([A-HK-Y][0-9]|[A-HK-Y][0-9]([0-9]|[ABEHMNPRV-Y]))'
+        '|[0-9][A-HJKS-UW]) [0-9][ABD-HJLNP-UW-Z]{2})$', re.I)
     strip = True
 
     messages = dict(
@@ -536,7 +539,8 @@ class USPhoneNumber(FancyValidator):
     """
     # for emacs: "
 
-    _phoneRE = re.compile(r'^\s*(?:1-)?(\d\d\d)[\- \.]?(\d\d\d)[\- \.]?(\d\d\d\d)(?:\s*ext\.?\s*(\d+))?\s*$', re.I)
+    _phoneRE = re.compile(r'^\s*(?:1-)?(\d\d\d)[\- \.]?(\d\d\d)[\- \.]?'
+        '(\d\d\d\d)(?:\s*ext\.?\s*(\d+))?\s*$', re.I)
 
     messages = dict(
         phoneFormat=_('Please enter a number, with area code,'
@@ -660,7 +664,7 @@ class InternationalPhoneNumber(FancyValidator):
         for rex, trf in transformations:
             match = rex.search(value)
             if match:
-                return trf % ((country_code,)+match.groups())
+                return trf % ((country_code,) + match.groups())
         return value
 
     def _convert_to_python(self, value, state):
@@ -706,8 +710,8 @@ class LanguageValidator(FancyValidator):
     languages are missing.
     Warning: ISO 639 is a smaller subset of ISO 639-2
 
-    @param  key_ok      accept the language's code instead of its name for input
-                        defaults to True
+    @param  key_ok  accept the language's code instead of its name for input
+                    defaults to True
 
     ::
 
