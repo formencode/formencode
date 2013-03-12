@@ -9,15 +9,16 @@ import cgi
 import locale
 import re
 import warnings
+from encodings import idna
 
 try:  # import dnspython
     import dns.resolver
     import dns.exception
-    from encodings import idna
 except (IOError, ImportError):
     have_dns = False
 else:
     have_dns = True
+
 
 # These are only imported when needed
 httplib = None
