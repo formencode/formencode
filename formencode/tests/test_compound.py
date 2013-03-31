@@ -24,6 +24,10 @@ class TestCompoundValidator(unittest.TestCase):
         self.assertRaises(NotImplementedError,
             self.validator.from_python, 1)
 
+    def test_clone(self):
+        clone = self.validator()
+        self.assertEqual(type(clone), type(self.validator))
+
 
 class TestAllCompoundValidator(unittest.TestCase):
 
@@ -41,6 +45,10 @@ class TestAllCompoundValidator(unittest.TestCase):
 
     def test_from_python(self):
         self.assertEqual(self.validator.from_python(1), 3)
+
+    def test_clone(self):
+        clone = self.validator()
+        self.assertEqual(clone.to_python(3), 1)
 
 
 class TestAnyCompoundValidator(unittest.TestCase):
@@ -71,6 +79,10 @@ class TestAnyCompoundValidator(unittest.TestCase):
         else:
             self.fail('Invalid should be raised when no validator succeeds.')
 
+    def test_clone(self):
+        clone = self.validator()
+        self.assertEqual(clone.to_python(2), 'b')
+
 
 class TestPipeCompoundValidator(unittest.TestCase):
 
@@ -88,3 +100,7 @@ class TestPipeCompoundValidator(unittest.TestCase):
 
     def test_from_python(self):
         self.assertEqual(self.validator.from_python(3), 1)
+
+    def test_clone(self):
+        clone = self.validator()
+        self.assertEqual(clone.to_python(1), 3)

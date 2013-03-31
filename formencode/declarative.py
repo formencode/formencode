@@ -121,10 +121,12 @@ class Declarative(object):
                 " (you gave %r)" % self.__unpackargs__)
             name = self.__unpackargs__[1]
             if name in kw:
-                raise TypeError(
-                    "keyword parameter '%s' was given by position and name"
-                    % name)
-            kw[name] = args
+                if args:
+                    raise TypeError(
+                        "keyword parameter '%s' was given by position and name"
+                        % name)
+            else:
+                kw[name] = args
         else:
             if len(args) > len(self.__unpackargs__):
                 raise TypeError(
