@@ -49,7 +49,7 @@ def get_error(inp, schema):
         assert False, (
             "Got %r from %r instead of an Invalid exception"
             % (result, inp))
-    except validators.Invalid, e:
+    except validators.Invalid as e:
         return e
 
 
@@ -112,7 +112,7 @@ def test_sign():
     res2['id'] = res2['id'][:2] + 'XXX' + res2['id'][5:]
     try:
         s.to_python(res2)
-    except validators.Invalid, e:
+    except validators.Invalid as e:
         assert str(e) == 'Signature is not correct'
     else:
         assert False

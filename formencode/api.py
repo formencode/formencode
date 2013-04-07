@@ -259,7 +259,7 @@ class Validator(declarative.Declarative):
         msg = trans(msg, **self.gettextargs)
         try:
             return msg % kw
-        except KeyError, e:
+        except KeyError as e:
             raise KeyError(
                 "Key not found (%s) for %r=%r %% %r (from: %s)"
                 % (e, msgName, self._messages.get(msgName), kw,

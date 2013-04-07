@@ -76,7 +76,7 @@ class BadCase(DecodeCase):
         print repr(self.raw_input)
         try:
             print repr(self.schema.to_python(self.input))
-        except Invalid, e:
+        except Invalid as e:
             actual = e.unpack_errors()
             assert actual == self.output
         else:
@@ -179,7 +179,7 @@ def test_multiple_chained_validators_errors():
     s = ChainedTest()
     try:
         s.to_python({'a': '1', 'a_confirm': '2', 'b': '3', 'b_confirm': '4'})
-    except Invalid, e:
+    except Invalid as e:
         assert 'a_confirm' in e.error_dict and 'b_confirm' in e.error_dict
     try:
         s.to_python({})
@@ -281,7 +281,7 @@ class TestAtLeastOneCheckboxIsChecked(object):
         # <input type="checkbox" name="agree" value="yes">
         try:
             self.schema.to_python({})
-        except Invalid, exc:
+        except Invalid as exc:
             error_message = exc.error_dict['agree'].msg
             assert self.not_empty_messages['missing'] == error_message, \
                 error_message

@@ -70,7 +70,7 @@ class ForEach(CompoundValidator):
                 for validator in self.validators:
                     try:
                         sub_value = validate(validator, sub_value, state)
-                    except Invalid, e:
+                    except Invalid as e:
                         errors.append(e)
                         all_good = False
                         good_pass = False

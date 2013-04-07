@@ -108,7 +108,7 @@ def test_html5():
     assert result == '<input type="number" name="quantity" value="10">'
     try:
         result = htmlfill.render('<input type="unknown" name="quantity">', {'quantity': '10'})
-    except AssertionError, e:
+    except AssertionError as e:
         assert "I don't know about this kind of <input>: unknown at 1:0" in str(e)
     result = htmlfill.render('<input type="unknown" name="quantity">', {'quantity': '10'}, text_as_default=True)
     assert result == '<input type="unknown" name="quantity" value="10">'
@@ -143,7 +143,7 @@ def test_iferror():
             == 'errors')
     try:
         htmlfill.render('<form:iferror noname="nothing">errors</form:iferror>')
-    except AssertionError, e:
+    except AssertionError as e:
         assert str(e) == "Name attribute in <iferror> required at 1:0"
 
 

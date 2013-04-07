@@ -63,7 +63,7 @@ class TestDeprecatedCustomValidator(unittest.TestCase):
         self.assertEqual(cv.to_python('0'), 0)
         try:
             cv.to_python('1')
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue(
                 'one is invalid' in str(e), e)
         else:
@@ -71,14 +71,14 @@ class TestDeprecatedCustomValidator(unittest.TestCase):
         self.assertEqual(cv.to_python('2'), 2)
         try:
             cv.to_python('3')
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue(
                 'three is invalid' in str(e), e)
         else:
             self.fail("three should be invalid")
         try:
             cv.to_python('4')
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue(
                 'four is invalid' in str(e), e)
         else:
@@ -91,7 +91,7 @@ class TestDeprecatedCustomValidator(unittest.TestCase):
         self.assertEqual(cv.from_python(1), '1')
         try:
             cv.from_python(2)
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue(
                 'two is invalid' in str(e), e)
         else:
@@ -106,21 +106,21 @@ class TestDeprecatedCustomValidator(unittest.TestCase):
         self.assertEqual(cv.from_python(1), '1')
         try:
             cv.from_python(2)
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue(
                 'two is invalid' in str(e), e)
         else:
             self.fail("two should be invalid")
         try:
             cv.from_python(3)
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue(
                 'three is invalid' in str(e), e)
         else:
             self.fail("three should be invalid")
         try:
             cv.from_python(4)
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue(
                 'four is invalid' in str(e), e)
         else:
@@ -170,7 +170,7 @@ class TestDeprecatedNotOneValidator(unittest.TestCase):
         self.assertEqual(nov.to_python('0'), 0)
         try:
             nov.to_python('1')
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue(
                 'must not be 1' in str(e), e)
         else:
@@ -185,7 +185,7 @@ class TestDeprecatedNotOneValidator(unittest.TestCase):
         self.assertEqual(nov.to_python('2'), 2)
         try:
             nov.to_python('42')
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue(
                 'must not be 42' in str(e), e)
         else:
@@ -201,7 +201,7 @@ class TestDeprecatedNotOneValidator(unittest.TestCase):
         self.assertEqual(nov.to_python('41'), 41)
         try:
             nov.to_python('42')
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue(
                 'must not be 42' in str(e), e)
         else:
@@ -291,7 +291,7 @@ class TestDeprecatedAllAndNotOneValidator(unittest.TestCase):
         self.assertEqual(cav.to_python('3'), 3)
         try:
             cav.to_python('4')
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue(
                 'must not be 4' in str(e), e)
         else:

@@ -441,7 +441,7 @@ class PostalCodeInCountryFormat(FancyValidator):
                 zip_validator = self._vd[fields_dict[self.country_field]]()
                 fields_dict[self.zip_field] = zip_validator.to_python(
                     fields_dict[self.zip_field])
-            except Invalid, e:
+            except Invalid as e:
                 message = self.message('badFormat', state)
                 raise Invalid(message, fields_dict, state,
                     error_dict={self.zip_field: e.msg,

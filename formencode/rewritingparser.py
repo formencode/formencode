@@ -154,7 +154,7 @@ class RewritingParser(HTMLParser.HTMLParser):
         try:
             return ''.join(
                 t for t in self._content if not isinstance(t, tuple))
-        except UnicodeDecodeError, e:
+        except UnicodeDecodeError as e:
             if self.data_is_str:
                 e.reason += (
                     " the form was passed in as an encoded string, but"

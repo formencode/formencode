@@ -13,7 +13,7 @@ def _test_builtins(func):
 
     try:
         ne.to_python("")
-    except formencode.api.Invalid, e:
+    except formencode.api.Invalid as e:
         func(e)
 
     del __builtin__._
@@ -41,7 +41,7 @@ def test_state():
 
     try:
         ne.to_python("", state=st())
-    except formencode.api.Invalid, e:
+    except formencode.api.Invalid as e:
         assert str(e) == "state dummy"
 
 
@@ -51,7 +51,7 @@ def _test_lang(language, notemptytext):
 
     try:
         ne.to_python("")
-    except formencode.api.Invalid, e:
+    except formencode.api.Invalid as e:
         assert unicode(e) == notemptytext
 
     formencode.api.set_stdtranslation()  # set back to defaults

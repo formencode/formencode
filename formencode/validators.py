@@ -77,7 +77,7 @@ def datetime_makedate(module, year, month, day):
     else:
         try:
             return module.DateTime(year, month, day)
-        except module.RangeError, e:
+        except module.RangeError as e:
             raise ValueError(str(e))
 
 
@@ -270,7 +270,7 @@ class Wrapper(FancyValidator):
         def result(value, state, func=func):
             try:
                 return func(value)
-            except Exception, e:
+            except Exception as e:
                 raise Invalid(str(e), value, state)
 
         return result
@@ -1361,14 +1361,14 @@ class Email(FancyValidator):
             try:
                 try:
                     dns.resolver.query(domain, 'MX')
-                except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer), e:
+                except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer) as e:
                     try:
                         dns.resolver.query(domain, 'A')
-                    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer), e:
+                    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer) as e:
                         raise Invalid(
                             self.message('domainDoesNotExist',
                                 state, domain=domain), value, state)
-            except (socket.error, dns.exception.DNSException), e:
+            except (socket.error, dns.exception.DNSException) as e:
                 raise Invalid(
                     self.message('socketError', state, error=e), value, state)
 
@@ -1546,10 +1546,10 @@ class URL(FancyValidator):
                 path += '?' + query
             conn.request('HEAD', path)
             res = conn.getresponse()
-        except httplib.HTTPException, e:
+        except httplib.HTTPException as e:
             raise Invalid(
                 self.message('httpError', state, error=e), state, url)
-        except socket.error, e:
+        except socket.error as e:
             raise Invalid(
                 self.message('socketError', state, error=e), state, url)
         else:
@@ -2009,7 +2009,7 @@ class DateConverter(FancyValidator):
         dt_mod = import_datetime(self.datetime_module)
         try:
             return datetime_makedate(dt_mod, year, month, day)
-        except ValueError, v:
+        except ValueError as v:
             raise Invalid(
                 self.message('invalidDate', state,
                     exception=str(v)), value, state)

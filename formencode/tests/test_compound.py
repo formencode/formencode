@@ -74,7 +74,7 @@ class TestAnyCompoundValidator(unittest.TestCase):
     def test_to_python_error(self):
         try:
             self.validator.to_python(3)
-        except Invalid, e:
+        except Invalid as e:
             self.assertTrue('Enter a value from: 2' in str(e))
         else:
             self.fail('Invalid should be raised when no validator succeeds.')

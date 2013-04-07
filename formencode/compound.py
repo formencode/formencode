@@ -106,7 +106,7 @@ class Any(CompoundValidator):
         for validator in validators:
             try:
                 return validate(validator, value, state)
-            except Invalid, e:
+            except Invalid as e:
                 lastException = e
         if self.if_invalid is NoDefault:
             raise lastException

@@ -15,7 +15,7 @@ class TestCreditCardValidator(unittest.TestCase):
         try:
             self.validator.to_python(
                 dict(ccNumber=ccnumber, ccType=cctype), None)
-        except Invalid, e:
+        except Invalid as e:
             return e.unpack_errors()['ccNumber']
 
     def message(self, key):
@@ -43,7 +43,7 @@ class TestCreditCardExpires(unittest.TestCase):
         try:
             self.validator.to_python(
                 dict(ccExpiresMonth=month, ccExpiresYear=year), None)
-        except Invalid, e:
+        except Invalid as e:
             return e.unpack_errors()['ccExpiresMonth']
 
     def message(self, key):

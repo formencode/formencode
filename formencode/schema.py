@@ -166,7 +166,7 @@ class Schema(FancyValidator):
                     state.key = name
                 try:
                     new[name] = validator.to_python(value, state)
-                except Invalid, e:
+                except Invalid as e:
                     errors[name] = e
 
             for name in unused:
@@ -190,7 +190,7 @@ class Schema(FancyValidator):
                         try:
                             new[name] = validator.to_python(
                                 self.if_key_missing, state)
-                        except Invalid, e:
+                        except Invalid as e:
                             errors[name] = e
                 else:
                     new[name] = validator.if_missing
@@ -203,7 +203,7 @@ class Schema(FancyValidator):
                     continue
                 try:
                     validator.validate_partial(value_dict, state)
-                except Invalid, e:
+                except Invalid as e:
                     sub_errors = e.unpack_errors()
                     if not isinstance(sub_errors, dict):
                         # Can't do anything here
@@ -260,7 +260,7 @@ class Schema(FancyValidator):
                         state.key = name
                     try:
                         new[name] = self.fields[name].from_python(value, state)
-                    except Invalid, e:
+                    except Invalid as e:
                         errors[name] = e
 
             del __traceback_info__
@@ -271,7 +271,7 @@ class Schema(FancyValidator):
                     state.key = name
                 try:
                     new[name] = validator.from_python(None, state)
-                except Invalid, e:
+                except Invalid as e:
                     errors[name] = e
 
             if errors:

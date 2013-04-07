@@ -14,7 +14,7 @@ class TestEmail(unittest.TestCase):
     def validate(self, *args):
         try:
             return self.validator.to_python(*args)
-        except Invalid, e:
+        except Invalid as e:
             return unicode(e)
 
     def message(self, message_name, username, domain):
