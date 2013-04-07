@@ -27,7 +27,7 @@ sha1 = None
 socket = None
 urlparse = None
 
-from api import (FancyValidator, Identity, Invalid, NoDefault, Validator,
+from .api import (FancyValidator, Identity, Invalid, NoDefault, Validator,
     deprecation_warning, is_empty)
 
 assert Identity and Invalid and NoDefault  # silence unused import warnings

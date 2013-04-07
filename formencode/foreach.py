@@ -2,8 +2,8 @@
 Validator for repeating items.
 """
 
-from api import NoDefault, Invalid
-from compound import CompoundValidator, from_python
+from .api import NoDefault, Invalid
+from .compound import CompoundValidator, from_python
 
 __all__ = ['ForEach']
 

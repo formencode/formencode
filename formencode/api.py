@@ -2,7 +2,7 @@
 Core classes for validation.
 """
 
-import declarative
+from . import declarative
 import gettext
 import os
 import re
@@ -181,7 +181,7 @@ class Invalid(Exception):
                 result[name] = item if isinstance(
                     item, basestring) else item.unpack_errors()
             if encode_variables:
-                import variabledecode
+                from . import variabledecode
                 result = variabledecode.variable_encode(
                     result, add_repetitions=False,
                     dict_char=dict_char, list_char=list_char)

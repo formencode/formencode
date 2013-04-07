@@ -20,7 +20,7 @@ and list_char keyword args. For example, to have the GET/POST variables,
 ``a_1=something`` as a list, you would use a ``list_char='_'``.
 """
 
-from api import FancyValidator
+from .api import FancyValidator
 
 __all__ = ['variable_decode', 'variable_encode', 'NestedVariables']
 

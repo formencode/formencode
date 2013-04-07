@@ -2,7 +2,7 @@
 Validators for applying validations in sequence.
 """
 
-from api import (FancyValidator, Identity, Invalid, NoDefault, Validator,
+from .api import (FancyValidator, Identity, Invalid, NoDefault, Validator,
     is_validator)
 
 __all__ = ['CompoundValidator', 'Any', 'All', 'Pipe']

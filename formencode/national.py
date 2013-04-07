@@ -3,9 +3,9 @@ Country specific validators for use with FormEncode.
 """
 import re
 
-from api import FancyValidator
-from compound import Any
-from validators import Regex, Invalid, _
+from .api import FancyValidator
+from .compound import Any
+from .validators import Regex, Invalid, _
 
 try:
     import pycountry
