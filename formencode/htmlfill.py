@@ -17,7 +17,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
            text_as_default=False, checkbox_checked_if_present=False,
            listener=None, encoding=None,
            error_class='error', prefix_error=True,
-           force_defaults=True,):
+           force_defaults=True, skip_passwords=False):
     """
     Render the ``form`` (which should be a string) given the ``defaults``
     and ``errors``.  Defaults are the values that go in the input fields
@@ -79,6 +79,10 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     and textareas will be emptied. This defaults to ``True``, which is
     appropriate the defaults are the result of a form submission.
 
+    ``skip_passwords`` specifies if password fields should be filled as well.
+    If disabled the password fields will not be filled with anything, which is
+    useful when you don't want to return a user's password in plain-text
+    source.
     """
     if defaults is None:
         defaults = {}
@@ -96,6 +100,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
         prefix_error=prefix_error,
         error_class=error_class,
         force_defaults=force_defaults,
+        skip_passwords=skip_passwords,
         )
     p.feed(form)
     p.close()
@@ -209,7 +214,7 @@ class FillingParser(RewritingParser):
                  auto_error_formatter=None,
                  text_as_default=False, checkbox_checked_if_present=False,
                  encoding=None, prefix_error=True,
-                 force_defaults=True):
+                 force_defaults=True, skip_passwords=False):
         RewritingParser.__init__(self)
         self.source = None
         self.lines = None
@@ -241,6 +246,7 @@ class FillingParser(RewritingParser):
         self.encoding = encoding
         self.prefix_error = prefix_error
         self.force_defaults = force_defaults
+        self.skip_passwords = skip_passwords
 
     def str_compare(self, str1, str2):
         """
@@ -434,6 +440,8 @@ class FillingParser(RewritingParser):
             self.skip_next = True
             self.add_key(name)
         elif t == 'password':
+            if self.skip_passwords:
+                return
             if value is None and not self.force_defaults:
                 value = value or self.get_attr(attrs, 'value', '')
             self.set_attr(attrs, 'value', value)
