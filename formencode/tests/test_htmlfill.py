@@ -186,6 +186,23 @@ def test_unicode():
             '<input type="checkbox" name="tags" value="2" />')
 
 
+def test_password():
+    assert (htmlfill.render('<input name="password" type="password" value="">',
+                            defaults={'password': 'secure passwd'})
+            == '<input name="password" type="password" value="secure passwd">')
+    assert (htmlfill.render('<input name="password" type="password" value="">',
+                            defaults={'password': 'secure passwd'},
+                            skip_passwords=True)
+            == '<input name="password" type="password" value="">')
+    assert (htmlfill.render('<input name="password" type="password">',
+                            defaults={'password': 'secure passwd'})
+            == '<input name="password" type="password" value="secure passwd">')
+    assert (htmlfill.render('<input name="password" type="password">',
+                            defaults={'password': 'secure passwd'},
+                            skip_passwords=True)
+            == '<input name="password" type="password">')
+
+
 def test_not_force_defaults_text():
     html = """<input type="text" name="text-1" class="my_text" value="i like this text" />"""
     rendered_html = htmlfill.render(html, defaults=dict(),
