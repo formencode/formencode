@@ -79,10 +79,10 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     and textareas will be emptied. This defaults to ``True``, which is
     appropriate the defaults are the result of a form submission.
 
-    ``skip_passwords`` specifies if password fields should be filled as well.
-    If disabled the password fields will not be filled with anything, which is
-    useful when you don't want to return a user's password in plain-text
-    source.
+    ``skip_passwords`` specifies if password fields should be skipped when
+    rendering form-content.  If disabled the password fields will not be filled
+    with anything, which is useful when you don't want to return a user's
+    password in plain-text source.
     """
     if defaults is None:
         defaults = {}
