@@ -209,14 +209,40 @@ class TestDateConverterValidator(unittest.TestCase):
             dc.to_python('oh/happy/day')
         except Invalid as e:
             self.assertTrue(
-                'Please enter the date in the form dd/mm/yyyy' in str(e))
+                'Please enter the date in the form DD/MM/YYYY' in str(e))
         else:
             self.fail('Date should be invalid')
 
-    def test_month_style(self):
+    def test_month_style_alias(self):
+        dc = self.validator()
+        self.assertEqual(dc.month_style, 'mdy')
+        for style in 'mdy mm/dd/yyyy MM/DD/YYYY US American'.split():
+            dc = self.validator(month_style=style)
+            self.assertEqual(dc.month_style, 'mdy')
+        for style in 'dmy dd/mm/yyyy DD/MM/YYYY Euro European'.split():
+            dc = self.validator(month_style=style)
+            self.assertEqual(dc.month_style, 'dmy')
+        for style in 'ymd yyyy/mm/dd YYYY/MM/DD ISO China Chinese'.split():
+            dc = self.validator(month_style=style)
+            self.assertEqual(dc.month_style, 'ymd')
+        try:
+            dc = self.validator(month_style='Klingon')
+        except TypeError as e:
+            self.assertTrue(
+                str(e) == "Bad month_style: 'klingon'")
+        else:
+            self.fail('month_style should be invalid')
+        try:
+            dc = self.validator(month_style='ydm')
+        except TypeError as e:
+            self.assertTrue(
+                str(e) == "Bad month_style: 'ydm'")
+        else:
+            self.fail('month_style should be invalid')
+
+    def test_us_style(self):
         d = datetime.date(2007, 12, 20)
         dc = self.validator()
-        self.assertEqual(dc.month_style, 'mm/dd/yyyy')
         self.assertEqual(dc.to_python('12/20/2007'), d)
         self.assertEqual(dc.from_python(d), '12/20/2007')
         self.assertEqual(dc.to_python('Dec/20/2007'), d)
@@ -231,11 +257,13 @@ class TestDateConverterValidator(unittest.TestCase):
             self.assertEqual(dc.to_python('12/Dec/2007'), d)
         except Invalid as e:
             self.assertTrue(
-                'Please enter the date in the form mm/dd/yyyy' in str(e))
+                'Please enter the date in the form MM/DD/YYYY' in str(e))
         else:
             self.fail('Date should be invalid')
+
+    def test_euro_style(self):
+        d = datetime.date(2007, 12, 20)
         dc = self.validator(month_style='dd/mm/yyyy')
-        self.assertEqual(dc.month_style, 'dd/mm/yyyy')
         self.assertEqual(dc.to_python('20/12/2007'), d)
         self.assertEqual(dc.from_python(d), '20/12/2007')
         self.assertEqual(dc.to_python('20/Dec/2007'), d)
@@ -250,9 +278,92 @@ class TestDateConverterValidator(unittest.TestCase):
             self.assertEqual(dc.to_python('Dec/12/2007'), d)
         except Invalid as e:
             self.assertTrue(
-                'Please enter the date in the form dd/mm/yyyy' in str(e))
+                'Please enter the date in the form DD/MM/YYYY' in str(e))
         else:
             self.fail('Date should be invalid')
+
+    def test_iso_style(self):
+        d = datetime.date(2013, 6, 30)
+        dc = self.validator(month_style='yyyy/mm/dd')
+        self.assertEqual(dc.to_python('2013/06/30'), d)
+        self.assertEqual(dc.from_python(d), '2013/06/30')
+        self.assertEqual(dc.to_python('2013/Jun/30'), d)
+        self.assertEqual(dc.to_python('2013/June/30'), d)
+        try:
+            self.assertEqual(dc.to_python('2013/30/06'), d)
+        except Invalid as e:
+            self.assertTrue('Please enter a month from 1 to 12' in str(e))
+        else:
+            self.fail('Date should be invalid')
+        try:
+            self.assertEqual(dc.to_python('2013/06/Jun'), d)
+        except Invalid as e:
+            self.assertTrue(
+                'Please enter the date in the form YYYY/MM/DD' in str(e))
+        else:
+            self.fail('Date should be invalid')
+
+    def test_no_day(self):
+        d = datetime.date(2007, 12, 1)
+        dc = self.validator(accept_day=False)
+        self.assertEqual(dc.to_python('12/2007'), d)
+        self.assertEqual(dc.from_python(d), '12/2007')
+        self.assertEqual(dc.to_python('Dec/2007'), d)
+        self.assertEqual(dc.to_python('December/2007'), d)
+        try:
+            self.assertEqual(dc.to_python('20/2007'), d)
+        except Invalid as e:
+            self.assertTrue('Please enter a month from 1 to 12' in str(e))
+        else:
+            self.fail('Date should be invalid')
+        try:
+            self.assertEqual(dc.to_python('12/20/2007'), d)
+        except Invalid as e:
+            self.assertTrue(
+                'Please enter the date in the form MM/YYYY' in str(e))
+        else:
+            self.fail('Date should be invalid')
+        try:
+            self.assertEqual(dc.to_python('2007/Dec'), d)
+        except Invalid as e:
+            self.assertTrue(
+                'Please enter the date in the form MM/YYYY' in str(e))
+        else:
+            self.fail('Date should be invalid')
+
+    def test_from_python(self):
+        d = datetime.date(2013, 6, 30)
+        dc = self.validator()
+        self.assertEqual(dc.from_python(d), '06/30/2013')
+        dc = self.validator(month_style='dd/mm/yyyy')
+        self.assertEqual(dc.from_python(d), '30/06/2013')
+        dc = self.validator(month_style='dd/mm/yyyy', separator='.')
+        self.assertEqual(dc.from_python(d), '30.06.2013')
+        dc = self.validator(month_style='yyyy/mm/dd')
+        self.assertEqual(dc.from_python(d), '2013/06/30')
+        dc = self.validator(month_style='yyyy/mm/dd', separator='-')
+        self.assertEqual(dc.from_python(d), '2013-06-30')
+
+    def test_from_python_no_day(self):
+        d = datetime.date(2013, 6, 30)
+        dc = self.validator(accept_day=False)
+        self.assertEqual(dc.from_python(d), '06/2013')
+        dc = self.validator(month_style='dd/mm/yyyy', accept_day=False)
+        self.assertEqual(dc.from_python(d), '06/2013')
+        dc = self.validator(month_style='yyyy/mm/dd', accept_day=False)
+        self.assertEqual(dc.from_python(d), '2013/06')
+        dc = self.validator(month_style='yyyy/mm/dd',
+            separator='-', accept_day=False)
+        self.assertEqual(dc.from_python(d), '2013-06')
+
+    def test_auto_separator(self):
+        d = datetime.date(2013, 6, 30)
+        dc = self.validator(month_style='us', separator=None)
+        self.assertEqual(dc.from_python(d), '06/30/2013')
+        dc = self.validator(month_style='euro', separator=None)
+        self.assertEqual(dc.from_python(d), '30.06.2013')
+        dc = self.validator(month_style='iso', separator=None)
+        self.assertEqual(dc.from_python(d), '2013-06-30')
 
 
 class TestTimeConverterValidator(unittest.TestCase):

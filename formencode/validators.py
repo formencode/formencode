@@ -1926,11 +1926,15 @@ class DateConverter(FancyValidator):
         >>> d.from_python(date)
         '12/03/2009'
     """
-    ## @@: accepts only US-style dates
 
+    # set to False if you want only month and year
     accept_day = True
-    # also allowed: 'dd/mm/yyyy'
-    month_style = 'mm/dd/yyyy'
+    # allowed month styles: 'mdy' = 'us', 'dmy' = 'euro', 'ymd' = 'iso'
+    # also allowed: 'mm/dd/yyyy', 'dd/mm/yyyy', 'yyyy/mm/dd'
+    month_style = 'mdy'
+    # preferred separator for reverse conversion: '/', '.' or '-'
+    separator = '/'
+
     # Use 'datetime' to force the Python datetime module, or
     # 'mxDateTime' to force the mxDateTime module (None means use
     # datetime, or if not present mxDateTime)
@@ -1951,11 +1955,28 @@ class DateConverter(FancyValidator):
         'dec': 12, 'december': 12,
         }
 
-    _day_month_date_re = re.compile(r'^\s*(\d\d?)[\-\./\\](\d\d?|%s)[\-\./\\](\d\d\d?\d?)\s*$' % '|'.join(_month_names), re.I)
-    _month_day_date_re = re.compile(r'^\s*(\d\d?|%s)[\-\./\\](\d\d?)[\-\./\\](\d\d\d?\d?)\s*$' % '|'.join(_month_names), re.I)
-    _month_date_re = re.compile(r'^\s*(\d\d?|%s)[\-\./\\](\d\d\d?\d?)\s*$' % '|'.join(_month_names), re.I)
+    _date_re = dict(
+        dmy=re.compile(
+            r'^\s*(\d\d?)[\-\./\\](\d\d?|%s)[\-\./\\](\d\d\d?\d?)\s*$'
+                % '|'.join(_month_names), re.I),
+        mdy=re.compile(
+            r'^\s*(\d\d?|%s)[\-\./\\](\d\d?)[\-\./\\](\d\d\d?\d?)\s*$'
+                % '|'.join(_month_names), re.I),
+        ymd=re.compile(
+            r'^\s*(\d\d\d?\d?)[\-\./\\](\d\d?|%s)[\-\./\\](\d\d?)\s*$'
+                % '|'.join(_month_names), re.I),
+        my=re.compile(
+            r'^\s*(\d\d?|%s)[\-\./\\](\d\d\d?\d?)\s*$'
+                % '|'.join(_month_names), re.I),
+        ym=re.compile(
+            r'^\s*(\d\d\d?\d?)[\-\./\\](\d\d?|%s)\s*$'
+                % '|'.join(_month_names), re.I))
 
-    ## @@: Feb. should be leap-year aware (but mxDateTime does catch that)
+    _formats = dict(d='%d', m='%m', y='%Y')
+
+    _human_formats = dict(d=_('DD'), m=_('MM'), y=_('YYYY'))
+
+    # Feb. should be leap-year aware (but mxDateTime does catch that)
     _monthDays = {
         1: 31, 2: 29, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31,
         9: 30, 10: 31, 11: 30, 12: 31}
@@ -1973,39 +1994,67 @@ class DateConverter(FancyValidator):
 
     def __init__(self, *args, **kw):
         super(DateConverter, self).__init__(*args, **kw)
-        if not self.month_style in ('dd/mm/yyyy', 'mm/dd/yyyy'):
-            raise TypeError('Bad month_style: %r' % self.month_style)
+        month_style = (self.month_style or DateConverter.month_style).lower()
+        accept_day = bool(self.accept_day)
+        self.accept_day = self.accept_day
+        if month_style in ('mdy',
+                'md', 'mm/dd/yyyy', 'mm/dd', 'us', 'american'):
+            month_style = 'mdy'
+        elif month_style in ('dmy',
+                'dm', 'dd/mm/yyyy', 'dd/mm', 'euro', 'european'):
+            month_style = 'dmy'
+        elif month_style in ('ymd',
+                'ym', 'yyyy/mm/dd', 'yyyy/mm', 'iso', 'china', 'chinese'):
+            month_style = 'ymd'
+        else:
+            raise TypeError('Bad month_style: %r' % month_style)
+        self.month_style = month_style
+        separator = self.separator
+        if not separator or separator == 'auto':
+            separator = dict(mdy='/', dmy='.', ymd='-')[month_style]
+        elif separator not in ('-', '.', '/', '\\'):
+            raise TypeError('Bad separator: %r' % separator)
+        self.separator = separator
+        self.format = separator.join(self._formats[part]
+            for part in month_style if part != 'd' or accept_day)
+        self.human_format = separator.join(self._human_formats[part]
+            for part in month_style if part != 'd' or accept_day)
 
     def _convert_to_python(self, value, state):
-        return (self.convert_day
-            if self.accept_day else self.convert_month)(value, state)
-
-    def convert_day(self, value, state):
         self.assert_string(value, state)
-        day_month_style = self.month_style == 'dd/mm/yyyy'
-        match = (day_month_style and self._day_month_date_re
-            or self._month_day_date_re).search(value)
+        month_style = self.month_style
+        if not self.accept_day:
+            month_style = 'ym' if month_style == 'ymd' else 'my'
+        match = self._date_re[month_style].search(value)
         if not match:
             raise Invalid(
                 self.message('badFormat', state,
-                    format=self.month_style), value, state)
-        month, day = match.group(1), match.group(2)
-        if day_month_style:
-            month, day = day, month
-        day = int(day)
-        try:
-            month = int(month)
-        except ValueError:
-            month = self.make_month(month, state)
-        year = self.make_year(match.group(3), state)
+                    format=self.human_format), value, state)
+        groups = match.groups()
+        if self.accept_day:
+            if month_style == 'mdy':
+                month, day, year = groups
+            elif month_style == 'dmy':
+                day, month, year = groups
+            else:
+                year, month, day = groups
+            day = int(day)
+            if not 1 <= day <= 31:
+                raise Invalid(self.message('invalidDay', state), value, state)
+        else:
+            day = 1
+            if month_style == 'my':
+                month, year = groups
+            else:
+                year, month = groups
+        month = self.make_month(month, state)
         if not 1 <= month <= 12:
             raise Invalid(self.message('monthRange', state), value, state)
-        if day < 1:
-            raise Invalid(self.message('invalidDay', state), value, state)
         if self._monthDays[month] < day:
             raise Invalid(
                 self.message('dayRange', state,
                     days=self._monthDays[month]), value, state)
+        year = self.make_year(year, state)
         dt_mod = import_datetime(self.datetime_module)
         try:
             return datetime_makedate(dt_mod, year, month, day)
@@ -2018,10 +2067,9 @@ class DateConverter(FancyValidator):
         try:
             return int(value)
         except ValueError:
-            value = value.lower().strip()
-            if value in self._month_names:
-                return self._month_names[value]
-            else:
+            try:
+                return self._month_names[value.lower().strip()]
+            except KeyError:
                 raise Invalid(
                     self.message('unknownMonthName', state,
                         month=value), value, state)
@@ -2039,33 +2087,10 @@ class DateConverter(FancyValidator):
             raise Invalid(self.message('fourDigitYear', state), year, state)
         return year
 
-    def convert_month(self, value, state):
-        match = self._month_date_re.search(value)
-        if not match:
-            raise Invalid(
-                self.message('wrongFormat', state,
-                    format='mm/yyyy'), value, state)
-        month = self.make_month(match.group(1), state)
-        year = self.make_year(match.group(2), state)
-        if not 1 <= month <= 12:
-            raise Invalid(self.message('monthRange', state), value, state)
-        dt_mod = import_datetime(self.datetime_module)
-        return datetime_makedate(dt_mod, year, month, 1)
-
     def _convert_from_python(self, value, state):
         if self.if_empty is not NoDefault and not value:
             return ''
-        return (self.unconvert_day
-            if self.accept_day else self.unconvert_month)(value, state)
-
-    def unconvert_day(self, value, state):
-        # @@ ib: double-check, improve
-        return value.strftime('%m/%d/%Y'
-            if self.month_style == 'mm/dd/yyyy' else '%d/%m/%Y')
-
-    def unconvert_month(self, value, state):
-        # @@ ib: double-check, improve
-        return value.strftime('%m/%Y')
+        return value.strftime(self.format)
 
 
 class TimeConverter(FancyValidator):
