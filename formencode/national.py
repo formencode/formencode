@@ -163,8 +163,7 @@ class DelimitedDigitsPostalCode(Regex):
         self.partition_lengths, self.delimiter = partition_lengths, delimiter
         Regex.__init__(self, *args, **kw)
 
-    messages = dict(
-        invalid=_('Please enter a zip code (%(format)s)'))
+    messages = dict(invalid=_('Please enter a zip code (%(format)s)'))
 
     def _to_python(self, value, state):
         self.assert_string(value, state)
@@ -224,18 +223,18 @@ class ArgentinianPostalCode(Regex):
         Invalid: Please enter a zip code (LnnnnLLL)
     """
 
+    format = _('LnnnnLLL')
     regex = re.compile(r'^([a-zA-Z]{1})\s*(\d{4})\s*([a-zA-Z]{3})$')
     strip = True
 
-    messages = dict(
-        invalid=_('Please enter a zip code (%s)') % _('LnnnnLLL'))
+    messages = dict(invalid=_('Please enter a zip code (%(format)s)'))
 
     def _to_python(self, value, state):
         self.assert_string(value, state)
         match = self.regex.search(value)
         if not match:
             raise Invalid(
-                self.message('invalid', state),
+                self.message('invalid', state, format=self.format),
                 value, state)
         return '%s%s%s' % (match.group(1).upper(),
                            match.group(2),
@@ -258,18 +257,18 @@ class CanadianPostalCode(Regex):
         Invalid: Please enter a zip code (LnL nLn)
     """
 
+    format = _('LnL nLn')
     regex = re.compile(r'^([a-zA-Z]\d[a-zA-Z])\s?(\d[a-zA-Z]\d)$')
     strip = True
 
-    messages = dict(
-        invalid=_('Please enter a zip code (%s)') % _('LnL nLn'))
+    messages = dict(invalid=_('Please enter a zip code (%(format)s)'))
 
     def _to_python(self, value, state):
         self.assert_string(value, state)
         match = self.regex.search(value)
         if not match:
             raise Invalid(
-                self.message('invalid', state),
+                self.message('invalid', state, format=self.format),
                 value, state)
         return '%s %s' % (match.group(1).upper(), match.group(2).upper())
 
@@ -437,10 +436,10 @@ class PostalCodeInCountryFormat(FancyValidator):
 
     def validate_python(self, fields_dict, state):
         if fields_dict[self.country_field] in self._vd:
+            zip_validator = self._vd[fields_dict[self.country_field]]()
             try:
-                zip_validator = self._vd[fields_dict[self.country_field]]()
                 fields_dict[self.zip_field] = zip_validator.to_python(
-                    fields_dict[self.zip_field])
+                    fields_dict[self.zip_field], state=state)
             except Invalid, e:
                 message = self.message('badFormat', state)
                 raise Invalid(message, fields_dict, state,
