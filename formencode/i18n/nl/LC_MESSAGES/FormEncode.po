@@ -63,7 +63,7 @@ msgstr ""
 #: formencode/national.py:165
 #, python-format
 msgid "Please enter a zip code (%(format)s)"
-msgstr "Voer een geldige postcode in (%(format))"
+msgstr "Voer een geldige postcode in (%(format)s)"
 
 #: formencode/national.py:229 formencode/national.py:263
 #, python-format
@@ -80,15 +80,15 @@ msgstr ""
 
 #: formencode/national.py:297
 msgid "Please enter a valid postal code (for format see BS 7666)"
-msgstr ""
+msgstr "Vennligst skriv inn en gyldig postnummer (for formatet se BS 7666)"
 
 #: formencode/national.py:338
 msgid "That country is not listed in ISO 3166"
-msgstr ""
+msgstr "At landet ikke er oppført i ISO 3166"
 
 #: formencode/national.py:393
 msgid "Given postal code does not match the country's format."
-msgstr ""
+msgstr "Opgegeven postcode komt niet overeen met de notatie voor het land."
 
 #: formencode/national.py:484
 msgid "Please enter a state code"

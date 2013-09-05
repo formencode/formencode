@@ -257,6 +257,7 @@ class Validator(declarative.Declarative):
 
         msg = self._messages[msgName]
         msg = trans(msg, **self.gettextargs)
+
         try:
             return msg % kw
         except KeyError as e:

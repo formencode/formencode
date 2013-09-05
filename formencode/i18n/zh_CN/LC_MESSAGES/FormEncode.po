@@ -82,11 +82,11 @@ msgstr ""
 
 #: formencode/national.py:338
 msgid "That country is not listed in ISO 3166"
-msgstr ""
+msgstr "該國家/地區並未列在 ISO 3166 中"
 
 #: formencode/national.py:393
 msgid "Given postal code does not match the country's format."
-msgstr ""
+msgstr "指定的郵遞區號與國家/地區的格式不相符。"
 
 #: formencode/national.py:484
 msgid "Please enter a state code"

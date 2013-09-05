@@ -83,7 +83,7 @@ msgstr ""
 
 #: formencode/national.py:393
 msgid "Given postal code does not match the country's format."
-msgstr ""
+msgstr "入力された郵便番号がその国の形式と一致していません"
 
 #: formencode/national.py:484
 msgid "Please enter a state code"

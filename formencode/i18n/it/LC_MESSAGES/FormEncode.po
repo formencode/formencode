@@ -86,7 +86,7 @@ msgstr ""
 
 #: formencode/national.py:393
 msgid "Given postal code does not match the country's format."
-msgstr ""
+msgstr "Il codice postale fornito non corrisponde al formato del paese."
 
 #: formencode/national.py:484
 msgid "Please enter a state code"
@@ -539,7 +539,7 @@ msgstr "Numero non valido"
 #: formencode/validators.py:2700
 #, python-format
 msgid "The field %(key)s is missing"
-msgstr ""
+msgstr "Il campo {{%(key)s}} è mancante."
 
 #: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"

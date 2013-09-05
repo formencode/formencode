@@ -56,7 +56,7 @@ msgstr ""
 #: formencode/national.py:144
 #, python-format
 msgid "%d digits"
-msgstr ""
+msgstr "%d digits"
 
 #: formencode/national.py:165
 #, python-format
@@ -78,15 +78,15 @@ msgstr ""
 
 #: formencode/national.py:297
 msgid "Please enter a valid postal code (for format see BS 7666)"
-msgstr ""
+msgstr "Por favor provea un codigo postal valido (Para ver el formato BS 7666)"
 
 #: formencode/national.py:338
 msgid "That country is not listed in ISO 3166"
-msgstr ""
+msgstr "Ese país no se encuentra en la lista de ISO 3166"
 
 #: formencode/national.py:393
 msgid "Given postal code does not match the country's format."
-msgstr ""
+msgstr "El código postal proporcionado no coincide con el formato del país."
 
 #: formencode/national.py:484
 msgid "Please enter a state code"
@@ -126,7 +126,7 @@ msgstr ""
 
 #: formencode/schema.py:64
 msgid "Missing value"
-msgstr ""
+msgstr "Falta el valor"
 
 #: formencode/schema.py:65
 #, fuzzy, python-format
