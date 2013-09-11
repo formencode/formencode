@@ -224,7 +224,7 @@ msgstr ""
 #: formencode/validators.py:796
 #, python-format
 msgid "Date must be after %(date)s"
-msgstr ""Päivämäärän on oltava myöhäisempi kuin %(date)s"
+msgstr "Päivämäärän on oltava myöhäisempi kuin %(date)s"
 
 #: formencode/validators.py:797
 #, python-format
@@ -261,7 +261,7 @@ msgstr ""
 #: formencode/validators.py:1036
 #, python-format
 msgid "Enter a value not more than %(max)i characters long"
-msgstr ""Kirjoita enintään %(max)i merkkiä pitkä arvo"
+msgstr "Kirjoita enintään %(max)i merkkiä pitkä arvo"
 
 #: formencode/validators.py:1037
 #, python-format
