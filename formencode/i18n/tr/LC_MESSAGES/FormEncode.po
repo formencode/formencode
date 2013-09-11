@@ -78,15 +78,15 @@ msgstr ""
 
 #: formencode/national.py:297
 msgid "Please enter a valid postal code (for format see BS 7666)"
-msgstr ""
+msgstr "Lütfen geçerli bir posta kodu girin (biçim için bkz. BS 7666)"
 
 #: formencode/national.py:338
 msgid "That country is not listed in ISO 3166"
-msgstr ""
+msgstr "Bu ülke, ISO 3166 dahilinde listelenmemiştir"
 
 #: formencode/national.py:393
 msgid "Given postal code does not match the country's format."
-msgstr ""
+msgstr "Belirtilen posta kodu ülkenin biçimiyle eşleşmiyor."
 
 #: formencode/national.py:484
 msgid "Please enter a state code"
@@ -336,7 +336,7 @@ msgstr "Sunucu hata kodu ile yanıt verdi (%(status)s)"
 #: formencode/validators.py:1417
 #, python-format
 msgid "You must provide a full domain name (like %(domain)s.com)"
-msgstr ""
+msgstr "Eksiksiz bir alan adı sağlamalısınız (örn. %(domain)s.com)"
 
 #: formencode/validators.py:1544
 msgid ""
@@ -509,7 +509,7 @@ msgstr ""
 #: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
-msgstr ""
+msgstr "%s için bir değer vermelisiniz"
 
 #: formencode/validators.py:2619
 #, python-format
@@ -539,7 +539,7 @@ msgstr "Bu sayı geçerli değil"
 #: formencode/validators.py:2700
 #, python-format
 msgid "The field %(key)s is missing"
-msgstr ""
+msgstr "%(key)s alanı eksik."
 
 #: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"

@@ -78,7 +78,7 @@ msgstr ""
 
 #: formencode/national.py:297
 msgid "Please enter a valid postal code (for format see BS 7666)"
-msgstr "Por favor provea un codigo postal valido (Para ver el formato BS 7666)"
+msgstr "Por favor provea un codigo postal valido (para ver los formatos, consulte BS 7666)"
 
 #: formencode/national.py:338
 msgid "That country is not listed in ISO 3166"
@@ -117,12 +117,12 @@ msgstr ""
 
 #: formencode/national.py:725
 msgid "That language is not listed in ISO 639"
-msgstr ""
+msgstr "El lenguaje no está incluido en la ISO 639"
 
 #: formencode/schema.py:63
 #, python-format
 msgid "The input field %(name)s was not expected."
-msgstr ""
+msgstr "El campo de entrada %(name)s no else el esperado."
 
 #: formencode/schema.py:64
 msgid "Missing value"
@@ -337,7 +337,7 @@ msgstr "El servidor respondió con un código de error (%(status)s)"
 #: formencode/validators.py:1417
 #, python-format
 msgid "You must provide a full domain name (like %(domain)s.com)"
-msgstr ""
+msgstr "Debe indicar un nombre completo de dominio (por ejemplo, %(domain)s.com)"
 
 #: formencode/validators.py:1544
 msgid ""
@@ -537,7 +537,7 @@ msgstr "El número no es válido"
 #: formencode/validators.py:2700
 #, python-format
 msgid "The field %(key)s is missing"
-msgstr ""
+msgstr "Falta el campo %(key)s"
 
 #: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"

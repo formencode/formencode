@@ -124,11 +124,11 @@ msgstr ""
 #: formencode/schema.py:63
 #, python-format
 msgid "The input field %(name)s was not expected."
-msgstr ""
+msgstr "Het invoerveld %(name)s werd niet verwacht."
 
 #: formencode/schema.py:64
 msgid "Missing value"
-msgstr ""
+msgstr "Ontbrekende waarde"
 
 #: formencode/schema.py:65
 #, fuzzy, python-format
@@ -339,7 +339,7 @@ msgstr "De server geeft een foutmelding (%(status)s)"
 #: formencode/validators.py:1417
 #, python-format
 msgid "You must provide a full domain name (like %(domain)s.com)"
-msgstr ""
+msgstr "U moet een volledige domeinnaam opgeven (zoals %(domain)s.com)"
 
 #: formencode/validators.py:1544
 msgid ""
@@ -511,7 +511,7 @@ msgstr ""
 #: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
-msgstr ""
+msgstr "U moet een waarde opgeven voor %s"
 
 #: formencode/validators.py:2619
 #, python-format
@@ -541,7 +541,7 @@ msgstr "Ongeldig nummer"
 #: formencode/validators.py:2700
 #, fuzzy, python-format
 msgid "The field %(key)s is missing"
-msgstr ""
+msgstr "Feltet %(key)s mangler"
 
 #: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"

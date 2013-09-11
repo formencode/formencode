@@ -19,16 +19,16 @@ msgstr ""
 
 #: formencode/api.py:401 formencode/validators.py:432
 msgid "Please enter a value"
-msgstr ""
+msgstr "Lisää arvo"
 
 #: formencode/api.py:402
 #, python-format
 msgid "The input must be a string (not a %(type)s: %(value)r)"
-msgstr ""
+msgstr "Syötteen on oltava merkkijono (ei {{%(type)s: %(value)r}} )"
 
 #: formencode/api.py:403
 msgid "The input must be a string (not None)"
-msgstr ""
+msgstr "Syötteen on oltava merkkijono (ei None)"
 
 #: formencode/national.py:31
 msgid "Belarus"
@@ -79,15 +79,15 @@ msgstr ""
 
 #: formencode/national.py:299
 msgid "Please enter a valid postal code (for format see BS 7666)"
-msgstr ""
+msgstr "Syötä kelvollinen postinumero (muoto, ks. BS 7666)"
 
 #: formencode/national.py:340
 msgid "That country is not listed in ISO 3166"
-msgstr ""
+msgstr "Maata ei löydy ISO 3166 -luettelosta"
 
 #: formencode/national.py:395
 msgid "Given postal code does not match the country's format."
-msgstr ""
+msgstr "Annettu postinumero ei vastaa maan postinumeromuotoa."
 
 #: formencode/national.py:486
 msgid "Please enter a state code"
@@ -122,7 +122,7 @@ msgstr ""
 
 #: formencode/schema.py:69
 msgid "Missing value"
-msgstr ""
+msgstr "Arvo puuttuu"
 
 #: formencode/schema.py:70
 #, python-format
@@ -224,12 +224,12 @@ msgstr ""
 #: formencode/validators.py:796
 #, python-format
 msgid "Date must be after %(date)s"
-msgstr ""
+msgstr ""Päivämäärän on oltava myöhäisempi kuin %(date)s"
 
 #: formencode/validators.py:797
 #, python-format
 msgid "Date must be before %(date)s"
-msgstr ""
+msgstr "Päivämäärän on oltava aikaisempi kuin %(date)s"
 
 #: formencode/validators.py:799
 #, python-format
@@ -238,7 +238,7 @@ msgstr ""
 
 #: formencode/validators.py:800
 msgid "The date must be sometime in the future"
-msgstr ""
+msgstr "Päivämäärän on oltava tulevaisuudessa"
 
 #: formencode/validators.py:901
 #, python-format
@@ -261,12 +261,12 @@ msgstr ""
 #: formencode/validators.py:1036
 #, python-format
 msgid "Enter a value not more than %(max)i characters long"
-msgstr ""
+msgstr ""Kirjoita enintään %(max)i merkkiä pitkä arvo"
 
 #: formencode/validators.py:1037
 #, python-format
 msgid "Enter a value %(min)i characters long or more"
-msgstr ""
+msgstr "Kirjoita vähintään %(min)i merkkiä pitkä arvo"
 
 #: formencode/validators.py:1119
 msgid "Invalid data or incorrect encoding"
@@ -274,30 +274,32 @@ msgstr ""
 
 #: formencode/validators.py:1290
 msgid "Please enter an email address"
-msgstr ""
+msgstr "Kirjoita sähköpostiosoite"
 
 #: formencode/validators.py:1291
 msgid "An email address must contain a single @"
-msgstr ""
+msgstr "Sähköpostiosoitteessa on oltava yksi @-merkki"
 
 #: formencode/validators.py:1292
 #, python-format
 msgid ""
 "The username portion of the email address is invalid (the portion before the "
 "@: %(username)s)"
-msgstr ""
+msgstr "Sähköpostiosoitteen käyttäjätunnus on virheellinen (merkkiä "
+"@: %(username)s edeltävä osa)"
 
 #: formencode/validators.py:1294 formencode/validators.py:1457
 #, python-format
 msgid "An error occured when trying to connect to the server: %(error)s"
-msgstr ""
+msgstr "Virhe muodostettaessa yhteyttä palvelimeen: %(error)s"
 
 #: formencode/validators.py:1296
 #, python-format
 msgid ""
 "The domain portion of the email address is invalid (the portion after the @: "
 "%(domain)s)"
-msgstr ""
+msgstr "Sähköpostiosoitteen verkkoalue on virheellinen (merkin @: "
+"%(domain)s jä"
 
 #: formencode/validators.py:1298
 #, python-format
@@ -331,7 +333,7 @@ msgstr ""
 #: formencode/validators.py:1461
 #, python-format
 msgid "You must provide a full domain name (like %(domain)s.com)"
-msgstr ""
+msgstr "Kirjoita koko verkkoalueen nimi (kuten %(verkkoalue).com)"
 
 #: formencode/validators.py:1602
 msgid ""
@@ -501,7 +503,7 @@ msgstr ""
 #: formencode/validators.py:2657
 #, python-format
 msgid "You must give a value for %s"
-msgstr ""
+msgstr "Syötä arvo kohtaan %s"
 
 #: formencode/validators.py:2691
 #, python-format

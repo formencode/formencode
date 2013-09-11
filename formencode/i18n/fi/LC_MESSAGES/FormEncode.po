@@ -539,7 +539,7 @@ msgstr "Numero ei ole pätevä"
 #: formencode/validators.py:2700
 #, python-format
 msgid "The field %(key)s is missing"
-msgstr ""
+msgstr "Kenttä %(key)s puuttuu"
 
 #: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"
