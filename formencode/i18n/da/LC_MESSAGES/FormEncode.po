@@ -26,7 +26,7 @@ msgstr "Indtast en værdi"
 msgid "The input must be a string (not a %(type)s: %(value)r)"
 msgstr "Det indtastede element skal være en streng (ikke en %(type)s: %(value)r)"
 
-#: formencode/api.py:403
+#: formencode/api.py:403:wq
 msgid "The input must be a string (not None)"
 msgstr "Det indtastede element skal være en streng (ikke intet)"
 
@@ -71,11 +71,11 @@ msgstr "Indtast et postnummer (%s)"
 
 #: formencode/national.py:231
 msgid "LnnnnLLL"
-msgstr ""
+msgstr "BttttBBB"
 
 #: formencode/national.py:265
 msgid "LnL nLn"
-msgstr ""
+msgstr "BtB bTb"
 
 #: formencode/national.py:299
 msgid "Please enter a valid postal code (for format see BS 7666)"
