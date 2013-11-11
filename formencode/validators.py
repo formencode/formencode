@@ -999,7 +999,7 @@ class Number(RangeValidator):
             if value == int_value:
                 return int_value
             return value
-        except ValueError:
+        except (ValueError, TypeError):
             raise Invalid(self.message('number', state), value, state)
 
 
