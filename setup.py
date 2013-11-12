@@ -44,6 +44,7 @@ setup(name='FormEncode',
       package_data={'formencode': ['../docs/*.txt']},
       test_suite='formencode.tests',
       tests_require=tests_require,
+      extras_require={'testing': tests_require},
       use_2to3=True,
       convert_2to3_doctests=doctests,
     )
