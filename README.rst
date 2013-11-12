@@ -1,6 +1,11 @@
 FormEncode
 ==========
 
+.. image:: https://secure.travis-ci.org/formencode/formencode.png?branch=master
+   :target: http://travis-ci.org/#!/formencode/formencode
+   :alt: Travis CI continuous integration status
+
+
 Introduction
 ------------
 
