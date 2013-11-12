@@ -973,6 +973,10 @@ class Number(RangeValidator):
         Traceback (most recent call last):
             ...
         Invalid: Please enter a number
+        >>> Number.to_python([1.2])
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a number
         >>> Number(min=5).to_python('6.5')
         6.5
         >>> Number(max=10.5).to_python('11.5')
@@ -995,7 +999,7 @@ class Number(RangeValidator):
             if value == int_value:
                 return int_value
             return value
-        except ValueError:
+        except (ValueError, TypeError):
             raise Invalid(self.message('number', state), value, state)
 
 
