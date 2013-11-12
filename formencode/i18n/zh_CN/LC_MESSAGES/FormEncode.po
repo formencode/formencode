@@ -78,15 +78,15 @@ msgstr ""
 
 #: formencode/national.py:297
 msgid "Please enter a valid postal code (for format see BS 7666)"
-msgstr ""
+msgstr "請輸入有效郵遞區號（若要瞭解格式，請查看 BS 7666)"
 
 #: formencode/national.py:338
 msgid "That country is not listed in ISO 3166"
-msgstr ""
+msgstr "該國家/地區並未列在 ISO 3166 中"
 
 #: formencode/national.py:393
 msgid "Given postal code does not match the country's format."
-msgstr ""
+msgstr "指定的郵遞區號與國家/地區的格式不相符。"
 
 #: formencode/national.py:484
 msgid "Please enter a state code"
@@ -118,11 +118,11 @@ msgstr ""
 #: formencode/schema.py:63
 #, python-format
 msgid "The input field %(name)s was not expected."
-msgstr ""
+msgstr "輸入欄位 %(name)s 不正確"
 
 #: formencode/schema.py:64
 msgid "Missing value"
-msgstr ""
+msgstr "遺失數值"
 
 #: formencode/schema.py:65
 #, fuzzy, python-format
@@ -327,7 +327,7 @@ msgstr "服务器返回了一个错误状态码 (%(status)s)"
 #: formencode/validators.py:1417
 #, python-format
 msgid "You must provide a full domain name (like %(domain)s.com)"
-msgstr ""
+msgstr "您必須提供完整網域名（如 %(domain)s.com)"
 
 #: formencode/validators.py:1544
 msgid ""
@@ -497,7 +497,7 @@ msgstr ""
 #: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
-msgstr ""
+msgstr "您必須為 %s 給出一個數值"
 
 #: formencode/validators.py:2619
 #, python-format
@@ -527,7 +527,7 @@ msgstr "数字无效"
 #: formencode/validators.py:2700
 #, python-format
 msgid "The field %(key)s is missing"
-msgstr ""
+msgstr "欄位 %(key)s 已遺失。"
 
 #: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"

@@ -78,15 +78,15 @@ msgstr ""
 
 #: formencode/national.py:297
 msgid "Please enter a valid postal code (for format see BS 7666)"
-msgstr ""
+msgstr "Inserisci un codice postale valido (per il formato vedi BS 7666)"
 
 #: formencode/national.py:338
 msgid "That country is not listed in ISO 3166"
-msgstr ""
+msgstr "Questo paese non è elencato nella norma ISO 3166"
 
 #: formencode/national.py:393
 msgid "Given postal code does not match the country's format."
-msgstr ""
+msgstr "Il codice postale fornito non corrisponde al formato del paese."
 
 #: formencode/national.py:484
 msgid "Please enter a state code"
@@ -117,16 +117,16 @@ msgstr ""
 
 #: formencode/national.py:725
 msgid "That language is not listed in ISO 639"
-msgstr ""
+msgstr "Questo linguaggio non è elencato nella norma ISO 639"
 
 #: formencode/schema.py:63
 #, python-format
 msgid "The input field %(name)s was not expected."
-msgstr ""
+msgstr "Il campo di immissione %(name)s non era previsto."
 
 #: formencode/schema.py:64
 msgid "Missing value"
-msgstr ""
+msgstr "Valore mancante"
 
 #: formencode/schema.py:65
 #, fuzzy, python-format
@@ -339,7 +339,7 @@ msgstr "Il server ha ritornato il codice di errore (%(status)s)"
 #: formencode/validators.py:1417
 #, python-format
 msgid "You must provide a full domain name (like %(domain)s.com)"
-msgstr ""
+msgstr "Occorre fornire un nome di dominio completo (come %(domain)s.com)"
 
 #: formencode/validators.py:1544
 msgid ""
@@ -509,7 +509,7 @@ msgstr ""
 #: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
-msgstr ""
+msgstr "Occorre fornire un valore per %s"
 
 #: formencode/validators.py:2619
 #, python-format
@@ -539,7 +539,7 @@ msgstr "Numero non valido"
 #: formencode/validators.py:2700
 #, python-format
 msgid "The field %(key)s is missing"
-msgstr ""
+msgstr "Il campo {{%(key)s}} è mancante."
 
 #: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"

@@ -75,15 +75,15 @@ msgstr ""
 
 #: formencode/national.py:297
 msgid "Please enter a valid postal code (for format see BS 7666)"
-msgstr ""
+msgstr "有効な郵便番号を入力してください（形式はBS 7666を参照してください"
 
 #: formencode/national.py:338
 msgid "That country is not listed in ISO 3166"
-msgstr ""
+msgstr "その国名は ISO 3166に登録されていません"
 
 #: formencode/national.py:393
 msgid "Given postal code does not match the country's format."
-msgstr ""
+msgstr "入力された郵便番号がその国の形式と一致していません"
 
 #: formencode/national.py:484
 msgid "Please enter a state code"
@@ -115,11 +115,11 @@ msgstr ""
 #: formencode/schema.py:63
 #, python-format
 msgid "The input field %(name)s was not expected."
-msgstr ""
+msgstr "入力フィールド %(name)s にエラーが発生しました"
 
 #: formencode/schema.py:64
 msgid "Missing value"
-msgstr ""
+msgstr "値が入っていません"
 
 #: formencode/schema.py:65
 #, fuzzy, python-format
@@ -494,7 +494,7 @@ msgstr ""
 #: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
-msgstr ""
+msgstr "% の値を入力してください"
 
 #: formencode/validators.py:2619
 #, python-format
@@ -524,7 +524,7 @@ msgstr "番号が正しくありません"
 #: formencode/validators.py:2700
 #, python-format
 msgid "The field %(key)s is missing"
-msgstr ""
+msgstr "フィールド %(key)s が入力されていません"
 
 #: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"

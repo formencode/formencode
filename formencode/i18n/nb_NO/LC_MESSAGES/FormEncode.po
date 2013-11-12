@@ -78,15 +78,15 @@ msgstr ""
 
 #: formencode/national.py:297
 msgid "Please enter a valid postal code (for format see BS 7666)"
-msgstr ""
+msgstr "Skriv inn gyldig postnummer (for format, se BS 7666)"
 
 #: formencode/national.py:338
 msgid "That country is not listed in ISO 3166"
-msgstr ""
+msgstr "Det landet er ikke oppført i ISO 3166"
 
 #: formencode/national.py:393
 msgid "Given postal code does not match the country's format."
-msgstr ""
+msgstr "Det oppgitte postnummeret stemmer ikke overens med landets format."
 
 #: formencode/national.py:484
 msgid "Please enter a state code"
@@ -122,11 +122,11 @@ msgstr ""
 #: formencode/schema.py:63
 #, python-format
 msgid "The input field %(name)s was not expected."
-msgstr ""
+msgstr "Inndatafeltet %(name)s ble ikke forventet."
 
 #: formencode/schema.py:64
 msgid "Missing value"
-msgstr ""
+msgstr "Mangler verdi"
 
 #: formencode/schema.py:65
 #, fuzzy, python-format
@@ -331,7 +331,7 @@ msgstr "Tjeneren ga tilbakemelding med feilkode (%(status)s)"
 #: formencode/validators.py:1417
 #, python-format
 msgid "You must provide a full domain name (like %(domain)s.com)"
-msgstr ""
+msgstr "Du må oppgi et fullstendig domenenavn (som %(domain)s.com)"
 
 #: formencode/validators.py:1544
 msgid ""
@@ -501,7 +501,7 @@ msgstr ""
 #: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
-msgstr ""
+msgstr "Du må oppgi en verdi for %s"
 
 #: formencode/validators.py:2619
 #, python-format
