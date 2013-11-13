@@ -45,6 +45,8 @@ def variable_decode(d, dict_char='.', list_char='-'):
                 break
             elif list_char in key:
                 key, index = key.split(list_char)
+                if not index.isdigit():
+                    continue
                 new_keys.append(key)
                 dicts_to_sort.add(tuple(new_keys))
                 new_keys.append(int(index))
