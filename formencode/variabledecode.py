@@ -44,12 +44,14 @@ def variable_decode(d, dict_char='.', list_char='-'):
                 was_repetition_count = True
                 break
             elif list_char in key:
-                key, index = key.split(list_char)
+                maybe_key, index = key.split(list_char)
                 if not index.isdigit():
-                    continue
-                new_keys.append(key)
-                dicts_to_sort.add(tuple(new_keys))
-                new_keys.append(int(index))
+                    new_keys.append(key)
+                else:
+                    key = maybe_key
+                    new_keys.append(key)
+                    dicts_to_sort.add(tuple(new_keys))
+                    new_keys.append(int(index))
             else:
                 new_keys.append(key)
         if was_repetition_count:
