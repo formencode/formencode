@@ -732,3 +732,26 @@ class TestRequireIfMissingValidator(unittest.TestCase):
         self.assertEqual(
             validate(v, dict(operator='', operand=0)),
             dict(operator=u'Please enter a value'))
+
+
+class TestCondfirmType(unittest.TestCase):
+
+    def test_schema_dict(self):
+        class foo(Schema):
+            bar = validators.ConfirmType(subclass=(dict,))
+
+        validator = foo()
+        value = {'bar': {}}
+        self.assertEqual(value, validator.to_python(value))
+
+        self.assertRaises(validators.Invalid, validator.to_python, ({'bar': 1},))
+
+    def test_schema_int(self):
+        class foo(Schema):
+            bar = validators.ConfirmType(subclass=(int,))
+
+        validator = foo()
+        value = {'bar': 1}
+        self.assertEqual(value, validator.to_python(value))
+
+        self.assertRaises(validators.Invalid, validator.to_python, ({'bar': {}},))

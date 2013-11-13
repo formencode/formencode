@@ -137,6 +137,8 @@ class ConfirmType(FancyValidator):
         Invalid: True must be of the type <type 'int'>
     """
 
+    accept_iterator = True
+
     subclass = None
     type = None
 
