@@ -68,4 +68,5 @@ class IValidator(IDeclarative):
 
 class ISchema(IValidator):
 
-    fields = Attribute('A dictionary of (field name: validator)', name='fields')
+    fields = Attribute('A dictionary of (field name: validator)',
+        name='fields')
