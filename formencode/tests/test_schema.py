@@ -2,9 +2,8 @@ import unittest
 
 from urlparse import parse_qsl
 
-from formencode import validators, foreach, compound
+from formencode import Invalid, Validator, compound, foreach, validators
 from formencode.schema import Schema, merge_dicts, SimpleFormValidator
-from formencode.api import *
 from formencode.variabledecode import NestedVariables
 
 

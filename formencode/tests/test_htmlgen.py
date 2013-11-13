@@ -5,7 +5,7 @@ from formencode.htmlgen import html
 
 # A test value that can't be encoded as ascii:
 uni_value = u'\xff'
-str_value = uni_value.encode('utf-8') if str is not unicode else uni_value
+str_value = uni_value if str is unicode else uni_value.encode('utf-8')
 
 
 def test_basic():
