@@ -1111,7 +1111,7 @@ class ByteString(FancyValidator):
 class UnicodeString(ByteString):
     """Convert things to unicode string.
 
-    This is implamented as a specialization of the ByteString class.
+    This is implemented as a specialization of the ByteString class.
 
     Under Python 3.x you can also use the alias `String` for this validator.
 
