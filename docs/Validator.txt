@@ -383,34 +383,34 @@ to work with, and better displays the structure.
 There are several options that most validators support (including your
 own validators, if you subclass from :class:`formencode.FancyValidator`):
 
-:attr:`if_empty``:
+:attr:`if_empty`:
       If set, then this value will be returned if the input evaluates
       to false (empty list, empty string, None, etc), but not the 0 or
       False objects.  This only applies to ``.to_python()``.
 
-:attr:`not_empty``:
+:attr:`not_empty`:
       If true, then if an empty value is given raise an error.
       (Both with ``.to_python()`` and also ``.from_python()``
       if ``.validate_python`` is true).
 
-:attr:`strip``:
+:attr:`strip`:
       If true and the input is a string, strip it (occurs before empty
       tests).
 
-:attr:`if_invalid``:
+:attr:`if_invalid`:
       If set, then when this validator would raise Invalid during
       ``.to_python()``, instead return this value.
 
-:attr:`if_invalid_python``:
+:attr:`if_invalid_python`:
       If set, when the Python value (converted with
       ``.from_python()``) is invalid, this value will be returned.
 
-:attr:`accept_python``:
+:attr:`accept_python`:
       If True (the default), then ``._validate_python()`` and
       ``._validate_other()`` will not be called when
       ``.from_python()`` is used.
 
-:attr:`if_missing``:
+:attr:`if_missing`:
       Typically when a field is missing the schema will raise an
       error.  In that case no validation is run -- so things like
       ``if_invalid`` won't be triggered.  This special attribute (if
