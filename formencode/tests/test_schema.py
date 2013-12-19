@@ -350,3 +350,13 @@ class TestStrictSchemaWithMultipleEqualInputFields(unittest.TestCase):
         params = cgi_parse('field=string1&field=string2')
         data = self.pipe_schema.to_python(params)
         self.assertEqual(data, dict(field=['string1', 'string2']))
+
+
+def test_copy():
+    assert 'mi' in Name.fields
+    NoTitleName = Name()
+    assert 'mi' in NoTitleName.fields
+    TitleName = NoTitleName(title=validators.String())
+    assert 'mi' in TitleName.fields
+    assert 'title' in TitleName.fields
+    assert 'title' not in NoTitleName.fields

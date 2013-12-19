@@ -100,6 +100,7 @@ class Schema(FancyValidator):
             cls.add_field(name, value)
 
     def __initargs__(self, new_attrs):
+        self.fields = self.fields.copy()
         for key, value in new_attrs.iteritems():
             if key in ('pre_validators', 'chained_validators'):
                 if is_validator(value):
