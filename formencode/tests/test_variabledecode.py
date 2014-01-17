@@ -17,6 +17,12 @@ class TestVariableDecode(unittest.TestCase):
 
         self.assertEqual(expect, variable_decode(src))
 
+    def test_list_decode_double_dash(self):
+        src = {'a-0': 'a', 'a-1-2': 'b', 'a-3': 'c'}
+        expect = {'a': ['a', 'c'], 'a-1-2': 'b'}
+
+        self.assertEqual(expect, variable_decode(src))
+
     def test_list_decode_non_int_nested(self):
         src = {'a-0.name': 'a', 'a-a.name': 'b', 'a-2.name': 'c'}
         expect = {'a': [{'name': 'a'}, {'name': 'c'}], 'a-a': {'name': 'b'}}
