@@ -312,7 +312,13 @@ class FillingParser(RewritingParser):
 
     def handle_starttag(self, tag, attrs, startend=False):
         self.write_pos()
-        if tag == 'input':
+        if self.in_textarea:
+            # Ignore all tags within a textarea. All content within a
+            # textarea is considered as value and not as part of
+            # the form which should be prefilled by htmlfill. So leave
+            # the value as it is.
+            return
+        elif tag == 'input':
             self.handle_input(attrs, startend)
         elif tag == 'textarea':
             self.handle_textarea(attrs)
