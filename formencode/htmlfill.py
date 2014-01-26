@@ -224,6 +224,7 @@ class FillingParser(RewritingParser):
         self.skip_textarea = False
         self.last_textarea_name = None
         self.in_select = None
+        self.in_datalist = False
         self.skip_next = False
         self.errors = errors or {}
         if isinstance(self.errors, basestring):
@@ -318,6 +319,8 @@ class FillingParser(RewritingParser):
             self.handle_textarea(attrs)
         elif tag == 'select':
             self.handle_select(attrs)
+        elif tag == 'datalist':
+            self.handle_datalist(attrs)
         elif tag == 'option':
             self.handle_option(attrs)
             return
@@ -338,6 +341,8 @@ class FillingParser(RewritingParser):
             self.handle_end_textarea()
         elif tag == 'select':
             self.handle_end_select()
+        elif tag == 'datalist':
+            self.handle_end_datalist()
         elif tag == 'form:error':
             self.handle_end_error()
         elif tag == 'form:iferror':
@@ -518,7 +523,15 @@ class FillingParser(RewritingParser):
             self.write_marker(self.in_select)
         self.in_select = None
 
+    def handle_datalist(self, attrs):
+        self.in_datalist = True
+
+    def handle_end_datalist(self):
+        self.in_datalist = False
+
     def handle_option(self, attrs):
+        if self.in_datalist:
+            return
         assert self.in_select is not None, (
             "<option> outside of <select> at %i:%i" % self.getpos())
         if self.in_select is not False:
