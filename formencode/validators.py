@@ -1527,8 +1527,11 @@ class URL(FancyValidator):
         global urlparse
         if urlparse is None:
             import urlparse
-        scheme, netloc, path, params, query, fragment = urlparse.urlparse(
-            url)
+        try:
+            scheme, netloc, path, params, query, fragment = urlparse.urlparse(
+                url)
+        except ValueError:
+            return url
         try:
             netloc = netloc.encode('idna')
             if unicode is str:  # Python 3
