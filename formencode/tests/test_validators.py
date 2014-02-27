@@ -704,6 +704,10 @@ class TestURLValidator(unittest.TestCase):
             "http://65.18.195.155/cgi-ordoro/bo/start.cgi"),
             "http://65.18.195.155/cgi-ordoro/bo/start.cgi")
 
+    def test_invalid_url(self):
+        self.assertRaises(validators.Invalid, self.validator.to_python,
+            '[http://domain.co.jp')
+
 
 class TestRequireIfMissingValidator(unittest.TestCase):
 
