@@ -4,17 +4,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version:  r2591\n"
+"Project-Id-Version: r2591\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2010-05-16 19:11+0200\n"
-"PO-Revision-Date: 2010-05-16 04:32+0200\n"
-"Last-Translator: Jan-Wijbrand Kolman <jkolman@thehealthagency.com>\n"
+"PO-Revision-Date: 2014-04-10 18:37+0100\n"
+"Last-Translator: Elmer de Looff <elmer.delooff@gmail.com>\n"
 "Language-Team: nl <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.0dev-r546\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: formencode/api.py:394 formencode/validators.py:418
 msgid "Please enter a value"
@@ -33,32 +34,32 @@ msgstr "De ingevoerde waarde moet een \"string\" zijn (niet \"None\")"
 
 #: formencode/national.py:29
 msgid "Belarus"
-msgstr ""
+msgstr "Wit-Rusland"
 
 #: formencode/national.py:30
 msgid "Montenegro"
-msgstr ""
+msgstr "Montenegro"
 
 #: formencode/national.py:31
 msgid "Tasmania"
-msgstr ""
+msgstr "Tasmanië"
 
 #: formencode/national.py:37
 msgid "Britain"
-msgstr ""
+msgstr "Brittannië"
 
 #: formencode/national.py:38
 msgid "Great Britain"
-msgstr ""
+msgstr "Groot-Brittannië"
 
 #: formencode/national.py:39
 msgid "Cote de Ivoire"
-msgstr ""
+msgstr "Ivoorkust"
 
 #: formencode/national.py:144
 #, python-format
 msgid "%d digits"
-msgstr ""
+msgstr "%d cijfers"
 
 #: formencode/national.py:165
 #, python-format
@@ -80,11 +81,11 @@ msgstr ""
 
 #: formencode/national.py:297
 msgid "Please enter a valid postal code (for format see BS 7666)"
-msgstr "Vennligst skriv inn en gyldig postnummer (for formatet se BS 7666)"
+msgstr "Voor een geldige postcode in (voor de opmaak zie BS 7666)"
 
 #: formencode/national.py:338
 msgid "That country is not listed in ISO 3166"
-msgstr "At landet ikke er oppført i ISO 3166"
+msgstr "Dat land komt niet voor in ISO 3166"
 
 #: formencode/national.py:393
 msgid "Given postal code does not match the country's format."
@@ -104,22 +105,22 @@ msgstr "Geen correct \"state code\""
 
 #: formencode/national.py:539
 msgid ""
-"Please enter a number, with area code, in the form ###-###-####, "
-"optionally with \"ext.####\""
+"Please enter a number, with area code, in the form ###-###-####, optionally "
+"with \"ext.####\""
 msgstr ""
-"Voer een getal in, met \"area code\", in het formaat ###-###-####, "
-"optioneel met \"ext.####\""
+"Voer een getal in, met \"area code\", in het formaat ###-###-####, optioneel "
+"met \"ext.####\""
 
 #: formencode/national.py:646
 #, fuzzy
 msgid "Please enter a number, with area code, in the form +##-###-#######."
 msgstr ""
-"Voer een getal in, met \"area code\", in het formaat ###-###-####, "
-"optioneel met \"ext.####\""
+"Voer een getal in, met \"area code\", in het formaat ###-###-####, optioneel "
+"met \"ext.####\""
 
 #: formencode/national.py:725
 msgid "That language is not listed in ISO 639"
-msgstr ""
+msgstr "Deze taal komt niet voor in ISO 639"
 
 #: formencode/schema.py:63
 #, python-format
@@ -181,7 +182,8 @@ msgstr "De ingevoerde waarde is incorrect"
 
 #: formencode/validators.py:543
 msgid "Enter only letters, numbers, or _ (underscore)"
-msgstr "De waarde kan alleen bestaan uit letters, cijfers of _ (\"underscore\")"
+msgstr ""
+"De waarde kan alleen bestaan uit letters, cijfers of _ (\"underscore\")"
 
 #: formencode/validators.py:581
 msgid "Invalid value"
@@ -245,14 +247,14 @@ msgid "The date must be sometime in the future"
 msgstr "De datum moet in de toekomst liggen"
 
 #: formencode/validators.py:882
-#, fuzzy, python-format
+#, python-format
 msgid "Please enter a number that is %(min)s or greater"
-msgstr "Ongeldig jaartal"
+msgstr "Voer een getal in dat ten minste %(min)s is"
 
 #: formencode/validators.py:883
-#, fuzzy, python-format
+#, python-format
 msgid "Please enter a number that is %(max)s or smaller"
-msgstr "Ongeldig jaartal"
+msgstr "Voer een getal in dat niet groter is dan %(max)s"
 
 #: formencode/validators.py:920
 msgid "Please enter an integer value"
@@ -263,9 +265,9 @@ msgid "Please enter a number"
 msgstr "Voer een getal in"
 
 #: formencode/validators.py:1019
-#, fuzzy, python-format
+#, python-format
 msgid "Enter a value not more than %(max)i characters long"
-msgstr "Maximaal %(max)i tekens"
+msgstr "Voer een waarde in die niet langer is dan %(max)i tekens"
 
 #: formencode/validators.py:1020
 #, python-format
@@ -282,13 +284,14 @@ msgstr "Voer een geldig emailadres in"
 
 #: formencode/validators.py:1268
 msgid "An email address must contain a single @"
-msgstr "Ongeldig emailadres: een emailadres kan slechts één \"@\" teken bevatten"
+msgstr ""
+"Ongeldig emailadres: een emailadres kan slechts één \"@\" teken bevatten"
 
 #: formencode/validators.py:1269
 #, python-format
 msgid ""
-"The username portion of the email address is invalid (the portion before "
-"the @: %(username)s)"
+"The username portion of the email address is invalid (the portion before the "
+"@: %(username)s)"
 msgstr "Ongeldig emailadres: het deel vóór de \"@\" is incorrect"
 
 #: formencode/validators.py:1271 formencode/validators.py:1413
@@ -299,11 +302,10 @@ msgstr "Fout bij het benaderen van server: %(error)s"
 #: formencode/validators.py:1273
 #, python-format
 msgid ""
-"The domain portion of the email address is invalid (the portion after the"
-" @: %(domain)s)"
+"The domain portion of the email address is invalid (the portion after the @: "
+"%(domain)s)"
 msgstr ""
-"Ongeldig emailadres: het \"domain\" (het deel achter de \"@\") is "
-"incorrect"
+"Ongeldig emailadres: het \"domain\" (het deel achter de \"@\") is incorrect"
 
 #: formencode/validators.py:1275
 #, python-format
@@ -311,8 +313,7 @@ msgid ""
 "The domain of the email address does not exist (the portion after the @: "
 "%(domain)s)"
 msgstr ""
-"Ongeldig emailadres: het \"domain\" (het deel achter de \"@\") bestaat "
-"niet"
+"Ongeldig emailadres: het \"domain\" (het deel achter de \"@\") bestaat niet"
 
 #: formencode/validators.py:1409
 msgid "You must start your URL with http://, https://, etc"
@@ -346,24 +347,25 @@ msgid ""
 "The type of i-name is not defined; it may be either individual or "
 "organizational"
 msgstr ""
+"Het type i-name is niet bepaald; dit mag individueel of organizationeel zijn"
 
 #: formencode/validators.py:1546
 msgid "Dots and dashes may not be repeated consecutively"
-msgstr ""
+msgstr "Punten en streepjes mogen niet achtereen voorkomen"
 
 #: formencode/validators.py:1547
 #, python-format
 msgid "\"%(iname)s\" is an invalid i-name"
-msgstr ""
+msgstr "\"%(iname)s\" is een ongeldige i-name"
 
 #: formencode/validators.py:1548
 msgid "i-names may not start with numbers nor punctuation marks"
-msgstr ""
+msgstr "i-names mogen niet beginnen met cijfers of leestekens"
 
 #: formencode/validators.py:1550
 #, python-format
 msgid "\"%(inumber)s\" is an invalid i-number"
-msgstr ""
+msgstr "\"%(inumber)s\" is een ongeldig i-number"
 
 #: formencode/validators.py:1551
 #, fuzzy, python-format
@@ -375,12 +377,12 @@ msgstr ""
 #: formencode/validators.py:1552
 #, python-format
 msgid "\"%(xri_type)s\" is not a valid type of XRI"
-msgstr ""
+msgstr "\"%(xri_type)s\" is geen geldig type XRI"
 
 #: formencode/validators.py:1651
 #, python-format
 msgid "\"%(id)s\" is not a valid OpenId (it is neither an URL nor an XRI)"
-msgstr ""
+msgstr "\"%(id)s\" is geen geldig OpenId (het is geen URL noch een XRI)"
 
 #: formencode/validators.py:1882 formencode/validators.py:1890
 #, python-format
@@ -403,7 +405,7 @@ msgstr "Deze maand heeft slechts %(days)i dagen"
 #: formencode/validators.py:1886
 #, python-format
 msgid "That is not a valid day (%(exception)s)"
-msgstr "Ongeldige datum"
+msgstr "Ongeldige dag (%(exception)s)"
 
 #: formencode/validators.py:1887
 #, python-format
@@ -415,9 +417,8 @@ msgid "Please enter a number for the year"
 msgstr "Ongeldig jaartal"
 
 #: formencode/validators.py:1889
-#, fuzzy
 msgid "Please enter a four-digit year after 1899"
-msgstr "Voer een vier-cijferig jaartal in"
+msgstr "Voer een vier-cijferig jaartal na 1899 in"
 
 #: formencode/validators.py:2070
 msgid "You must indicate AM or PM"
@@ -442,12 +443,12 @@ msgstr "Minuten zijn verplicht (na een \":\")"
 #: formencode/validators.py:2075
 #, python-format
 msgid "The %(part)s value you gave is not a number: %(number)r"
-msgstr "Eén van de waarden is geen getal"
+msgstr "De gegeven %(part)s waarde is geen getal: %(number)r"
 
 #: formencode/validators.py:2076
 #, python-format
 msgid "You must enter an hour in the range %(range)s"
-msgstr "Het uur in ongeldig"
+msgstr "Het uur moet in het bereik %(range)s liggen"
 
 #: formencode/validators.py:2077
 msgid "You must enter a minute in the range 0-59"
@@ -476,23 +477,23 @@ msgid "Signature is not correct"
 msgstr "Signatuur is incorrect"
 
 #: formencode/validators.py:2378
-#, fuzzy
 msgid "Please enter a valid IP address (a.b.c.d)"
-msgstr "Voer een geldig emailadres in"
+msgstr "Voer een geldig IP-adres (a.b.c.d.) in"
 
 #: formencode/validators.py:2379
 #, python-format
 msgid "The octets must be within the range of 0-255 (not %(octet)r)"
-msgstr ""
+msgstr "De octetten moeten in het bereik 0-255 liggen (niet %(octet)r)"
 
 #: formencode/validators.py:2426
 msgid "Please enter a valid IP address (a.b.c.d) or IP network (a.b.c.d/e)"
-msgstr ""
+msgstr "Voer een geldig IP adres (a.b.c.d) of netwerkadres (a.b.c.d/e) in"
 
 #: formencode/validators.py:2428
 #, python-format
 msgid "The network size (bits) must be within the range of 8-32 (not %(bits)r)"
 msgstr ""
+"De netwerkgrootte (bits) moet in het bereik 8-32 liggen (niet %(bits)r)"
 
 #: formencode/validators.py:2477
 #, python-format
@@ -500,13 +501,15 @@ msgid ""
 "A MAC address must contain 12 digits and A-F; the value you gave has "
 "%(length)s characters"
 msgstr ""
+"Een MAC-adres moet bestaan uit 12 cijfers of A-F; de opgegeven waarde "
+"bestaat uit %(length)s characters"
 
 #: formencode/validators.py:2479
 #, python-format
 msgid ""
-"MAC addresses may only contain 0-9 and A-F (and optionally :), not "
-"%(char)r"
+"MAC addresses may only contain 0-9 and A-F (and optionally :), not %(char)r"
 msgstr ""
+"MAC-adressen mogen alleen 0-9 en A-F (en optioneel :) bevatten, niet %(char)r"
 
 #: formencode/validators.py:2586
 #, python-format
@@ -524,7 +527,7 @@ msgstr "Waarden komen niet overeen"
 
 #: formencode/validators.py:2621
 msgid "Fields should be a dictionary"
-msgstr ""
+msgstr "Velden moeten een dictionaries zijn"
 
 #: formencode/validators.py:2697
 msgid "Please enter only the number, no other characters"
@@ -539,9 +542,9 @@ msgid "That number is not valid"
 msgstr "Ongeldig nummer"
 
 #: formencode/validators.py:2700
-#, fuzzy, python-format
+#, python-format
 msgid "The field %(key)s is missing"
-msgstr "Feltet %(key)s mangler"
+msgstr "Het veld %(key)s ontbreekt"
 
 #: formencode/validators.py:2816
 msgid "Please enter numbers only for month and year"
@@ -558,4 +561,3 @@ msgstr "Voer alleen de cijfers in van de \"credit card security code\""
 #: formencode/validators.py:2893
 msgid "Invalid credit card security code length"
 msgstr "Incorrecte \"credit card security code\"-lengte"
-
