@@ -329,7 +329,7 @@ that a little more.  Here's a more complete implementation of
     ...                           value, state)
     ...         non_letters = self.letter_regex.sub('', value)
     ...         if len(non_letters) < self.non_letter:
-    ...             raise Invalid(self.message("non_letter",
+    ...             raise Invalid(self.message("non_letter", state,
     ...                                         non_letter=self.non_letter),
     ...                           value, state)
 
