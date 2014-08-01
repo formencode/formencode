@@ -681,44 +681,64 @@ class TestIPAddressValidator(unittest.TestCase):
     def test_invalid_colon_number(self):
         validate = self.validator().to_python
 
-        with self.assertRaises(Invalid) as e:
+        try:
             validate('ABCD:EF01::ABCD:EF01::6789')
+        except Invalid as e:
+            self.assertTrue("IPv6 address can only have a single '::'" in str(e))
+        else:
+            self.fail('IPv6 with 2 colons should be invalid')
 
-        self.assertTrue("IPv6 address can only have a single '::'" in str(e.exception))
 
     def test_invalid_octet_or_segment(self):
         validate=self.validator().to_python
 
-        with self.assertRaises(Invalid) as ipv6_not_hex:
+        try:
             validate('ZZZZ:ZZZZ:YYYY:XXXX:QQQQ:WWWW:LLLL:MMMM')
+        except Invalid as e:
+            self.assertTrue("IPv6 segments must be hexadecimal values within range of 0-FFFF"
+                " (not 'ZZZZ')" in str(e))
+        else:
+            self.fail('IPv6 segments must be hexadecimal')
 
-        with self.assertRaises(Invalid) as ipv6_long:
+        try:
             validate('ABCD1234FFFF::6789FFFF1234')
+        except Invalid as e:
+            self.assertTrue("IPv6 segments must be hexadecimal values within range of 0-FFFF"
+                                    " (not 'ABCD1234FFFF')" in str(e))
+        else:
+            self.fail('IPv6 segments must be hexadecimal 0-FFFF')
 
-        with self.assertRaises(Invalid) as ipv6_non_an:
+        try:
             validate('+FFF::1234')
+        except Invalid as e:
+            self.assertTrue("IPv6 segments must be hexadecimal values within range of 0-FFFF"
+                        " (not '+FFF')" in str(e))
+        else:
+            self.fail('IPv6 segments must be hexadecimal')
 
-        with self.assertRaises(Invalid) as ipv4_not_in_range:
+        try:
             validate('123.256.1.1')
+        except Invalid as e:
+            self.assertTrue("The octets must be within the range of 0-255"
+                        " (not '256')" in str(e))
+        else:
+            self.fail('Octet should be out of range')
 
-        with self.assertRaises(Invalid) as ipv4_non_an:
+        try:
             validate('123.255.+1.1')
+        except Invalid as e:
+            self.assertTrue("The octets must be within the range of 0-255"
+                        " (not '+1')" in str(e))
+        else:
+            self.fail('Octets must only contain digits')
 
-        with self.assertRaises(Invalid) as ipv6_sufix_not_in_range:
+        try:
             validate('0:0:0:0:0:FFFF:271.0.0.1')
-
-        self.assertTrue("IPv6 segments must be hexadecimal values within range of 0-FFFF"
-                        " (not 'ZZZZ')" in str(ipv6_not_hex.exception))
-        self.assertTrue("IPv6 segments must be hexadecimal values within range of 0-FFFF"
-                        " (not 'ABCD1234FFFF')" in str(ipv6_long.exception))
-        self.assertTrue("IPv6 segments must be hexadecimal values within range of 0-FFFF"
-                        " (not '+FFF')" in str(ipv6_non_an.exception))
-        self.assertTrue("The octets must be within the range of 0-255"
-                        " (not '256')" in str(ipv4_not_in_range.exception))
-        self.assertTrue("The octets must be within the range of 0-255"
-                        " (not '+1')" in str(ipv4_non_an.exception))
-        self.assertTrue("The octets must be within the range of 0-255"
-                        " (not '271')" in str(ipv6_sufix_not_in_range.exception))
+        except Invalid as e:
+            self.assertTrue("The octets must be within the range of 0-255"
+                        " (not '271')" in str(e))
+        else:
+            self.fail('Octet should be out of range')
 
     def test_leading_zeros(self):
         validate = self.validator().to_python
@@ -786,15 +806,21 @@ class TestCIDRValidator(unittest.TestCase):
         self.assertRaises(Invalid, validate, '1::2::3')
 
     def test_invalid_mask_range(self):
-        with self.assertRaises(Invalid) as ipv4_high:
+        try:
             self.validator().to_python('127.0.0.1/64')
-        with self.assertRaises(Invalid) as ipv6_high:
-            self.validator().to_python('::1/129')
+        except Invalid as e:
+            self.assertTrue("The network size (bits) must be within the range"
+            " of 0-32 (not '64')" in str(e))
+        else:
+            self.fail('The range of the mask for ipv4 must be 0-32')
 
-        self.assertTrue("The network size (bits) must be within the range"
-            " of 0-32 (not '64')" in str(ipv4_high.exception))
-        self.assertTrue("The network size (bits) must be within the range"
-            " of 0-128 (not '129')" in str(ipv6_high.exception))
+        try:
+            self.validator().to_python('::1/129')
+        except Invalid as e:
+            self.assertTrue("The network size (bits) must be within the range"
+                    " of 0-128 (not '129')" in str(e))
+        else:
+            self.fail('The range of the ipv6 mask must be 0-128')
 
 
 class TestURLValidator(unittest.TestCase):
