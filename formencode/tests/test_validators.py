@@ -642,32 +642,104 @@ class TestIPAddressValidator(unittest.TestCase):
     def setUp(self):
         self.validator = validators.IPAddress
 
-    def test_valid_address(self):
+    def test_valid_ipv4_address(self):
         self.validator().to_python('127.0.0.1')
+
+    def test_valid_ipv6_adress(self):
+        self.validator().to_python('ABCD:EF01:2345:6789:ABCD:EF01:2345:6789')
+        self.validator().to_python('2001:DB8:0:0:8:800:200C:417A')
+        self.validator().to_python('abcd:ef01:2345:6789:abcd:ef01:2345:6789')
+        self.validator().to_python('2001:DB8::8:800:200C:417A')
+        self.validator().to_python('::1')
+        self.validator().to_python('::')
+        self.validator().to_python('0:0:0:0:0:FFFF:129.144.52.38')
+        self.validator().to_python('::129.144.52.38')
 
     def test_address_is_none(self):
         self.assertRaises(Invalid, self.validator()._validate_python, None)
 
-    def test_invalid_address(self):
+    def test_invalid_ipv4_address(self):
         validate = self.validator().to_python
         self.assertRaises(Invalid, validate, '127.0.1')
         self.assertRaises(Invalid, validate, '271.0.0.1')
         self.assertRaises(Invalid, validate, '127.0.0.0.1')
+        self.assertRaises(Invalid, validate, 'a.b.c.d')
+        self.assertRaises(Invalid, validate, '127.0.0.1:80')
+
+    def test_invalid_ipv6_address(self):
+        validate = self.validator().to_python
+        self.assertRaises(Invalid, validate, 'ABCD:EF01:2345:6789:ABCD:EF01:2345:6789:ABCD')
+        self.assertRaises(Invalid, validate, 'ABCD:6789')
+        self.assertRaises(Invalid, validate, 'ABCD:EF01:2345:6789')
+        self.assertRaises(Invalid, validate, 'ABCD:EF01:2345:6789:ABCD:EF01:2345:6789:')
+        self.assertRaises(Invalid, validate, ':ABCD:EF01:2345:6789:ABCD:EF01:2345:6789')
+        self.assertRaises(Invalid, validate, '0:0:129.144.52.38')
+        self.assertRaises(Invalid, validate, '0:0:0:0:0:FFFF:127.0.1')
+        self.assertRaises(Invalid, validate, '0:0:0:0:0:FFFF:127.0.0.0.1')
+        self.assertRaises(Invalid, validate, '2001:DB8::8:800:200C:417A:12:1')
+
+    def test_invalid_colon_number(self):
+        validate = self.validator().to_python
+
+        with self.assertRaises(Invalid) as e:
+            validate('ABCD:EF01::ABCD:EF01::6789')
+
+        self.assertTrue("IPv6 address can only have a single '::'" in str(e.exception))
+
+    def test_invalid_octet_or_segment(self):
+        validate=self.validator().to_python
+
+        with self.assertRaises(Invalid) as ipv6_not_hex:
+            validate('ZZZZ:ZZZZ:YYYY:XXXX:QQQQ:WWWW:LLLL:MMMM')
+
+        with self.assertRaises(Invalid) as ipv6_long:
+            validate('ABCD1234FFFF::6789FFFF1234')
+
+        with self.assertRaises(Invalid) as ipv6_non_an:
+            validate('+FFF::1234')
+
+        with self.assertRaises(Invalid) as ipv4_not_in_range:
+            validate('123.256.1.1')
+
+        with self.assertRaises(Invalid) as ipv4_non_an:
+            validate('123.255.+1.1')
+
+        with self.assertRaises(Invalid) as ipv6_sufix_not_in_range:
+            validate('0:0:0:0:0:FFFF:271.0.0.1')
+
+        self.assertTrue("IPv6 segments must be hexadecimal values within range of 0-FFFF"
+                        " (not 'ZZZZ')" in str(ipv6_not_hex.exception))
+        self.assertTrue("IPv6 segments must be hexadecimal values within range of 0-FFFF"
+                        " (not 'ABCD1234FFFF')" in str(ipv6_long.exception))
+        self.assertTrue("IPv6 segments must be hexadecimal values within range of 0-FFFF"
+                        " (not '+FFF')" in str(ipv6_non_an.exception))
+        self.assertTrue("The octets must be within the range of 0-255"
+                        " (not '256')" in str(ipv4_not_in_range.exception))
+        self.assertTrue("The octets must be within the range of 0-255"
+                        " (not '+1')" in str(ipv4_non_an.exception))
+        self.assertTrue("The octets must be within the range of 0-255"
+                        " (not '271')" in str(ipv6_sufix_not_in_range.exception))
 
     def test_leading_zeros(self):
         validate = self.validator().to_python
         try:
             validate('1.2.3.037')
         except Invalid as e:
-            self.assertTrue('The octets must not have leading zeros' in str(e))
+            self.assertTrue('Leading zeros are not permitted' in str(e))
         else:
             self.fail('IP address octets with leading zeros should be invalid')
         try:
             validate('1.2.3.0377')
         except Invalid as e:
-            self.assertTrue('The octets must not have leading zeros' in str(e))
+            self.assertTrue('Leading zeros are not permitted' in str(e))
         else:
             self.fail('IP octets with leading zeros should be invalid')
+        try:
+            validate('1234::0123:0')
+        except Invalid as e:
+            self.assertTrue('Leading zeros are not permitted' in str(e))
+        else:
+            self.fail('IP segments with leading zeros should be invalid')
 
     def test_leading_zeros_allowed(self):
         validate = self.validator(leading_zeros=True).to_python
@@ -676,13 +748,53 @@ class TestIPAddressValidator(unittest.TestCase):
         except Invalid as e:
             self.fail('IP address octets with leading zeros should be valid')
         try:
+            validate("1234:0123::0")
+        except Invalid:
+            self.fail('IP address segments with leading zeros should be valid')
+        try:
             validate('1.2.3.0377')
         except Invalid as e:
+            print e
             self.assertTrue("The octets must be within the range of 0-255"
                 " (not '377')" in str(e))
         else:
             self.fail(
                 'IP address octets should not be interpreted as octal numbers')
+
+class TestCIDRValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.CIDR
+
+    def test_valid_ipv4(self):
+        self.validator().to_python('127.0.0.1/16')
+        self.validator().to_python('127.0.0.1/0')
+        self.validator().to_python('127.0.0.1')
+
+    def test_valid_ipv6(self):
+        self.validator().to_python('1::1/64')
+        self.validator().to_python('1::1/0')
+        self.validator().to_python('1::1')
+
+    def test_invalid_network(self):
+        validate = self.validator().to_python
+        self.assertRaises(Invalid, validate, 'ABCD:EF01:2345:6789:ABCD:EF01:2345:6789/ABCD')
+        self.assertRaises(Invalid, validate, 'ABCD:EF01:2345:6789:ABCD:EF01:2345:6789/0x1')
+        self.assertRaises(Invalid, validate, '127.0.0.1/ABCD')
+        self.assertRaises(Invalid, validate, '127.0.0.1/+1')
+        self.assertRaises(Invalid, validate, '127.0.0.0.1')
+        self.assertRaises(Invalid, validate, '1::2::3')
+
+    def test_invalid_mask_range(self):
+        with self.assertRaises(Invalid) as ipv4_high:
+            self.validator().to_python('127.0.0.1/64')
+        with self.assertRaises(Invalid) as ipv6_high:
+            self.validator().to_python('::1/129')
+
+        self.assertTrue("The network size (bits) must be within the range"
+            " of 0-32 (not '64')" in str(ipv4_high.exception))
+        self.assertTrue("The network size (bits) must be within the range"
+            " of 0-128 (not '129')" in str(ipv6_high.exception))
 
 
 class TestURLValidator(unittest.TestCase):

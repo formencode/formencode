@@ -10,6 +10,7 @@ import locale
 import re
 import warnings
 from encodings import idna
+import string
 
 try:  # import dnspython
     import dns.resolver
@@ -2461,6 +2462,8 @@ class IPAddress(FancyValidator):
         >>> ip = IPAddress()
         >>> ip.to_python('127.0.0.1')
         '127.0.0.1'
+        >>> ip.to_python('2001:DB8::8:800:200C:417A')
+        '2001:DB8::8:800:200C:417A'
         >>> ip.to_python('299.0.0.1')
         Traceback (most recent call last):
             ...
@@ -2468,30 +2471,46 @@ class IPAddress(FancyValidator):
         >>> ip.to_python('192.168.0.1/1')
         Traceback (most recent call last):
             ...
-        Invalid: Please enter a valid IP address (a.b.c.d)
+        Invalid: Please enter a valid IPv4 or IPv6 address
         >>> ip.to_python('asdf')
         Traceback (most recent call last):
             ...
-        Invalid: Please enter a valid IP address (a.b.c.d)
+        Invalid: Please enter a valid IPv4 or IPv6 address
+        >>> ip.to_python('ABCD:EF01::ABCD:EF01::6789')
+        Traceback (most recent call last):
+            ...
+        Invalid: IPv6 address can only have a single '::'
     """
 
     messages = dict(
-        badFormat=_('Please enter a valid IP address (a.b.c.d)'),
-        leadingZeros=_('The octets must not have leading zeros'),
+        badFormat=_('Please enter a valid IPv4 or IPv6 address'),
+        leadingZeros=_('Leading zeros are not permitted'),
         illegalOctets=_('The octets must be within the range of 0-255'
-            ' (not %(octet)r)'))
+            ' (not %(octet)r)'),
+        doubleColon=_("IPv6 address can only have a single '::'"),
+        illegalSegment=_("IPv6 segments must be hexadecimal values within range of 0-FFFF"
+                        " (not %(segment)r)"))
 
     leading_zeros = False
 
     def _validate_python(self, value, state=None):
+        if not value:
+            raise Invalid(self.message('badFormat', state), value, state)
+
+        if ":" in value:
+            #probably ipv6
+            self._validate_ipv6(value, state)
+        else:
+            self._validate_ipv4(value, state)
+
+    def _validate_ipv4(self, value, state=None):
         try:
-            if not value:
-                raise ValueError
             octets = value.split('.', 5)
             # Only 4 octets?
             if len(octets) != 4:
                 raise ValueError
             # Correct octets?
+            digits = frozenset(string.digits)
             for octet in octets:
                 if octet.startswith('0') and octet != '0':
                     if not self.leading_zeros:
@@ -2499,11 +2518,65 @@ class IPAddress(FancyValidator):
                             self.message('leadingZeros', state), value, state)
                     # strip zeros so this won't be an octal number
                     octet = octet.lstrip('0')
-                if not 0 <= int(octet) < 256:
+
+                #have to test it against digits because int() excepts +
+                if not 0 <= int(octet) < 256 or not digits.issuperset(octet):
                     raise Invalid(
                         self.message('illegalOctets', state, octet=octet),
                         value, state)
-        # Splitting faild: wrong syntax
+        # Splitting field: wrong syntax
+        except ValueError:
+            raise Invalid(self.message('badFormat', state), value, state)
+
+    def _validate_ipv6(self, value, state=None):
+        try:
+            parts = value.split(':')
+
+            # An IPv6 address needs at least 2 colons (3 parts).
+            if len(parts) < 3:
+                raise ValueError
+
+            # If the address has an IPv4-style suffix, is it valid.
+            if '.' in parts[-1]:
+                self._validate_ipv4(parts.pop())
+                parts.append('0')
+                parts.append('0')
+
+            #can't have leading or trailing singular colons
+            if (not parts[0] and parts[1]) or (not parts[-1] and parts[-2]):
+                raise ValueError
+
+            # Disregarding the endpoints, find if '::' with nothing in between.
+            # This indicates that a run of zeros has been skipped.
+            skip_index = None
+            for i in range(1, len(parts) - 1):
+                if not parts[i]:
+                    if skip_index is not None:
+                        # Can't have more than one '::'
+                        raise Invalid(self.message('doubleColon', state), value, state)
+                    skip_index = i
+
+            if skip_index is not None:
+                if len(parts)>8 and parts[skip_index-1] and parts[skip_index+1]:
+                    raise ValueError
+            else:
+                if len(parts) != 8:
+                    raise ValueError
+
+            #Validate each hex value
+            hex_digits = frozenset(string.hexdigits)
+            for hex_val in parts:
+                if hex_val.startswith('0') and hex_val != '0':
+                    if not self.leading_zeros:
+                        raise Invalid(
+                            self.message('leadingZeros', state), value, state)
+
+                hex_val = hex_val.lstrip('0')
+
+                if not hex_digits.issuperset(hex_val) or len(hex_val)>4:
+                    raise Invalid(
+                        self.message('illegalSegment', state, segment=hex_val),value, state)
+
         except ValueError:
             raise Invalid(self.message('badFormat', state), value, state)
 
@@ -2516,41 +2589,51 @@ class CIDR(IPAddress):
     Examples::
 
         >>> cidr = CIDR()
-        >>> cidr.to_python('127.0.0.1')
-        '127.0.0.1'
+        >>> cidr.to_python('127.0.0.1/16')
+        '127.0.0.1/16'
+        >>> cidr.to_python('::1/16')
+        '::1/16'
         >>> cidr.to_python('299.0.0.1')
         Traceback (most recent call last):
             ...
         Invalid: The octets must be within the range of 0-255 (not '299')
-        >>> cidr.to_python('192.168.0.1/1')
+        >>> cidr.to_python('192.168.0.1/33')
         Traceback (most recent call last):
             ...
-        Invalid: The network size (bits) must be within the range of 8-32 (not '1')
+        Invalid: The network size (bits) must be within the range of 0-32 (not '33')
         >>> cidr.to_python('asdf')
         Traceback (most recent call last):
             ...
-        Invalid: Please enter a valid IP address (a.b.c.d) or IP network (a.b.c.d/e)
+        Invalid: Please enter a valid IPv4 or IPv6 address or IPv4/IPv6 network
     """
 
     messages = dict(IPAddress._messages,
-        badFormat=_('Please enter a valid IP address (a.b.c.d)'
-            ' or IP network (a.b.c.d/e)'),
+        badFormat=_('Please enter a valid IPv4 or IPv6 address'
+            ' or IPv4/IPv6 network'),
         illegalBits=_('The network size (bits) must be within the range'
-            ' of 8-32 (not %(bits)r)'))
+            ' of %(min)r-%(max)r (not %(bits)r)'))
 
-    def _validate_python(self, value, state):
+    def _validate_python(self, value, state=None):
         try:
-            # Split into octets and bits
-            if '/' in value:  # a.b.c.d/e
+            min_bits = 0
+            if ':' in value:
+                max_bits = 128
+            else:
+                max_bits = 32
+            # Split into address and bits
+            if '/' in value:
                 addr, bits = value.split('/')
-            else:  # a.b.c.d
-                addr, bits = value, 32
+            else:  
+                addr, bits = value, max_bits
+
+
             # Use IPAddress validator to validate the IP part
             IPAddress._validate_python(self, addr, state)
             # Bits (netmask) correct?
-            if not 8 <= int(bits) <= 32:
+            digits = frozenset(string.digits)
+            if not min_bits <= int(bits) <= max_bits or not digits.issuperset(str(bits)):
                 raise Invalid(
-                    self.message('illegalBits', state, bits=bits),
+                    self.message('illegalBits', state, bits=bits, max=max_bits, min=min_bits),
                     value, state)
         # Splitting faild: wrong syntax
         except ValueError:
