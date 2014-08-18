@@ -700,7 +700,7 @@ class TestURLValidator(unittest.TestCase):
             'http://c.somewhere.pl/wi16677/5050f81b001f9e5f45902c1b/')
 
     def test_ip_validator(self):
-        self.assertEqual(validators.URL(freuire_tld=False).to_python(
+        self.assertEqual(validators.URL(require_tld=False).to_python(
             "http://65.18.195.155/cgi-ordoro/bo/start.cgi"),
             "http://65.18.195.155/cgi-ordoro/bo/start.cgi")
 
