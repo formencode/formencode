@@ -700,7 +700,7 @@ class TestURLValidator(unittest.TestCase):
             'http://c.somewhere.pl/wi16677/5050f81b001f9e5f45902c1b/')
 
     def test_ip_validator(self):
-        self.assertEqual(validators.URL(require_tld=False).to_python(
+        self.assertEqual(validators.URL(freuire_tld=False).to_python(
             "http://65.18.195.155/cgi-ordoro/bo/start.cgi"),
             "http://65.18.195.155/cgi-ordoro/bo/start.cgi")
 
@@ -732,6 +732,39 @@ class TestRequireIfMissingValidator(unittest.TestCase):
         self.assertEqual(
             validate(v, dict(operator='', operand=0)),
             dict(operator=u'Please enter a value'))
+
+class TestRequireIfMatchingValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.RequireIfMatching
+
+    def test_missing(self):
+        v = self.validator('phone_type', 'mobile', required_fields=['mobile'])
+        self.assertEqual(
+            validate(v, dict()),
+            dict()
+        )
+
+    def test_matching(self):
+        v = self.validator('phone_type', 'mobile', required_fields=['mobile'])
+        self.assertEqual(
+            validate(v, dict(phone_type='mobile')),
+            dict(mobile=u'Please enter a value')
+        )
+
+    def test_matching_multiple_required(self):
+        v = self.validator('phone_type', 'mobile', required_fields=['mobile', 'code'])
+        self.assertEqual(
+            validate(v, dict(phone_type='mobile')),
+            dict(mobile=u'Please enter a value')
+        )
+
+    def test_not_matching(self):
+        v = self.validator('phone_type', 'home', required_fields=['mobile'])
+        self.assertEqual(
+            validate(v, dict(phone_type='mobile')),
+            dict(phone_type='mobile')
+        )
 
 
 class TestCondfirmType(unittest.TestCase):
