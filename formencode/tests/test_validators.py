@@ -733,6 +733,39 @@ class TestRequireIfMissingValidator(unittest.TestCase):
             validate(v, dict(operator='', operand=0)),
             dict(operator=u'Please enter a value'))
 
+class TestRequireIfMatchingValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.RequireIfMatching
+
+    def test_missing(self):
+        v = self.validator('phone_type', 'mobile', required_fields=['mobile'])
+        self.assertEqual(
+            validate(v, dict()),
+            dict()
+        )
+
+    def test_matching(self):
+        v = self.validator('phone_type', 'mobile', required_fields=['mobile'])
+        self.assertEqual(
+            validate(v, dict(phone_type='mobile')),
+            dict(mobile=u'Please enter a value')
+        )
+
+    def test_matching_multiple_required(self):
+        v = self.validator('phone_type', 'mobile', required_fields=['mobile', 'code'])
+        self.assertEqual(
+            validate(v, dict(phone_type='mobile')),
+            dict(mobile=u'Please enter a value')
+        )
+
+    def test_not_matching(self):
+        v = self.validator('phone_type', 'home', required_fields=['mobile'])
+        self.assertEqual(
+            validate(v, dict(phone_type='mobile')),
+            dict(phone_type='mobile')
+        )
+
 
 class TestCondfirmType(unittest.TestCase):
 
