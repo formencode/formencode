@@ -1358,7 +1358,7 @@ class Email(FancyValidator):
             idna_domain = '.'.join(idna_domain)
         except UnicodeError:
             # UnicodeError: label empty or too long
-            # This exception might happen if we have an invalid domain name part 
+            # This exception might happen if we have an invalid domain name part
             # (for example test@.foo.bar.com)
             raise Invalid(
                 self.message('badDomain', state, domain=domain),
@@ -1899,8 +1899,8 @@ class DateConverter(FancyValidator):
     """
     Validates and converts a string date, like mm/yy, dd/mm/yy,
     dd-mm-yy, etc.  Using ``month_style`` you can support
-    ``'mm/dd/yyyy'`` or ``'dd/mm/yyyy'``.  Only these two general
-    styles are supported.
+    the three general styles `mdy` = `us` = `mm/dd/yyyy`,
+    `dmy` = `euro` = `dd/mm/yyyy` and `ymd` = `iso` = `yyyy/mm/dd`.
 
     Accepts English month names, also abbreviated.  Returns value as a
     datetime object (you can get mx.DateTime objects if you use
@@ -2715,7 +2715,7 @@ class RequireIfMatching(FormValidator):
     matches the value of ``expected_value``, then the validator will raise an
     ``Invalid`` exception for every field in ``required_fields`` that is
     missing.
-    
+
     ::
 
         >>> from formencode import validators
