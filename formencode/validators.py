@@ -1899,8 +1899,9 @@ class DateConverter(FancyValidator):
     """
     Validates and converts a string date, like mm/yy, dd/mm/yy,
     dd-mm-yy, etc.  Using ``month_style`` you can support
-    the three general styles `mdy` = `us` = `mm/dd/yyyy`,
-    `dmy` = `euro` = `dd/mm/yyyy` and `ymd` = `iso` = `yyyy/mm/dd`.
+    the three general styles ``mdy`` = ``us`` = ``mm/dd/yyyy``,
+    ``dmy`` = ``euro`` = ``dd/mm/yyyy`` and
+    ``ymd`` = ``iso`` = ``yyyy/mm/dd``.
 
     Accepts English month names, also abbreviated.  Returns value as a
     datetime object (you can get mx.DateTime objects if you use
