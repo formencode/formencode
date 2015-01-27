@@ -23,8 +23,17 @@ The latest documentation is available at http://www.formencode.org/
 Changes
 -------
 
-Added a validator that can require one or more fields based on the value of another field.
+2015-01-27
+----------
+Added a domain blacklist option for the Email validator. A german howto can be
+found here: http://techblog.auf-nach-mallorca.info/2015/01/27/email-adressen-in-python-gegen-domain-blacklist-validieren/
 
-A german howto can be found here: http://techblog.auf-nach-mallorca.info/2014/08/19/dynamische_formulare_validieren_mit_formencode/
+Courtesy of the developers of http://www.auf-nach-mallorca.info
+
+2014-08-19
+----------
+Added a validator that can require one or more fields based on the value of
+another field. A german howto can be found here:
+http://techblog.auf-nach-mallorca.info/2014/08/19/dynamische_formulare_validieren_mit_formencode/
 
 Courtesy of the developers of http://www.auf-nach-mallorca.info
