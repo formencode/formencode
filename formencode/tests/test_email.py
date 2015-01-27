@@ -66,6 +66,40 @@ class TestEmail(unittest.TestCase):
         for email, expected in valid_email_addresses:
             self.assertEqual(self.validate(email), expected)
 
+class TestEmailDomainBlacklist(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = Email(domain_blacklist=[
+            'example.com',
+            '123.net'
+        ])
+
+    def validate(self, *args):
+        return self.validator.to_python(*args)
+
+    def test_blacklisted_domains(self):
+        email_addresses = [
+            # (email address, expected email address),
+            (' test@foo.com ', 'test@foo.com'),
+            ('Test@foo.com', 'Test@foo.com'),
+            ('nobody@xn--m7r7ml7t24h.com', 'nobody@xn--m7r7ml7t24h.com'),
+            ('o*reilly@test.com', 'o*reilly@test.com'),
+            ('foo+bar@example.com', 'foo+bar@example.com'),
+            ('foo.bar@example.com', 'foo.bar@example.com'),
+            ('foo!bar@example.com', 'foo!bar@example.com'),
+            ('foo{bar}@example.com', 'foo{bar}@example.com'),
+            ('customer/department=shipping@example.com',
+                'customer/department=shipping@example.com'),
+            ('$A12345@example.com', '$A12345@example.com'),
+            ('!def!xyz%abc@example.com', '!def!xyz%abc@example.com'),
+            ('_somename@example.com', '_somename@example.com'),
+            ('john.doe@123.net', 'john.doe@123.net')]
+
+        for email, expected in email_addresses:
+            if 'example.com' in email or '123.net' in email:
+                self.assertRaises(Invalid, self.validate, email)
+            else:
+                self.assertEqual(self.validate(email), expected)
 
 class TestUnicodeEmailWithResolveDomain(unittest.TestCase):
 

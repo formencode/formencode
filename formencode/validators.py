@@ -1259,6 +1259,10 @@ class Email(FancyValidator):
     course. You must have the `dnspython <http://www.dnspython.org/>`__ modules
     installed to look up DNS (MX and A) records.
 
+    If you pass a list of blacklisted domain names
+    ``domain_blacklist=['example.com', ...]``, the validation will fail if the
+    email address is of one of these domains.
+
     ::
 
         >>> e = Email()
@@ -1304,11 +1308,18 @@ class Email(FancyValidator):
         u'test@google.com'
         >>> e = Email(not_empty=False)
         >>> e.to_python('')
+        >>> e = Email(domain_blacklist=['foo.bar.com'])
+        >>> e.to_python('test@.foo.bar.com')
+        Traceback (most recent call last):
+            ...
+        Invalid: The domain of the email address is blacklisted (the portion after the @: foo.bar.com)
 
     """
 
     resolve_domain = False
     resolve_timeout = 10  # timeout in seconds when resolving domains
+
+    __unpackargs__ = ('domain_blacklist', )
 
     usernameRE = re.compile(r"^[\w!#$%&'*+\-/=?^`{|}~.]+$")
     domainRE = re.compile(r'''
@@ -1326,6 +1337,8 @@ class Email(FancyValidator):
         badDomain=_('The domain portion of the email address is invalid'
             ' (the portion after the @: %(domain)s)'),
         domainDoesNotExist=_('The domain of the email address does not exist'
+            ' (the portion after the @: %(domain)s)'),
+        domainBlacklisted=_('The domain of the email address is blacklisted'
             ' (the portion after the @: %(domain)s)'))
 
     def __init__(self, *args, **kw):
@@ -1350,6 +1363,10 @@ class Email(FancyValidator):
         if not self.usernameRE.search(username):
             raise Invalid(
                 self.message('badUsername', state, username=username),
+                value, state)
+        if hasattr(self, 'domain_blacklist') and domain in self.domain_blacklist:
+            raise Invalid(
+                self.message('domainBlacklisted', state, domain=domain),
                 value, state)
         try:
             idna_domain = [idna.ToASCII(p) for p in domain.split('.')]
