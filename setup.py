@@ -9,7 +9,7 @@ The official repo is at GitHub: https://github.com/formencode/formencode
 import sys
 from setuptools import setup, find_packages
 
-version = '1.3.0a1'
+version = '1.3.0'
 
 if not '2.6' <= sys.version < '3.0' and not '3.2' <= sys.version:
     raise ImportError('Python version not supported')
