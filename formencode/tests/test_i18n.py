@@ -70,7 +70,7 @@ def test_pt_BR():
 
 
 def test_zh_TW():
-    _test_lang("zh_TW", u"請輸入一個值")
+    _test_lang("zh_TW", u"請輸入值")
 
 
 def test_sk():
