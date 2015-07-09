@@ -510,7 +510,7 @@ Localization of Error Messages (i18n)
 When a failed validation occurs FormEncode tries to output the error
 message in the appropriate language. For this it uses the standard
 `gettext <http://docs.python.org/library/gettext.html>`_ mechanism of
-python. To translate the message in the appropirate message FormEncode
+python. To translate the message in the appropriate message FormEncode
 has to find a gettext function that translates the string. The
 language to be translated into and the used domain is determined by
 the found gettext function. To serve a standard translation mechanism
