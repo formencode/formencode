@@ -150,7 +150,7 @@ class DelimitedDigitsPostalCode(Regex):
     def assembly_regex(self, partition_lengths, delimiter):
         mg = [r'(\d{%d})' % l for l in partition_lengths]
         rd = r'\%s?' % delimiter
-        return rd.join(mg)
+        return "^" + rd.join(mg) + "$"
 
     def __init__(self, partition_lengths, delimiter=None,
                  *args, **kw):
