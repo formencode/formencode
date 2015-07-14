@@ -147,19 +147,26 @@ class DelimitedDigitsPostalCode(Regex):
         else:
             return delimiter.join('n' * l for l in partition_lengths)
 
-    def assembly_regex(self, partition_lengths, delimiter):
+    def assembly_regex(self, partition_lengths, delimiter, strict):
         mg = [r'(\d{%d})' % l for l in partition_lengths]
         rd = r'\%s?' % delimiter
-        return rd.join(mg)
+        regex = rd.join(mg)
 
-    def __init__(self, partition_lengths, delimiter=None,
+        # anchor the regex so that it wont take zip codes w/ longer
+        # input than what is specified by the partition_lengths
+        if strict:
+            regex = "^" + regex + "$"
+
+        return regex
+
+    def __init__(self, partition_lengths, delimiter=None, strict=False,
                  *args, **kw):
         if isinstance(partition_lengths, (int, long)):
             partition_lengths = [partition_lengths]
         if not delimiter:
             delimiter = ''
         self.format = self.assembly_formatstring(partition_lengths, delimiter)
-        self.regex = self.assembly_regex(partition_lengths, delimiter)
+        self.regex = self.assembly_regex(partition_lengths, delimiter, strict)
         self.partition_lengths, self.delimiter = partition_lengths, delimiter
         Regex.__init__(self, *args, **kw)
 
