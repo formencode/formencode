@@ -1551,18 +1551,18 @@ class URL(FancyValidator):
             import socket
         scheme, netloc, path, params, query, fragment = urlparse.urlparse(
             url, 'http')
-        if scheme == 'https':
-            ConnClass = httplib.HTTPSConnection
-        else:
-            ConnClass = httplib.HTTPConnection
+        if params:
+            path += ';' + params
+        if query:
+            path += '?' + query
         try:
-            conn = ConnClass(netloc)
-            if params:
-                path += ';' + params
-            if query:
-                path += '?' + query
-            conn.request('HEAD', path)
-            res = conn.getresponse()
+            conn = (httplib.HTTPSConnection if scheme == 'https'
+                    else httplib.HTTPConnection)(netloc)
+            try:
+                conn.request('HEAD', path)
+                res = conn.getresponse()
+            finally:
+                conn.close()
         except httplib.HTTPException as e:
             raise Invalid(
                 self.message('httpError', state, error=e), state, url)
