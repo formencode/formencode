@@ -92,12 +92,26 @@ elif pycountry:
     def get_country(code):
         return _c(pycountry.countries.get(alpha2=code).name)
 
-    def get_languages():
-        return [(e.alpha2, _l(e.name)) for e in pycountry.languages
-            if e.name and getattr(e, 'alpha2', None)]
+    try:
+        if not pycountry.languages.get(iso639_1_code='en'):
+            raise KeyError
+    except KeyError:  # pycountry < 1.12
 
-    def get_language(code):
-        return _l(pycountry.languages.get(alpha2=code).name)
+        def get_languages():
+            return [(e.alpha2, _l(e.name)) for e in pycountry.languages
+                if e.name and getattr(e, 'alpha2', None)]
+
+        def get_language(code):
+            return _l(pycountry.languages.get(alpha2=code).name)
+
+    else:
+
+        def get_languages():
+            return [(e.iso639_1_code, _l(e.name)) for e in pycountry.languages
+                if e.name and getattr(e, 'iso639_1_code', None)]
+
+        def get_language(code):
+            return _l(pycountry.languages.get(iso639_1_code=code).name)
 
 
 ############################################################
