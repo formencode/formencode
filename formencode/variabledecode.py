@@ -25,6 +25,16 @@ from .api import FancyValidator
 __all__ = ['variable_decode', 'variable_encode', 'NestedVariables']
 
 
+def _int_key(key):
+    """Robust sort key for numbers that sorts invalid keys last.
+
+    This is used to make sorting behave the same across Python 2 and 3.
+    """
+    if isinstance(key, int):
+        return 0, key
+    return 1, 0
+
+
 def variable_decode(d, dict_char='.', list_char='-'):
     """Decode the flat dictionary d into a nested structure."""
     result = {}
@@ -96,7 +106,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
             to_sort = none_values
         else:
             to_sort = to_sort.iteritems()
-        to_sort = [x[1] for x in sorted(to_sort)]
+        to_sort = [x[1] for x in sorted(to_sort, key=_int_key)]
         if key in known_lengths:
             if len(to_sort) < known_lengths[key]:
                 to_sort.extend([''] * (known_lengths[key] - len(to_sort)))

@@ -47,6 +47,12 @@ class TestVariableDecode(unittest.TestCase):
 
         self.assertEqual(expect, variable_decode(src))
 
+    def test_list_dict_bad_key(self):
+        src = {'a-0.good': 'a', 'a.0.bad': 'b', 'a-1.good': 'c'}
+        expect = {'a': [{'good': 'a'}, {'good': 'c'}, {'bad': 'b'}]}
+
+        self.assertEqual(expect, variable_decode(src))
+
 
 class TestVariableEncode(unittest.TestCase):
 
