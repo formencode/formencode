@@ -31,7 +31,10 @@ class RewritingParser(HTMLParser.HTMLParser):
 
     def __init__(self):
         self._content = []
-        HTMLParser.HTMLParser.__init__(self)
+        try:
+            HTMLParser.HTMLParser.__init__(self, convert_charrefs=False)
+        except TypeError:  # Python < 3.4
+            HTMLParser.HTMLParser.__init__(self)
 
     def feed(self, data):
         self.data_is_str = isinstance(data, str)
