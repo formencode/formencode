@@ -2727,7 +2727,7 @@ class RequireIfMatching(FormValidator):
         >>> v.to_python(dict(phone_type='mobile'))
         Traceback (most recent call last):
             ...
-        formencode.api.Invalid: You must give a value for mobile
+        Invalid: You must give a value for mobile
         >>> v.to_python(dict(phone_type='someothervalue'))
         {'phone_type': 'someothervalue'}
     """
