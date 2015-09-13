@@ -167,48 +167,51 @@ class TestDeprecatedNotOneValidator(unittest.TestCase):
 
     def test_to_python(self):
         nov = DeprecatedNotOneValidator()
-        self.assertEqual(nov.to_python('0'), 0)
-        try:
-            nov.to_python('1')
-        except Invalid as e:
-            self.assertTrue(
-                'must not be 1' in str(e), e)
-        else:
-            self.fail("1 should be invalid")
-        self.assertEqual(nov.to_python('2'), 2)
-        self.assertEqual(nov.to_python('42'), 42)
+        with warnings.catch_warnings(record=True):
+            self.assertEqual(nov.to_python('0'), 0)
+            try:
+                nov.to_python('1')
+            except Invalid as e:
+                self.assertTrue(
+                    'must not be 1' in str(e), e)
+            else:
+                self.fail("1 should be invalid")
+            self.assertEqual(nov.to_python('2'), 2)
+            self.assertEqual(nov.to_python('42'), 42)
 
     def test_to_python_number(self):
         nov = DeprecatedNotOneValidator(number=42)
-        self.assertEqual(nov.to_python('0'), 0)
-        self.assertEqual(nov.to_python('1'), 1)
-        self.assertEqual(nov.to_python('2'), 2)
-        try:
-            nov.to_python('42')
-        except Invalid as e:
-            self.assertTrue(
-                'must not be 42' in str(e), e)
-        else:
-            self.fail("42 should be invalid")
+        with warnings.catch_warnings(record=True):
+            self.assertEqual(nov.to_python('0'), 0)
+            self.assertEqual(nov.to_python('1'), 1)
+            self.assertEqual(nov.to_python('2'), 2)
+            try:
+                nov.to_python('42')
+            except Invalid as e:
+                self.assertTrue(
+                    'must not be 42' in str(e), e)
+            else:
+                self.fail("42 should be invalid")
 
     def test_to_python_range(self):
         nov = DeprecatedNotOneValidator(min=40, max=49, number=42)
-        self.assertRaises(Invalid, nov.to_python, '0')
-        self.assertRaises(Invalid, nov.to_python, '1')
-        self.assertRaises(Invalid, nov.to_python, '2')
-        self.assertRaises(Invalid, nov.to_python, '39')
-        self.assertEqual(nov.to_python('40'), 40)
-        self.assertEqual(nov.to_python('41'), 41)
-        try:
-            nov.to_python('42')
-        except Invalid as e:
-            self.assertTrue(
-                'must not be 42' in str(e), e)
-        else:
-            self.fail("42 should be invalid")
-        self.assertEqual(nov.to_python('43'), 43)
-        self.assertEqual(nov.to_python('49'), 49)
-        self.assertRaises(Invalid, nov.to_python, '50')
+        with warnings.catch_warnings(record=True):
+            self.assertRaises(Invalid, nov.to_python, '0')
+            self.assertRaises(Invalid, nov.to_python, '1')
+            self.assertRaises(Invalid, nov.to_python, '2')
+            self.assertRaises(Invalid, nov.to_python, '39')
+            self.assertEqual(nov.to_python('40'), 40)
+            self.assertEqual(nov.to_python('41'), 41)
+            try:
+                nov.to_python('42')
+            except Invalid as e:
+                self.assertTrue(
+                    'must not be 42' in str(e), e)
+            else:
+                self.fail("42 should be invalid")
+            self.assertEqual(nov.to_python('43'), 43)
+            self.assertEqual(nov.to_python('49'), 49)
+            self.assertRaises(Invalid, nov.to_python, '50')
 
 
 with warnings.catch_warnings(record=True) as custom_compound_warnings:
@@ -286,16 +289,17 @@ class TestDeprecatedAllAndNotOneValidator(unittest.TestCase):
 
     def test_to_python(self):
         cav = self.validator
-        self.assertRaises(Invalid, cav.to_python, '1')
-        self.assertRaises(Invalid, cav.to_python, '2')
-        self.assertEqual(cav.to_python('3'), 3)
-        try:
-            cav.to_python('4')
-        except Invalid as e:
-            self.assertTrue(
-                'must not be 4' in str(e), e)
-        else:
-            self.fail("4 should be invalid")
-        self.assertEqual(cav.to_python('5'), 5)
-        self.assertRaises(Invalid, cav.to_python, '6')
-        self.assertRaises(Invalid, cav.to_python, '7')
+        with warnings.catch_warnings(record=True):
+            self.assertRaises(Invalid, cav.to_python, '1')
+            self.assertRaises(Invalid, cav.to_python, '2')
+            self.assertEqual(cav.to_python('3'), 3)
+            try:
+                cav.to_python('4')
+            except Invalid as e:
+                self.assertTrue(
+                    'must not be 4' in str(e), e)
+            else:
+                self.fail("4 should be invalid")
+            self.assertEqual(cav.to_python('5'), 5)
+            self.assertRaises(Invalid, cav.to_python, '6')
+            self.assertRaises(Invalid, cav.to_python, '7')
