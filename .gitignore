@@ -4,6 +4,7 @@
 *.pyo
 *.tox
 
+.eggs
 build
 dist/
 docs/_build
