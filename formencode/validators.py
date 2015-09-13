@@ -1564,9 +1564,27 @@ class URL(FancyValidator):
             finally:
                 conn.close()
         except httplib.HTTPException as e:
+            e = str(e)
+            if str is not unicode:  # Python 2
+                try:
+                    e = e.decode('utf-8')
+                except UnicodeDecodeError:
+                    try:
+                        e = e.decode('latin-1')
+                    except UnicodeDecodeError:
+                        e = e.decode('ascii', 'replace')
             raise Invalid(
                 self.message('httpError', state, error=e), state, url)
         except socket.error as e:
+            e = str(e)
+            if str is not unicode:  # Python 2
+                try:
+                    e = e.decode('utf-8')
+                except UnicodeDecodeError:
+                    try:
+                        e = e.decode('latin-1')
+                    except UnicodeDecodeError:
+                        e = e.decode('ascii', 'replace')
             raise Invalid(
                 self.message('socketError', state, error=e), state, url)
         else:
