@@ -26,9 +26,7 @@ __all__ = ['variable_decode', 'variable_encode', 'NestedVariables']
 
 
 def variable_decode(d, dict_char='.', list_char='-'):
-    """
-    Decode the flat dictionary d into a nested structure.
-    """
+    """Decode the flat dictionary d into a nested structure."""
     result = {}
     dicts_to_sort = set()
     known_lengths = {}
@@ -93,9 +91,9 @@ def variable_decode(d, dict_char='.', list_char='-'):
             last_key = sub_key
             to_sort = to_sort[sub_key]
         if None in to_sort:
-            noneVals = [(0, x) for x in to_sort.pop(None)]
-            noneVals.extend(to_sort.iteritems())
-            to_sort = noneVals
+            none_values = [(0, x) for x in to_sort.pop(None)]
+            none_values.extend(to_sort.iteritems())
+            to_sort = none_values
         else:
             to_sort = to_sort.iteritems()
         to_sort = [x[1] for x in sorted(to_sort)]
@@ -109,9 +107,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
 
 def variable_encode(d, prepend='', result=None, add_repetitions=True,
                     dict_char='.', list_char='-'):
-    """
-    Encode a nested structure into a flat dictionary.
-    """
+    """Encode a nested structure into a flat dictionary."""
     if result is None:
         result = {}
     if isinstance(d, dict):
@@ -129,9 +125,9 @@ def variable_encode(d, prepend='', result=None, add_repetitions=True,
             variable_encode(value, "%s%s%i" % (prepend, list_char, i), result,
                 add_repetitions, dict_char=dict_char, list_char=list_char)
         if add_repetitions:
-            repName = ('%s--repetitions' % prepend
+            rep_name = ('%s--repetitions' % prepend
                 if prepend else '__repetitions__')
-            result[repName] = str(len(d))
+            result[rep_name] = str(len(d))
     else:
         result[prepend] = d
     return result
