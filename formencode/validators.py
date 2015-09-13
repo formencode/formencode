@@ -1375,10 +1375,10 @@ class Email(FancyValidator):
             try:
                 try:
                     dns.resolver.query(domain, 'MX')
-                except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer) as e:
+                except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
                     try:
                         dns.resolver.query(domain, 'A')
-                    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer) as e:
+                    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
                         raise Invalid(
                             self.message('domainDoesNotExist',
                                 state, domain=domain), value, state)
@@ -2280,9 +2280,9 @@ class TimeConverter(FancyValidator):
         else:
             second = None
         if second is None:
-            return (hour, minute)
+            return hour, minute
         else:
-            return (hour, minute, second)
+            return hour, minute, second
 
     def _convert_from_python(self, value, state):
         if isinstance(value, basestring):
