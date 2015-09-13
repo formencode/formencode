@@ -20,11 +20,19 @@ Documentation
 
 The latest documentation is available at http://www.formencode.org/
 
+
+Testing
+-------
+
+Use `python setup.py nosetests` to run the test suite.
+Use `tox` to run the test suite for all supported Python versions.
+
+
 Changes
 -------
 
 Added a validator that can require one or more fields based on the value of another field.
 
-A german howto can be found here: http://techblog.auf-nach-mallorca.info/2014/08/19/dynamische_formulare_validieren_mit_formencode/
+A German howto can be found here: http://techblog.auf-nach-mallorca.info/2014/08/19/dynamische_formulare_validieren_mit_formencode/
 
 Courtesy of the developers of http://www.auf-nach-mallorca.info
