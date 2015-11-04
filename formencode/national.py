@@ -297,6 +297,39 @@ class CanadianPostalCode(Regex):
         return '%s %s' % (match.group(1).upper(), match.group(2).upper())
 
 
+class DutchPostalCode(Regex):
+    """
+    Dutch Postal codes.
+
+    ::
+
+        >>> DutchPostalCode.to_python('1011 PN')
+        '1011PN'
+        >>> DutchPostalCode.to_python('3400ac')
+        '3400AC'
+        >>> DutchPostalCode.to_python('12345')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a zip code (nnnnLL)
+    """
+
+    format = _('nnnnLL')
+    regex = re.compile(r'^(\d{4})\s?([a-zA-Z]{2})$')
+    strip = True
+
+    messages = dict(
+        invalid=_('Please enter a zip code (%(format)s)'))
+
+    def _convert_to_python(self, value, state):
+        self.assert_string(value, state)
+        match = self.regex.search(value)
+        if not match:
+            raise Invalid(
+                self.message('invalid', state, format=self.format),
+                value, state)
+        return '%s%s' % (match.group(1), match.group(2).upper())
+
+
 class UKPostalCode(Regex):
     """
     UK Postal codes. Please see BS 7666.
@@ -454,6 +487,7 @@ class PostalCodeInCountryFormat(FancyValidator):
         'LU': FourDigitsPostalCode,
         'MC': lambda: DelimitedDigitsPostalCode(5),
         'NI': lambda: DelimitedDigitsPostalCode([3, 3, 1], '-'),
+        'NL': DutchPostalCode,
         'NO': FourDigitsPostalCode,
         'PL': PolishPostalCode,
         'PT': lambda: DelimitedDigitsPostalCode([4, 3], '-'),
