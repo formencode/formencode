@@ -316,9 +316,9 @@ class UKPostalCode(Regex):
     """
 
     regex = re.compile(r'^((ASCN|BBND|BIQQ|FIQQ|PCRN|SIQQ|STHL|TDCU|TKCA)'
-        ' 1ZZ|BFPO (c\/o )?[1-9]{1,4}|GIR 0AA|[A-PR-UWYZ]'
+        '\s?1ZZ|BFPO (c\/o )?[1-9]{1,4}|GIR\s?0AA|[A-PR-UWYZ]'
         '([0-9]{1,2}|([A-HK-Y][0-9]|[A-HK-Y][0-9]([0-9]|[ABEHMNPRV-Y]))'
-        '|[0-9][A-HJKS-UW]) [0-9][ABD-HJLNP-UW-Z]{2})$', re.I)
+        '|[0-9][A-HJKS-UW])\s?[0-9][ABD-HJLNP-UW-Z]{2})$', re.I)
     strip = True
 
     messages = dict(
@@ -331,7 +331,11 @@ class UKPostalCode(Regex):
             raise Invalid(
                 self.message('invalid', state),
                 value, state)
-        return match.group(1).upper()
+        value = match.group(1).upper()
+        if not value.startswith('BFPO'):
+          value = value.replace(' ', '')
+          value = '%s %s' % (value[:-3], value[-3:])
+        return value
 
 
 class CountryValidator(FancyValidator):
