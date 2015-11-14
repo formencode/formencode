@@ -1,0 +1,95 @@
+List of Contributors
+====================
+
+The below-signed are contributors to a code repository that is part of the
+project named "FormEncode".  Each below-signed contributor has agreed to
+license their contributions under the MIT license (see LICENSE.txt) as of the
+date listed by their name.
+
+Contributors
+------------
+ - Ian Bicking, 2015-11-14
+
+ - Christoph Zwerschke, 2015-11-14
+
+ - Christopher Lambacher, 2015-11-14
+
+ - Philip Jenvey, 2015-11-14
+
+ - Ian Wilson, 2015-11-14
+
+ - W. Mark Kubacki, 2015-11-14
+
+ - Greg Horvath, 2015-11-14
+
+ - Maxim Avanov, 2015-11-14
+
+ - Ben Bangert, 2015-11-14
+
+ - Matthew Desmarais, 2015-11-14
+
+ - Ethan Jucovy, 2015-11-14
+
+ - Marc Abramowitz, 2015-11-14
+
+ - Benjamin Behringer, 2015-11-14
+
+ - Richard Flosi, 2015-11-14
+
+ - Juliusz Gonera, 2015-11-14
+
+ - John Kraal, 2015-11-14
+
+ - Alessandro Molina, 2015-11-14
+
+ - Neil Muller, 2015-11-14
+
+ - Philipp Spitzer, 2015-11-14
+
+ - Vitaly Babiy, 2015-11-14
+
+ - David Stanek, 2015-11-14
+
+ - Ira, 2015-11-14
+
+ - Hong Minhee, 2015-11-14
+
+ - Felix Wolfsteller, 2015-11-14
+
+ - Keith Yang, 2015-11-14
+
+ - Elmer de Looff, 2015-11-14
+
+ - Jonathan Vanasco, 2015-11-14
+
+ - Luke Tucker, 2015-11-14
+
+ - Kevin Dangoor, 2015-11-14
+
+ - Mark Lipscombe, 2015-11-14
+
+ - Nina Plakalovic, 2015-11-14
+
+ - Oleg Broytman, 2015-11-14
+
+ - Christophe Benz, 2015-11-14
+
+ - Chris George, 2015-11-14
+
+ - Philipp Hagemeister, 2015-11-14
+
+ - Remco Verhoef, 2015-11-14
+
+ - Ryan P. Kelly, 2015-11-14
+
+ - Jason R. Coombs, 2015-11-14
+
+Contributors that Have Not Agreed to MIT License
+
+ - Patrick Hunt, 2015-11-14
+
+ - Jeff Breidenbach, 2015-11-14
+
+ - Bo Du, 2015-11-14
+
+ - Aleksey Sivokon, 2015-11-14
