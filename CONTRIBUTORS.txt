@@ -84,12 +84,26 @@ Contributors
 
  - Jason R. Coombs, 2015-11-14
 
-Contributors that Have Not Agreed to MIT License
-
- - Patrick Hunt, 2015-11-14
-
- - Jeff Breidenbach, 2015-11-14
-
- - Bo Du, 2015-11-14
+ - Joshua Bronson, 2015-11-14
 
  - Aleksey Sivokon, 2015-11-14
+
+Contributors that Have Not Agreed to MIT License
+
+ - Patrick Hunt
+
+ - Bo Du
+
+ - Dennis Muhlestein
+
+ - Marius Gedminas
+
+ - Jason Culverhouse
+
+ - Michele Cella
+
+ - Jacob Smullyan
+
+ - Stéphane Raimbault
+
+ - Arnaud Fontaine
