@@ -88,6 +88,11 @@ Contributors
 
  - Aleksey Sivokon, 2015-11-14
 
+ - Stéphane Raimbault 2015-11-23
+
+ - Jason Culverhouse, 2015-11-24
+
+
 Contributors that Have Not Agreed to MIT License
 
  - Patrick Hunt
@@ -98,12 +103,8 @@ Contributors that Have Not Agreed to MIT License
 
  - Marius Gedminas
 
- - Jason Culverhouse
-
  - Michele Cella
 
  - Jacob Smullyan
-
- - Stéphane Raimbault
 
  - Arnaud Fontaine
