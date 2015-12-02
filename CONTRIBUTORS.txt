@@ -92,8 +92,16 @@ Contributors
 
  - Jason Culverhouse, 2015-11-24
 
+ - Michele Cella, 2015-11-30
 
-Contributors that Have Not Agreed to MIT License
+ - Arnaud Fontaine, 2015-12-01
+
+
+The following people made their contributions under the PSF license and did
+not respond to requests to approve the change to the MIT license. If you are
+one of these contributor and you do not want you changes licensed under MIT
+please contact the project managers and we will work on backing out your
+contributions.
 
  - Patrick Hunt
 
@@ -103,8 +111,4 @@ Contributors that Have Not Agreed to MIT License
 
  - Marius Gedminas
 
- - Michele Cella
-
  - Jacob Smullyan
-
- - Arnaud Fontaine
