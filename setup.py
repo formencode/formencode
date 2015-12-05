@@ -28,7 +28,7 @@ setup(name='FormEncode',
       classifiers=[
           "Development Status :: 4 - Beta",
            "Intended Audience :: Developers",
-           "License :: OSI Approved :: Python Software Foundation License",
+           "License :: OSI Approved :: MIT",
            "Programming Language :: Python",
            "Programming Language :: Python :: 2",
            "Programming Language :: Python :: 3",
