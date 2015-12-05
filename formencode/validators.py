@@ -2345,7 +2345,7 @@ class ISODateTimeConverter(FancyValidator):
         >>> tim.to_python('2012-06-25T05:30:25')
         datetime.datetime(2012, 6, 25, 5, 30, 25)
         >>> tim.to_python('1999-12-01T12:00:00')
-        datetime.datetime(1999, 12, 1, 12, 0, 0)
+        datetime.datetime(1999, 12, 1, 12, 0)
         >>> tim.to_python('2012-06-25 05:30:25')
         Traceback (most recent call last):
             ...
