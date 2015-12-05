@@ -99,8 +99,8 @@ Contributors
 
 The following people made their contributions under the PSF license and did
 not respond to requests to approve the change to the MIT license. If you are
-one of these contributor and you do not want you changes licensed under MIT
-please contact the project managers and we will work on backing out your
+one of these contributors and you do not want you changes licensed under MIT
+please contact the project managers and we will work on removing your
 contributions.
 
  - Patrick Hunt
