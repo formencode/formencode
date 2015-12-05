@@ -96,6 +96,8 @@ Contributors
 
  - Arnaud Fontaine, 2015-12-01
 
+ - Bradley Arsenault, 2015-12-05
+
 
 The following people made their contributions under the PSF license and did
 not respond to requests to approve the change to the MIT license. If you are
