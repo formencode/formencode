@@ -2364,9 +2364,9 @@ class ISODateTimeConverter(FancyValidator):
         datetime_class = dt_mod.datetime
         try:
             datetime = datetime_class.strptime(value, r"%Y-%m-%dT%H:%M:%S")
+            return datetime
         except ValueError:
             raise Invalid(self.message('invalidFormat', state), value, state)
-        return datetime
 
     def _convert_from_python(self, value, state):
         return value.isoformat("T")
