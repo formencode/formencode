@@ -17,7 +17,9 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
            text_as_default=False, checkbox_checked_if_present=False,
            listener=None, encoding=None,
            error_class='error', prefix_error=True,
-           force_defaults=True, skip_passwords=False):
+           force_defaults=True, skip_passwords=False,
+           data_formencode_form=None, data_formencode_ignore=None,
+           ):
     """
     Render the ``form`` (which should be a string) given the ``defaults``
     and ``errors``.  Defaults are the values that go in the input fields
@@ -83,6 +85,19 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     rendering form-content.  If disabled the password fields will not be filled
     with anything, which is useful when you don't want to return a user's
     password in plain-text source.
+
+    ``data_formencode_form`` if a string is passed in (default `None`) only
+    fields with the html attribute `data-formencode-form` that matches this
+    string will be processed. For example: if a HTML fragment has two forms they
+    can be differentiated to Formencode by decorating the input elements with
+    attributes such as `data-formencode-form="a"` or `data-formencode-form="b"`,
+    then instructing `render()` to only process the "a" or "b" fields.
+
+    ``data_formencode_ignore`` if True (default `None`) fields with the html
+    attribute `data-formencode-ignore` will not be processed. This attribute
+    need only be present in the tag: `data-formencode-ignore="1"`,
+    `data-formencode-ignore=""` and `data-formencode-ignore` without a value are
+    all valid signifiers.
     """
     if defaults is None:
         defaults = {}
@@ -101,6 +116,8 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
         error_class=error_class,
         force_defaults=force_defaults,
         skip_passwords=skip_passwords,
+        data_formencode_form=data_formencode_form,
+        data_formencode_ignore=data_formencode_ignore,
         )
     p.feed(form)
     p.close()
@@ -214,7 +231,9 @@ class FillingParser(RewritingParser):
                  auto_error_formatter=None,
                  text_as_default=False, checkbox_checked_if_present=False,
                  encoding=None, prefix_error=True,
-                 force_defaults=True, skip_passwords=False):
+                 force_defaults=True, skip_passwords=False,
+                 data_formencode_form=None, data_formencode_ignore=None,
+                 ):
         RewritingParser.__init__(self)
         self.source = None
         self.lines = None
@@ -247,6 +266,8 @@ class FillingParser(RewritingParser):
         self.prefix_error = prefix_error
         self.force_defaults = force_defaults
         self.skip_passwords = skip_passwords
+        self.data_formencode_form = data_formencode_form
+        self.data_formencode_ignore = data_formencode_ignore
 
     def str_compare(self, str1, str2):
         """
@@ -312,6 +333,15 @@ class FillingParser(RewritingParser):
 
     def handle_starttag(self, tag, attrs, startend=False):
         self.write_pos()
+        if self.data_formencode_form:
+            for a in attrs:
+                if a[0] == 'data-formencode-form':
+                    if a[1] != self.data_formencode_form:
+                        return
+        if self.data_formencode_ignore:
+            for a in attrs:
+                if a[0] == 'data-formencode-ignore':
+                    return
         if tag == 'input':
             self.handle_input(attrs, startend)
         elif tag == 'textarea':
