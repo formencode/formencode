@@ -1,11 +1,13 @@
 """
 Country specific validators for use with FormEncode.
 """
+from __future__ import absolute_import
 import re
 
 from .api import FancyValidator
 from .compound import Any
 from .validators import Regex, Invalid, _
+import six
 
 try:
     import pycountry
@@ -53,7 +55,7 @@ if tgformat:
         else:
             d = dict(country_additions)
             d.update(dict(c2))
-        ret = d.items() + fuzzy_countrynames
+        ret = list(d.items()) + fuzzy_countrynames
         return ret
 
     def get_country(code):
@@ -65,7 +67,7 @@ if tgformat:
         if len(c1) > len(c2):
             d = dict(c1)
             d.update(dict(c2))
-            return d.items()
+            return list(d.items())
         else:
             return c2
 
@@ -175,7 +177,7 @@ class DelimitedDigitsPostalCode(Regex):
 
     def __init__(self, partition_lengths, delimiter=None, strict=False,
                  *args, **kw):
-        if isinstance(partition_lengths, (int, long)):
+        if isinstance(partition_lengths, six.integer_types):
             partition_lengths = [partition_lengths]
         if not delimiter:
             delimiter = ''
@@ -734,7 +736,7 @@ class InternationalPhoneNumber(FancyValidator):
             value = value.encode('ascii', 'strict')
         except UnicodeEncodeError:
             raise Invalid(self.message('phoneFormat', state), value, state)
-        if unicode is str:  # Python 3
+        if six.text_type is str:  # Python 3
             value = value.decode('ascii')
         value = self._mark_chars_re.sub('-', value)
         for f, t in [('  ', ' '),
@@ -824,7 +826,7 @@ class LanguageValidator(FancyValidator):
 
 def validators():
     """Return the names of all validators in this module."""
-    return [name for name, value in globals().items()
+    return [name for name, value in list(globals().items())
         if isinstance(value, type) and issubclass(value, FancyValidator)]
 
 __all__ = ['Invalid'] + validators()

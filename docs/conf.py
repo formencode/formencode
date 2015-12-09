@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 # -*- coding: utf-8 -*-
 #
 # FormEncode documentation build configuration file, created by
@@ -12,6 +13,7 @@
 # serve to show the default.
 
 import sys, os
+import six
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -40,8 +42,8 @@ source_suffix = '.txt'
 master_doc = 'index'
 
 # General information about the project.
-project = u'FormEncode'
-copyright = u'2008-2012, Ian Bicking and Contributors'
+project = six.u('FormEncode')
+copyright = six.u('2008-2012, Ian Bicking and Contributors')
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -179,8 +181,8 @@ htmlhelp_basename = 'FormEncode_doc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'FormEncode.tex', u'FormEncode Documentation',
-   u'Ian Bicking', 'manual'),
+  ('index', 'FormEncode.tex', six.u('FormEncode Documentation'),
+   six.u('Ian Bicking'), 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -212,6 +214,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'formencode', u'FormEncode Documentation',
-     [u'Ian Bicking'], 1)
+    ('index', 'formencode', six.u('FormEncode Documentation'),
+     [six.u('Ian Bicking')], 1)
 ]

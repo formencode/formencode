@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from nose.tools import assert_raises
 
 from formencode.context import Context, ContextRestoreError

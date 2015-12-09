@@ -1,6 +1,8 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import unittest
 
-from urlparse import parse_qsl
+from six.moves.urllib.parse import parse_qsl
 
 from formencode import Invalid, Validator, compound, foreach, validators
 from formencode.schema import Schema, merge_dicts, SimpleFormValidator
@@ -14,14 +16,14 @@ def _notranslation(s):
 def setup_module(module):
     """Disable i18n translation"""
 
-    import __builtin__
-    __builtin__._ = _notranslation
+    import six.moves.builtins
+    six.moves.builtins._ = _notranslation
 
 
 def teardown_module(module):
     """Remove translation function"""
-    import __builtin__
-    del __builtin__._
+    import six.moves.builtins
+    del six.moves.builtins._
 
 
 def d(**kw):
@@ -56,9 +58,9 @@ class DecodeCase(object):
         all_cases.append(self)
 
     def test(self):
-        print 'input', repr(self.input)
+        print('input', repr(self.input))
         actual = self.schema.to_python(self.input)
-        print 'output', repr(actual)
+        print('output', repr(actual))
         assert actual == self.output
 
 
@@ -72,9 +74,9 @@ class BadCase(DecodeCase):
             self.output = self.output['text']
 
     def test(self):
-        print repr(self.raw_input)
+        print(repr(self.raw_input))
         try:
-            print repr(self.schema.to_python(self.input))
+            print(repr(self.schema.to_python(self.input)))
         except Invalid as e:
             actual = e.unpack_errors()
             assert actual == self.output

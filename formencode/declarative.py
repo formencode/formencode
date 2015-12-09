@@ -17,11 +17,15 @@ in a variable by that name.
 Also, you can define a __classinit__(cls, new_attrs) method, which
 will be called when the class is created (including subclasses).
 """
+from __future__ import absolute_import
 
 import copy
 import types
 
 from itertools import count
+import six
+from six.moves import map
+from six.moves import zip
 
 
 class classinstancemethod(object):
@@ -55,9 +59,9 @@ class _methodwrapper(object):
     def __repr__(self):
         if self.obj is None:
             return ('<bound class method %s.%s>'
-                    % (self.cls.__name__, self.func.func_name))
+                    % (self.cls.__name__, self.func.__name__))
         return ('<bound method %s.%s of %r>'
-                % (self.cls.__name__, self.func.func_name, self.obj))
+                % (self.cls.__name__, self.func.__name__, self.obj))
 
 
 class DeclarativeMeta(type):
@@ -66,11 +70,11 @@ class DeclarativeMeta(type):
         cls = type.__new__(meta, class_name, bases, new_attrs)
         for name in cls.__mutableattributes__:
             setattr(cls, name, copy.copy(getattr(cls, name)))
-        cls.declarative_count = cls.counter.next()
+        cls.declarative_count = next(cls.counter)
         if ('__classinit__' in new_attrs and not isinstance(cls.__classinit__,
                 (staticmethod, types.FunctionType))):
             setattr(cls, '__classinit__',
-                    staticmethod(cls.__classinit__.im_func))
+                    staticmethod(cls.__classinit__.__func__))
         cls.__classinit__(cls, new_attrs)
         names = getattr(cls, '__singletonmethods__', None)
         if names:
@@ -97,13 +101,11 @@ class singletonmethod(object):
         return types.MethodType(self.func, obj)
 
 
-class Declarative(object):
+class Declarative(six.with_metaclass(DeclarativeMeta, object)):
 
     __unpackargs__ = ()
 
     __mutableattributes__ = ()
-
-    __metaclass__ = DeclarativeMeta
 
     __singletonmethods__ = ()
 
@@ -143,10 +145,10 @@ class Declarative(object):
         for name in self.__mutableattributes__:
             if name not in kw:
                 setattr(self, name, copy.copy(getattr(self, name)))
-        for name, value in kw.iteritems():
+        for name, value in six.iteritems(kw):
             setattr(self, name, value)
         if 'declarative_count' not in kw:
-            self.declarative_count = self.counter.next()
+            self.declarative_count = next(self.counter)
         self.__initargs__(kw)
 
     def __initargs__(self, new_attrs):
@@ -179,7 +181,7 @@ class Declarative(object):
                 and self.__unpackargs__[1] in vals):
             v = vals[self.__unpackargs__[1]]
             if isinstance(v, (list, int)):
-                args.extend(map(source.makeRepr, v))
+                args.extend(list(map(source.makeRepr, v)))
                 del v[self.__unpackargs__[1]]
         for name in self.__unpackargs__:
             if name in vals:
@@ -188,7 +190,7 @@ class Declarative(object):
             else:
                 break
         args.extend('%s=%s' % (name, source.makeRepr(value))
-                     for (name, value) in vals.iteritems())
+                     for (name, value) in six.iteritems(vals))
         return '%s(%s)' % (self.__class__.__name__,
                            ', '.join(args))
 

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import os
 import sys
 import doctest
@@ -8,6 +9,7 @@ from formencode import htmlgen
 from formencode import national
 from formencode import schema
 from formencode import validators
+import six
 
 
 """Modules that will have their doctests tested."""
@@ -27,7 +29,7 @@ base = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__))))
 
 
-if unicode is str:  # Python 3
+if six.text_type is str:  # Python 3
 
     OutputChecker = doctest.OutputChecker
 

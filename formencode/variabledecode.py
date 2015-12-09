@@ -19,8 +19,11 @@ a dict or list, both variable_decode and variable_encode take dict_char
 and list_char keyword args. For example, to have the GET/POST variables,
 ``a_1=something`` as a list, you would use a ``list_char='_'``.
 """
+from __future__ import absolute_import
 
 from .api import FancyValidator
+import six
+from six.moves import range
 
 __all__ = ['variable_decode', 'variable_encode', 'NestedVariables']
 
@@ -39,7 +42,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
     result = {}
     dicts_to_sort = set()
     known_lengths = {}
-    for key, value in d.iteritems():
+    for key, value in six.iteritems(d):
         keys = key.split(dict_char)
         new_keys = []
         was_repetition_count = False
@@ -101,10 +104,10 @@ def variable_decode(d, dict_char='.', list_char='-'):
             to_sort = to_sort[sub_key]
         if None in to_sort:
             none_values = [(0, x) for x in to_sort.pop(None)]
-            none_values.extend(to_sort.iteritems())
+            none_values.extend(six.iteritems(to_sort))
             to_sort = none_values
         else:
-            to_sort = to_sort.iteritems()
+            to_sort = six.iteritems(to_sort)
         to_sort = [x[1] for x in sorted(to_sort, key=_sort_key)]
         if key in known_lengths:
             if len(to_sort) < known_lengths[key]:
@@ -120,7 +123,7 @@ def variable_encode(d, prepend='', result=None, add_repetitions=True,
     if result is None:
         result = {}
     if isinstance(d, dict):
-        for key, value in d.iteritems():
+        for key, value in six.iteritems(d):
             if key is None:
                 name = prepend
             elif not prepend:

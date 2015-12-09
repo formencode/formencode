@@ -1,6 +1,7 @@
 """
 Core classes for validation.
 """
+from __future__ import absolute_import
 
 from . import declarative
 import gettext
@@ -8,6 +9,7 @@ import os
 import re
 import textwrap
 import warnings
+import six
 
 try:
     from pkg_resources import resource_filename
@@ -150,15 +152,15 @@ class Invalid(Exception):
         val = self.msg
         return val
 
-    if unicode is not str:  # Python 2
+    if six.text_type is not str:  # Python 2
 
         def __unicode__(self):
-            if isinstance(self.msg, unicode):
+            if isinstance(self.msg, six.text_type):
                 return self.msg
             elif isinstance(self.msg, str):
                 return self.msg.decode('utf8')
             else:
-                return unicode(self.msg)
+                return six.text_type(self.msg)
 
     def unpack_errors(self, encode_variables=False, dict_char='.',
                       list_char='-'):
@@ -177,15 +179,15 @@ class Invalid(Exception):
                 for item in self.error_list]
         if self.error_dict:
             result = {}
-            for name, item in self.error_dict.iteritems():
+            for name, item in six.iteritems(self.error_dict):
                 result[name] = item if isinstance(
-                    item, basestring) else item.unpack_errors()
+                    item, six.string_types) else item.unpack_errors()
             if encode_variables:
                 from . import variabledecode
                 result = variabledecode.variable_encode(
                     result, add_repetitions=False,
                     dict_char=dict_char, list_char=list_char)
-                for key in result.keys():
+                for key in list(result.keys()):
                     if not result[key]:
                         del result[key]
             return result
@@ -245,8 +247,8 @@ class Validator(declarative.Declarative):
         except AttributeError:
             try:
                 if self.use_builtins_gettext:
-                    import __builtin__
-                    trans = __builtin__._
+                    import six.moves.builtins
+                    trans = six.moves.builtins._
                 else:
                     trans = _stdtrans
             except AttributeError:
@@ -311,7 +313,7 @@ class Validator(declarative.Declarative):
         """
         doc = cls.__doc__ or ''
         doc = [textwrap.dedent(doc).rstrip()]
-        messages = sorted(cls._messages.iteritems())
+        messages = sorted(six.iteritems(cls._messages))
         doc.append('\n\n**Messages**\n\n')
         for name, default in messages:
             default = re.sub(r'(%\(.*?\)[rsifcx])', r'``\1``', default)
@@ -456,7 +458,7 @@ class FancyValidator(Validator):
 
     def to_python(self, value, state=None):
         try:
-            if self.strip and isinstance(value, basestring):
+            if self.strip and isinstance(value, six.string_types):
                 value = value.strip()
             elif hasattr(value, 'mixed'):
                 # Support Paste's MultiDict
@@ -484,7 +486,7 @@ class FancyValidator(Validator):
 
     def from_python(self, value, state=None):
         try:
-            if self.strip and isinstance(value, basestring):
+            if self.strip and isinstance(value, six.string_types):
                 value = value.strip()
             if not self.accept_python:
                 if self.is_empty(value):
@@ -520,7 +522,7 @@ class FancyValidator(Validator):
         return None
 
     def assert_string(self, value, state):
-        if not isinstance(value, basestring):
+        if not isinstance(value, six.string_types):
             raise Invalid(self.message('badType', state,
                                        type=type(value), value=value),
                           value, state)

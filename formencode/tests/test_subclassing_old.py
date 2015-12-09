@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 # -*- coding: utf-8 -*-
 
 import unittest
@@ -6,6 +7,7 @@ import warnings
 from formencode.api import is_validator, FancyValidator, Invalid
 from formencode.compound import CompoundValidator, All
 from formencode.validators import Int
+from six.moves import map
 
 
 with warnings.catch_warnings(record=True) as custom_warnings:

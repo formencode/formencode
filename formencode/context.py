@@ -51,10 +51,12 @@ When Python 2.5 comes out, this syntax would certainly be useful::
 
 And ``page`` will be set to ``'view'`` only inside that ``with`` block.
 """
+from __future__ import absolute_import
 
 import threading
 
 from itertools import count
+from six.moves import range
 
 __all__ = ['Context', 'ContextRestoreError']
 
@@ -96,7 +98,7 @@ class Context(object):
             "You can only write attribute on context object with the .set() method")
 
     def set(self, **kw):
-        state_id = _restore_ids.next()
+        state_id = next(_restore_ids)
         try:
             stack = self._local.stack
         except AttributeError:

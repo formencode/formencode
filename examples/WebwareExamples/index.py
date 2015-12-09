@@ -1,6 +1,9 @@
+from __future__ import absolute_import
+from __future__ import print_function
 from formencode import Invalid, htmlfill, Schema, validators
 
 from WebKit.Page import Page
+import six
 
 
 page_style = '''
@@ -72,10 +75,10 @@ class index(Page):
         fields = self.request().fields()
         try:
             fields = FormSchema.to_python(fields, self)
-        except Invalid, e:
+        except Invalid as e:
             errors = dict((k, v.encode('utf-8'))
-                for k, v in e.unpack_errors().iteritems())
-            print "Errors:", errors
+                for k, v in six.iteritems(e.unpack_errors()))
+            print("Errors:", errors)
             self.rendered_form = htmlfill.render(form_template,
                 defaults=fields, errors=errors)
             self.writeHTML()
@@ -83,7 +86,7 @@ class index(Page):
             self.doAction(fields)
 
     def doAction(self, fields):
-        print "Fields:", fields
+        print("Fields:", fields)
         self.rendered_form = response_template % fields
         self.writeHTML()
 

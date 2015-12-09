@@ -5,6 +5,7 @@ and decoupled processes for filling and generating forms.
 
 The official repo is at GitHub: https://github.com/formencode/formencode
 """
+from __future__ import absolute_import
 
 import sys
 from setuptools import setup, find_packages
@@ -43,8 +44,8 @@ setup(name='FormEncode',
       include_package_data=True,
       package_data={'formencode': ['../docs/*.txt']},
       test_suite='formencode.tests',
+      install_requires=['six'],
       tests_require=tests_require,
       extras_require={'testing': tests_require},
-      use_2to3=True,
       convert_2to3_doctests=doctests,
     )

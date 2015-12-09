@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import os
 import re
 import sys
 
 import xml.etree.ElementTree as ET
+import six
 try:
     XMLParseError = ET.ParseError
 except AttributeError:  # Python < 2.7
     from xml.parsers.expat import ExpatError as XMLParseError
 
-from htmlentitydefs import name2codepoint
+from six.moves.html_entities import name2codepoint
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__)))))
@@ -44,7 +48,7 @@ def run_filename(filename):
         data_content = ''
     namespace = {}
     if data_content:
-        exec data_content in namespace
+        exec(data_content, namespace)
     data = namespace.copy()
     data['defaults'] = data.get('defaults', {})
     if 'check' in data:
@@ -52,7 +56,7 @@ def run_filename(filename):
     else:
         def checker(p, s):
             pass
-    for name in data.keys():
+    for name in list(data.keys()):
         if name.startswith('_') or hasattr('__builtin__', name):
             del data[name]
     listener = htmlfill_schemabuilder.SchemaBuilder()
@@ -62,7 +66,7 @@ def run_filename(filename):
     output = p.text()
 
     def reporter(v):
-        print v
+        print(v)
 
     try:
         output_xml = ET.XML(output)
@@ -72,10 +76,10 @@ def run_filename(filename):
     else:
         comp = xml_compare(output_xml, expected_xml, reporter)
     if not comp:
-        print '---- Output:   ----'
-        print output
-        print '---- Expected: ----'
-        print expected
+        print('---- Output:   ----')
+        print(output)
+        print('---- Expected: ----')
+        print(expected)
         assert False
     checker(p, listener.schema())
     checker(p, htmlfill_schemabuilder.parse_schema(template))
@@ -87,14 +91,14 @@ def test_no_trailing_newline():
 
 
 def test_escape_defaults():
-    rarr = unichr(name2codepoint['rarr'])
+    rarr = six.unichr(name2codepoint['rarr'])
     assert (htmlfill.render('<input type="submit" value="next&gt;&rarr;">', {}, {})
             == '<input type="submit" value="next&gt;%s">' % rarr)
     assert (htmlfill.render('<input type="submit" value="1&amp;2">', {}, {})
             == '<input type="submit" value="1&amp;2">')
     assert (htmlfill.render('<input type="submit" value="Japan - &#x65E5;&#x672C; Nihon" />',
                             {}, {}) ==
-            u'<input type="submit" value="Japan - 日本 Nihon" />')
+            '<input type="submit" value="Japan - 日本 Nihon" />')
 
 
 def test_xhtml():
@@ -180,7 +184,7 @@ def test_checkbox():
 
 
 def test_unicode():
-    assert (htmlfill.render(u'<input type="checkbox" name="tags" value="2" />',
+    assert (htmlfill.render('<input type="checkbox" name="tags" value="2" />',
                            dict(tags=[])) ==
             '<input type="checkbox" name="tags" value="2" />')
 
@@ -455,10 +459,10 @@ def test_error_class_textarea():
 
 def test_mix_str_and_unicode():
     html = '<input type="text" name="cheese">'
-    uhtml = unicode(html)
+    uhtml = six.text_type(html)
     cheese = dict(cheese='Käse')
-    ucheese = dict(cheese=u'Käse')
-    expected = u'<input type="text" name="cheese" value="Käse">'
+    ucheese = dict(cheese='Käse')
+    expected = '<input type="text" name="cheese" value="Käse">'
     rendered = htmlfill.render(html, defaults=cheese, encoding='utf-8')
     assert expected == rendered
     rendered = htmlfill.render(html, defaults=ucheese, encoding='utf-8')

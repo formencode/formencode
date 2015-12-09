@@ -1,13 +1,16 @@
+from __future__ import absolute_import
 
-import HTMLParser
+import six.moves.html_parser
 import re
+import six
+from six.moves import range
 
 try:
     from html import escape
 except ImportError:  # Python < 3.2
     from cgi import escape
 
-from htmlentitydefs import name2codepoint
+from six.moves.html_entities import name2codepoint
 
 
 def html_quote(v):
@@ -15,16 +18,16 @@ def html_quote(v):
         return ''
     if hasattr(v, '__html__'):
         return v.__html__()
-    if isinstance(v, basestring):
+    if isinstance(v, six.string_types):
         return escape(v, True)
     if hasattr(v, '__unicode__'):
-        v = unicode(v)
+        v = six.text_type(v)
     else:
         v = str(v)
     return escape(v, True)
 
 
-class RewritingParser(HTMLParser.HTMLParser):
+class RewritingParser(six.moves.html_parser.HTMLParser):
 
     listener = None
     skip_next = False
@@ -32,9 +35,9 @@ class RewritingParser(HTMLParser.HTMLParser):
     def __init__(self):
         self._content = []
         try:
-            HTMLParser.HTMLParser.__init__(self, convert_charrefs=False)
+            six.moves.html_parser.HTMLParser.__init__(self, convert_charrefs=False)
         except TypeError:  # Python < 3.4
-            HTMLParser.HTMLParser.__init__(self)
+            six.moves.html_parser.HTMLParser.__init__(self)
 
     def feed(self, data):
         self.data_is_str = isinstance(data, str)
@@ -43,7 +46,7 @@ class RewritingParser(HTMLParser.HTMLParser):
         self.source_pos = 1, 0
         if self.listener:
             self.listener.reset()
-        HTMLParser.HTMLParser.feed(self, data)
+        six.moves.html_parser.HTMLParser.feed(self, data)
 
     _entityref_re = re.compile('&([a-zA-Z][-.a-zA-Z\d]*);')
     _charref_re = re.compile('&#(\d+|[xX][a-fA-F\d]+);')

@@ -1,8 +1,12 @@
+from __future__ import absolute_import
 import warnings
 
 from .api import _, is_validator, FancyValidator, Invalid, NoDefault
 from . import declarative
 from .exc import FERuntimeWarning
+import six
+from six.moves import map
+from six.moves import zip
 
 __all__ = ['Schema']
 
@@ -81,7 +85,7 @@ class Schema(FancyValidator):
         # Scan through the class variables we've defined *just*
         # for this subclass, looking for validators (both classes
         # and instances):
-        for key, value in new_attrs.iteritems():
+        for key, value in six.iteritems(new_attrs):
             if key in ('pre_validators', 'chained_validators'):
                 if is_validator(value):
                     msg = "Any validator with the name %s will be ignored." % \
@@ -96,12 +100,12 @@ class Schema(FancyValidator):
             elif key in cls.fields:
                 del cls.fields[key]
 
-        for name, value in cls.fields.iteritems():
+        for name, value in six.iteritems(cls.fields):
             cls.add_field(name, value)
 
     def __initargs__(self, new_attrs):
         self.fields = self.fields.copy()
-        for key, value in new_attrs.iteritems():
+        for key, value in six.iteritems(new_attrs):
             if key in ('pre_validators', 'chained_validators'):
                 if is_validator(value):
                     msg = "Any validator with the name %s will be ignored." % \
@@ -139,13 +143,13 @@ class Schema(FancyValidator):
 
         new = {}
         errors = {}
-        unused = self.fields.keys()
+        unused = list(self.fields.keys())
         if state is not None:
             previous_key = getattr(state, 'key', None)
             previous_full_dict = getattr(state, 'full_dict', None)
             state.full_dict = value_dict
         try:
-            for name, value in value_dict.items():
+            for name, value in list(value_dict.items()):
                 try:
                     unused.remove(name)
                 except ValueError:
@@ -239,14 +243,14 @@ class Schema(FancyValidator):
         self.assert_dict(value_dict, state)
         new = {}
         errors = {}
-        unused = self.fields.keys()
+        unused = list(self.fields.keys())
         if state is not None:
             previous_key = getattr(state, 'key', None)
             previous_full_dict = getattr(state, 'full_dict', None)
             state.full_dict = value_dict
         try:
             __traceback_info__ = None
-            for name, value in value_dict.iteritems():
+            for name, value in six.iteritems(value_dict):
                 __traceback_info__ = 'for_python in %s' % name
                 try:
                     unused.remove(name)
@@ -327,7 +331,7 @@ class Schema(FancyValidator):
         result = []
         result.extend(self.pre_validators)
         result.extend(self.chained_validators)
-        result.extend(self.fields.itervalues())
+        result.extend(six.itervalues(self.fields))
         return result
 
     def is_empty(self, value):
@@ -338,7 +342,7 @@ class Schema(FancyValidator):
         return {}
 
     def _value_is_iterator(self, value):
-        if isinstance(value, basestring):
+        if isinstance(value, six.string_types):
             return False
         elif isinstance(value, (list, tuple)):
             return True
@@ -361,16 +365,16 @@ def format_compound_error(v, indent=0):
             # version if possible, and unicode() if necessary, because
             # testing for the presence of a __unicode__ method isn't
             # enough
-            return unicode(v)
+            return six.text_type(v)
     elif isinstance(v, dict):
         return ('%s\n' % (' ' * indent)).join(
             '%s: %s' % (k, format_compound_error(value, indent=len(k) + 2))
-            for k, value in sorted(v.iteritems()) if value is not None)
+            for k, value in sorted(six.iteritems(v)) if value is not None)
     elif isinstance(v, list):
         return ('%s\n' % (' ' * indent)).join(
             '%s' % (format_compound_error(value, indent=indent))
             for value in v if value is not None)
-    elif isinstance(v, basestring):
+    elif isinstance(v, six.string_types):
         return v
     else:
         assert False, "I didn't expect something like %s" % repr(v)
@@ -383,7 +387,7 @@ def merge_dicts(d1, d2):
 
 
 def merge_values(v1, v2):
-    if isinstance(v1, basestring) and isinstance(v2, basestring):
+    if isinstance(v1, six.string_types) and isinstance(v2, six.string_types):
         return v1 + '\n' + v2
     elif isinstance(v1, (list, tuple)) and isinstance(v2, (list, tuple)):
         return merge_lists(v1, v2)
@@ -474,7 +478,7 @@ class SimpleFormValidator(FancyValidator):
         errors = self.func(value_dict, state, self)
         if not errors:
             return value_dict
-        if isinstance(errors, basestring):
+        if isinstance(errors, six.string_types):
             raise Invalid(errors, value_dict, state)
         elif isinstance(errors, dict):
             raise Invalid(

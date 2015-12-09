@@ -1,11 +1,14 @@
+from __future__ import absolute_import
+from __future__ import print_function
 
 import doctest
 
 from formencode.htmlgen import html
+import six
 
 # A test value that can't be encoded as ascii:
-uni_value = u'\xff'
-str_value = uni_value if str is unicode else uni_value.encode('utf-8')
+uni_value = six.u('\xff')
+str_value = uni_value if str is six.text_type else uni_value.encode('utf-8')
 
 
 def test_basic():
@@ -37,7 +40,7 @@ def test_unicode():
         assert False, (
             "We need something that can't be ASCII-encoded: %r (%r)"
             % (uni_value, uni_value.encode('ascii')))
-    assert unicode(html.b(uni_value)) == u'<b>%s</b>' % uni_value
+    assert six.text_type(html.b(uni_value)) == six.u('<b>%s</b>') % uni_value
 
 
 def test_quote():
@@ -76,10 +79,10 @@ def test_namespace():
 
 if __name__ == '__main__':
     # It's like a super-mini py.test...
-    for name, value in globals().iteritems():
+    for name, value in six.iteritems(globals()):
         if name.startswith('test'):
-            print name
+            print(name)
             value()
     from formencode import htmlgen
     doctest.testmod(htmlgen)
-    print 'doctest'
+    print('doctest')
