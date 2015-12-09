@@ -297,6 +297,39 @@ class CanadianPostalCode(Regex):
         return '%s %s' % (match.group(1).upper(), match.group(2).upper())
 
 
+class DutchPostalCode(Regex):
+    """
+    Dutch Postal codes.
+
+    ::
+
+        >>> DutchPostalCode.to_python('1011 PN')
+        '1011PN'
+        >>> DutchPostalCode.to_python('3400ac')
+        '3400AC'
+        >>> DutchPostalCode.to_python('12345')
+        Traceback (most recent call last):
+            ...
+        Invalid: Please enter a zip code (nnnnLL)
+    """
+
+    format = _('nnnnLL')
+    regex = re.compile(r'^(\d{4})\s?([a-zA-Z]{2})$')
+    strip = True
+
+    messages = dict(
+        invalid=_('Please enter a zip code (%(format)s)'))
+
+    def _convert_to_python(self, value, state):
+        self.assert_string(value, state)
+        match = self.regex.search(value)
+        if not match:
+            raise Invalid(
+                self.message('invalid', state, format=self.format),
+                value, state)
+        return '%s%s' % (match.group(1), match.group(2).upper())
+
+
 class UKPostalCode(Regex):
     """
     UK Postal codes. Please see BS 7666.
@@ -316,9 +349,9 @@ class UKPostalCode(Regex):
     """
 
     regex = re.compile(r'^((ASCN|BBND|BIQQ|FIQQ|PCRN|SIQQ|STHL|TDCU|TKCA)'
-        ' 1ZZ|BFPO (c\/o )?[1-9]{1,4}|GIR 0AA|[A-PR-UWYZ]'
+        '\s?1ZZ|BFPO (c\/o )?[1-9]{1,4}|GIR\s?0AA|[A-PR-UWYZ]'
         '([0-9]{1,2}|([A-HK-Y][0-9]|[A-HK-Y][0-9]([0-9]|[ABEHMNPRV-Y]))'
-        '|[0-9][A-HJKS-UW]) [0-9][ABD-HJLNP-UW-Z]{2})$', re.I)
+        '|[0-9][A-HJKS-UW])\s?[0-9][ABD-HJLNP-UW-Z]{2})$', re.I)
     strip = True
 
     messages = dict(
@@ -331,7 +364,11 @@ class UKPostalCode(Regex):
             raise Invalid(
                 self.message('invalid', state),
                 value, state)
-        return match.group(1).upper()
+        value = match.group(1).upper()
+        if not value.startswith('BFPO'):
+          value = value.replace(' ', '')
+          value = '%s %s' % (value[:-3], value[-3:])
+        return value
 
 
 class CountryValidator(FancyValidator):
@@ -450,6 +487,7 @@ class PostalCodeInCountryFormat(FancyValidator):
         'LU': FourDigitsPostalCode,
         'MC': lambda: DelimitedDigitsPostalCode(5),
         'NI': lambda: DelimitedDigitsPostalCode([3, 3, 1], '-'),
+        'NL': DutchPostalCode,
         'NO': FourDigitsPostalCode,
         'PL': PolishPostalCode,
         'PT': lambda: DelimitedDigitsPostalCode([4, 3], '-'),
