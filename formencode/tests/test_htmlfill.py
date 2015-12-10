@@ -48,7 +48,7 @@ def run_filename(filename):
         data_content = ''
     namespace = {}
     if data_content:
-        exec(data_content, namespace)
+        six.exec_(data_content, namespace)
     data = namespace.copy()
     data['defaults'] = data.get('defaults', {})
     if 'check' in data:

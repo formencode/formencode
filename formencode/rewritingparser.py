@@ -62,7 +62,7 @@ class RewritingParser(six.moves.html_parser.HTMLParser):
             # If we don't recognize it, pass it through as though it
             # wasn't an entity ref at all
             return match.group(0)
-        return unichr(name2codepoint[name])
+        return six.unichr(name2codepoint[name])
 
     def _sub_charref(self, match):
         num = match.group(1)
@@ -70,7 +70,7 @@ class RewritingParser(six.moves.html_parser.HTMLParser):
             num = int(num[1:], 16)
         else:
             num = int(num)
-        return unichr(num)
+        return six.unichr(num)
 
     def handle_misc(self, whatever):
         self.write_pos()

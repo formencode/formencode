@@ -1129,12 +1129,12 @@ class UnicodeString(ByteString):
 
     ::
 
-        >>> UnicodeString().to_python(None)
-        u''
-        >>> UnicodeString().to_python([])
-        u''
-        >>> UnicodeString(encoding='utf-7').to_python('Ni Ni Ni')
-        u'Ni Ni Ni'
+        >>> UnicodeString().to_python(None) == six.u('')
+        True
+        >>> UnicodeString().to_python([]) == six.u('')
+        True
+        >>> UnicodeString(encoding='utf-7').to_python('Ni Ni Ni') == six.u('Ni Ni Ni')
+        True
 
     """
     encoding = 'utf-8'
@@ -1304,8 +1304,8 @@ class Email(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: The domain of the email address does not exist (the portion after the @: thisdomaindoesnotexistithinkforsure.com)
-        >>> e.to_python(u'test@google.com')
-        u'test@google.com'
+        >>> e.to_python('test@google.com')
+        'test@google.com'
         >>> e = Email(not_empty=False)
         >>> e.to_python('')
 
@@ -1460,13 +1460,13 @@ class URL(FancyValidator):
     You may set allow_idna to False to change this behavior::
 
         >>> URL(allow_idna=True).to_python(
-        ... u'http://\u0433\u0443\u0433\u043b.\u0440\u0444')
+        ... six.u('http://\u0433\u0443\u0433\u043b.\u0440\u0444'))
         'http://xn--c1aay4a.xn--p1ai'
         >>> URL(allow_idna=True, add_http=True).to_python(
-        ... u'\u0433\u0443\u0433\u043b.\u0440\u0444')
+        ... six.u('\u0433\u0443\u0433\u043b.\u0440\u0444'))
         'http://xn--c1aay4a.xn--p1ai'
         >>> URL(allow_idna=False).to_python(
-        ... u'http://\u0433\u0443\u0433\u043b.\u0440\u0444')
+        ... six.u('http://\u0433\u0443\u0433\u043b.\u0440\u0444'))
         Traceback (most recent call last):
         ...
         Invalid: That is not a valid URL
