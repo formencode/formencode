@@ -25,7 +25,7 @@ else:
 
 
 # These are only imported when needed
-httplib = None
+http_client = None
 random = None
 sha1 = None
 socket = None
@@ -1546,9 +1546,9 @@ class URL(FancyValidator):
             return url
 
     def _check_url_exists(self, url, state):
-        global httplib, urlparse, socket
-        if httplib is None:
-            import six.moves.http_client
+        global http_client, urlparse, socket
+        if http_client is None:
+            from six.moves import http_client
         if urlparse is None:
             from six.moves.urllib import parse as urlparse
         if socket is None:
@@ -1560,14 +1560,14 @@ class URL(FancyValidator):
         if query:
             path += '?' + query
         try:
-            conn = (six.moves.http_client.HTTPSConnection if scheme == 'https'
-                    else six.moves.http_client.HTTPConnection)(netloc)
+            conn = (http_client.HTTPSConnection if scheme == 'https'
+                    else http_client.HTTPConnection)(netloc)
             try:
                 conn.request('HEAD', path)
                 res = conn.getresponse()
             finally:
                 conn.close()
-        except six.moves.http_client.HTTPException as e:
+        except http_client.HTTPException as e:
             e = str(e)
             if str is not six.text_type:  # Python 2
                 try:

@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-import six.moves.html_parser
+from six.moves import html_parser
 import re
 import six
 from six.moves import range
@@ -27,7 +27,7 @@ def html_quote(v):
     return escape(v, True)
 
 
-class RewritingParser(six.moves.html_parser.HTMLParser):
+class RewritingParser(html_parser.HTMLParser):
 
     listener = None
     skip_next = False
@@ -35,9 +35,9 @@ class RewritingParser(six.moves.html_parser.HTMLParser):
     def __init__(self):
         self._content = []
         try:
-            six.moves.html_parser.HTMLParser.__init__(self, convert_charrefs=False)
+            html_parser.HTMLParser.__init__(self, convert_charrefs=False)
         except TypeError:  # Python < 3.4
-            six.moves.html_parser.HTMLParser.__init__(self)
+            html_parser.HTMLParser.__init__(self)
 
     def feed(self, data):
         self.data_is_str = isinstance(data, str)
@@ -46,7 +46,7 @@ class RewritingParser(six.moves.html_parser.HTMLParser):
         self.source_pos = 1, 0
         if self.listener:
             self.listener.reset()
-        six.moves.html_parser.HTMLParser.feed(self, data)
+        html_parser.HTMLParser.feed(self, data)
 
     _entityref_re = re.compile('&([a-zA-Z][-.a-zA-Z\d]*);')
     _charref_re = re.compile('&#(\d+|[xX][a-fA-F\d]+);')
