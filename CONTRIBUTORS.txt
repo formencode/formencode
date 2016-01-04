@@ -98,6 +98,8 @@ Contributors
 
  - Bradley Arsenault, 2015-12-05
 
+ - Bo Du, 2015-12-28
+
 
 The following people made their contributions under the PSF license and did
 not respond to requests to approve the change to the MIT license. If you are
@@ -107,7 +109,6 @@ contributions.
 
  - Patrick Hunt
 
- - Bo Du
 
  - Dennis Muhlestein
 
