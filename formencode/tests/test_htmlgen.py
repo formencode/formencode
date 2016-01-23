@@ -7,7 +7,7 @@ from formencode.htmlgen import html
 import six
 
 # A test value that can't be encoded as ascii:
-uni_value = six.u('\xff')
+uni_value = u'\xff'
 str_value = uni_value if str is six.text_type else uni_value.encode('utf-8')
 
 
@@ -40,7 +40,7 @@ def test_unicode():
         assert False, (
             "We need something that can't be ASCII-encoded: %r (%r)"
             % (uni_value, uni_value.encode('ascii')))
-    assert six.text_type(html.b(uni_value)) == six.u('<b>%s</b>') % uni_value
+    assert six.text_type(html.b(uni_value)) == u'<b>%s</b>' % uni_value
 
 
 def test_quote():

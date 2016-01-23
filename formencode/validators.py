@@ -1129,11 +1129,11 @@ class UnicodeString(ByteString):
 
     ::
 
-        >>> UnicodeString().to_python(None) == six.u('')
+        >>> UnicodeString().to_python(None) == u''
         True
-        >>> UnicodeString().to_python([]) == six.u('')
+        >>> UnicodeString().to_python([]) == u''
         True
-        >>> UnicodeString(encoding='utf-7').to_python('Ni Ni Ni') == six.u('Ni Ni Ni')
+        >>> UnicodeString(encoding='utf-7').to_python('Ni Ni Ni') == u'Ni Ni Ni'
         True
 
     """
@@ -1152,7 +1152,7 @@ class UnicodeString(ByteString):
 
     def _convert_to_python(self, value, state):
         if not value:
-            return six.u('')
+            return u''
         if isinstance(value, six.text_type):
             return value
         if not isinstance(value, six.text_type):
@@ -1184,7 +1184,7 @@ class UnicodeString(ByteString):
         return value
 
     def empty_value(self, value):
-        return six.u('')
+        return u''
 
 
 # Provide proper alias for native strings
@@ -1460,13 +1460,13 @@ class URL(FancyValidator):
     You may set allow_idna to False to change this behavior::
 
         >>> URL(allow_idna=True).to_python(
-        ... six.u('http://\u0433\u0443\u0433\u043b.\u0440\u0444'))
+        ... u'http://\u0433\u0443\u0433\u043b.\u0440\u0444')
         'http://xn--c1aay4a.xn--p1ai'
         >>> URL(allow_idna=True, add_http=True).to_python(
-        ... six.u('\u0433\u0443\u0433\u043b.\u0440\u0444'))
+        ... u'\u0433\u0443\u0433\u043b.\u0440\u0444')
         'http://xn--c1aay4a.xn--p1ai'
         >>> URL(allow_idna=False).to_python(
-        ... six.u('http://\u0433\u0443\u0433\u043b.\u0440\u0444'))
+        ... u'http://\u0433\u0443\u0433\u043b.\u0440\u0444')
         Traceback (most recent call last):
         ...
         Invalid: That is not a valid URL
@@ -3126,7 +3126,8 @@ class CreditCardSecurityCode(FormValidator):
         if errors:
             error_list = sorted(six.iteritems(errors))
             raise Invalid(
-                '<br>\n'.join('%s: %s' % (name, value)
+                '<br>\n'.join(
+                    '%s: %s' % (name, value)
                     for name, value in error_list),
                 field_dict, state, error_dict=errors)
 
