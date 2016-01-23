@@ -88,7 +88,7 @@ Contributors
 
  - Aleksey Sivokon, 2015-11-14
 
- - St�phane Raimbault 2015-11-23
+ - Stéphane Raimbault 2015-11-23
 
  - Jason Culverhouse, 2015-11-24
 
@@ -100,6 +100,8 @@ Contributors
 
  - Bo Du, 2015-12-28
 
+ - Miloš Gavrilov, 2015-12-06
+
 
 The following people made their contributions under the PSF license and did
 not respond to requests to approve the change to the MIT license. If you are
@@ -108,7 +110,6 @@ please contact the project managers and we will work on removing your
 contributions.
 
  - Patrick Hunt
-
 
  - Dennis Muhlestein
 
