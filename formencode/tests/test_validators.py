@@ -14,7 +14,7 @@ from formencode.foreach import ForEach
 from formencode.api import NoDefault
 import six
 
-if six.PY3:
+if not six.PY2:
     unicode = str
 
 
