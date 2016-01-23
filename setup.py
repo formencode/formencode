@@ -12,7 +12,7 @@ from setuptools import setup, find_packages
 
 version = '1.3.0'
 
-if not '2.6' <= sys.version < '3.0' and not '3.2' <= sys.version:
+if not '2.6' <= sys.version < '3.0' and not '3.2' < sys.version:
     raise ImportError('Python version not supported')
 
 tests_require = ['nose', 'pycountry',
@@ -23,7 +23,7 @@ doctests = ['docs/htmlfill.txt', 'docs/Validator.txt',
 
 setup(name='FormEncode',
       version=version,
-      # requires_python='>=2.6,!=3.0,!=3.1', # PEP345
+      # requires_python='>=2.6,!=3.0,!=3.1',!=3.2, # PEP345
       description="HTML form validation, generation, and conversion package",
       long_description=__doc__,
       classifiers=[
