@@ -2,7 +2,7 @@
 # Copyright (C) 2015 Laboratorijski informacioni sistemi
 # This file is distributed under the same license as the FormEncode project.
 # Andrija Zaric <andrija@lis.rs>, 2012.
-# Updated by Miloš Gavrilov, 2015
+# Updated by Miloš Gavrilov, 2016.
 #
 msgid ""
 msgstr ""
@@ -373,7 +373,7 @@ msgstr "Molim, unesite datum u obliku %(format)s"
 
 #: formencode/validators.py:1942
 msgid "Please enter a month from 1 to 12"
-msgstr "Molim, unesite dautm u obliku %(format)s"
+msgstr "Molim, unesite mesec između 1 i 12"
 
 #: formencode/validators.py:1943
 msgid "Please enter a valid day"
@@ -537,7 +537,6 @@ msgstr "Nevaljan rok isteka"
 msgid "Please enter numbers only for credit card security code"
 msgstr "Molim, unesite cifre samo za sigurnosni kod kartice"
 
-#: formencode/validators.py:2965     
+#: formencode/validators.py:2965
 msgid "Invalid credit card security code length"
 msgstr "Nevaljana dužina sigurnosnog koda kartice"
-    

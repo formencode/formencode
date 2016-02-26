@@ -2,7 +2,7 @@
 # Copyright (C) 2013 Laboratorijski informacioni sistemi
 # This file is distributed under the same license as the FormEncode project.
 # Andrija Zaric <andrija@lis.rs>, 2012.
-# Updated by Nina Plakalovic <nina@lis.rs>, 2013
+# Updated by Nina Plakalovic <nina@lis.rs>, 2013, Miloš Gavrilov, 2016.
 #
 msgid ""
 msgstr ""
@@ -373,7 +373,7 @@ msgstr "Молим, унесите датум у облику %(format)s"
 
 #: formencode/validators.py:1942
 msgid "Please enter a month from 1 to 12"
-msgstr "Молим, унесите даутм у облику %(format)s"
+msgstr "Молим, унесите месец између 1 и 12"
 
 #: formencode/validators.py:1943
 msgid "Please enter a valid day"
