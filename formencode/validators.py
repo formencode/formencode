@@ -2846,13 +2846,17 @@ class RequireValueIfFieldsMatches(FormValidator):
           - field1 is 10
           - field2 is uppercase
 
-        >>> v.to_python(dict(cmp='<', field1='10', field2='HELLO')) # ok condition matches
-        {'field2': 'HELLO', 'field1': '10', 'cmp': '<'}
-        >>> v.to_python(dict(cmp='>', field1='12', field2='Bye'))    #  ok conditions don't match
-        {'field2': 'Bye', 'field1': '12', 'cmp': '>'}
-        >>> v.to_python(dict(cmp='<', field2='HELLO')) # ok missing field for a condition
-        {'field2': 'HELLO', 'cmp': '<'}
-
+        >>> # ok condition matches
+        >>> v.to_python(dict(cmp='<', field1='10', field2='HELLO')) == {'field2': 'HELLO',
+        ...                                                             'field1': '10', 'cmp': '<'}
+        True
+        >>> # ok missing field for a condition
+        >>> v.to_python(dict(cmp='>', field1='12', field2='Bye')) ==  {'field2': 'Bye',
+        ...                                                            'field1': '12', 'cmp': '>'}
+        True
+        >>> # ok missing field for a condition
+        >>> v.to_python(dict(cmp='<', field2='HELLO')) == {'field2': 'HELLO', 'cmp': '<'}
+        True
     """
 
     # Field that we will check for its value:
