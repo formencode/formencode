@@ -2892,9 +2892,9 @@ class RequireValueIfFieldsMatches(FormValidator):
                 #   one condition doesn't match, stop here
                 return value_dict
             elif message:
-                conditions_msg.append('  - {} {}'.format(condition_field, message))
+                conditions_msg.append('  - {0} {1}'.format(condition_field, message))
             else:
-                conditions_msg.append('  - {} is {}'.format(condition_field, actual_value))
+                conditions_msg.append('  - {0} is {1}'.format(condition_field, actual_value))
 
         # all the conditions matches and the field hasn't the expected value.
         conditions_msg = "\n".join(conditions_msg)
