@@ -2336,7 +2336,7 @@ class ISODateTimeConverter(FancyValidator):
     """
     Converts fields which contain both date and time, in the
     ISO 8601 standard format YYYY-MM-DDTHH:MM:SS.
-    
+
     Stores in a datetime.datetime object.
 
     Examples::
@@ -2352,10 +2352,10 @@ class ISODateTimeConverter(FancyValidator):
         Invalid: The must enter your date & time in the format YYYY-MM-DDTHH:MM:SS
 
     """
-    
+
     # This can be set to make it prefer mxDateTime:
     datetime_module = None
-    
+
     messages = dict(
         invalidFormat=_('The must enter your date & time in the format YYYY-MM-DDTHH:MM:SS'),)
 
@@ -2815,6 +2815,89 @@ class RequireIfMatching(FormValidator):
                             Invalid(self.message('empty', state),
                                 value_dict.get(required_field), state)})
         return value_dict
+
+
+class RequireValueIfFieldsMatches(FormValidator):
+    """
+    Requires a value in a field based on values of other fields.
+
+    This validator is applied to a form, not an individual field (usually
+    using a Schema's ``pre_validators`` or ``chained_validators``).
+
+    You provide a field name, an expected value, and a list of conditions to match as tuples
+    [(other_fieldname, other_fieldname_expected_value, message)...])
+
+    If all the conditions matches and the expected value don't, an InvalidError will be raised
+    in the field name, listing all the messages.
+
+    Instead of a constant, ``other_fieldname_expected_value`` can be a callable which receive the
+    actual value and return a boolean.
+
+    ``message`` for each condition is optional.
+    ::
+
+        >>> v = RequireValueIfFieldsMatches('cmp', expected_value='<',
+        ...       conditions=[('field1', '10'),
+        ...                   ('field2', lambda x: x.upper() == x, 'is uppercase')])
+        >>> v.to_python(dict(cmp='==', field1='10', field2='HELLO'))
+        Traceback (most recent call last):
+          ...
+        Invalid: The value of 'cmp' must be '<' if:
+          - field1 is 10
+          - field2 is uppercase
+
+        >>> v.to_python(dict(cmp='<', field1='10', field2='HELLO')) # ok condition matches
+        {'field2': 'HELLO', 'field1': '10', 'cmp': '<'}
+        >>> v.to_python(dict(cmp='>', field1='12', field2='Bye'))    #  ok conditions don't match
+        {'field2': 'Bye', 'field1': '12', 'cmp': '>'}
+        >>> v.to_python(dict(cmp='<', field2='HELLO')) # ok missing field for a condition
+        {'field2': 'HELLO', 'cmp': '<'}
+
+    """
+
+    # Field that we will check for its value:
+    field = None
+    # Value that the field shall have
+    expected_value = None
+    # If this field is present, then these fields are required:
+    conditions = []
+
+    __unpackargs__ = ('field', 'expected_value', 'conditions')
+
+    def _convert_to_python(self, value_dict, state):
+        if self.field in value_dict and value_dict.get(self.field) == self.expected_value:
+            # the field already has the expected value, we don't need to ask for the conditons
+            return value_dict
+
+        conditions_msg = []
+        for condition in self.conditions:
+            if len(condition) == 3:
+                condition_field, expected, message = condition
+            elif len(condition) == 2:
+                message = ''
+                condition_field, expected = condition
+            else:
+                raise ValueError('Condition misconfigured')
+
+            if condition_field not in value_dict:
+                # the field for this conditions wasn't given,
+                return value_dict
+            cmp_func = expected if callable(expected) else lambda v: v == expected
+            actual_value = value_dict.get(condition_field)
+            if not cmp_func(actual_value):
+                #   one condition doesn't match, stop here
+                return value_dict
+            elif message:
+                conditions_msg.append('  - {} {}'.format(condition_field, message))
+            else:
+                conditions_msg.append('  - {} is {}'.format(condition_field, actual_value))
+
+        # all the conditions matches and the field hasn't the expected value.
+        conditions_msg = "\n".join(conditions_msg)
+        raise Invalid('The value of {!r} must be {!r} if:\n{}'.format(
+                                 self.field, self.expected_value, conditions_msg),
+                                 value_dict, state)
+
 
 class FieldsMatch(FormValidator):
     """
