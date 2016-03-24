@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 # formencode package
 
 from formencode.api import (

@@ -1,10 +1,12 @@
 """
 Parser for HTML forms, that fills in defaults and errors.  See ``render``.
 """
+from __future__ import absolute_import
 
 import re
 
 from formencode.rewritingparser import RewritingParser, html_quote
+import six
 
 __all__ = ['render', 'htmlliteral', 'default_formatter',
            'none_formatter', 'escape_formatter',
@@ -206,7 +208,7 @@ class FillingParser(RewritingParser):
         ... <input type="radio" name="living" value="no">
         ... <input type="checkbox" name="nice_guy" checked="checked">''')
         >>> parser.close()
-        >>> print parser.text() # doctest: +NORMALIZE_WHITESPACE
+        >>> print (parser.text()) # doctest: +NORMALIZE_WHITESPACE
         <input type="text" name="name" value="Bob Jones">
         <select name="occupation">
         <option value="">Default</option>
@@ -245,7 +247,7 @@ class FillingParser(RewritingParser):
         self.in_select = None
         self.skip_next = False
         self.errors = errors or {}
-        if isinstance(self.errors, basestring):
+        if isinstance(self.errors, six.string_types):
             self.errors = {None: self.errors}
         self.in_error = None
         self.skip_error = False
@@ -274,14 +276,14 @@ class FillingParser(RewritingParser):
         Compare the two objects as strings (coercing to strings if necessary).
         Also uses encoding to compare the strings.
         """
-        if not isinstance(str1, basestring):
+        if not isinstance(str1, six.string_types):
             if hasattr(str1, '__unicode__'):
-                str1 = unicode(str1)
+                str1 = six.text_type(str1)
             else:
                 str1 = str(str1)
         if type(str1) == type(str2):
             return str1 == str2
-        if isinstance(str1, unicode):
+        if isinstance(str1, six.text_type):
             str1 = str1.encode(self.encoding or self.default_encoding)
         else:
             str2 = str2.encode(self.encoding or self.default_encoding)
@@ -295,7 +297,7 @@ class FillingParser(RewritingParser):
             if key in unused_errors:
                 del unused_errors[key]
         if self.auto_error_formatter:
-            for key, value in unused_errors.iteritems():
+            for key, value in six.iteritems(unused_errors):
                 error_message = self.auto_error_formatter(value)
                 error_message = '<!-- for: %s -->\n%s' % (key, error_message)
                 self.insert_at_marker(
@@ -318,7 +320,7 @@ class FillingParser(RewritingParser):
         if self.encoding is not None:
             new_content = []
             for item in self._content:
-                if (unicode is not str  # Python 2
+                if (six.text_type is not str  # Python 2
                         and isinstance(item, str)):
                     item = item.decode(self.encoding)
                 new_content.append(item)
@@ -420,11 +422,11 @@ class FillingParser(RewritingParser):
         if self.prefix_error:
             self.write_marker(name)
         value = self.defaults.get(name)
-        if (unicode is not str  # Python 2
-                and isinstance(name, unicode) and isinstance(value, str)):
+        if (six.text_type is not str  # Python 2
+                and isinstance(name, six.text_type) and isinstance(value, str)):
             value = value.decode(self.encoding or self.default_encoding)
         if name in self.add_attributes:
-            for attr_name, attr_value in self.add_attributes[name].iteritems():
+            for attr_name, attr_value in six.iteritems(self.add_attributes[name]):
                 if attr_name.startswith('+'):
                     attr_name = attr_name[1:]
                     self.set_attr(attrs, attr_name,
@@ -570,7 +572,7 @@ class FillingParser(RewritingParser):
         """
         if obj is None:
             return False
-        if isinstance(obj, basestring):
+        if isinstance(obj, six.string_types):
             return obj == value
         if hasattr(obj, '__contains__'):
             if value in obj:

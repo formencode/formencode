@@ -55,8 +55,11 @@ Examples::
     '<a href="#top">return to top</a>'
 
 """
+from __future__ import absolute_import
 
 import xml.etree.ElementTree as ET
+import six
+from six.moves import map
 
 try:
     from html import escape
@@ -90,12 +93,12 @@ class _HTML:
     def quote(self, arg):
         if arg is None:
             return ''
-        if unicode is not str:  # Python 2
-            arg = unicode(arg).encode(default_encoding)
+        if six.text_type is not str:  # Python 2
+            arg = six.text_type(arg).encode(default_encoding)
         return escape(arg, True)
 
     def str(self, arg, encoding=None):
-        if isinstance(arg, basestring):
+        if isinstance(arg, six.string_types):
             if not isinstance(arg, str):
                 arg = arg.encode(default_encoding)
             return arg
@@ -106,7 +109,7 @@ class _HTML:
         elif isinstance(arg, Element):
             return str(arg)
         else:
-            arg = unicode(arg)
+            arg = six.text_type(arg)
             if not isinstance(arg, str):  # Python 2
                 arg = arg.encode(default_encoding)
             return arg
@@ -127,11 +130,11 @@ class Element(ET.Element
             args = kw.pop('c')
             if not isinstance(args, (list, tuple)):
                 args = (args,)
-        for name, value in kw.items():
+        for name, value in list(kw.items()):
             if value is None:
                 del kw[name]
                 continue
-            kw[name] = unicode(value)
+            kw[name] = six.text_type(value)
             if name.endswith('_'):
                 kw[name[:-1]] = value
                 del kw[name]
@@ -151,20 +154,20 @@ class Element(ET.Element
             if not ET.iselement(arg):
                 if last is None:
                     if el.text is None:
-                        el.text = unicode(arg)
+                        el.text = six.text_type(arg)
                     else:
-                        el.text += unicode(arg)
+                        el.text += six.text_type(arg)
                 else:
                     if last.tail is None:
-                        last.tail = unicode(arg)
+                        last.tail = six.text_type(arg)
                     else:
-                        last.tail += unicode(arg)
+                        last.tail += six.text_type(arg)
             else:
                 last = arg
                 el.append(last)
         return el
 
-    if unicode is str:  # Python 3
+    if six.text_type is str:  # Python 3
 
         def __str__(self):
             return ET.tostring(

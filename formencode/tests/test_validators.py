@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 import datetime
 import unittest
@@ -10,6 +12,10 @@ from formencode.variabledecode import NestedVariables
 from formencode.schema import Schema
 from formencode.foreach import ForEach
 from formencode.api import NoDefault
+import six
+
+if not six.PY2:
+    unicode = str
 
 
 def validate(validator, value):
@@ -49,7 +55,7 @@ class TestByteStringValidator(unittest.TestCase):
         self.messages = self.validator.message
 
     def test_alias(self):
-        if str is not unicode:  # Python 2
+        if str is not six.text_type:  # Python 2
             self.assertTrue(self.validator is validators.String)
 
     def test_docstring(self):
@@ -87,7 +93,7 @@ class TestUnicodeStringValidator(unittest.TestCase):
         self.validator = validators.UnicodeString
 
     def test_alias(self):
-        if str is unicode:  # Python 3
+        if str is six.text_type:  # Python 3
             self.assertTrue(self.validator is validators.String)
 
     def test_docstring(self):
@@ -96,47 +102,47 @@ class TestUnicodeStringValidator(unittest.TestCase):
 
     def test_unicode(self):
         un = self.validator()
-        self.assertEqual(un.to_python(12), u'12')
-        self.assertTrue(type(un.to_python(12)) is unicode)
-        self.assertEqual(un.from_python(12), u'12'.encode('ascii'))
+        self.assertEqual(un.to_python(12), '12')
+        self.assertTrue(type(un.to_python(12)) is six.text_type)
+        self.assertEqual(un.from_python(12), '12'.encode('ascii'))
         self.assertTrue(type(un.from_python(12)) is bytes)
 
     def test_unicode_encoding(self):
         uv = self.validator()
-        us = u'käse'
+        us = 'käse'
         u7s, u8s = us.encode('utf-7'), us.encode('utf-8')
         self.assertEqual(uv.to_python(u8s), us)
-        self.assertTrue(type(uv.to_python(u8s)) is unicode)
+        self.assertTrue(type(uv.to_python(u8s)) is six.text_type)
         self.assertEqual(uv.from_python(us), u8s)
         self.assertTrue(type(uv.from_python(us)) is bytes)
         uv = self.validator(encoding='utf-7')
         self.assertEqual(uv.to_python(u7s), us)
-        self.assertTrue(type(uv.to_python(u7s)) is unicode)
+        self.assertTrue(type(uv.to_python(u7s)) is six.text_type)
         self.assertEqual(uv.from_python(us), u7s)
         self.assertTrue(type(uv.from_python(us)) is bytes)
         uv = self.validator(inputEncoding='utf-7')
         self.assertEqual(uv.to_python(u7s), us)
-        self.assertTrue(type(uv.to_python(u7s)) is unicode)
+        self.assertTrue(type(uv.to_python(u7s)) is six.text_type)
         uv = self.validator(outputEncoding='utf-7')
         self.assertEqual(uv.from_python(us), u7s)
         self.assertTrue(type(uv.from_python(us)) is bytes)
         uv = self.validator(inputEncoding=None)
         self.assertEqual(uv.to_python(us), us)
-        self.assertTrue(type(uv.to_python(us)) is unicode)
+        self.assertTrue(type(uv.to_python(us)) is six.text_type)
         self.assertEqual(uv.from_python(us), u8s)
         self.assertTrue(type(uv.from_python(us)) is bytes)
         uv = self.validator(outputEncoding=None)
         self.assertEqual(uv.to_python(u8s), us)
-        self.assertTrue(type(uv.to_python(u8s)) is unicode)
+        self.assertTrue(type(uv.to_python(u8s)) is six.text_type)
         self.assertEqual(uv.from_python(us), us)
-        self.assertTrue(type(uv.from_python(us)) is unicode)
+        self.assertTrue(type(uv.from_python(us)) is six.text_type)
 
         def test_unicode_empty(self):
             iv = self.validator()
-            for value in [None, "", u""]:
+            for value in [None, b"", ""]:
                 result = iv.to_python(value)
-                self.assertEqual(result, u"")
-                self.assertTrue(isinstance(result, unicode))
+                self.assertEqual(result, "")
+                self.assertTrue(isinstance(result, six.text_type))
 
 
 class TestIntValidator(unittest.TestCase):
@@ -207,14 +213,14 @@ class TestDateConverterValidator(unittest.TestCase):
             dc.to_python('20/12/150')
         except Invalid as e:
             self.assertTrue(
-                'Please enter a four-digit year after 1899' in str(e))
+                'Please enter a four-digit year after 1899' in unicode(e))
         else:
             self.fail('Date should be invalid')
         try:
             dc.to_python('oh/happy/day')
         except Invalid as e:
             self.assertTrue(
-                'Please enter the date in the form DD/MM/YYYY' in str(e))
+                'Please enter the date in the form DD/MM/YYYY' in unicode(e))
         else:
             self.fail('Date should be invalid')
 
@@ -234,14 +240,14 @@ class TestDateConverterValidator(unittest.TestCase):
             dc = self.validator(month_style='Klingon')
         except TypeError as e:
             self.assertTrue(
-                str(e) == "Bad month_style: 'klingon'")
+                unicode(e).replace("u'", "'") == "Bad month_style: 'klingon'")
         else:
             self.fail('month_style should be invalid')
         try:
             dc = self.validator(month_style='ydm')
         except TypeError as e:
             self.assertTrue(
-                str(e) == "Bad month_style: 'ydm'")
+                unicode(e).replace("u'", "'") == "Bad month_style: 'ydm'")
         else:
             self.fail('month_style should be invalid')
 
@@ -255,14 +261,14 @@ class TestDateConverterValidator(unittest.TestCase):
         try:
             self.assertEqual(dc.to_python('20/12/2007'), d)
         except Invalid as e:
-            self.assertTrue('Please enter a month from 1 to 12' in str(e))
+            self.assertTrue('Please enter a month from 1 to 12' in unicode(e))
         else:
             self.fail('Date should be invalid')
         try:
             self.assertEqual(dc.to_python('12/Dec/2007'), d)
         except Invalid as e:
             self.assertTrue(
-                'Please enter the date in the form MM/DD/YYYY' in str(e))
+                'Please enter the date in the form MM/DD/YYYY' in unicode(e))
         else:
             self.fail('Date should be invalid')
 
@@ -276,14 +282,14 @@ class TestDateConverterValidator(unittest.TestCase):
         try:
             self.assertEqual(dc.to_python('12/20/2007'), d)
         except Invalid as e:
-            self.assertTrue('Please enter a month from 1 to 12' in str(e))
+            self.assertTrue('Please enter a month from 1 to 12' in unicode(e))
         else:
             self.fail('Date should be invalid')
         try:
             self.assertEqual(dc.to_python('Dec/12/2007'), d)
         except Invalid as e:
             self.assertTrue(
-                'Please enter the date in the form DD/MM/YYYY' in str(e))
+                'Please enter the date in the form DD/MM/YYYY' in unicode(e))
         else:
             self.fail('Date should be invalid')
 
@@ -297,14 +303,14 @@ class TestDateConverterValidator(unittest.TestCase):
         try:
             self.assertEqual(dc.to_python('2013/30/06'), d)
         except Invalid as e:
-            self.assertTrue('Please enter a month from 1 to 12' in str(e))
+            self.assertTrue('Please enter a month from 1 to 12' in unicode(e))
         else:
             self.fail('Date should be invalid')
         try:
             self.assertEqual(dc.to_python('2013/06/Jun'), d)
         except Invalid as e:
             self.assertTrue(
-                'Please enter the date in the form YYYY/MM/DD' in str(e))
+                'Please enter the date in the form YYYY/MM/DD' in unicode(e))
         else:
             self.fail('Date should be invalid')
 
@@ -318,21 +324,21 @@ class TestDateConverterValidator(unittest.TestCase):
         try:
             self.assertEqual(dc.to_python('20/2007'), d)
         except Invalid as e:
-            self.assertTrue('Please enter a month from 1 to 12' in str(e))
+            self.assertTrue('Please enter a month from 1 to 12' in unicode(e))
         else:
             self.fail('Date should be invalid')
         try:
             self.assertEqual(dc.to_python('12/20/2007'), d)
         except Invalid as e:
             self.assertTrue(
-                'Please enter the date in the form MM/YYYY' in str(e))
+                'Please enter the date in the form MM/YYYY' in unicode(e))
         else:
             self.fail('Date should be invalid')
         try:
             self.assertEqual(dc.to_python('2007/Dec'), d)
         except Invalid as e:
             self.assertTrue(
-                'Please enter the date in the form MM/YYYY' in str(e))
+                'Please enter the date in the form MM/YYYY' in unicode(e))
         else:
             self.fail('Date should be invalid')
 
@@ -383,29 +389,29 @@ class TestTimeConverterValidator(unittest.TestCase):
             tc.to_python('25:30:15')
         except Invalid as e:
             self.assertTrue(
-                'You must enter an hour in the range 0-23' in str(e))
+                'You must enter an hour in the range 0-23' in unicode(e))
         else:
             self.fail('Time should be invalid')
         try:
             tc.to_python('20:75:15')
         except Invalid as e:
             self.assertTrue(
-                'You must enter a minute in the range 0-59' in str(e))
+                'You must enter a minute in the range 0-59' in unicode(e))
         else:
             self.fail('Time should be invalid')
         try:
             tc.to_python('20:30:75')
         except Invalid as e:
             self.assertTrue(
-                'You must enter a second in the range 0-59' in str(e))
+                'You must enter a second in the range 0-59' in unicode(e))
         else:
             self.fail('Time should be invalid')
         try:
             tc.to_python('20:30:zx')
         except Invalid as e:
             self.assertTrue(
-                'The second value you gave is not a number' in str(e))
-            self.assertTrue('zx' in str(e))
+                'The second value you gave is not a number' in unicode(e))
+            self.assertTrue('zx' in unicode(e))
         else:
             self.fail('Time should be invalid')
 
@@ -437,7 +443,7 @@ class TestForEachValidator(unittest.TestCase):
             values = validator.to_python(start_values, state)
         except Invalid as e:
             self.assertEqual(e.unpack_errors(),
-                {'people': u'Please add a person'})
+                {'people': 'Please add a person'})
         else:
             raise Exception("Shouldn't be valid data", values, start_values)
 
@@ -534,8 +540,8 @@ class TestINameValidator(unittest.TestCase):
 
     def test_non_english_inames(self):
         """i-names with non-English characters are valid"""
-        self.validator.to_python(u'=Gustavo.Narea.García')
-        self.validator.to_python(u'@名前.例')
+        self.validator.to_python('=Gustavo.Narea.García')
+        self.validator.to_python('@名前.例')
 
     def test_inames_plus_paths(self):
         """i-names with paths are valid but not supported"""
@@ -544,9 +550,9 @@ class TestINameValidator(unittest.TestCase):
 
     def test_communities(self):
         """i-names may have so-called 'communities'"""
-        self.validator.to_python(u'=María*Yolanda*Liliana*Gustavo')
-        self.validator.to_python(u'=Gustavo*Andreina')
-        self.validator.to_python(u'@IBM*Lenovo')
+        self.validator.to_python('=María*Yolanda*Liliana*Gustavo')
+        self.validator.to_python('=Gustavo*Andreina')
+        self.validator.to_python('@IBM*Lenovo')
 
 
 class TestINumberValidator(unittest.TestCase):
@@ -619,8 +625,8 @@ class TestOneOfValidator(unittest.TestCase):
             'Value must be one of: ``%(items)s`` (not ``%(value)r``)' in doc)
 
     def test_unicode_list(self):
-        o = validators.OneOf([u'ö', u'a'])
-        self.assertRaises(Invalid, o.to_python, u"ä")
+        o = validators.OneOf(['ö', 'a'])
+        self.assertRaises(Invalid, o.to_python, "ä")
 
     def test_ascii_list(self):
         o = validators.OneOf(['a', 'b'])
@@ -659,13 +665,13 @@ class TestIPAddressValidator(unittest.TestCase):
         try:
             validate('1.2.3.037')
         except Invalid as e:
-            self.assertTrue('The octets must not have leading zeros' in str(e))
+            self.assertTrue('The octets must not have leading zeros' in unicode(e))
         else:
             self.fail('IP address octets with leading zeros should be invalid')
         try:
             validate('1.2.3.0377')
         except Invalid as e:
-            self.assertTrue('The octets must not have leading zeros' in str(e))
+            self.assertTrue('The octets must not have leading zeros' in unicode(e))
         else:
             self.fail('IP octets with leading zeros should be invalid')
 
@@ -679,7 +685,7 @@ class TestIPAddressValidator(unittest.TestCase):
             validate('1.2.3.0377')
         except Invalid as e:
             self.assertTrue("The octets must be within the range of 0-255"
-                " (not '377')" in str(e))
+                " (not '377')" in unicode(e).replace("u'", "'"))
         else:
             self.fail(
                 'IP address octets should not be interpreted as octal numbers')
@@ -718,7 +724,7 @@ class TestRequireIfMissingValidator(unittest.TestCase):
         v = self.validator('phone_type', missing='mail')
         self.assertEqual(
             validate(v, dict(phone_type='')),
-            dict(phone_type=u'Please enter a value'))
+            dict(phone_type='Please enter a value'))
         self.assertEqual(
             validate(v, dict(phone_type='', mail='foo@bar.org')),
             dict(phone_type='', mail='foo@bar.org'))
@@ -727,7 +733,7 @@ class TestRequireIfMissingValidator(unittest.TestCase):
         v = self.validator('phone_type', present='phone')
         self.assertEqual(
             validate(v, dict(phone_type='', phone='510 420  4577')),
-            dict(phone_type=u'Please enter a value'))
+            dict(phone_type='Please enter a value'))
         self.assertEqual(
             validate(v, dict(phone='')), dict(phone=''))
 
@@ -735,7 +741,8 @@ class TestRequireIfMissingValidator(unittest.TestCase):
         v = self.validator('operator', present='operand')
         self.assertEqual(
             validate(v, dict(operator='', operand=0)),
-            dict(operator=u'Please enter a value'))
+            dict(operator='Please enter a value'))
+
 
 class TestRequireIfMatchingValidator(unittest.TestCase):
 
@@ -753,14 +760,14 @@ class TestRequireIfMatchingValidator(unittest.TestCase):
         v = self.validator('phone_type', 'mobile', required_fields=['mobile'])
         self.assertEqual(
             validate(v, dict(phone_type='mobile')),
-            dict(mobile=u'Please enter a value')
+            dict(mobile='Please enter a value')
         )
 
     def test_matching_multiple_required(self):
         v = self.validator('phone_type', 'mobile', required_fields=['mobile', 'code'])
         self.assertEqual(
             validate(v, dict(phone_type='mobile')),
-            dict(mobile=u'Please enter a value')
+            dict(mobile='Please enter a value')
         )
 
     def test_not_matching(self):

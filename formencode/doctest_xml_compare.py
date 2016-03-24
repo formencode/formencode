@@ -1,6 +1,11 @@
+from __future__ import absolute_import
+from __future__ import print_function
 
 import doctest
 import xml.etree.ElementTree as ET
+import six
+from six.moves import map
+from six.moves import zip
 try:
     XMLParseError = ET.ParseError
 except AttributeError:  # Python < 2.7
@@ -11,7 +16,7 @@ RealOutputChecker = doctest.OutputChecker
 
 def debug(*msg):
     import sys
-    print >> sys.stderr, ' '.join(map(str, msg))
+    print(' '.join(map(str, msg)), file=sys.stderr)
 
 
 class HTMLOutputChecker(RealOutputChecker):
@@ -69,7 +74,7 @@ def xml_compare(x1, x2, reporter=None):
         if reporter:
             reporter('Tags do not match: %s and %s' % (x1.tag, x2.tag))
         return False
-    for name, value in x1.attrib.iteritems():
+    for name, value in six.iteritems(x1.attrib):
         if x2.attrib.get(name) != value:
             if reporter:
                 reporter('Attributes do not match: %s=%r, %s=%r'
@@ -120,7 +125,7 @@ def make_xml(s):
 
 
 def make_string(xml):
-    if isinstance(xml, basestring):
+    if isinstance(xml, six.string_types):
         xml = make_xml(xml)
     s = ET.tostring(xml)
     if s == '<xml />':

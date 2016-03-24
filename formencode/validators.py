@@ -4,12 +4,16 @@
 """
 Validator/Converters for use with FormEncode.
 """
+from __future__ import absolute_import
 
 import cgi
 import locale
 import re
 import warnings
 from encodings import idna
+import six
+from six.moves import map
+from six.moves import range
 
 try:  # import dnspython
     import dns.resolver
@@ -21,7 +25,7 @@ else:
 
 
 # These are only imported when needed
-httplib = None
+http_client = None
 random = None
 sha1 = None
 socket = None
@@ -513,13 +517,13 @@ class Regex(FancyValidator):
 
     def __init__(self, *args, **kw):
         FancyValidator.__init__(self, *args, **kw)
-        if isinstance(self.regex, basestring):
+        if isinstance(self.regex, six.string_types):
             ops = 0
-            assert not isinstance(self.regexOps, basestring), (
+            assert not isinstance(self.regexOps, six.string_types), (
                 "regexOps should be a list of options from the re module "
                 "(names, or actual values)")
             for op in self.regexOps:
-                if isinstance(op, basestring):
+                if isinstance(op, six.string_types):
                     ops |= getattr(re, op)
                 else:
                     ops |= op
@@ -527,13 +531,13 @@ class Regex(FancyValidator):
 
     def _validate_python(self, value, state):
         self.assert_string(value, state)
-        if self.strip and isinstance(value, basestring):
+        if self.strip and isinstance(value, six.string_types):
             value = value.strip()
         if not self.regex.search(value):
             raise Invalid(self.message('invalid', state), value, state)
 
     def _convert_to_python(self, value, state):
-        if self.strip and isinstance(value, basestring):
+        if self.strip and isinstance(value, six.string_types):
             return value.strip()
         return value
 
@@ -615,7 +619,7 @@ class OneOf(FancyValidator):
                     try:
                         items = '; '.join(map(str, self.list))
                     except UnicodeError:
-                        items = '; '.join(map(unicode, self.list))
+                        items = '; '.join(map(six.text_type, self.list))
                     raise Invalid(
                         self.message('notIn', state,
                             items=items, value=value), value, state)
@@ -690,13 +694,13 @@ class DictConverter(FancyValidator):
                     state, items=items), value, state)
 
     def _convert_from_python(self, value, state):
-        for k, v in self.dict.iteritems():
+        for k, v in six.iteritems(self.dict):
             if value == v:
                 return k
         if self.hideDict:
             raise Invalid(self.message('valueNotFound', state), value, state)
         else:
-            items = '; '.join(map(repr, self.dict.itervalues()))
+            items = '; '.join(map(repr, six.itervalues(self.dict)))
             raise Invalid(
                 self.message('chooseValue', state,
                     value=repr(value), items=items), value, state)
@@ -812,8 +816,8 @@ class DateValidator(FancyValidator):
 
     def _validate_python(self, value, state):
         date_format = self.message('date_format', state)
-        if (str is not unicode  # Python 2
-                and isinstance(date_format, unicode)):
+        if (str is not six.text_type  # Python 2
+                and isinstance(date_format, six.text_type)):
             # strftime uses the locale encoding, not Unicode
             encoding = locale.getlocale(locale.LC_TIME)[1] or 'utf-8'
             date_format = date_format.encode(encoding)
@@ -1061,27 +1065,27 @@ class ByteString(FancyValidator):
     def _convert_to_python(self, value, state):
         if value is None:
             value = ''
-        elif not isinstance(value, basestring):
+        elif not isinstance(value, six.string_types):
             try:
                 value = bytes(value)
             except UnicodeEncodeError:
-                value = unicode(value)
-        if self.encoding is not None and isinstance(value, unicode):
+                value = six.text_type(value)
+        if self.encoding is not None and isinstance(value, six.text_type):
             value = value.encode(self.encoding)
         return value
 
     def _convert_from_python(self, value, state):
         if value is None:
             value = ''
-        elif not isinstance(value, basestring):
+        elif not isinstance(value, six.string_types):
             if isinstance(value, (list, tuple)):
                 value = self.list_joiner.join(
                     self._convert_from_python(v, state) for v in value)
             try:
                 value = str(value)
             except UnicodeEncodeError:
-                value = unicode(value)
-        if self.encoding is not None and isinstance(value, unicode):
+                value = six.text_type(value)
+        if self.encoding is not None and isinstance(value, six.text_type):
             value = value.encode(self.encoding)
         if self.strip:
             value = value.strip()
@@ -1092,11 +1096,11 @@ class ByteString(FancyValidator):
             return
         if value is None:
             value = ''
-        elif not isinstance(value, basestring):
+        elif not isinstance(value, six.string_types):
             try:
                 value = str(value)
             except UnicodeEncodeError:
-                value = unicode(value)
+                value = six.text_type(value)
         if self.max is not None and len(value) > self.max:
             raise Invalid(
                 self.message('tooLong', state, max=self.max), value, state)
@@ -1125,12 +1129,12 @@ class UnicodeString(ByteString):
 
     ::
 
-        >>> UnicodeString().to_python(None)
-        u''
-        >>> UnicodeString().to_python([])
-        u''
-        >>> UnicodeString(encoding='utf-7').to_python('Ni Ni Ni')
-        u'Ni Ni Ni'
+        >>> UnicodeString().to_python(None) == u''
+        True
+        >>> UnicodeString().to_python([]) == u''
+        True
+        >>> UnicodeString(encoding='utf-7').to_python('Ni Ni Ni') == u'Ni Ni Ni'
+        True
 
     """
     encoding = 'utf-8'
@@ -1149,18 +1153,18 @@ class UnicodeString(ByteString):
     def _convert_to_python(self, value, state):
         if not value:
             return u''
-        if isinstance(value, unicode):
+        if isinstance(value, six.text_type):
             return value
-        if not isinstance(value, unicode):
+        if not isinstance(value, six.text_type):
             if hasattr(value, '__unicode__'):
-                value = unicode(value)
+                value = six.text_type(value)
                 return value
-            if not (unicode is str  # Python 3
+            if not (six.text_type is str  # Python 3
                     and isinstance(value, bytes) and self.inputEncoding):
                 value = str(value)
-        if self.inputEncoding and not isinstance(value, unicode):
+        if self.inputEncoding and not isinstance(value, six.text_type):
             try:
-                value = unicode(value, self.inputEncoding)
+                value = six.text_type(value, self.inputEncoding)
             except UnicodeDecodeError:
                 raise Invalid(self.message('badEncoding', state), value, state)
             except TypeError:
@@ -1170,12 +1174,12 @@ class UnicodeString(ByteString):
         return value
 
     def _convert_from_python(self, value, state):
-        if not isinstance(value, unicode):
+        if not isinstance(value, six.text_type):
             if hasattr(value, '__unicode__'):
-                value = unicode(value)
+                value = six.text_type(value)
             else:
                 value = str(value)
-        if self.outputEncoding and isinstance(value, unicode):
+        if self.outputEncoding and isinstance(value, six.text_type):
             value = value.encode(self.outputEncoding)
         return value
 
@@ -1185,7 +1189,7 @@ class UnicodeString(ByteString):
 
 # Provide proper alias for native strings
 
-String = UnicodeString if str is unicode else ByteString
+String = UnicodeString if str is six.text_type else ByteString
 
 
 class Set(FancyValidator):
@@ -1300,8 +1304,8 @@ class Email(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: The domain of the email address does not exist (the portion after the @: thisdomaindoesnotexistithinkforsure.com)
-        >>> e.to_python(u'test@google.com')
-        u'test@google.com'
+        >>> e.to_python('test@google.com')
+        'test@google.com'
         >>> e = Email(not_empty=False)
         >>> e.to_python('')
 
@@ -1353,7 +1357,7 @@ class Email(FancyValidator):
                 value, state)
         try:
             idna_domain = [idna.ToASCII(p) for p in domain.split('.')]
-            if unicode is str:  # Python 3
+            if six.text_type is str:  # Python 3
                 idna_domain = [p.decode('ascii') for p in idna_domain]
             idna_domain = '.'.join(idna_domain)
         except UnicodeError:
@@ -1526,7 +1530,7 @@ class URL(FancyValidator):
     def _encode_idna(self, url):
         global urlparse
         if urlparse is None:
-            import urlparse
+            from six.moves.urllib import parse as urlparse
         try:
             scheme, netloc, path, params, query, fragment = urlparse.urlparse(
                 url)
@@ -1534,7 +1538,7 @@ class URL(FancyValidator):
             return url
         try:
             netloc = netloc.encode('idna')
-            if unicode is str:  # Python 3
+            if six.text_type is str:  # Python 3
                 netloc = netloc.decode('ascii')
             return str(urlparse.urlunparse((scheme, netloc,
                 path, params, query, fragment)))
@@ -1542,11 +1546,11 @@ class URL(FancyValidator):
             return url
 
     def _check_url_exists(self, url, state):
-        global httplib, urlparse, socket
-        if httplib is None:
-            import httplib
+        global http_client, urlparse, socket
+        if http_client is None:
+            from six.moves import http_client
         if urlparse is None:
-            import urlparse
+            from six.moves.urllib import parse as urlparse
         if socket is None:
             import socket
         scheme, netloc, path, params, query, fragment = urlparse.urlparse(
@@ -1556,16 +1560,16 @@ class URL(FancyValidator):
         if query:
             path += '?' + query
         try:
-            conn = (httplib.HTTPSConnection if scheme == 'https'
-                    else httplib.HTTPConnection)(netloc)
+            conn = (http_client.HTTPSConnection if scheme == 'https'
+                    else http_client.HTTPConnection)(netloc)
             try:
                 conn.request('HEAD', path)
                 res = conn.getresponse()
             finally:
                 conn.close()
-        except httplib.HTTPException as e:
+        except http_client.HTTPException as e:
             e = str(e)
-            if str is not unicode:  # Python 2
+            if str is not six.text_type:  # Python 2
                 try:
                     e = e.decode('utf-8')
                 except UnicodeDecodeError:
@@ -1577,7 +1581,7 @@ class URL(FancyValidator):
                 self.message('httpError', state, error=e), state, url)
         except socket.error as e:
             e = str(e)
-            if str is not unicode:  # Python 2
+            if str is not six.text_type:  # Python 2
                 try:
                     e = e.decode('utf-8')
                 except UnicodeDecodeError:
@@ -1706,7 +1710,7 @@ class XRI(FancyValidator):
                 is not valid.
 
         """
-        if not isinstance(value, basestring):
+        if not isinstance(value, six.string_types):
             raise Invalid(
                 self.message('badType', state,
                     type=str(type(value)), value=value), value, state)
@@ -1886,7 +1890,7 @@ class FileUploadKeeper(FancyValidator):
         if isinstance(upload, cgi.FieldStorage):
             filename = upload.filename
             content = upload.value
-        elif isinstance(upload, basestring) and upload:
+        elif isinstance(upload, six.string_types) and upload:
             filename = None
             # @@: Should this encode upload if it is unicode?
             content = upload
@@ -2303,7 +2307,7 @@ class TimeConverter(FancyValidator):
             return hour, minute, second
 
     def _convert_from_python(self, value, state):
-        if isinstance(value, basestring):
+        if isinstance(value, six.string_types):
             return value
         if hasattr(value, 'hour'):
             hour, minute = value.hour, value.minute
@@ -2444,7 +2448,7 @@ class StringBool(FancyValidator):  # originally from TurboGears 1
         string=_('Value should be %(true)r or %(false)r'))
 
     def _convert_to_python(self, value, state):
-        if isinstance(value, basestring):
+        if isinstance(value, six.string_types):
             value = value.strip().lower()
             if value in self.true_values:
                 return True
@@ -2514,7 +2518,7 @@ class SignedString(FancyValidator):
         if not random:
             import random
         return ''.join(chr(random.randrange(256))
-            for _i in xrange(self.nonce_length))
+            for _i in range(self.nonce_length))
 
 
 class IPAddress(FancyValidator):
@@ -2872,7 +2876,7 @@ class FieldsMatch(FormValidator):
                 else:
                     errors[name] = self.message('invalidNoMatch', state)
         if errors:
-            error_list = sorted(errors.iteritems())
+            error_list = sorted(six.iteritems(errors))
             error_message = '<br>\n'.join(
                 '%s: %s' % (name, value) for name, value in error_list)
             raise Invalid(error_message, field_dict, state, error_dict=errors)
@@ -2931,7 +2935,7 @@ class CreditCardValidator(FormValidator):
     def _validate_python(self, field_dict, state):
         errors = self._validateReturn(field_dict, state)
         if errors:
-            error_list = sorted(errors.iteritems())
+            error_list = sorted(six.iteritems(errors))
             raise Invalid(
                 '<br>\n'.join('%s: %s' % (name, value)
                     for name, value in error_list),
@@ -2948,7 +2952,7 @@ class CreditCardValidator(FormValidator):
         number = number.replace(' ', '')
         number = number.replace('-', '')
         try:
-            long(number)
+            int(number)
         except ValueError:
             return {self.cc_number_field: self.message('notANumber', state)}
         assert ccType in self._cardInfo, (
@@ -3046,7 +3050,7 @@ class CreditCardExpires(FormValidator):
     def _validate_python(self, field_dict, state):
         errors = self._validateReturn(field_dict, state)
         if errors:
-            error_list = sorted(errors.iteritems())
+            error_list = sorted(six.iteritems(errors))
             raise Invalid(
                 '<br>\n'.join('%s: %s' % (name, value)
                     for name, value in error_list),
@@ -3120,9 +3124,10 @@ class CreditCardSecurityCode(FormValidator):
     def _validate_python(self, field_dict, state):
         errors = self._validateReturn(field_dict, state)
         if errors:
-            error_list = sorted(errors.iteritems())
+            error_list = sorted(six.iteritems(errors))
             raise Invalid(
-                '<br>\n'.join('%s: %s' % (name, value)
+                '<br>\n'.join(
+                    '%s: %s' % (name, value)
                     for name, value in error_list),
                 field_dict, state, error_dict=errors)
 
@@ -3143,7 +3148,7 @@ class CreditCardSecurityCode(FormValidator):
 
 def validators():
     """Return the names of all validators in this module."""
-    return [name for name, value in globals().iteritems()
+    return [name for name, value in six.iteritems(globals())
         if isinstance(value, type) and issubclass(value, Validator)]
 
 __all__ = ['Invalid'] + validators()

@@ -6,6 +6,7 @@ You can either pass ``SchemaBuilder`` to ``htmlfill.render`` (the
 ``listen`` argument), or call ``parse_schema`` to just parse out a
 ``Schema`` object.
 """
+from __future__ import absolute_import
 
 from . import validators
 from . import schema

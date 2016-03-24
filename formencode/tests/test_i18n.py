@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 import formencode
+import six
 
 ne = formencode.validators.NotEmpty()
 
@@ -8,15 +11,15 @@ ne = formencode.validators.NotEmpty()
 def _test_builtins(func):
     def dummy(s):
         return "builtins dummy"
-    import __builtin__
-    __builtin__._ = dummy
+    import six.moves.builtins
+    six.moves.builtins._ = dummy
 
     try:
         ne.to_python("")
     except formencode.api.Invalid as e:
         func(e)
 
-    del __builtin__._
+    del six.moves.builtins._
 
 
 def test_builtins():
@@ -52,90 +55,90 @@ def _test_lang(language, notemptytext):
     try:
         ne.to_python("")
     except formencode.api.Invalid as e:
-        assert unicode(e) == notemptytext
+        assert six.text_type(e) == notemptytext
 
     formencode.api.set_stdtranslation()  # set back to defaults
 
 
 def test_de():
-    _test_lang("de", u"Bitte einen Wert eingeben")
+    _test_lang("de", "Bitte einen Wert eingeben")
 
 
 def test_es():
-    _test_lang("es", u"Por favor introduzca un valor")
+    _test_lang("es", "Por favor introduzca un valor")
 
 
 def test_pt_BR():
-    _test_lang("pt_BR", u"Por favor digite um valor")
+    _test_lang("pt_BR", "Por favor digite um valor")
 
 
 def test_zh_TW():
-    _test_lang("zh_TW", u"請輸入值")
+    _test_lang("zh_TW", "請輸入值")
 
 
 def test_sk():
-    _test_lang("sk", u"Zadajte hodnotu, prosím")
+    _test_lang("sk", "Zadajte hodnotu, prosím")
 
 
 def test_ru():
-    _test_lang("ru", u"Необходимо ввести значение")
+    _test_lang("ru", "Необходимо ввести значение")
 
 
 def test_sl():
-    _test_lang("sl", u"Prosim, izpolnite polje")
+    _test_lang("sl", "Prosim, izpolnite polje")
 
 
 def test_pt_PT():
-    _test_lang("pt_PT", u"Por favor insira um valor")
+    _test_lang("pt_PT", "Por favor insira um valor")
 
 
 def test_fr():
-    _test_lang("fr", u"Saisissez une valeur")
+    _test_lang("fr", "Saisissez une valeur")
 
 
 def test_nl():
-    _test_lang("nl", u"Voer een waarde in")
+    _test_lang("nl", "Voer een waarde in")
 
 
 def test_pl():
-    _test_lang("pl", u"Proszę podać wartość")
+    _test_lang("pl", "Proszę podać wartość")
 
 
 def test_el():
-    _test_lang("el", u"Παρακαλούμε εισάγετε μια τιμή")
+    _test_lang("el", "Παρακαλούμε εισάγετε μια τιμή")
 
 
 def test_zh_CN():
-    _test_lang("zh_CN", u"请输入一个值")
+    _test_lang("zh_CN", "请输入一个值")
 
 
 def test_cs():
-    _test_lang("cs", u"Prosím zadejte hodnotu")
+    _test_lang("cs", "Prosím zadejte hodnotu")
 
 
 def test_fi():
-    _test_lang("fi", u"Anna arvo")
+    _test_lang("fi", "Anna arvo")
 
 
 def test_nb_NO():
-    _test_lang("nb_NO", u"Venligst fyll inn en verdi")
+    _test_lang("nb_NO", "Venligst fyll inn en verdi")
 
 
 def test_it():
-    _test_lang("it", u"Inserire un dato")
+    _test_lang("it", "Inserire un dato")
 
 
 def test_et():
-    _test_lang("et", u"Palun sisestada väärtus")
+    _test_lang("et", "Palun sisestada väärtus")
 
 
 def test_lt():
-    _test_lang("lt", u"Prašome įvesti reikšmę")
+    _test_lang("lt", "Prašome įvesti reikšmę")
 
 
 def test_ja():
-    _test_lang("ja", u"入力してください")
+    _test_lang("ja", "入力してください")
 
 
 def test_tr():
-    _test_lang("tr", u"Lütfen bir değer giriniz")
+    _test_lang("tr", "Lütfen bir değer giriniz")

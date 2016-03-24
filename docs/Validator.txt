@@ -61,11 +61,12 @@ sort of feedback.  Like:
     >>> raw_input_input = []
     >>> def raw_input(prompt):
     ...     value = raw_input_input.pop(0)
-    ...     print '%s%s' % (prompt, value)
+    ...     print ('%s%s' % (prompt, value))
     ...     return value
     >>> raw_input_input.extend(['ten', '10'])
     >>> raw_input_input.extend(['bob', 'bob@nowhere.com'])
-    >>> if unicode is str:  # Python 3
+    >>> import six
+    >>> if not six.PY2:  # Python 3
     ...    input = raw_input
 
 ::
@@ -75,8 +76,8 @@ sort of feedback.  Like:
     ...         try:
     ...             value = raw_input('Enter a number: ')
     ...             return validator.to_python(value)
-    ...         except formencode.Invalid, e:
-    ...             print e
+    ...         except formencode.Invalid as e:
+    ...             print (e)
     ...
     >>> get_integer()
     Enter a number: ten
@@ -91,8 +92,8 @@ We can also generalize this kind of function::
     ...         try:
     ...             value = raw_input(prompt)
     ...             return validator.to_python(value)
-    ...         except formencode.Invalid, e:
-    ...             print e
+    ...         except formencode.Invalid as e:
+    ...             print (e)
     >>> valid_input('Enter your email: ', validators.Email())
     Enter your email: bob
     An email address must contain a single @

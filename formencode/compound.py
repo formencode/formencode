@@ -1,9 +1,11 @@
 """
 Validators for applying validations in sequence.
 """
+from __future__ import absolute_import
 
 from .api import (FancyValidator, Identity, Invalid, NoDefault, Validator,
     is_validator)
+import six
 
 __all__ = ['CompoundValidator', 'Any', 'All', 'Pipe']
 
@@ -39,7 +41,7 @@ class CompoundValidator(FancyValidator):
     def __classinit__(cls, new_attrs):
         FancyValidator.__classinit__(cls, new_attrs)
         toAdd = []
-        for name, value in new_attrs.iteritems():
+        for name, value in six.iteritems(new_attrs):
             if is_validator(value) and value is not Identity:
                 toAdd.append((name, value))
                 # @@: Should we really delete too?
@@ -200,7 +202,7 @@ class All(CompoundValidator):
         filtering out None and trying to keep `All` validators from
         being nested (which isn't needed).
         """
-        validators = filter(lambda v: v and v is not Identity, validators)
+        validators = [v for v in validators if v and v is not Identity]
         if not validators:
             return Identity
         if len(validators) == 1:

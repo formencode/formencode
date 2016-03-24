@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 import unittest
 
 from formencode import Invalid
 from formencode.validators import Email
+import six
 
 
 class TestEmail(unittest.TestCase):
@@ -15,7 +18,7 @@ class TestEmail(unittest.TestCase):
         try:
             return self.validator.to_python(*args)
         except Invalid as e:
-            return unicode(e)
+            return six.text_type(e)
 
     def message(self, message_name, username, domain):
         email = '@'.join((username, domain))
@@ -74,8 +77,8 @@ class TestUnicodeEmailWithResolveDomain(unittest.TestCase):
 
     def test_unicode_ascii_subgroup(self):
         self.assertEqual(self.validator.to_python(
-            u'foo@yandex.com'), 'foo@yandex.com')
+            'foo@yandex.com'), 'foo@yandex.com')
 
     def test_cyrillic_email(self):
         self.assertEqual(self.validator.to_python(
-            u'me@письмо.рф'), u'me@письмо.рф')
+            'me@письмо.рф'), 'me@письмо.рф')
