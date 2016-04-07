@@ -477,7 +477,7 @@ class PostalCodeInCountryFormat(FancyValidator):
         'FR': lambda: DelimitedDigitsPostalCode(5),
         'GB': UKPostalCode,
         'GF': lambda: DelimitedDigitsPostalCode(5),
-        'GR': lambda: DelimitedDigitsPostalCode([2, 3], ' '),
+        'GR': lambda: DelimitedDigitsPostalCode([3, 2], ' '),
         'HN': lambda: DelimitedDigitsPostalCode(5),
         'HT': FourDigitsPostalCode,
         'HU': FourDigitsPostalCode,
