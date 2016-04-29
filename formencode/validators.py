@@ -1203,6 +1203,10 @@ class Set(FancyValidator):
     If you give ``use_set=True``, then it will return an actual
     ``set`` object.
 
+    If you give ``array_in_field_name=True``, then a '[]' string will be
+    appended to the end of the field name. JQuery appends a '[]' to the end
+    of a parameter name when the value is an array.
+
     ::
 
        >>> Set.to_python(None)
@@ -1221,6 +1225,7 @@ class Set(FancyValidator):
     """
 
     use_set = False
+    array_in_field_name = False
 
     if_missing = ()
     accept_iterator = True
@@ -2340,7 +2345,7 @@ class ISODateTimeConverter(FancyValidator):
     """
     Converts fields which contain both date and time, in the
     ISO 8601 standard format YYYY-MM-DDTHH:MM:SS.
-    
+
     Stores in a datetime.datetime object.
 
     Examples::
@@ -2356,10 +2361,10 @@ class ISODateTimeConverter(FancyValidator):
         Invalid: The must enter your date & time in the format YYYY-MM-DDTHH:MM:SS
 
     """
-    
+
     # This can be set to make it prefer mxDateTime:
     datetime_module = None
-    
+
     messages = dict(
         invalidFormat=_('The must enter your date & time in the format YYYY-MM-DDTHH:MM:SS'),)
 

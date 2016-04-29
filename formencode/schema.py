@@ -4,6 +4,7 @@ import warnings
 from .api import _, is_validator, FancyValidator, Invalid, NoDefault
 from . import declarative
 from .exc import FERuntimeWarning
+from .validators import Set
 import six
 from six.moves import map
 from six.moves import zip
@@ -93,7 +94,13 @@ class Schema(FancyValidator):
                     warnings.warn(msg, FERuntimeWarning)
                 continue
             if is_validator(value):
-                cls.fields[key] = value
+                # JQuery adds a '[]' to the key name of a
+                # parameter that is an array. ( field_name = key + '[]' )
+                if isinstance(value, Set) and \
+                        getattr(value, "array_in_field_name", False):
+                    cls.fields[key + "[]"] = value
+                else:
+                    cls.fields[key] = value
                 delattr(cls, key)
             # This last case means we're overwriting a validator
             # from a superclass:
