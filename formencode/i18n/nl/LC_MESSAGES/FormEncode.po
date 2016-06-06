@@ -292,7 +292,7 @@ msgstr ""
 msgid ""
 "The username portion of the email address is invalid (the portion before the "
 "@: %(username)s)"
-msgstr "Ongeldig emailadres: het deel vóór de \"@\" is incorrect"
+msgstr "Ongeldig emailadres: het deel vóór de \"@: %(username)s\" is incorrect"
 
 #: formencode/validators.py:1271 formencode/validators.py:1413
 #, python-format
@@ -305,7 +305,8 @@ msgid ""
 "The domain portion of the email address is invalid (the portion after the @: "
 "%(domain)s)"
 msgstr ""
-"Ongeldig emailadres: het \"domain\" (het deel achter de \"@\") is incorrect"
+"Ongeldig emailadres: het \"domain\" (het deel achter de \"@: %(domain)s\") "
+"is incorrect"
 
 #: formencode/validators.py:1275
 #, python-format
@@ -313,7 +314,8 @@ msgid ""
 "The domain of the email address does not exist (the portion after the @: "
 "%(domain)s)"
 msgstr ""
-"Ongeldig emailadres: het \"domain\" (het deel achter de \"@\") bestaat niet"
+"Ongeldig emailadres: het \"domain\" (het deel achter de \"@: %(domain)s\") "
+"bestaat niet"
 
 #: formencode/validators.py:1409
 msgid "You must start your URL with http://, https://, etc"

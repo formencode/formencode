@@ -327,7 +327,7 @@ msgstr "올바른 URL이 아닙니다"
 #: formencode/validators.py:1455
 #, python-format
 msgid "An error occurred when trying to access the URL: %(error)s"
-msgstr "URL에 접속 시도중 오류가 발생했습니다: $(error)s"
+msgstr "URL에 접속 시도중 오류가 발생했습니다: %(error)s"
 
 #: formencode/validators.py:1459
 msgid "The server responded that the page could not be found"
