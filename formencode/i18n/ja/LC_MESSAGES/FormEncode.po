@@ -494,7 +494,7 @@ msgstr ""
 #: formencode/validators.py:2586
 #, python-format
 msgid "You must give a value for %s"
-msgstr "% の値を入力してください"
+msgstr "%s の値を入力してください"
 
 #: formencode/validators.py:2619
 #, python-format

@@ -302,8 +302,6 @@ msgstr "Domenski del e-poštnega naslova je neveljaven: %(domain)s"
 
 #: formencode/validators.py:1275
 #, fuzzy, python-format
-#| msgid "" "The domain portion of the email address is invalid (the portion
-#| after the" " @: %(domain)s)"
 msgid ""
 "The domain of the email address does not exist (the portion after the @: "
 "%(domain)s)"

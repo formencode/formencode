@@ -440,7 +440,7 @@ msgstr "Inserire i minuti ( dopo i : )"
 #: formencode/validators.py:2075
 #, python-format
 msgid "The %(part)s value you gave is not a number: %(number)r"
-msgstr "%(part), non e' un numero: %(number)r"
+msgstr "%(part)s, non e' un numero: %(number)r"
 
 #: formencode/validators.py:2076
 #, python-format

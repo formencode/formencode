@@ -118,7 +118,7 @@ msgstr "Det språket inte är upptaget i ISO 639"
 #: formencode/schema.py:68
 #, python-format
 msgid "The input field %(name)s was not expected."
-msgstr "Inmatningsfältet %(namn) var inte förväntat."
+msgstr "Inmatningsfältet %(name)s var inte förväntat."
 
 #: formencode/schema.py:69
 msgid "Missing value"
@@ -331,7 +331,7 @@ msgstr ""
 #: formencode/validators.py:1461
 #, python-format
 msgid "You must provide a full domain name (like %(domain)s.com)"
-msgstr "Du måste ange ett komplett domännamn (som %(domän)er.com"
+msgstr "Du måste ange ett komplett domännamn (som %(domain)s.com"
 
 #: formencode/validators.py:1602
 msgid ""
