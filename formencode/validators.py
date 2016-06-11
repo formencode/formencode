@@ -556,7 +556,7 @@ class PlainText(Regex):
         >>> PlainText(accept_python=False).from_python('  this  ')
         Traceback (most recent call last):
           ...
-        Invalid: Enter only letters, numbers, or _ (underscore)
+        Invalid: Enter only letters, numbers, _ (underscore) or - (hyphen)
         >>> PlainText(strip=True).to_python('  this  ')
         'this'
         >>> PlainText(strip=True).from_python('  this  ')
@@ -566,7 +566,7 @@ class PlainText(Regex):
     regex = r"^[a-zA-Z_\-0-9]*$"
 
     messages = dict(
-        invalid=_('Enter only letters, numbers, or _ (underscore)'))
+        invalid=_('Enter only letters, numbers, _ (underscore) or - (hyphen)'))
 
 
 class OneOf(FancyValidator):
