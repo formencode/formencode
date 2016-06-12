@@ -799,3 +799,21 @@ class TestCondfirmType(unittest.TestCase):
         self.assertEqual(value, validator.to_python(value))
 
         self.assertRaises(validators.Invalid, validator.to_python, ({'bar': {}},))
+
+
+class TestPlainTextValidator(unittest.TestCase):
+
+    def test_valid_text(self):
+        validator = validators.PlainText()
+        value = 'foo-Bar_123'
+        self.assertEqual(value, validator.to_python(value))
+
+    def test_invalid_text(self):
+        validator = validators.PlainText()
+        invalid_value = 'foo@bar.com'
+        expected = 'Enter only letters, numbers, _ (underscore) or - (hyphen)'
+
+        with self.assertRaises(validators.Invalid) as exc:
+            validator.to_python(invalid_value)
+
+        self.assertEqual(exc.exception.msg, expected)
