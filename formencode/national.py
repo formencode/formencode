@@ -484,7 +484,7 @@ class PostalCodeInCountryFormat(FancyValidator):
         'IS': lambda: DelimitedDigitsPostalCode(3),
         'IT': lambda: DelimitedDigitsPostalCode(5),
         'JP': lambda: DelimitedDigitsPostalCode([3, 4], '-'),
-        'KR': lambda: DelimitedDigitsPostalCode([3, 3], '-'),
+        'KR': lambda: DelimitedDigitsPostalCode(5),
         'LI': FourDigitsPostalCode,
         'LU': FourDigitsPostalCode,
         'MC': lambda: DelimitedDigitsPostalCode(5),
