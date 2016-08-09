@@ -1,17 +1,22 @@
 What's New In FormEncode 2.0
 ==============================
 
-This article explains the latest changes in `FormEncode` version 2.0
+This article explains the latest changes in `FormEncode` version 2.0.0
 compared to its predecessor, `FormEncode` 1.3.0
 
 
-Feature Additions
------------------
+Changelog
+---------
 
  - `FormEncode` can now run on Python 3.3 and higher without needing to run 2to3 first.
-
-
-Backwards Incompatibilities
----------------------------
-
  - `FormEncode` 2.0 is no longer compatible with Python 3.2. If you need Python 3.2 compatibility please use FormEncode 1.3
+ - Add strict flag to USPostalCode to raise error on postal codes that has too
+   many digits instead of just truncating
+ - Various Python 3 fixes
+ - Serbian latin translation
+ - Changed License to MIT
+ - Dutch, UK, Greek and South Korean postal code format fixes
+ - Add postal code formats for Switzerland, Cyprus, Faroe Islands, San Marino, Ukraine and Vatican City.
+ - Add ISODateTimeConverter validator
+ - Add ability to target htmlfill to particular form or ignore a form
+ - Fix format errors in some translations
