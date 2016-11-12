@@ -87,12 +87,12 @@ elif pycountry:
     _l = lambda t: gettext.dgettext('iso639', t)
 
     def get_countries():
-        c1 = set([(e.alpha2, _c(e.name)) for e in pycountry.countries])
+        c1 = set([(e.alpha_2, _c(e.name)) for e in pycountry.countries])
         ret = c1.union(country_additions + fuzzy_countrynames)
         return ret
 
     def get_country(code):
-        return _c(pycountry.countries.get(alpha2=code).name)
+        return _c(pycountry.countries.get(alpha_2=code).name)
 
     try:
         if not pycountry.languages.get(iso639_1_code='en'):
@@ -100,11 +100,11 @@ elif pycountry:
     except KeyError:  # pycountry < 1.12
 
         def get_languages():
-            return [(e.alpha2, _l(e.name)) for e in pycountry.languages
-                if e.name and getattr(e, 'alpha2', None)]
+            return [(e.alpha_2, _l(e.name)) for e in pycountry.languages
+                if e.name and getattr(e, 'alpha_2', None)]
 
         def get_language(code):
-            return _l(pycountry.languages.get(alpha2=code).name)
+            return _l(pycountry.languages.get(alpha_2=code).name)
 
     else:
 
