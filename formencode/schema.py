@@ -3,6 +3,7 @@ import warnings
 
 from .api import _, is_validator, FancyValidator, Invalid, NoDefault
 from . import declarative
+from . import variabledecode
 from .exc import FERuntimeWarning
 import six
 from six.moves import map
@@ -498,3 +499,40 @@ class SimpleFormValidator(FancyValidator):
         def decorator(func):
             return cls(func, **kw)
         return decorator
+
+class SuperSchema(Schema):
+    """Subclass of formencode.Schema, acting as a Context manager for
+    validation. The Form object returned has a data and errors dict.
+    ## with WhateverSuperSchema({}) as form:
+    ##     if form.errors:
+    ##         # handle the errors
+    ##     if form.is_valid:
+    ##         <do whatever with form.data>
+    """
+    class Form(object):
+        def __init__(self, to_validate):
+            self.data = {}
+            self.errors = {}
+            self.to_validate = to_validate
+            self.is_valid = False
+            self.parent = self
+
+    def __init__(self, data):
+        super(Schema, self).__init__()
+        self.to_validate = data
+
+    def __enter__(self):
+        f = self.Form(self.to_validate)
+        f.parent = self
+
+        try:
+            f.data = self.to_python(f.to_validate)
+            f.is_valid = True
+        except Invalid as e:
+            f.data = e.value
+            f.errors = e.unpack_errors(variabledecode.variable_encode)
+        finally:
+            return f
+
+    def __exit__(self, type, value, traceback):
+        pass
