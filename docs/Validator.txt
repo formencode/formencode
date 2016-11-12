@@ -309,7 +309,7 @@ If you wish to use a with statement to perform validation, you can use the
     ...     if data.errors:
     ...         print(data.errors)
     ...     if data.is_valid:
-    ...         print(data.data['fname'], data.data['lname'])
+    ...         print('%s %s' % (data.data['fname'], data.data['lname']))
     Alan Turing
 
 Writing Your Own Validator
