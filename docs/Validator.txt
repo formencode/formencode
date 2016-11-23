@@ -299,13 +299,12 @@ Using a with statement
 ----------------------
 
 If you wish to use a with statement to perform validation, you can use the
-:class:`SuperSchema` class instead of the :class:`Schema` class.
+:func:`validate` function instead of the :func:`to_python` function.
 
-    >>> from formencode.schema import SuperSchema
-    >>> class NameSchema(SuperSchema):
+    >>> class NameSchema(formencode.Schema):
     ...     fname = validators.ByteString(not_empty=True)
     ...     lname = validators.ByteString(not_empty=True)
-    >>> with NameSchema({'fname': 'Alan', 'lname': 'Turing'}) as data:
+    >>> with NameSchema.validate({'fname': 'Alan', 'lname': 'Turing'}) as data:
     ...     if data.errors:
     ...         print(data.errors)
     ...     if data.is_valid:

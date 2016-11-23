@@ -5,8 +5,7 @@ import unittest
 from six.moves.urllib.parse import parse_qsl
 
 from formencode import Invalid, Validator, compound, foreach, validators
-from formencode.schema import (Schema, SuperSchema, merge_dicts,
-    SimpleFormValidator)
+from formencode.schema import Schema, merge_dicts, SimpleFormValidator
 from formencode.variabledecode import NestedVariables
 
 
@@ -84,12 +83,12 @@ class BadCase(DecodeCase):
         else:
             assert False, "Exception expected"
 
-class SuperSchemaCase(object):
+class WithBlockCase(object):
     error_expected = False
 
-    def __init__(self, superschema, input, **output):
+    def __init__(self, schema, input, **output):
         self.raw_input = input
-        self.superschema = superschema
+        self.schema = schema
         if isinstance(input, str):
             input = cgi_parse(input)
         self.input = input
@@ -98,22 +97,22 @@ class SuperSchemaCase(object):
 
     def test(self):
         print('input', repr(self.input))
-        with self.superschema(self.input) as form:
+        with self.schema.validate(self.input) as form:
             actual = form.data
             print('output', repr(actual))
             assert actual == self.output
 
-class SuperSchemaBadCase(SuperSchemaCase):
+class WithBlockBadCase(WithBlockCase):
     error_expected = True
 
     def __init__(self, *args, **kw):
-        SuperSchemaCase.__init__(self, *args, **kw)
+        WithBlockCase.__init__(self, *args, **kw)
         if len(self.output) == 1 and 'text' in self.output:
             self.output = self.output['text']
 
     def test(self):
         print(repr(self.raw_input))
-        with self.superschema(self.input) as form:
+        with self.schema.validate(self.input) as form:
             if form.errors:
                 # good - check them
                 assert form.errors == self.output
@@ -181,18 +180,18 @@ BadCase(AddressesForm,
         text="The input field 'whatever' was not expected.")
 
 
-class SSName(SuperSchema):
+class SSName(Schema):
     fname = validators.String(not_empty=True)
     mi = validators.String(max=1, if_missing=None, if_empty=None)
     lname = validators.String(not_empty=True)
 
-SuperSchemaCase(SSName, 'fname=Brennan&mi=M&lname=Todd',
+WithBlockCase(SSName, 'fname=Brennan&mi=M&lname=Todd',
                 fname='Brennan', mi='M', lname='Todd')
-SuperSchemaBadCase(SSName, 'fname=&lname=',
+WithBlockBadCase(SSName, 'fname=&lname=',
                    fname='Please enter a value',
                    lname='Please enter a value')
 
-class SSAddressesForm(SuperSchema):
+class SSAddressesForm(Schema):
 
     pre_validators = [NestedVariables()]
 
@@ -202,7 +201,7 @@ class SSAddressesForm(SuperSchema):
             name = Name()
             email = validators.Email()
 
-SuperSchemaCase(SSAddressesForm,
+WithBlockCase(SSAddressesForm,
                 'addresses-2.name.fname=Jill&addresses-1.name.fname=Bob&'
                 'addresses-1.name.lname=Briscoe&'
                 'addresses-1.email=bob@bobcom.com&'
