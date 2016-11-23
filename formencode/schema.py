@@ -9,7 +9,7 @@ import six
 from six.moves import map
 from six.moves import zip
 
-__all__ = ['Schema']
+__all__ = ['Schema', 'SchemaResults']
 
 
 class Schema(FancyValidator):
@@ -358,28 +358,28 @@ class Schema(FancyValidator):
     
     @classmethod
     def validate(cls, data):
-        class Results(object):
-            def __init__(self, to_validate, schema):
-                self.to_validate = to_validate
-                self.schema = schema
-                self.errors = {}
-                self.data = {}
-                self.is_valid = False
-            def __exit__(self, type, value, traceback):
-                pass
-            def __enter__(self):
-                try:
-                    self.data = self.schema.to_python(self.to_validate)
-                    self.is_valid = True
-                except Invalid as e:
-                    self.data = e.value
-                    self.errors=e.unpack_errors(variabledecode.variable_encode)
-                finally:
-                    return self
-        r = Results(data, cls)
+        r = SchemaResults(data, cls)
         return r
 
 
+class SchemaResults(object):
+    def __init__(self, to_validate, schema):
+        self.to_validate = to_validate
+        self.schema = schema
+        self.errors = {}
+        self.data = {}
+        self.is_valid = False
+    def __exit__(self, type, value, traceback):
+        pass
+    def __enter__(self):
+        try:
+            self.data = self.schema.to_python(self.to_validate)
+            self.is_valid = True
+        except Invalid as e:
+            self.data = e.value
+            self.errors=e.unpack_errors(variabledecode.variable_encode)
+        finally:
+            return self
 
 def format_compound_error(v, indent=0):
     if isinstance(v, Exception):
