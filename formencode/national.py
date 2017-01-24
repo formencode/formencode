@@ -86,34 +86,60 @@ elif pycountry:
     gettext.bindtextdomain('iso639', pycountry.LOCALES_DIR)
     _l = lambda t: gettext.dgettext('iso639', t)
 
-    def get_countries():
-        c1 = set([(e.alpha2, _c(e.name)) for e in pycountry.countries])
-        ret = c1.union(country_additions + fuzzy_countrynames)
-        return ret
-
-    def get_country(code):
-        return _c(pycountry.countries.get(alpha2=code).name)
+    # pycountry has gone through a bunch of API changes over its lifetime,
+    # so we detect a working one and roll with it
 
     try:
-        if not pycountry.languages.get(iso639_1_code='en'):
-            raise KeyError
-    except KeyError:  # pycountry < 1.12
+        pycountry.countries.get(alpha_2='US')
+    except KeyError:
+        # API for pycountry < 16.10
+        def get_countries():
+            c1 = set([(e.alpha2, _c(e.name)) for e in pycountry.countries])
+            ret = c1.union(country_additions + fuzzy_countrynames)
+            return ret
 
-        def get_languages():
-            return [(e.alpha2, _l(e.name)) for e in pycountry.languages
-                if e.name and getattr(e, 'alpha2', None)]
-
-        def get_language(code):
-            return _l(pycountry.languages.get(alpha2=code).name)
-
+        def get_country(code):
+            return _c(pycountry.countries.get(alpha2=code).name)
     else:
+        # API for pycountry >= 16.10
+        def get_countries():
+            c1 = set([(e.alpha_2, _c(e.name)) for e in pycountry.countries])
+            ret = c1.union(country_additions + fuzzy_countrynames)
+            return ret
 
+        def get_country(code):
+            return _c(pycountry.countries.get(alpha_2=code).name)
+
+    try:
+        pycountry.languages.get(alpha_2='en')
+    except KeyError:
+        try:
+            if not pycountry.languages.get(iso639_1_code='en'):
+                raise KeyError
+        except KeyError:
+            # API for pycountry < 1.12
+            def get_languages():
+                return [(e.alpha2, _l(e.name)) for e in pycountry.languages
+                    if e.name and getattr(e, 'alpha2', None)]
+
+            def get_language(code):
+                return _l(pycountry.languages.get(alpha2=code).name)
+        else:
+            # API for pycountry 1.12 up to 16.10
+            def get_languages():
+                return [(e.iso639_1_code, _l(e.name)) for e in pycountry.languages
+                    if e.name and getattr(e, 'iso639_1_code', None)]
+
+            def get_language(code):
+                return _l(pycountry.languages.get(iso639_1_code=code).name)
+    else:
+        # API for pycountry >= 16.10
         def get_languages():
-            return [(e.iso639_1_code, _l(e.name)) for e in pycountry.languages
-                if e.name and getattr(e, 'iso639_1_code', None)]
+            return [(e.alpha_2, _l(e.name)) for e in pycountry.languages
+                if e.name and getattr(e, 'alpha_2', None)]
 
         def get_language(code):
-            return _l(pycountry.languages.get(iso639_1_code=code).name)
+            return _l(pycountry.languages.get(alpha_2=code).name)
 
 
 ############################################################
