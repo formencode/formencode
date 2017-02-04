@@ -152,10 +152,16 @@ class DelimitedDigitsPostalCode(Regex):
     With constant amount of digits. By providing a single digit as partition
     you can obtain a trivial 'x digits' postal code validator.
 
+    For flexibility, input may use additional delimiters or delimters in a
+    bad position. Only the minimum (or if strict, exact) number of digits has
+    to be provided.
+
     ::
 
         >>> german = DelimitedDigitsPostalCode(5)
         >>> german.to_python('55555')
+        '55555'
+        >>> german.to_python('55 55-5')
         '55555'
         >>> german.to_python('5555')
         Traceback (most recent call last):
@@ -165,6 +171,8 @@ class DelimitedDigitsPostalCode(Regex):
         >>> polish.to_python('55555')
         '55-555'
         >>> polish.to_python('55-555')
+        '55-555'
+        >>> polish.to_python('555-55')
         '55-555'
         >>> polish.to_python('5555')
         Traceback (most recent call last):
@@ -189,10 +197,12 @@ class DelimitedDigitsPostalCode(Regex):
         else:
             return delimiter.join('n' * l for l in partition_lengths)
 
+    def assembly_grouping(self, partition_lengths, delimiter):
+        digit_groups = ['%s' * length for length in partition_lengths]
+        return delimiter.join(digit_groups)
+
     def assembly_regex(self, partition_lengths, delimiter, strict):
-        mg = [r'(\d{%d})' % l for l in partition_lengths]
-        rd = r'\%s?' % delimiter
-        regex = rd.join(mg)
+        regex = r'\D*(\d)\D*' * sum(partition_lengths)
 
         # anchor the regex so that it wont take zip codes w/ longer
         # input than what is specified by the partition_lengths
@@ -208,6 +218,7 @@ class DelimitedDigitsPostalCode(Regex):
         if not delimiter:
             delimiter = ''
         self.format = self.assembly_formatstring(partition_lengths, delimiter)
+        self.grouping = self.assembly_grouping(partition_lengths, delimiter)
         self.regex = self.assembly_regex(partition_lengths, delimiter, strict)
         self.partition_lengths, self.delimiter = partition_lengths, delimiter
         Regex.__init__(self, *args, **kw)
@@ -222,7 +233,7 @@ class DelimitedDigitsPostalCode(Regex):
             raise Invalid(
                 self.message('invalid', state, format=self.format),
                 value, state)
-        return self.delimiter.join(match.groups())
+        return self.grouping % match.groups()
 
 
 def USPostalCode(*args, **kw):
