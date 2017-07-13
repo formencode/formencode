@@ -556,7 +556,7 @@ class PlainText(Regex):
         >>> PlainText(accept_python=False).from_python('  this  ')
         Traceback (most recent call last):
           ...
-        Invalid: Enter only letters, numbers, or _ (underscore)
+        Invalid: Enter only letters, numbers, - (hyphen) or _ (underscore)
         >>> PlainText(strip=True).to_python('  this  ')
         'this'
         >>> PlainText(strip=True).from_python('  this  ')
@@ -566,7 +566,7 @@ class PlainText(Regex):
     regex = r"^[a-zA-Z_\-0-9]*$"
 
     messages = dict(
-        invalid=_('Enter only letters, numbers, or _ (underscore)'))
+        invalid=_('Enter only letters, numbers, - (hyphen) or _ (underscore)'))
 
 
 class OneOf(FancyValidator):
@@ -612,7 +612,7 @@ class OneOf(FancyValidator):
             for v in value:
                 self._validate_python(v, state)
         else:
-            if not value in self.list:
+            if value not in self.list:
                 if self.hideList:
                     raise Invalid(self.message('invalid', state), value, state)
                 else:
@@ -2340,7 +2340,7 @@ class ISODateTimeConverter(FancyValidator):
     """
     Converts fields which contain both date and time, in the
     ISO 8601 standard format YYYY-MM-DDTHH:MM:SS.
-    
+
     Stores in a datetime.datetime object.
 
     Examples::
@@ -2356,10 +2356,10 @@ class ISODateTimeConverter(FancyValidator):
         Invalid: The must enter your date & time in the format YYYY-MM-DDTHH:MM:SS
 
     """
-    
+
     # This can be set to make it prefer mxDateTime:
     datetime_module = None
-    
+
     messages = dict(
         invalidFormat=_('The must enter your date & time in the format YYYY-MM-DDTHH:MM:SS'),)
 
@@ -2772,6 +2772,7 @@ class RequireIfMissing(FormValidator):
 
 RequireIfPresent = RequireIfMissing
 
+
 class RequireIfMatching(FormValidator):
     """
     Require a list of fields based on the value of another field.
@@ -2819,6 +2820,7 @@ class RequireIfMatching(FormValidator):
                             Invalid(self.message('empty', state),
                                 value_dict.get(required_field), state)})
         return value_dict
+
 
 class FieldsMatch(FormValidator):
     """
