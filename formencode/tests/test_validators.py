@@ -642,6 +642,36 @@ class TestOneOfValidator(unittest.TestCase):
 
         self.assertEqual(expected, value)
 
+    def test_mixed_list(self):
+        """before `_message_vars_decode`, the errors were:
+            Value must be one of: a; b; ö; ™; 1; 2; 3 (not u'c')
+            Value must be one of: a; b; ö; ™; 1; 2; 3 (not u'\xa7')
+        """
+        o = validators.OneOf(['a', 'b', 'ö', '™', 1, 2, 3])
+        try:
+            o.to_python('c')
+            raise ValueError("exception expected")
+        except Invalid as e:
+            self.assertTrue("Value must be one of: a; b; ö; ™; 1; 2; 3 (not 'c')" in unicode(e))
+        try:
+            o.to_python(9)
+            raise ValueError("exception expected")
+        except Invalid as e:
+            self.assertTrue("Value must be one of: a; b; ö; ™; 1; 2; 3 (not 9)" in unicode(e))
+        try:
+            o.to_python(u'd')
+            raise ValueError("exception expected")
+        except Invalid as e:
+            self.assertTrue("Value must be one of: a; b; ö; ™; 1; 2; 3 (not 'd')" in unicode(e))
+        try:
+            o.to_python('§')
+            raise ValueError("exception expected")
+        except Invalid as e:
+            if six.PY2:
+                self.assertTrue(r"Value must be one of: a; b; ö; ™; 1; 2; 3 (not u'\xa7')" in unicode(e))
+            else:
+                self.assertTrue(r"Value must be one of: a; b; ö; ™; 1; 2; 3 (not '§')" in unicode(e))
+
 
 class TestIPAddressValidator(unittest.TestCase):
 
