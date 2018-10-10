@@ -10,3 +10,13 @@ from formencode.foreach import ForEach
 from formencode import validators
 from formencode import national
 from formencode.variabledecode import NestedVariables
+
+VERSION = (2, 0, '0a1')
+
+
+def get_version():
+    """Return the VERSION as a string e.g: 2.0.0a1"""
+    return '.'.join(map(str, VERSION))
+
+
+__version__ = get_version()

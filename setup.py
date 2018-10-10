@@ -10,7 +10,8 @@ from __future__ import absolute_import
 import sys
 from setuptools import setup, find_packages
 
-version = '2.0.0a1'
+from formencode import get_version
+
 
 if not '2.6' <= sys.version < '3.0' and not '3.2' < sys.version:
     raise ImportError('Python version not supported')
@@ -22,7 +23,7 @@ doctests = ['docs/htmlfill.txt', 'docs/Validator.txt',
     'formencode/tests/non_empty.txt']
 
 setup(name='FormEncode',
-      version=version,
+      version=get_version(),
       # requires_python='>=2.6,!=3.0,!=3.1',!=3.2, # PEP345
       description="HTML form validation, generation, and conversion package",
       long_description=__doc__,
