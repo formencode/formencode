@@ -342,7 +342,7 @@ class Schema(FancyValidator):
         return {}
 
     def _value_is_iterator(self, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, six.string_types + (six.binary_type, )):
             return False
         elif isinstance(value, (list, tuple)):
             return True
