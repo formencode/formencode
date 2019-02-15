@@ -542,31 +542,61 @@ class Regex(FancyValidator):
         return value
 
 
-class PlainText(Regex):
+class AsciiPlainText(Regex):
     """
     Test that the field contains only letters, numbers, underscore,
     and the hyphen.  Subclasses Regex.
 
     Examples::
 
-        >>> PlainText.to_python('_this9_')
+        >>> AsciiPlainText.to_python('_this9_')
         '_this9_'
-        >>> PlainText.from_python('  this  ')
+        >>> AsciiPlainText.from_python('  this  ')
         '  this  '
-        >>> PlainText(accept_python=False).from_python('  this  ')
+        >>> AsciiPlainText(accept_python=False).from_python('  this  ')
         Traceback (most recent call last):
           ...
         Invalid: Enter only letters, numbers, - (hyphen) or _ (underscore)
-        >>> PlainText(strip=True).to_python('  this  ')
+        >>> AsciiPlainText(strip=True).to_python('  this  ')
         'this'
-        >>> PlainText(strip=True).from_python('  this  ')
+        >>> AsciiPlainText(strip=True).from_python('  this  ')
         'this'
     """
 
-    regex = r"^[a-zA-Z_\-0-9]*$"
+    regexOps = ('A',) if str is six.text_type else ()
+    regex = r"^[\w\-]*$"
 
     messages = dict(
         invalid=_('Enter only letters, numbers, - (hyphen) or _ (underscore)'))
+
+
+class UnicodePlainText(AsciiPlainText):
+    """
+    Test that the field contains only letters, numbers, underscore,
+    and the hyphen.  Subclasses Regex.
+
+    Examples::
+
+        >>> UnicodePlainText.to_python('_this9_')
+        '_this9_'
+        >>> UnicodePlainText.from_python('  this  ')
+        '  this  '
+        >>> UnicodePlainText(accept_python=False).from_python('  this  ')
+        Traceback (most recent call last):
+          ...
+        Invalid: Enter only letters, numbers, - (hyphen) or _ (underscore)
+        >>> UnicodePlainText(strip=True).to_python('  this  ')
+        'this'
+        >>> UnicodePlainText(strip=True).from_python('  this  ')
+        'this'
+    """
+
+    regexOps = ('U',)
+
+
+# Provide proper alias for native strings
+
+PlainText = UnicodePlainText if str is six.text_type else AsciiPlainText
 
 
 class OneOf(FancyValidator):

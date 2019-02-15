@@ -137,12 +137,208 @@ class TestUnicodeStringValidator(unittest.TestCase):
         self.assertEqual(uv.from_python(us), us)
         self.assertTrue(type(uv.from_python(us)) is six.text_type)
 
-        def test_unicode_empty(self):
-            iv = self.validator()
-            for value in [None, b"", ""]:
-                result = iv.to_python(value)
-                self.assertEqual(result, "")
-                self.assertTrue(isinstance(result, six.text_type))
+    def test_unicode_empty(self):
+        iv = self.validator()
+        for value in [None, b"", ""]:
+            result = iv.to_python(value)
+            self.assertEqual(result, "")
+            self.assertTrue(isinstance(result, six.text_type))
+
+
+class TestAsciiPlainTextValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.AsciiPlainText
+
+    @unittest.skipIf(str is six.text_type, 'Not Python 2')
+    def test_alias(self):
+        self.assertTrue(self.validator is validators.PlainText)
+
+    def test_docstring(self):
+        doc = self.validator.__doc__
+        self.assertIn('Test that the field contains only letters, numbers, underscore,', doc)
+
+    def test_non_string(self):
+        un = self.validator()
+
+        try:
+            un.to_python(12)
+        except Invalid as e:
+            self.assertIn(
+                'The input must be a string', six.text_type(e)
+            )
+        else:
+            self.fail('Integer should be invalid')
+
+    @unittest.skipIf(str is not six.text_type, 'Not Python3')
+    def test_byte_string(self):
+        un = self.validator()
+
+        try:
+            un.to_python(b'test')
+        except Invalid as e:
+            self.assertIn(
+                'The input must be a string', six.text_type(e)
+            )
+        else:
+            self.fail('Byte string should be invalid')
+
+    def test_ascii(self):
+        uv = self.validator()
+
+        us = '_this9_'
+        self.assertEqual(uv.to_python(us), us)
+        self.assertTrue(type(uv.to_python(us)) is six.text_type)
+
+        us = '  this  '
+        self.assertEqual(uv.from_python(us), us)
+        self.assertTrue(type(uv.from_python(us)) is six.text_type)
+
+        un = self.validator(accept_python=False)
+        try:
+            un.to_python(us)
+        except Invalid as e:
+            self.assertIn(
+                'Enter only letters, numbers, - (hyphen) or _ (underscore)', six.text_type(e)
+            )
+        else:
+            self.fail('Input should be invalid')
+
+        uv = self.validator(strip=True)
+        es = 'this'
+        self.assertEqual(uv.to_python(us), es)
+        self.assertTrue(type(uv.to_python(us)) is six.text_type)
+
+        self.assertEqual(uv.from_python(us), es)
+        self.assertTrue(type(uv.from_python(us)) is six.text_type)
+
+    def test_unicode(self):
+        uv = self.validator()
+
+        us = '_käse9_-'
+        try:
+            uv.to_python(us)
+        except Invalid as e:
+            self.assertIn(
+                'Enter only letters, numbers, - (hyphen) or _ (underscore)', six.text_type(e)
+            )
+        else:
+            self.fail('Input should be invalid')
+
+    def test_empty(self):
+        iv = self.validator()
+
+        result = iv.to_python(None)
+        self.assertIsNone(result)
+
+        result = iv.to_python('')
+        self.assertIsNone(result)
+
+
+class TestUnicodePlainTextValidator(unittest.TestCase):
+
+    def setUp(self):
+        self.validator = validators.UnicodePlainText
+
+    @unittest.skipIf(str is not six.text_type, 'Not Python 3')
+    def test_alias(self):
+        self.assertTrue(self.validator is validators.PlainText)
+
+    def test_docstring(self):
+        doc = self.validator.__doc__
+        self.assertIn('Test that the field contains only letters, numbers, underscore,', doc)
+
+    def test_non_string(self):
+        un = self.validator()
+
+        try:
+            un.to_python(12)
+        except Invalid as e:
+            self.assertIn(
+                'The input must be a string', six.text_type(e)
+            )
+        else:
+            self.fail('Integer should be invalid')
+
+    @unittest.skipIf(str is not six.text_type, 'Not Python3')
+    def test_byte_string(self):
+        un = self.validator()
+
+        try:
+            un.to_python(b'test')
+        except Invalid as e:
+            self.assertIn(
+                'The input must be a string', six.text_type(e)
+            )
+        else:
+            self.fail('Byte string should be invalid')
+
+    def test_ascii(self):
+        uv = self.validator()
+
+        us = '_this9_'
+        self.assertEqual(uv.to_python(us), us)
+        self.assertTrue(type(uv.to_python(us)) is six.text_type)
+
+        us = '  this  '
+        self.assertEqual(uv.from_python(us), us)
+        self.assertTrue(type(uv.from_python(us)) is six.text_type)
+
+        un = self.validator(accept_python=False)
+        try:
+            un.to_python(us)
+        except Invalid as e:
+            self.assertIn(
+                'Enter only letters, numbers, - (hyphen) or _ (underscore)', six.text_type(e)
+            )
+        else:
+            self.fail('Input should be invalid')
+
+        uv = self.validator(strip=True)
+        es = 'this'
+        self.assertEqual(uv.to_python(us), es)
+        self.assertTrue(type(uv.to_python(us)) is six.text_type)
+
+        self.assertEqual(uv.from_python(us), es)
+        self.assertTrue(type(uv.from_python(us)) is six.text_type)
+
+    def test_unicode(self):
+        uv = self.validator()
+
+        us = '_käse9_-'
+        self.assertEqual(uv.to_python(us), us)
+        self.assertTrue(type(uv.to_python(us)) is six.text_type)
+
+        us = '  käse  '
+        self.assertEqual(uv.from_python(us), us)
+        self.assertTrue(type(uv.from_python(us)) is six.text_type)
+
+        un = self.validator(accept_python=False)
+        try:
+            un.to_python(us)
+        except Invalid as e:
+            self.assertIn(
+                'Enter only letters, numbers, - (hyphen) or _ (underscore)', six.text_type(e)
+            )
+        else:
+            self.fail('Input should be invalid')
+
+        uv = self.validator(strip=True)
+        es = 'käse'
+        self.assertEqual(uv.to_python(us), es)
+        self.assertTrue(type(uv.to_python(us)) is six.text_type)
+
+        self.assertEqual(uv.from_python(us), es)
+        self.assertTrue(type(uv.from_python(us)) is six.text_type)
+
+    def test_empty(self):
+        iv = self.validator()
+
+        result = iv.to_python(None)
+        self.assertIsNone(result)
+
+        result = iv.to_python('')
+        self.assertIsNone(result)
 
 
 class TestIntValidator(unittest.TestCase):
