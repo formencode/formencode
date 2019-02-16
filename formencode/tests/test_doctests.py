@@ -65,30 +65,46 @@ def doctest_module(document, verbose, raise_error):
         assert failure_count == 0
 
 
-def set_func_description(fn, description):
-    """Wrap function and set description attr for nosetests to display."""
-    def _wrapper(*a_test_args):
-        fn(*a_test_args)
-    _wrapper.description = description
-    return _wrapper
-
-
 def test_doctests():
     """Generate each doctest."""
-    # TODO Can we resolve this from nose?
-    verbose = False
-    raise_error = True
+    for suite in suites():
+        for test in suite._tests:
+            yield test
+
+
+def suites():
+    prefix_len = len(os.path.dirname(base)) + 1
     for document in text_files + modules:
         if isinstance(document, str):
-            name = "Doctests for %s" % (document,)
             if not document.startswith(os.sep):
                 document = os.path.join(base, document)
-            yield set_func_description(doctest_file, name), document, \
-                     verbose, raise_error
+            suite = doctest.DocFileSuite(
+                document,
+                module_relative=False,
+                optionflags=doctest.ELLIPSIS | doctest.IGNORE_EXCEPTION_DETAIL,
+            )
+            filename = document[prefix_len:]
+            for test in suite._tests:
+                dt_test = test._dt_test
+                test.description = 'doctest.file:%s:%s (%d example%s)' % (
+                    filename, dt_test.lineno, len(dt_test.examples),
+                    's' if len(dt_test.examples) > 0 else ''
+                )
         else:
-            name = "Doctests for %s" % (document.__name__,)
-            yield set_func_description(doctest_module, name), document, \
-                    verbose, raise_error
+            suite = doctest.DocTestSuite(
+                document,
+                optionflags=doctest.ELLIPSIS | doctest.IGNORE_EXCEPTION_DETAIL,
+            )
+            filename = document.__file__[prefix_len:]
+            for test in suite._tests:
+                dt_test = test._dt_test
+                test.description = 'doctest.module:%s %s:%s (%d example%s)' % (
+                    dt_test.name,
+                    filename, dt_test.lineno, len(dt_test.examples),
+                    's' if len(dt_test.examples) > 0 else ''
+                )
+
+        yield suite
 
 
 if __name__ == '__main__':
