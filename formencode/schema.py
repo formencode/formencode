@@ -209,11 +209,10 @@ class Schema(FancyValidator):
                 try:
                     validator.validate_partial(value_dict, state)
                 except Invalid as e:
-                    sub_errors = e.unpack_errors()
-                    if not isinstance(sub_errors, dict):
+                    if e.error_dict is None:
                         # Can't do anything here
                         continue
-                    merge_dicts(errors, sub_errors)
+                    merge_dicts(errors, e.error_dict)
 
             if errors:
                 raise Invalid(
@@ -393,6 +392,8 @@ def merge_values(v1, v2):
         return merge_lists(v1, v2)
     elif isinstance(v1, dict) and isinstance(v2, dict):
         return merge_dicts(v1, v2)
+    elif isinstance(v1, Invalid) and isinstance(v2, Invalid):
+        return merge_invalid_exceptions(v1, v2)
     else:
         # @@: Should we just ignore errors?  Seems we do...
         return v1
@@ -414,6 +415,35 @@ def merge_lists(l1, l2):
             item = merge_values(l1item, l2item)
         result.append(item)
     return result
+
+
+def merge_invalid_exceptions(e1, e2):
+    # type: (Invalid, Invalid) -> Invalid
+    """
+    Given two formencode.Invalid exceptions merge them together
+    """
+    if e1.error_dict and e2.error_dict:
+        errors = merge_dicts(e1.error_dict, e2.error_dict)
+        return Invalid(
+            format_compound_error(errors),
+            e1.value, e1.state, error_dict=errors
+        )
+
+    elif e1.error_list and e2.error_list:
+        errors = merge_lists(e1.error_list, e2.error_list)
+        return Invalid(
+            format_compound_error(errors),
+            e1.value, e1.state, error_list=errors
+        )
+
+    elif e1.msg and e2.msg:
+        return Invalid(
+            e1.msg + '\n' + e2.msg,
+            e1.value, e1.state
+        )
+
+    # Else, exception mismatch on properties being merged, let first value be dominate
+    return e1
 
 
 class SimpleFormValidator(FancyValidator):
