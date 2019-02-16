@@ -190,6 +190,114 @@ def test_multiple_chained_validators_errors():
         assert False
 
 
+class NestedSchemaValidator(Schema):
+
+    name = Name(if_missing=None)
+    chained_test = ChainedTest(if_missing=None)
+
+
+def test_nested_schema_validators():
+    s = NestedSchemaValidator()
+    try:
+        s.to_python({'chained_test': {'a': '1', 'a_confirm': '2', 'b': '3', 'b_confirm': '4'}})
+    except Invalid as e:
+        assert 'chained_test' in e.error_dict
+        e = e.error_dict['chained_test']
+        assert 'a_confirm' in e.error_dict and 'b_confirm' in e.error_dict
+
+    try:
+        s.to_python({'chained_test': {}})
+    except Invalid as e:
+        pass
+    else:
+        assert False
+
+    try:
+        s.to_python({'name': {'fname': '', 'mi': 'SAM', 'lname': ''}})
+    except Invalid as e:
+        assert 'name' in e.error_dict
+        e = e.error_dict['name']
+        assert 'fname' in e.error_dict and 'mi' in e.error_dict and 'lname' in e.error_dict
+
+    try:
+        s.to_python({'name': {}})
+    except Invalid as e:
+        pass
+    else:
+        assert False
+
+
+class PartialFormValidator(validators.FormValidator):
+    """
+    Call the NestedSchemaValidator validator as a post/chained validator to a form
+    """
+    validate_partial_form = True
+
+    def validate_partial(self, field_dict, state):
+        self._validate_python(field_dict, state)
+
+    def _validate_python(self, field_dict, state):
+        NestedSchemaValidator().to_python(field_dict, state)
+
+
+class PartialFormSchemaValidator(Schema):
+
+    allow_extra_fields = True
+    chained_validators = [
+        PartialFormValidator(),
+    ]
+
+
+def test_partial_form_with_nested_forms_validators():
+
+    nested_validator = NestedSchemaValidator()
+    partial_validator = PartialFormSchemaValidator()
+
+    try:
+        partial_validator.to_python(
+            {'chained_test': {'a': '1', 'a_confirm': '2', 'b': '3', 'b_confirm': '4'}}
+        )
+    except Invalid as e:
+        partial_error = e
+
+    else:
+        assert False
+
+    try:
+        nested_validator.to_python(
+            {'chained_test': {'a': '1', 'a_confirm': '2', 'b': '3', 'b_confirm': '4'}}
+        )
+    except Invalid as e:
+        expected_error = e
+
+    else:
+        assert False
+
+    assert expected_error == partial_error
+
+    try:
+        partial_validator.to_python(
+            {'chained_test': {}}
+        )
+    except Invalid as e:
+        partial_error = e
+
+    else:
+        assert False
+
+    try:
+        nested_validator.to_python(
+            {'chained_test': {}}
+        )
+    except Invalid as e:
+        expected_error = e
+
+    else:
+        assert False
+
+    assert expected_error == partial_error
+
+
 def test_SimpleFormValidator_doc():
     """
     Verify SimpleFormValidator preserves the decorated function's docstring.
