@@ -195,16 +195,6 @@ class Invalid(Exception):
             "You can only encode dictionary errors")
         return self.msg
 
-    def __eq__(self, other):
-        if not isinstance(other, type(self)):
-            return False
-
-        # state is more debug than identity information
-        return (
-            self.msg == other.msg
-            and self.error_dict == other.error_dict
-            and self.error_list == other.error_list
-        )
 
 ############################################################
 ## Base Classes

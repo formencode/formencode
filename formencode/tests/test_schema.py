@@ -250,6 +250,20 @@ class PartialFormSchemaValidator(Schema):
 
 def test_partial_form_with_nested_forms_validators():
 
+    # Monkey patch Invalid to have working equality test
+    def invalid_eq(self, other):
+        if not isinstance(other, type(self)):
+            return False
+
+        # state is more debug than identity information
+        return (
+            self.msg == other.msg
+            and self.error_dict == other.error_dict
+            and self.error_list == other.error_list
+        )
+
+    Invalid.__eq__ = invalid_eq
+
     nested_validator = NestedSchemaValidator()
     partial_validator = PartialFormSchemaValidator()
 
