@@ -12,11 +12,11 @@ from setuptools import setup, find_packages
 
 version = '2.0.0a1'
 
-if not '2.6' <= sys.version < '3.0' and not '3.2' < sys.version:
+if not (2, 7) <= sys.version_info < (3, 0) and not (3, 2) < sys.version_info:
     raise ImportError('Python version not supported')
 
 tests_require = ['nose', 'pycountry',
-    'dnspython' if sys.version < '3.0' else 'dnspython3']
+    'dnspython<=1.16.0' if sys.version_info < (3, 0) else 'dnspython>=1.10.0']
 
 doctests = ['docs/htmlfill.txt', 'docs/Validator.txt',
     'formencode/tests/non_empty.txt']
@@ -32,12 +32,13 @@ setup(name='FormEncode',
            "License :: OSI Approved :: MIT License",
            "Programming Language :: Python",
            "Programming Language :: Python :: 2",
-           "Programming Language :: Python :: 2.6",
            "Programming Language :: Python :: 2.7",
            "Programming Language :: Python :: 3",
            "Programming Language :: Python :: 3.3",
            "Programming Language :: Python :: 3.4",
            "Programming Language :: Python :: 3.5",
+           "Programming Language :: Python :: 3.6",
+           "Programming Language :: Python :: 3.7",
            "Topic :: Software Development :: Libraries :: Python Modules",
            ],
       author='Ian Bicking',
