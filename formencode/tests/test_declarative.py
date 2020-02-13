@@ -34,13 +34,13 @@ class TestDeclarative(unittest.TestCase):
         obj_bar = D(foo='bar')
         obj_baz = D(foo='baz')
         obj = D(bar=obj_bar, baz=obj_baz)
-        self.assertTrue(re.match("<Declarative object \d+"
-            " bar=<Declarative object \d+ foo='bar'>"
-            " baz=<Declarative object \d+ foo='baz'>>", repr(obj)))
+        self.assertTrue(re.match(r"<Declarative object \d+"
+            r" bar=<Declarative object \d+ foo='bar'>"
+            r" baz=<Declarative object \d+ foo='baz'>>", repr(obj)))
 
     def test_repr_recursive(self):
         D = declarative.Declarative
         obj = D(foo='bar')
         obj.bar = obj
-        self.assertTrue(re.match("<Declarative object \d+"
-            " bar=self foo='bar'>", repr(obj)))
+        self.assertTrue(re.match(r"<Declarative object \d+"
+            r" bar=self foo='bar'>", repr(obj)))
