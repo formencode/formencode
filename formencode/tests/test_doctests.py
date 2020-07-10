@@ -66,7 +66,7 @@ def doctest_module(document, verbose, raise_error):
 
 
 def set_func_description(fn, description):
-    """Wrap function and set description attr for nosetests to display."""
+    """Wrap function and set description attr to display."""
     def _wrapper(*a_test_args):
         fn(*a_test_args)
     _wrapper.description = description
@@ -75,7 +75,6 @@ def set_func_description(fn, description):
 
 def test_doctests():
     """Generate each doctest."""
-    # TODO Can we resolve this from nose?
     verbose = False
     raise_error = True
     for document in text_files + modules:

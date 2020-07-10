@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 import datetime
 import unittest
-from nose.plugins.skip import SkipTest
 
 from formencode import validators
 from formencode.validators import Invalid
