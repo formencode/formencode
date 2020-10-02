@@ -10,8 +10,6 @@ from __future__ import absolute_import
 import sys
 from setuptools import setup, find_packages
 
-version = '2.0.0a1'
-
 if not '2.7' <= sys.version < '3.0' and not '3.6' <= sys.version:
     raise ImportError('Python version not supported')
 
@@ -22,7 +20,6 @@ doctests = ['docs/htmlfill.txt', 'docs/Validator.txt',
     'formencode/tests/non_empty.txt']
 
 setup(name='FormEncode',
-      version=version,
       # requires_python='>=2.7,!=3.0,!=3.1,!=3.2,!=3.3,!=3.4,' # PEP345
       description="HTML form validation, generation, and conversion package",
       long_description=__doc__,
@@ -43,6 +40,7 @@ setup(name='FormEncode',
       author_email='ianb@colorstudy.com',
       url='http://formencode.org',
       license='MIT',
+      data_files = [("", ["LICENSE.txt"])],
       zip_safe=False,
       packages=find_packages(),
       include_package_data=True,
@@ -50,6 +48,8 @@ setup(name='FormEncode',
       test_suite='formencode.tests',
       install_requires=['six'],
       tests_require=tests_require,
+      use_scm_version=True,
+      setup_requires=['setuptools_scm', 'setuptools_scm_git_archive'],
+
       extras_require={'testing': tests_require},
-      convert_2to3_doctests=doctests,
     )
