@@ -396,7 +396,7 @@ msgstr "Nepoznato ime meseca: %(month)s"
 
 #: formencode/validators.py:1947
 msgid "Please enter a number for the year"
-msgstr "Neznano ime meseca: %(month)s"
+msgstr "Molim, unesite broj godine"
 
 #: formencode/validators.py:1948
 msgid "Please enter a four-digit year after 1899"
@@ -408,7 +408,7 @@ msgstr "Morate naznačiti pre ili posle podne (AM ili PM)"
 
 #: formencode/validators.py:2132
 msgid "There are too many :'s"
-msgstr "Previše dvotački"
+msgstr "Ima previše :'s"
 
 #: formencode/validators.py:2133
 msgid "You may not enter seconds"
