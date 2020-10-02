@@ -240,6 +240,31 @@ class Validator(declarative.Declarative):
     def from_python(self, value, state=None):
         return value
 
+    _message_vars_decode = None
+    if six.text_type is not str:
+        def _message_vars_decode(self, message_vars):
+            """
+            Under python2, a form value in web frameworks may be encoded as
+            UTF8 unicode. The standard error templates use a ``%(value)r``
+            string formatting, which will render the error as ``u"Foo"`` instead
+            of just ``"Foo"``.  This decoder, which can be overridden, will
+            encode the value back to a python string and render ``"Foo"``.  This
+            decoder will only update the error dictionary if the unicode and
+            string values are equal by comparison.
+
+             v = message_vars.items()[0][1]
+            """
+            if six.text_type is not str:
+                for (k, v) in message_vars.items():
+                    if isinstance(v, six.text_type):
+                        try:
+                            v2 = v.encode('utf-8')
+                        except Exception as e:
+                            v2 = v
+                        if v == v2:
+                            message_vars[k] = v2
+            return message_vars
+
     def message(self, msgName, state, **kw):
         # determine translation function
         try:
@@ -259,6 +284,10 @@ class Validator(declarative.Declarative):
 
         msg = self._messages[msgName]
         msg = trans(msg, **self.gettextargs)
+
+        if self._message_vars_decode:
+            # handle custom decoding for message vars
+            kw = self._message_vars_decode(kw)
 
         try:
             return msg % kw
