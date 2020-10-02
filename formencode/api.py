@@ -98,7 +98,7 @@ class NoDefault(object):
 
 def is_empty(value):
     """Check whether the given value should be considered "empty"."""
-    return value is None or value == '' or (
+    return value is None or value == '' or value == b'' or (
         isinstance(value, (list, tuple, dict)) and not value)
 
 
