@@ -48,8 +48,8 @@ class RewritingParser(html_parser.HTMLParser):
             self.listener.reset()
         html_parser.HTMLParser.feed(self, data)
 
-    _entityref_re = re.compile('&([a-zA-Z][-.a-zA-Z\d]*);')
-    _charref_re = re.compile('&#(\d+|[xX][a-fA-F\d]+);')
+    _entityref_re = re.compile(r'&([a-zA-Z][-.a-zA-Z\d]*);')
+    _charref_re = re.compile(r'&#(\d+|[xX][a-fA-F\d]+);')
 
     def unescape(self, s):
         s = self._entityref_re.sub(self._sub_entityref, s)

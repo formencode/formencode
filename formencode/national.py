@@ -388,9 +388,9 @@ class UKPostalCode(Regex):
     """
 
     regex = re.compile(r'^((ASCN|BBND|BIQQ|FIQQ|PCRN|SIQQ|STHL|TDCU|TKCA)'
-        '\s?1ZZ|BFPO (c\/o )?[1-9]{1,4}|GIR\s?0AA|[A-PR-UWYZ]'
-        '([0-9]{1,2}|([A-HK-Y][0-9]|[A-HK-Y][0-9]([0-9]|[ABEHMNPRV-Y]))'
-        '|[0-9][A-HJKS-UW])\s?[0-9][ABD-HJLNP-UW-Z]{2})$', re.I)
+        r'\s?1ZZ|BFPO (c\/o )?[1-9]{1,4}|GIR\s?0AA|[A-PR-UWYZ]'
+        r'([0-9]{1,2}|([A-HK-Y][0-9]|[A-HK-Y][0-9]([0-9]|[ABEHMNPRV-Y]))'
+        r'|[0-9][A-HJKS-UW])\s?[0-9][ABD-HJLNP-UW-Z]{2})$', re.I)
     strip = True
 
     messages = dict(
@@ -646,7 +646,7 @@ class USPhoneNumber(FancyValidator):
     # for emacs: "
 
     _phoneRE = re.compile(r'^\s*(?:1-)?(\d\d\d)[\- \.]?(\d\d\d)[\- \.]?'
-        '(\d\d\d\d)(?:\s*ext\.?\s*(\d+))?\s*$', re.I)
+        r'(\d\d\d\d)(?:\s*ext\.?\s*(\d+))?\s*$', re.I)
 
     messages = dict(
         phoneFormat=_('Please enter a number, with area code,'
