@@ -16,13 +16,13 @@ class ForEach(CompoundValidator):
 
     For instance::
 
-        ForEach(AsInt(), InList([1, 2, 3]))
+        ForEach(Int(), OneOf([1, 2, 3]))
 
     Will take a list of values and try to convert each of them to
     an integer, and then check if each integer is 1, 2, or 3.  Using
     multiple arguments is equivalent to::
 
-        ForEach(All(AsInt(), InList([1, 2, 3])))
+        ForEach(All(Int(), OneOf([1, 2, 3])))
 
     Use convert_to_list=True if you want to force the input to be a
     list.  This will turn non-lists into one-element lists, and None

@@ -396,7 +396,7 @@ msgstr "Непознато име месеца: %(month)s"
 
 #: formencode/validators.py:1947
 msgid "Please enter a number for the year"
-msgstr "Незнано име месеца: %(month)s"
+msgstr "Молим, унесите број године"
 
 #: formencode/validators.py:1948
 msgid "Please enter a four-digit year after 1899"
@@ -408,7 +408,7 @@ msgstr "Морате назначити пре или после подне (AM 
 
 #: formencode/validators.py:2132
 msgid "There are too many :'s"
-msgstr "Превише двотачки"
+msgstr "Има превише :'s"
 
 #: formencode/validators.py:2133
 msgid "You may not enter seconds"
