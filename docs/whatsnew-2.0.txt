@@ -24,3 +24,4 @@ You might also try FormEncode 2.0.0a1 which supports Python 2.6 and Python
  - Add ISODateTimeConverter validator
  - Add ability to target htmlfill to particular form or ignore a form
  - Fix format errors in some translations
+ - The version of the library can be checked using formencode.__version__
