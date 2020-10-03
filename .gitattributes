@@ -17,3 +17,5 @@
 
 *.mo binary
 *.png binary
+
+.git_archival.txt  export-subst
