@@ -8,8 +8,12 @@ compared to its predecessor, `FormEncode` 1.3.0
 Changelog
 ---------
 
- - `FormEncode` can now run on Python 3.3 and higher without needing to run 2to3 first.
- - `FormEncode` 2.0 is no longer compatible with Python 3.2. If you need Python 3.2 compatibility please use FormEncode 1.3
+ - `FormEncode` can now run on Python 3.6 and higher without needing to run 2to3 first.
+ - `FormEncode` 2.0 is no longer compatible with Python 2.6 and 3.2 to 3.5. If
+   you need Python 2.6 or 3.2 to 3.5 compatibility please use FormEncode 1.3.
+You might also try FormEncode 2.0.0a1 which supports Python 2.6 and Python
+3.3-3.5
+ - This will be the last major version to support Python 2.7
  - Add strict flag to USPostalCode to raise error on postal codes that has too
    many digits instead of just truncating
  - Various Python 3 fixes
