@@ -325,14 +325,14 @@ that a little more.  Here's a more complete implementation of
     ...
     ...     def _validate_python(self, value, state):
     ...         if len(value) < self.min:
-    ...             raise Invalid(self.message("too_few", state,
-    ...                                        min=self.min),
-    ...                           value, state)
+    ...             raise formencode.Invalid(self.message("too_few", state,
+    ...                                                   min=self.min),
+    ...                                      value, state)
     ...         non_letters = self.letter_regex.sub('', value)
     ...         if len(non_letters) < self.non_letter:
-    ...             raise Invalid(self.message("non_letter", state,
-    ...                                         non_letter=self.non_letter),
-    ...                           value, state)
+    ...             raise formencode.Invalid(self.message("non_letter", state,
+    ...                                                   non_letter=self.non_letter),
+    ...                                      value, state)
 
 With all validators, any arguments you pass to the constructor will be
 used to set instance variables.  So :class:`SecureValidator(min=5)` will
@@ -502,8 +502,8 @@ use the :meth:`message` method, like::
         }
 
     def _validate_python(self, value, state):
-        raise Invalid(self.message('key', state, substitution='apples'),
-                      value, state)
+        raise formencode.Invalid(self.message('key', state, substitution='apples'),
+                                 value, state)
 
 Localization of Error Messages (i18n)
 -------------------------------------
