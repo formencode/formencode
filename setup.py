@@ -10,17 +10,17 @@ from __future__ import absolute_import
 import sys
 from setuptools import setup, find_packages
 
-if not '2.7' <= sys.version < '3.0' and not '3.6' <= sys.version:
+if not (2,7) <= sys.version_info[:2] < (3,0) and not (3,6) <= sys.version_info[:2]:
     raise ImportError('Python version not supported')
 
-tests_require = ['nose', 'dnspython==1.16.0' if sys.version < '3.0' else 'dnspython>=2.0.0',
-     'pycountry<19' if sys.version < '3.0' else 'pycountry']
+tests_require = ['nose', 'dnspython==1.16.0' if sys.version_info[:2] < (3,0) else 'dnspython>=2.0.0',
+     'pycountry<19' if sys.version_info < (3,0) else 'pycountry']
 
 doctests = ['docs/htmlfill.txt', 'docs/Validator.txt',
     'formencode/tests/non_empty.txt']
 
 setup(name='FormEncode',
-      # requires_python='>=2.7,!=3.0,!=3.1,!=3.2,!=3.3,!=3.4,' # PEP345
+      # requires_python='>=2.7,!=3.0,!=3.1,!=3.2,!=3.3,!=3.4,!=3.5' # PEP345
       description="HTML form validation, generation, and conversion package",
       long_description=__doc__,
       classifiers=[
@@ -34,6 +34,7 @@ setup(name='FormEncode',
            "Programming Language :: Python :: 3.6",
            "Programming Language :: Python :: 3.7",
            "Programming Language :: Python :: 3.8",
+           "Programming Language :: Python :: 3.9",
            "Topic :: Software Development :: Libraries :: Python Modules",
            ],
       author='Ian Bicking',
