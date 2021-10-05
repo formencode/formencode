@@ -11,6 +11,8 @@ from formencode import schema
 from formencode import validators
 import six
 
+import pytest
+
 
 """Modules that will have their doctests tested."""
 modules = [compound, htmlfill, htmlgen, national, schema, validators]
@@ -66,16 +68,13 @@ def doctest_module(document, verbose, raise_error):
 
 
 def set_func_description(fn, description):
-    """Wrap function and set description attr for nosetests to display."""
+    """Wrap function and set description attr for pytest to display."""
     def _wrapper(*a_test_args):
         fn(*a_test_args)
     _wrapper.description = description
     return _wrapper
 
-
-def test_doctests():
-    """Generate each doctest."""
-    # TODO Can we resolve this from nose?
+def collect_functions():
     verbose = False
     raise_error = True
     for document in text_files + modules:
@@ -89,6 +88,12 @@ def test_doctests():
             name = "Doctests for %s" % (document.__name__,)
             yield set_func_description(doctest_module, name), document, \
                     verbose, raise_error
+
+
+@pytest.mark.parametrize("testfn,document,verbose,raise_error", list(collect_functions()))
+def test_doctests(testfn,document,verbose,raise_error):
+    """Generate each doctest."""
+    testfn(document, verbose, raise_error)
 
 
 if __name__ == '__main__':

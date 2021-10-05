@@ -24,16 +24,18 @@ if base_dir not in sys.path:
 from formencode import htmlfill, htmlfill_schemabuilder
 from formencode.doctest_xml_compare import xml_compare
 
+import pytest
 
-def test_inputoutput():
+
+def collect_values():
     data_dir = os.path.join(os.path.dirname(__file__), 'htmlfill_data')
     for fn in os.listdir(data_dir):
         if fn.startswith('data-'):
             fn = os.path.join(data_dir, fn)
-            yield run_filename, fn
+            yield fn
 
-
-def run_filename(filename):
+@pytest.mark.parametrize('filename', list(collect_values()))
+def test_runfile(filename):
     f = open(filename)
     content = f.read()
     f.close()

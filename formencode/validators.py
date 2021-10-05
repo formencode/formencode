@@ -1395,7 +1395,7 @@ class Email(FancyValidator):
 
 
 class URL(FancyValidator):
-    """
+    r"""
     Validate a URL, either http://... or https://.  If check_exists
     is true, then we'll actually make a request for the page.
 

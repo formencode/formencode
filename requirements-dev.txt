@@ -1,0 +1,9 @@
+pytest<4.7; python_version == '2.7'
+pytest-cov<2.13; python_version == '2.7'
+pytest; python_version > '2.7'
+pytest-cov; python_version > '2.7'
+wheel
+pycountry<19; python_version == '2.7'
+dnspython<2.0.0; python_version == '2.7'
+pycountry; python_version > '2.7'
+dnspython; python_version > '2.7'
