@@ -24,7 +24,7 @@ The latest documentation is available at http://www.formencode.org/
 Testing
 -------
 
-Use `python setup.py nosetests` to run the test suite.
+Use `pytest formencode` to run the test suite.
 Use `tox` to run the test suite for all supported Python versions.
 
 

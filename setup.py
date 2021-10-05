@@ -9,12 +9,20 @@ from __future__ import absolute_import
 
 import sys
 from setuptools import setup, find_packages
+import platform
 
 if not (2,7) <= sys.version_info[:2] < (3,0) and not (3,6) <= sys.version_info[:2]:
     raise ImportError('Python version not supported')
 
-tests_require = ['nose', 'dnspython==1.16.0' if sys.version_info[:2] < (3,0) else 'dnspython>=2.0.0',
-     'pycountry<19' if sys.version_info < (3,0) else 'pycountry']
+tests_require = [
+    'pytest<4.7' if sys.version_info[:2] < (3,0) else 'pytest',
+    'dnspython==1.16.0' if sys.version_info[:2] < (3,0) else 'dnspython>=2.0.0',
+    'pycountry<19' if sys.version_info < (3,0) else 'pycountry']
+
+setup_requires = [
+    'setuptools_scm<6.0' if sys.version_info[:2] < (3,0) else 'setuptools_scm',
+    'setuptools_scm_git_archive',
+]
 
 doctests = ['docs/htmlfill.txt', 'docs/Validator.txt',
     'formencode/tests/non_empty.txt']
@@ -50,7 +58,7 @@ setup(name='FormEncode',
       install_requires=['six'],
       tests_require=tests_require,
       use_scm_version=True,
-      setup_requires=['setuptools_scm', 'setuptools_scm_git_archive'],
+      setup_requires=setup_requires,
 
       extras_require={'testing': tests_require},
     )

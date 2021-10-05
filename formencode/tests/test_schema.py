@@ -8,6 +8,8 @@ from formencode import Invalid, Validator, compound, foreach, validators
 from formencode.schema import Schema, merge_dicts, SimpleFormValidator
 from formencode.variabledecode import NestedVariables
 
+import pytest
+
 
 def _notranslation(s):
     return s
@@ -146,10 +148,14 @@ BadCase(AddressesForm,
         text="The input field 'whatever' was not expected.")
 
 
-def test_this():
-
+def collect_cases():
     for case in all_cases:
-        yield (case.test,)
+        yield case.test
+
+
+@pytest.mark.parametrize('func', list(collect_cases()))
+def test_this(func):
+    func()
 
 
 def test_merge():

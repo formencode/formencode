@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import datetime
 import unittest
-from nose.plugins.skip import SkipTest
+import pytest
 
 from formencode import validators
 from formencode.validators import Invalid
@@ -198,7 +198,7 @@ class TestNumberValidator(unittest.TestCase):
         try:
             inf = float('infinity')
         except ValueError:
-            raise SkipTest
+            pytest.skip('skipping incompatible float test')
         self.assertEqual(self.validator.to_python('infinity'), inf)
 
 

@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from nose.tools import assert_raises
+import pytest
 
 from formencode.context import Context, ContextRestoreError
 
@@ -34,7 +34,8 @@ def test_fail():
     c3 = Context()
     res1 = c3.set(a=1)
     res2 = c3.set(b=2)
-    assert_raises(ContextRestoreError, res1.restore)
+    with pytest.raises(ContextRestoreError):
+        res1.restore()
     assert c3.b == 2
     assert c3.a == 1
     res2.restore()
