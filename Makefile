@@ -15,7 +15,7 @@ publish:
 	pip install 'twine>=1.5.0'
 	python setup.py sdist bdist_wheel
 	twine upload dist/*
-	rm -fr build dist .egg formencode.egg-info
+	rm -fr build dist .egg FormEncode.egg-info
 
 docs:
 	cd docs && make html

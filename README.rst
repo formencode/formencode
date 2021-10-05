@@ -1,9 +1,9 @@
 FormEncode
 ==========
 
-.. image:: https://secure.travis-ci.org/formencode/formencode.png?branch=master
-   :target: https://travis-ci.org/formencode/formencode
-   :alt: Travis CI continuous integration status
+.. image:: https://github.com/formencode/formencode/actions/workflows/run-tests.yml/badge.svg
+   :target: https://github.com/formencode/formencode/actions
+   :alt: Test Status
 
 
 Introduction
@@ -31,8 +31,4 @@ Use `tox` to run the test suite for all supported Python versions.
 Changes
 -------
 
-Added a validator that can require one or more fields based on the value of another field.
-
-A German howto can be found here: http://techblog.auf-nach-mallorca.info/2014/08/19/dynamische_formulare_validieren_mit_formencode/
-
-Courtesy of the developers of http://www.auf-nach-mallorca.info
+See the `What's new section of the documentation <http://www.formencode.org/en/latest/#what-s-new>`_.

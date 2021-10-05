@@ -1,6 +1,10 @@
 name: Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
 
 jobs:
   build:
@@ -9,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [2.7, 3.6, 3.7, 3.8, 3.9, 3.10-dev]
+        python-version: [2.7, 3.6, 3.7, 3.8, 3.9, 3.10.0]
         os: [ubuntu-18.04, macOS-latest, windows-latest]
         include:
           # pypy3 on Windows currently fails trying to
