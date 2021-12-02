@@ -13,6 +13,8 @@ compared to its predecessor, `FormEncode` 1.3.0
  - Note this will be the last version to support Python 2.7. The next version
    will be 2.1 to signal this change. If you want to keep support for Python
    2.7 update your dependencies spec to be below 2.1
+ - Added python_requires to setup(), to no longer install on unsupported Python
+   versions.
 
 2.0.0
 -----

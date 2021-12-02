@@ -31,6 +31,7 @@ setup(name='FormEncode',
       # requires_python='>=2.7,!=3.0,!=3.1,!=3.2,!=3.3,!=3.4,!=3.5' # PEP345
       description="HTML form validation, generation, and conversion package",
       long_description=__doc__,
+      python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*',
       classifiers=[
           "Development Status :: 4 - Beta",
            "Intended Audience :: Developers",
