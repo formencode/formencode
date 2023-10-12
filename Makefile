@@ -1,7 +1,8 @@
 .PHONY: docs
 init:
-	pip install -e .
+	pip install .
 	pip install -r requirements-test.txt
+
 ci:
 	pytest
 
