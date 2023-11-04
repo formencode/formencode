@@ -1,6 +1,6 @@
 .PHONY: docs
 init:
-	pip install .
+	pip install -e .
 	pip install -r requirements-test.txt
 
 ci:
