@@ -260,7 +260,7 @@ def test_state_manipulation():
     assert state.key == old_key, "key not restored"
 
 
-class TestAtLeastOneCheckboxIsChecked:
+class TestAtLeastOneCheckboxIsChecked(unittest.TestCase):
     """Tests to address SourceForge bug #1777245
 
     The reporter is trying to enforce agreement to a Terms of Service
@@ -268,7 +268,7 @@ class TestAtLeastOneCheckboxIsChecked:
     a validation failure. The tests below illustrate a working approach.
     """
 
-    def setup(self):
+    def setUp(self):
         self.not_empty_messages = {'missing': 'a missing value message'}
 
         class CheckForCheckboxSchema(Schema):
@@ -279,7 +279,7 @@ class TestAtLeastOneCheckboxIsChecked:
     def test_Schema_with_input_present(self):
         # <input type="checkbox" name="agree" value="yes" checked="checked">
         result = self.schema.to_python({'agree': 'yes'})
-        assert result['agree'] is True
+        self.assertTrue(result['agree'])
 
     def test_Schema_with_input_missing(self):
         # <input type="checkbox" name="agree" value="yes">
@@ -287,10 +287,10 @@ class TestAtLeastOneCheckboxIsChecked:
             self.schema.to_python({})
         except Invalid as exc:
             error_message = exc.error_dict['agree'].msg
-            assert self.not_empty_messages['missing'] == error_message, \
-                error_message
+            self.assertEqual(self.not_empty_messages['missing'], error_message,
+                error_message)
         else:
-            assert False, 'missing input not detected'
+            self.fail('missing input not detected')
 
 
 class TestStrictSchemaWithMultipleEqualInputFields(unittest.TestCase):
