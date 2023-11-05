@@ -1335,10 +1335,10 @@ class Email(FancyValidator):
                 import socket
             try:
                 try:
-                    dns.resolver.query(domain, 'MX')
+                    dns.resolver.resolve(domain, 'MX')
                 except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
                     try:
-                        dns.resolver.query(domain, 'A')
+                        dns.resolver.resolve(domain, 'A')
                     except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
                         raise Invalid(
                             self.message('domainDoesNotExist',
