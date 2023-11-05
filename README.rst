@@ -1,6 +1,8 @@
 FormEncode
 ==========
 
+|PyPI| |Python| |Tests|
+
 .. |PyPI| image:: https://img.shields.io/pypi/v/formencode
    :target: https://pypi.org/project/formencode
    :alt: PyPI
