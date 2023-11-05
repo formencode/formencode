@@ -33,4 +33,4 @@ jobs:
     - name: Install dependencies
       run: make
     - name: Run tests
-      run: make ci
+      run: make tests
