@@ -8,7 +8,6 @@ from formencode import htmlgen
 from formencode import national
 from formencode import schema
 from formencode import validators
-import six
 
 import pytest
 
@@ -29,24 +28,22 @@ text_files = [
 base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-if six.text_type is str:  # Python 3
+OutputChecker = doctest.OutputChecker
 
-    OutputChecker = doctest.OutputChecker
+class OutputChecker3(OutputChecker):
+    def check_output(self, want, got, optionflags):
+        if want.startswith("u'"):
+            want = want[1:]
+        elif want.startswith("set(["):
+            want = (
+                want[3:]
+                .replace("([", "{")
+                .replace("])", "}")
+                .replace("{}", "set()")
+            )
+        return OutputChecker.check_output(self, want, got, optionflags)
 
-    class OutputChecker3(OutputChecker):
-        def check_output(self, want, got, optionflags):
-            if want.startswith("u'"):
-                want = want[1:]
-            elif want.startswith("set(["):
-                want = (
-                    want[3:]
-                    .replace("([", "{")
-                    .replace("])", "}")
-                    .replace("{}", "set()")
-                )
-            return OutputChecker.check_output(self, want, got, optionflags)
-
-    doctest.OutputChecker = OutputChecker3
+doctest.OutputChecker = OutputChecker3  # needed??
 
 
 def doctest_file(document, verbose, raise_error):

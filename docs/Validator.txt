@@ -56,25 +56,22 @@ The core of this validation process is two methods and an exception::
 exception.  Typically we'd catch that exception, and use it for some
 sort of feedback.  Like:
 
-.. comment (fake raw_input):
+.. comment (fake input):
 
-    >>> raw_input_input = []
-    >>> def raw_input(prompt):
-    ...     value = raw_input_input.pop(0)
+    >>> input_values = []
+    >>> def input(prompt):
+    ...     value = input_values.pop(0)
     ...     print ('%s%s' % (prompt, value))
     ...     return value
-    >>> raw_input_input.extend(['ten', '10'])
-    >>> raw_input_input.extend(['bob', 'bob@nowhere.com'])
-    >>> import six
-    >>> if not six.PY2:  # Python 3
-    ...    input = raw_input
+    >>> input_values.extend(['ten', '10'])
+    >>> input_values.extend(['bob', 'bob@nowhere.com'])
 
 ::
 
     >>> def get_integer():
     ...     while 1:
     ...         try:
-    ...             value = raw_input('Enter a number: ')
+    ...             value = input('Enter a number: ')
     ...             return validator.to_python(value)
     ...         except formencode.Invalid as e:
     ...             print (e)
@@ -90,10 +87,10 @@ We can also generalize this kind of function::
     >>> def valid_input(prompt, validator):
     ...     while 1:
     ...         try:
-    ...             value = raw_input(prompt)
+    ...             value = input(prompt)
     ...             return validator.to_python(value)
     ...         except formencode.Invalid as e:
-    ...             print (e)
+    ...             print(e)
     >>> valid_input('Enter your email: ', validators.Email())
     Enter your email: bob
     An email address must contain a single @
@@ -573,12 +570,12 @@ Optionally you can also add a test of your language to
     ne = formencode.validators.NotEmpty()
     [...]
     def test_de():
-        _test_lang("de", u"Bitte einen Wert eingeben")
+        _test_lang("de", "Bitte einen Wert eingeben")
 
 And the test for your language::
 
     def test_<lang>():
-        _test_lang("<lang>", u"<translation of Not Empty Text in the language <lang>")
+        _test_lang("<lang>", "<translation of Not Empty Text in the language <lang>")
 
 HTTP/HTML Form Input
 --------------------

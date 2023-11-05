@@ -57,14 +57,8 @@ Examples::
 """
 
 import xml.etree.ElementTree as ET
-import six
-from six.moves import map
 
-try:
-    from html import escape
-except ImportError:  # Python < 3.2
-    from cgi import escape
-
+from html import escape
 
 __all__ = ['html']
 
@@ -92,26 +86,18 @@ class _HTML:
     def quote(self, arg):
         if arg is None:
             return ''
-        if six.text_type is not str:  # Python 2
-            arg = six.text_type(arg).encode(default_encoding)
         return escape(arg, True)
 
     def str(self, arg, encoding=None):
-        if isinstance(arg, six.string_types):
-            if not isinstance(arg, str):
-                arg = arg.encode(default_encoding)
+        if isinstance(arg, str):
             return arg
-        elif arg is None:
+        if isinstance(str, bytes):
+            return arg.encode(default_encoding)
+        if arg is None:
             return ''
-        elif isinstance(arg, (list, tuple)):
+        if isinstance(arg, (list, tuple)):
             return ''.join(map(self.str, arg))
-        elif isinstance(arg, Element):
-            return str(arg)
-        else:
-            arg = six.text_type(arg)
-            if not isinstance(arg, str):  # Python 2
-                arg = arg.encode(default_encoding)
-            return arg
+        return str(arg)
 
 
 html = _HTML()
@@ -134,7 +120,7 @@ class Element(ET.Element
             if value is None:
                 del kw[name]
                 continue
-            kw[name] = six.text_type(value)
+            kw[name] = str(value)
             if name.endswith('_'):
                 kw[name[:-1]] = value
                 del kw[name]
@@ -154,33 +140,22 @@ class Element(ET.Element
             if not ET.iselement(arg):
                 if last is None:
                     if el.text is None:
-                        el.text = six.text_type(arg)
+                        el.text = str(arg)
                     else:
-                        el.text += six.text_type(arg)
+                        el.text += str(arg)
                 else:
                     if last.tail is None:
-                        last.tail = six.text_type(arg)
+                        last.tail = str(arg)
                     else:
-                        last.tail += six.text_type(arg)
+                        last.tail += str(arg)
             else:
                 last = arg
                 el.append(last)
         return el
 
-    if six.text_type is str:  # Python 3
-
-        def __str__(self):
-            return ET.tostring(
-                self, default_encoding).decode(default_encoding)
-
-    else:
-
-        def __str__(self):
-            return ET.tostring(self, default_encoding)
-
-        def __unicode__(self):
-            # This is lame!
-            return str(self).decode(default_encoding)
+    def __str__(self):
+        return ET.tostring(
+            self, default_encoding).decode(default_encoding)
 
     def __repr__(self):
         content = str(self)

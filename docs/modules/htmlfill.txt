@@ -13,5 +13,4 @@ Module Contents
 .. autofunction:: escape_formatter
 .. autofunction:: escapenl_formatter
 .. autofunction:: ignore_formatter
-.. autofunction:: ignore_formatter
 .. autoclass:: FillingParser

@@ -22,12 +22,9 @@ import copy
 import types
 
 from itertools import count
-import six
-from six.moves import map
-from six.moves import zip
 
 
-class classinstancemethod(object):
+class classinstancemethod:
     """
     Acts like a class method when called from a class, like an
     instance method when called by an instance.  The method should
@@ -42,7 +39,7 @@ class classinstancemethod(object):
         return _methodwrapper(self.func, obj=obj, cls=cls)
 
 
-class _methodwrapper(object):
+class _methodwrapper:
 
     def __init__(self, func, obj, cls):
         self.func = func
@@ -84,7 +81,7 @@ class DeclarativeMeta(type):
         return cls
 
 
-class singletonmethod(object):
+class singletonmethod:
     """
     For Declarative subclasses, this decorator will call the method
     on the cls.singleton() object if called as a class method (or
@@ -100,7 +97,7 @@ class singletonmethod(object):
         return types.MethodType(self.func, obj)
 
 
-class Declarative(six.with_metaclass(DeclarativeMeta, object)):
+class Declarative(metaclass=DeclarativeMeta):
 
     __unpackargs__ = ()
 
@@ -144,7 +141,7 @@ class Declarative(six.with_metaclass(DeclarativeMeta, object)):
         for name in self.__mutableattributes__:
             if name not in kw:
                 setattr(self, name, copy.copy(getattr(self, name)))
-        for name, value in six.iteritems(kw):
+        for name, value in kw.items():
             setattr(self, name, value)
         if 'declarative_count' not in kw:
             self.declarative_count = next(self.counter)
@@ -189,7 +186,7 @@ class Declarative(six.with_metaclass(DeclarativeMeta, object)):
             else:
                 break
         args.extend('%s=%s' % (name, source.makeRepr(value))
-                    for (name, value) in six.iteritems(vals))
+                    for (name, value) in vals.items())
         return '%s(%s)' % (self.__class__.__name__,
                            ', '.join(args))
 

@@ -47,23 +47,20 @@ class TestCustomValidator(unittest.TestCase):
         try:
             cv.to_python('1')
         except Invalid as e:
-            self.assertTrue(
-                'one is invalid' in str(e), e)
+            self.assertIn('one is invalid', str(e), e)
         else:
             self.fail("one should be invalid")
         self.assertEqual(cv.to_python('2'), 2)
         try:
             cv.to_python('3')
         except Invalid as e:
-            self.assertTrue(
-                'three is invalid' in str(e), e)
+            self.assertIn('three is invalid', str(e), e)
         else:
             self.fail("three should be invalid")
         try:
             cv.to_python('4')
         except Invalid as e:
-            self.assertTrue(
-                'four is invalid' in str(e), e)
+            self.assertIn('four is invalid', str(e), e)
         else:
             self.fail("four should be invalid")
         self.assertEqual(cv.to_python('5'), 5)
@@ -75,8 +72,7 @@ class TestCustomValidator(unittest.TestCase):
         try:
             cv.from_python(2)
         except Invalid as e:
-            self.assertTrue(
-                'two is invalid' in str(e), e)
+            self.assertIn('two is invalid', str(e), e)
         else:
             self.fail("two should be invalid")
         self.assertEqual(cv.from_python(3), '3')
@@ -90,22 +86,19 @@ class TestCustomValidator(unittest.TestCase):
         try:
             cv.from_python(2)
         except Invalid as e:
-            self.assertTrue(
-                'two is invalid' in str(e), e)
+            self.assertIn('two is invalid', str(e), e)
         else:
             self.fail("two should be invalid")
         try:
             cv.from_python(3)
         except Invalid as e:
-            self.assertTrue(
-                'three is invalid' in str(e), e)
+            self.assertIn('three is invalid', str(e), e)
         else:
             self.fail("three should be invalid")
         try:
             cv.from_python(4)
         except Invalid as e:
-            self.assertTrue(
-                'four is invalid' in str(e), e)
+            self.assertIn('four is invalid', str(e), e)
         else:
             self.fail("four should be invalid")
         self.assertEqual(cv.from_python(5), '5')
@@ -141,8 +134,7 @@ class TestNotOneValidator(unittest.TestCase):
         try:
             nov.to_python('1')
         except Invalid as e:
-            self.assertTrue(
-                'must not be 1' in str(e), e)
+            self.assertIn('must not be 1', str(e), e)
         else:
             self.fail("1 should be invalid")
         self.assertEqual(nov.to_python('2'), 2)
@@ -156,8 +148,7 @@ class TestNotOneValidator(unittest.TestCase):
         try:
             nov.to_python('42')
         except Invalid as e:
-            self.assertTrue(
-                'must not be 42' in str(e), e)
+            self.assertIn('must not be 42', str(e), e)
         else:
             self.fail("42 should be invalid")
 
@@ -172,8 +163,7 @@ class TestNotOneValidator(unittest.TestCase):
         try:
             nov.to_python('42')
         except Invalid as e:
-            self.assertTrue(
-                'must not be 42' in str(e), e)
+            self.assertIn('must not be 42', str(e), e)
         else:
             self.fail("42 should be invalid")
         self.assertEqual(nov.to_python('43'), 43)
@@ -241,8 +231,7 @@ class TestAllAndNotOneValidator(unittest.TestCase):
         try:
             cav.to_python('4')
         except Invalid as e:
-            self.assertTrue(
-                'must not be 4' in str(e), e)
+            self.assertIn('must not be 4', str(e), e)
         else:
             self.fail("4 should be invalid")
         self.assertEqual(cav.to_python('5'), 5)

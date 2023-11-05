@@ -4,8 +4,6 @@ import warnings
 from formencode.api import is_validator, FancyValidator, Invalid
 from formencode.compound import CompoundValidator, All
 from formencode.validators import Int
-from six.moves import map
-
 
 with warnings.catch_warnings(record=True) as custom_warnings:
     warnings.simplefilter('default')
@@ -51,7 +49,7 @@ class TestDeprecatedCustomValidator(unittest.TestCase):
         output = '\n'.join(map(str, custom_warnings))
         for old, new in deprecated:
             msg = '%s is deprecated; use %s instead' % (old, new)
-            self.assertTrue(msg in output, output or 'no warnings')
+            self.assertIn(msg, output, output or 'no warnings')
 
     def test_is_validator(self):
         self.assertTrue(is_validator(DeprecatedCustomValidator))
@@ -63,23 +61,20 @@ class TestDeprecatedCustomValidator(unittest.TestCase):
         try:
             cv.to_python('1')
         except Invalid as e:
-            self.assertTrue(
-                'one is invalid' in str(e), e)
+            self.assertIn('one is invalid', str(e), e)
         else:
             self.fail("one should be invalid")
         self.assertEqual(cv.to_python('2'), 2)
         try:
             cv.to_python('3')
         except Invalid as e:
-            self.assertTrue(
-                'three is invalid' in str(e), e)
+            self.assertIn('three is invalid', str(e), e)
         else:
             self.fail("three should be invalid")
         try:
             cv.to_python('4')
         except Invalid as e:
-            self.assertTrue(
-                'four is invalid' in str(e), e)
+            self.assertIn('four is invalid', str(e), e)
         else:
             self.fail("four should be invalid")
         self.assertEqual(cv.to_python('5'), 5)
@@ -91,8 +86,7 @@ class TestDeprecatedCustomValidator(unittest.TestCase):
         try:
             cv.from_python(2)
         except Invalid as e:
-            self.assertTrue(
-                'two is invalid' in str(e), e)
+            self.assertIn('two is invalid', str(e), e)
         else:
             self.fail("two should be invalid")
         self.assertEqual(cv.from_python(3), '3')
@@ -106,22 +100,19 @@ class TestDeprecatedCustomValidator(unittest.TestCase):
         try:
             cv.from_python(2)
         except Invalid as e:
-            self.assertTrue(
-                'two is invalid' in str(e), e)
+            self.assertIn('two is invalid', str(e), e)
         else:
             self.fail("two should be invalid")
         try:
             cv.from_python(3)
         except Invalid as e:
-            self.assertTrue(
-                'three is invalid' in str(e), e)
+            self.assertIn('three is invalid', str(e), e)
         else:
             self.fail("three should be invalid")
         try:
             cv.from_python(4)
         except Invalid as e:
-            self.assertTrue(
-                'four is invalid' in str(e), e)
+            self.assertIn('four is invalid', str(e), e)
         else:
             self.fail("four should be invalid")
         self.assertEqual(cv.from_python(5), '5')
@@ -157,7 +148,7 @@ class TestDeprecatedNotOneValidator(unittest.TestCase):
         for output in runtime_warnings, not_one_warnings:
             output = '\n'.join(map(str, output))
             msg = '_to_python is deprecated; use _convert_to_python instead'
-            self.assertTrue(msg in output, output or 'no warnings')
+            self.assertIn(msg, output, output or 'no warnings')
 
     def test_is_validator(self):
         self.assertTrue(is_validator(DeprecatedNotOneValidator))
@@ -171,8 +162,7 @@ class TestDeprecatedNotOneValidator(unittest.TestCase):
             try:
                 nov.to_python('1')
             except Invalid as e:
-                self.assertTrue(
-                    'must not be 1' in str(e), e)
+                self.assertIn('must not be 1', str(e), e)
             else:
                 self.fail("1 should be invalid")
             self.assertEqual(nov.to_python('2'), 2)
@@ -187,8 +177,7 @@ class TestDeprecatedNotOneValidator(unittest.TestCase):
             try:
                 nov.to_python('42')
             except Invalid as e:
-                self.assertTrue(
-                    'must not be 42' in str(e), e)
+                self.assertIn('must not be 42', str(e), e)
             else:
                 self.fail("42 should be invalid")
 
@@ -204,8 +193,7 @@ class TestDeprecatedNotOneValidator(unittest.TestCase):
             try:
                 nov.to_python('42')
             except Invalid as e:
-                self.assertTrue(
-                    'must not be 42' in str(e), e)
+                self.assertIn('must not be 42', str(e), e)
             else:
                 self.fail("42 should be invalid")
             self.assertEqual(nov.to_python('43'), 43)
@@ -232,7 +220,7 @@ class TestDeprecatedCustomCompoundValidator(unittest.TestCase):
     def test_1_warnings(self):
         output = '\n'.join(map(str, custom_compound_warnings))
         msg = 'attempt_convert is deprecated; use _attempt_convert instead'
-        self.assertTrue(msg in output, output or 'no warnings')
+        self.assertIn(msg, output, output or 'no warnings')
 
     def test_is_validator(self):
         self.assertTrue(is_validator(DeprecatedCustomCompoundValidator))
@@ -280,7 +268,7 @@ class TestDeprecatedAllAndNotOneValidator(unittest.TestCase):
         for output in runtime_warnings, all_and_not_one_warnings:
             output = '\n'.join(map(str, output))
             msg = 'attempt_convert is deprecated; use _attempt_convert instead'
-            self.assertTrue(msg in output, output or 'no warnings')
+            self.assertIn(msg, output, output or 'no warnings')
 
     def test_is_validator(self):
         self.assertTrue(is_validator(DeprecatedAllAndNotOneValidator))
@@ -295,8 +283,7 @@ class TestDeprecatedAllAndNotOneValidator(unittest.TestCase):
             try:
                 cav.to_python('4')
             except Invalid as e:
-                self.assertTrue(
-                    'must not be 4' in str(e), e)
+                self.assertIn('must not be 4', str(e), e)
             else:
                 self.fail("4 should be invalid")
             self.assertEqual(cav.to_python('5'), 5)

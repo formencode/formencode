@@ -6,7 +6,6 @@ import re
 from .api import FancyValidator
 from .compound import Any
 from .validators import Regex, Invalid, _
-import six
 
 try:
     import pycountry
@@ -207,7 +206,7 @@ class DelimitedDigitsPostalCode(Regex):
 
     def __init__(self, partition_lengths, delimiter=None, strict=False,
                  *args, **kw):
-        if isinstance(partition_lengths, six.integer_types):
+        if isinstance(partition_lengths, int):
             partition_lengths = [partition_lengths]
         if not delimiter:
             delimiter = ''
@@ -415,19 +414,19 @@ class CountryValidator(FancyValidator):
     ::
 
         >>> CountryValidator.to_python('Germany')
-        u'DE'
+        'DE'
         >>> CountryValidator.to_python('Finland')
-        u'FI'
+        'FI'
         >>> CountryValidator.to_python('UNITED STATES')
-        u'US'
+        'US'
         >>> CountryValidator.to_python('Krakovia')
         Traceback (most recent call last):
             ...
         Invalid: That country is not listed in ISO 3166
         >>> CountryValidator.from_python('DE')
-        u'Germany'
+        'Germany'
         >>> CountryValidator.from_python('FI')
-        u'Finland'
+        'Finland'
     """
 
     key_ok = True
@@ -771,8 +770,7 @@ class InternationalPhoneNumber(FancyValidator):
             value = value.encode('ascii', 'strict')
         except UnicodeEncodeError:
             raise Invalid(self.message('phoneFormat', state), value, state)
-        if six.text_type is str:  # Python 3
-            value = value.decode('ascii')
+        value = value.decode('ascii')
         value = self._mark_chars_re.sub('-', value)
         for f, t in [('  ', ' '),
                 ('--', '-'), (' - ', '-'), ('- ', '-'), (' -', '-')]:
@@ -813,17 +811,17 @@ class LanguageValidator(FancyValidator):
 
         >>> l = LanguageValidator()
         >>> l.to_python('German')
-        u'de'
+        'de'
         >>> l.to_python('Chinese')
-        u'zh'
+        'zh'
         >>> l.to_python('Klingonian')
         Traceback (most recent call last):
             ...
         Invalid: That language is not listed in ISO 639
         >>> l.from_python('de')
-        u'German'
+        'German'
         >>> l.from_python('zh')
-        u'Chinese'
+        'Chinese'
     """
 
     key_ok = True

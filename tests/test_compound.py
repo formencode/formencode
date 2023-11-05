@@ -11,8 +11,8 @@ class TestCompoundValidator(unittest.TestCase):
 
     def test_repr(self):
         r = repr(self.validator)
-        self.assertFalse('validatorArgs' in r)
-        self.assertTrue('validators=[]' in r)
+        self.assertNotIn('validatorArgs', r)
+        self.assertIn('validators=[]', r)
 
     def test_to_python(self):
         self.assertRaises(NotImplementedError,
@@ -35,7 +35,7 @@ class TestAllCompoundValidator(unittest.TestCase):
 
     def test_repr(self):
         r = repr(self.validator)
-        self.assertFalse('validatorArgs' in r)
+        self.assertNotIn('validatorArgs', r)
         self.assertEqual(r.count('DictConverter'), 2)
 
     def test_to_python(self):
@@ -58,7 +58,7 @@ class TestAnyCompoundValidator(unittest.TestCase):
 
     def test_repr(self):
         r = repr(self.validator)
-        self.assertFalse('validatorArgs' in r)
+        self.assertNotIn('validatorArgs', r)
         self.assertEqual(r.count('DictConverter'), 3)
 
     def test_to_python(self):
@@ -73,7 +73,7 @@ class TestAnyCompoundValidator(unittest.TestCase):
         try:
             self.validator.to_python(3)
         except Invalid as e:
-            self.assertTrue('Enter a value from: 2' in str(e))
+            self.assertIn('Enter a value from: 2', str(e))
         else:
             self.fail('Invalid should be raised when no validator succeeds.')
 
@@ -90,7 +90,7 @@ class TestPipeCompoundValidator(unittest.TestCase):
 
     def test_repr(self):
         r = repr(self.validator)
-        self.assertFalse('validatorArgs' in r)
+        self.assertNotIn('validatorArgs', r)
         self.assertEqual(r.count('DictConverter'), 2)
 
     def test_to_python(self):

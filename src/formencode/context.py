@@ -25,7 +25,7 @@ Note that all values are thread local; this means you cannot use a
 context object to pass information to another thread.  In a
 single-thread environment it doesn't really matter.
 
-Typically you will create ``Context`` instances for your application,
+Typically, you will create ``Context`` instances for your application,
 environment, etc.  These should be global module-level variables, that
 may be imported by any interested module; each instance is a namespace
 of its own.
@@ -41,10 +41,10 @@ First, when instantiating a ``Context`` object, you can give it a
 value.  ``None`` is a typical value for that.
 
 Another is ``context.set_default(**vars)``, which will set only those
-variables to default values.  This will not effect the stack of
-scopes, but will only add defaults.
+variables to default values.  This will not affect the stack of scopes,
+but will only add defaults.
 
-When Python 2.5 comes out, this syntax would certainly be useful::
+this syntax would certainly be useful::
 
     with context(page='view'):
         do stuff...
@@ -55,14 +55,13 @@ And ``page`` will be set to ``'view'`` only inside that ``with`` block.
 import threading
 
 from itertools import count
-from six.moves import range
 
 __all__ = ['Context', 'ContextRestoreError']
 
 _restore_ids = count()
 
 
-class NoDefault(object):
+class NoDefault:
     """A dummy value used for parameters with no default."""
 
 
@@ -70,7 +69,7 @@ class ContextRestoreError(Exception):
     """Raised when something is restored out-of-order."""
 
 
-class Context(object):
+class Context:
 
     def __init__(self, default=NoDefault):
         self.__dict__['_local'] = threading.local()
@@ -152,7 +151,7 @@ class Context(object):
             self.__class__.__name__, myid, ' '.join(varlist))
 
 
-class RestoreState(object):
+class RestoreState:
 
     def __init__(self, context, state_id):
         self.state_id = state_id

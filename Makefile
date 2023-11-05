@@ -5,7 +5,7 @@ init:
 .PHONY: tests
 
 tests:
-	pytest
+	pytest tests
 
 flake8:
 	flake8 src tests

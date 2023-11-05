@@ -4,7 +4,6 @@ Validator for repeating items.
 
 from .api import NoDefault, Invalid
 from .compound import CompoundValidator, from_python
-import six
 
 __all__ = ['ForEach']
 
@@ -84,7 +83,7 @@ class ForEach(CompoundValidator):
                     new_list = set(new_list)
                 return new_list
             else:
-                raise Invalid('Errors:\n%s' % '\n'.join(six.text_type(e)
+                raise Invalid('Errors:\n%s' % '\n'.join(str(e)
                     for e in errors if e), value, state, error_list=errors)
         finally:
             if state is not None:
@@ -106,15 +105,14 @@ class ForEach(CompoundValidator):
     def empty_value(self, value):
         return []
 
-    class _IfMissing(object):
+    class _IfMissing:
 
         def __get__(self, obj, cls=None):
             if obj is None:
                 return []
-            elif obj._if_missing is ForEach._if_missing:
+            if obj._if_missing is ForEach._if_missing:
                 return []
-            else:
-                return obj._if_missing
+            return obj._if_missing
 
         def __set__(self, obj, value):
             obj._if_missing = value
@@ -126,7 +124,7 @@ class ForEach(CompoundValidator):
     del _IfMissing
 
     def _convert_to_list(self, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return [value]
         elif value is None:
             return []

@@ -21,7 +21,7 @@ class TestCreditCardValidator(unittest.TestCase):
 
     def test_validate(self):
         validate, message = self.validate, self.message
-        self.assertTrue(validate('visa', '4' + '1' * 15) is None)
+        self.assertIsNone(validate('visa', '4' + '1' * 15))
         self.assertEqual(validate('visa', '5' + '1' * 12),
             message('invalidNumber'))
         self.assertEqual(validate('visa', '4' + '1' * 11 + '2'),
@@ -49,7 +49,7 @@ class TestCreditCardExpires(unittest.TestCase):
 
     def test_validate(self):
         validate, message = self.validate, self.message
-        self.assertTrue(validate('11', '2250') is None)
+        self.assertIsNone(validate('11', '2250'))
         self.assertEqual(validate('11', 'test'), message('notANumber'))
         self.assertEqual(validate('test', '2250'), message('notANumber'))
         self.assertEqual(validate('10', '2005'), message('invalidNumber'))

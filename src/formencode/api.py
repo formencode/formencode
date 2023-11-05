@@ -8,7 +8,6 @@ import os
 import re
 import textwrap
 import warnings
-import six
 
 try:
     from pkg_resources import resource_filename
@@ -58,10 +57,7 @@ def set_stdtranslation(domain="FormEncode", languages=None,
                             languages=languages,
                             localedir=localedir, fallback=True)
     global _stdtrans
-    try:
-        _stdtrans = t.ugettext
-    except AttributeError:  # Python 3
-        _stdtrans = t.gettext
+    _stdtrans = t.gettext
 
 
 set_stdtranslation()
@@ -93,7 +89,7 @@ def deprecated(old=None, new=None):
     return outer
 
 
-class NoDefault(object):
+class NoDefault:
     """A dummy value used for parameters with no default."""
 
 
@@ -150,18 +146,7 @@ class Invalid(Exception):
                 % (self, self.error_list, self.error_dict))
 
     def __str__(self):
-        val = self.msg
-        return val
-
-    if six.text_type is not str:  # Python 2
-
-        def __unicode__(self):
-            if isinstance(self.msg, six.text_type):
-                return self.msg
-            elif isinstance(self.msg, str):
-                return self.msg.decode('utf8')
-            else:
-                return six.text_type(self.msg)
+        return self.msg
 
     def unpack_errors(self, encode_variables=False, dict_char='.',
                       list_char='-'):
@@ -180,9 +165,9 @@ class Invalid(Exception):
                 for item in self.error_list]
         if self.error_dict:
             result = {}
-            for name, item in six.iteritems(self.error_dict):
+            for name, item in self.error_dict.items():
                 result[name] = item if isinstance(
-                    item, six.string_types) else item.unpack_errors()
+                    item, str) else item.unpack_errors()
             if encode_variables:
                 from . import variabledecode
                 result = variabledecode.variable_encode(
@@ -239,32 +224,6 @@ class Validator(declarative.Declarative):
     def from_python(self, value, state=None):
         return value
 
-    if six.text_type is str:
-        _message_vars_decode = None
-    else:
-        def _message_vars_decode(self, message_vars):
-            """
-            Under python2, a form value in web frameworks may be encoded as
-            UTF8 unicode. The standard error templates use a ``%(value)r``
-            string formatting, which will render the error as ``u"Foo"`` instead
-            of just ``"Foo"``.  This decoder, which can be overridden, will
-            encode the value back to a python string and render ``"Foo"``.  This
-            decoder will only update the error dictionary if the unicode and
-            string values are equal by comparison.
-
-             v = message_vars.items()[0][1]
-            """
-            if six.text_type is not str:
-                for (k, v) in message_vars.items():
-                    if isinstance(v, six.text_type):
-                        try:
-                            v2 = v.encode('utf-8')
-                        except Exception:
-                            v2 = v
-                        if v == v2:
-                            message_vars[k] = v2
-            return message_vars
-
     def message(self, msgName, state, **kw):
         # determine translation function
         try:
@@ -272,8 +231,8 @@ class Validator(declarative.Declarative):
         except AttributeError:
             try:
                 if self.use_builtins_gettext:
-                    import six.moves.builtins
-                    trans = six.moves.builtins._
+                    import builtins
+                    trans = builtins._
                 else:
                     trans = _stdtrans
             except AttributeError:
@@ -282,12 +241,7 @@ class Validator(declarative.Declarative):
         if not callable(trans):
             trans = _stdtrans
 
-        msg = self._messages[msgName]
-        msg = trans(msg, **self.gettextargs)
-
-        if self._message_vars_decode:
-            # handle custom decoding for message vars
-            kw = self._message_vars_decode(kw)
+        msg = trans(self._messages[msgName], **self.gettextargs)
 
         try:
             return msg % kw
@@ -340,11 +294,10 @@ class Validator(declarative.Declarative):
         This changes the class's docstring to include information
         about all the messages this validator uses.
         """
-        doc = cls.__doc__ or ''
-        doc = [textwrap.dedent(doc).rstrip()]
-        messages = sorted(six.iteritems(cls._messages))
-        doc.append('\n\n**Messages**\n\n')
-        for name, default in messages:
+        doc = [
+            textwrap.dedent(cls.__doc__ or '').rstrip(),
+            '\n\n**Messages**\n\n']
+        for name, default in sorted(cls._messages.items()):
             default = re.sub(r'(%\(.*?\)[rsifcx])', r'``\1``', default)
             doc.append('``' + name + '``:\n')
             doc.append('  ' + default + '\n\n')
@@ -487,7 +440,7 @@ class FancyValidator(Validator):
 
     def to_python(self, value, state=None):
         try:
-            if self.strip and isinstance(value, six.string_types):
+            if self.strip and isinstance(value, str):
                 value = value.strip()
             elif hasattr(value, 'mixed'):
                 # Support Paste's MultiDict
@@ -515,7 +468,7 @@ class FancyValidator(Validator):
 
     def from_python(self, value, state=None):
         try:
-            if self.strip and isinstance(value, six.string_types):
+            if self.strip and isinstance(value, str):
                 value = value.strip()
             if not self.accept_python:
                 if self.is_empty(value):
@@ -551,7 +504,7 @@ class FancyValidator(Validator):
         return None
 
     def assert_string(self, value, state):
-        if not isinstance(value, six.string_types):
+        if not isinstance(value, str):
             raise Invalid(self.message('badType', state,
                                        type=type(value), value=value),
                           value, state)

@@ -60,7 +60,7 @@ def force_list(v):
         return [v]
 
 
-class SchemaBuilder(object):
+class SchemaBuilder:
 
     def __init__(self, validators=default_validators):
         self.validators = validators

@@ -5,7 +5,6 @@ Parser for HTML forms, that fills in defaults and errors.  See ``render``.
 import re
 
 from formencode.rewritingparser import RewritingParser, html_quote
-import six
 
 __all__ = ['render', 'htmlliteral', 'default_formatter',
            'none_formatter', 'escape_formatter',
@@ -125,7 +124,7 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     return p.text()
 
 
-class htmlliteral(object):
+class htmlliteral:
 
     def __init__(self, html, text=None):
         if text is None:
@@ -246,7 +245,7 @@ class FillingParser(RewritingParser):
         self.in_select = None
         self.skip_next = False
         self.errors = errors or {}
-        if isinstance(self.errors, six.string_types):
+        if isinstance(self.errors, str):
             self.errors = {None: self.errors}
         self.in_error = None
         self.skip_error = False
@@ -275,14 +274,11 @@ class FillingParser(RewritingParser):
         Compare the two objects as strings (coercing to strings if necessary).
         Also uses encoding to compare the strings.
         """
-        if not isinstance(str1, six.string_types):
-            if hasattr(str1, '__unicode__'):
-                str1 = six.text_type(str1)
-            else:
-                str1 = str(str1)
+        if not isinstance(str1, str):
+            str1 = str(str1)
         if type(str1) is type(str2):
             return str1 == str2
-        if isinstance(str1, six.text_type):
+        if isinstance(str1, str):
             str1 = str1.encode(self.encoding or self.default_encoding)
         else:
             str2 = str2.encode(self.encoding or self.default_encoding)
@@ -296,7 +292,7 @@ class FillingParser(RewritingParser):
             if key in unused_errors:
                 del unused_errors[key]
         if self.auto_error_formatter:
-            for key, value in six.iteritems(unused_errors):
+            for key, value in unused_errors.items():
                 error_message = self.auto_error_formatter(value)
                 error_message = '<!-- for: %s -->\n%s' % (key, error_message)
                 self.insert_at_marker(
@@ -319,9 +315,6 @@ class FillingParser(RewritingParser):
         if self.encoding is not None:
             new_content = []
             for item in self._content:
-                if (six.text_type is not str  # Python 2
-                        and isinstance(item, str)):
-                    item = item.decode(self.encoding)
                 new_content.append(item)
             self._content = new_content
         self._text = self._get_text()
@@ -421,11 +414,8 @@ class FillingParser(RewritingParser):
         if self.prefix_error:
             self.write_marker(name)
         value = self.defaults.get(name)
-        if (six.text_type is not str  # Python 2
-                and isinstance(name, six.text_type) and isinstance(value, str)):
-            value = value.decode(self.encoding or self.default_encoding)
         if name in self.add_attributes:
-            for attr_name, attr_value in six.iteritems(self.add_attributes[name]):
+            for attr_name, attr_value in self.add_attributes[name].items():
                 if attr_name.startswith('+'):
                     attr_name = attr_name[1:]
                     self.set_attr(attrs, attr_name,
@@ -571,7 +561,7 @@ class FillingParser(RewritingParser):
         """
         if obj is None:
             return False
-        if isinstance(obj, six.string_types):
+        if isinstance(obj, str):
             return obj == value
         if hasattr(obj, '__contains__'):
             if value in obj:

@@ -3,9 +3,6 @@ import warnings
 from .api import _, is_validator, FancyValidator, Invalid, NoDefault
 from . import declarative
 from .exc import FERuntimeWarning
-import six
-from six.moves import map
-from six.moves import zip
 
 __all__ = ['Schema']
 
@@ -84,7 +81,7 @@ class Schema(FancyValidator):
         # Scan through the class variables we've defined *just*
         # for this subclass, looking for validators (both classes
         # and instances):
-        for key, value in six.iteritems(new_attrs):
+        for key, value in new_attrs.items():
             if key in ('pre_validators', 'chained_validators'):
                 if is_validator(value):
                     msg = "Any validator with the name %s will be ignored." % \
@@ -99,12 +96,12 @@ class Schema(FancyValidator):
             elif key in cls.fields:
                 del cls.fields[key]
 
-        for name, value in six.iteritems(cls.fields):
+        for name, value in cls.fields.items():
             cls.add_field(name, value)
 
     def __initargs__(self, new_attrs):
         self.fields = self.fields.copy()
-        for key, value in six.iteritems(new_attrs):
+        for key, value in new_attrs.items():
             if key in ('pre_validators', 'chained_validators'):
                 if is_validator(value):
                     msg = "Any validator with the name %s will be ignored." % \
@@ -248,7 +245,7 @@ class Schema(FancyValidator):
             previous_full_dict = getattr(state, 'full_dict', None)
             state.full_dict = value_dict
         try:
-            for name, value in six.iteritems(value_dict):
+            for name, value in value_dict.items():
                 try:
                     unused.remove(name)
                 except ValueError:
@@ -325,7 +322,7 @@ class Schema(FancyValidator):
         result = []
         result.extend(self.pre_validators)
         result.extend(self.chained_validators)
-        result.extend(six.itervalues(self.fields))
+        result.extend(self.fields.values())
         return result
 
     def is_empty(self, value):
@@ -336,9 +333,9 @@ class Schema(FancyValidator):
         return {}
 
     def _value_is_iterator(self, value):
-        if isinstance(value, six.string_types + (six.binary_type, )):
+        if isinstance(value, (bytes, str)):
             return False
-        elif isinstance(value, (list, tuple)):
+        if isinstance(value, (list, tuple)):
             return True
 
         try:
@@ -351,26 +348,18 @@ class Schema(FancyValidator):
 
 def format_compound_error(v, indent=0):
     if isinstance(v, Exception):
-        try:
-            return str(v)
-        except (UnicodeDecodeError, UnicodeEncodeError):
-            # There doesn't seem to be a better way to get a str()
-            # version if possible, and unicode() if necessary, because
-            # testing for the presence of a __unicode__ method isn't
-            # enough
-            return six.text_type(v)
-    elif isinstance(v, dict):
+        return str(v)
+    if isinstance(v, dict):
         return ('%s\n' % (' ' * indent)).join(
             '%s: %s' % (k, format_compound_error(value, indent=len(k) + 2))
-            for k, value in sorted(six.iteritems(v)) if value is not None)
-    elif isinstance(v, list):
+            for k, value in sorted(v.items()) if value is not None)
+    if isinstance(v, list):
         return ('%s\n' % (' ' * indent)).join(
             '%s' % (format_compound_error(value, indent=indent))
             for value in v if value is not None)
-    elif isinstance(v, six.string_types):
+    if isinstance(v, str):
         return v
-    else:
-        assert False, "I didn't expect something like %s" % repr(v)
+    raise TypeError("I didn't expect something like %r" % v)
 
 
 def merge_dicts(d1, d2):
@@ -380,15 +369,14 @@ def merge_dicts(d1, d2):
 
 
 def merge_values(v1, v2):
-    if isinstance(v1, six.string_types) and isinstance(v2, six.string_types):
+    if isinstance(v1, str) and isinstance(v2, str):
         return v1 + '\n' + v2
-    elif isinstance(v1, (list, tuple)) and isinstance(v2, (list, tuple)):
+    if isinstance(v1, (list, tuple)) and isinstance(v2, (list, tuple)):
         return merge_lists(v1, v2)
-    elif isinstance(v1, dict) and isinstance(v2, dict):
+    if isinstance(v1, dict) and isinstance(v2, dict):
         return merge_dicts(v1, v2)
-    else:
-        # @@: Should we just ignore errors?  Seems we do...
-        return v1
+    # @@: Should we just ignore errors?  Seems we do...
+    return v1
 
 
 def merge_lists(l1, l2):
@@ -471,18 +459,15 @@ class SimpleFormValidator(FancyValidator):
         errors = self.func(value_dict, state, self)
         if not errors:
             return value_dict
-        if isinstance(errors, six.string_types):
+        if isinstance(errors, str):
             raise Invalid(errors, value_dict, state)
-        elif isinstance(errors, dict):
+        if isinstance(errors, dict):
             raise Invalid(
                 format_compound_error(errors),
                 value_dict, state, error_dict=errors)
-        elif isinstance(errors, Invalid):
+        if isinstance(errors, Invalid):
             raise errors
-        else:
-            raise TypeError(
-                "Invalid error value: %r" % errors)
-        return value_dict
+        raise TypeError("Invalid error value: %r" % errors)
 
     validate_partial = to_python
 

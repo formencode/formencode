@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 # in this case you must set it manually before running the tests).
 os.environ['LANGUAGE'] = 'C'
 
-# Enable deprecation warnings (disabled by default in Python > 2.6).
+# Enable deprecation warnings (which are disabled by default)
 import warnings
 warnings.simplefilter('default')
 

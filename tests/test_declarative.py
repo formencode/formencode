@@ -22,8 +22,8 @@ class TestDeclarative(unittest.TestCase):
         D = declarative.Declarative
         obj_bar = D(foo='bar', woo='par')
         obj_baz = obj_bar(foo='baz')
-        self.assertTrue(type(obj_bar) is type(obj_baz))
-        self.assertTrue(obj_bar is not obj_baz)
+        self.assertIs(type(obj_bar), type(obj_baz))
+        self.assertIsNot(obj_bar, obj_baz)
         self.assertEqual(obj_baz.foo, 'baz')
         self.assertEqual(obj_baz.woo, 'par')
 

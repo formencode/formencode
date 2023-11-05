@@ -1,5 +1,5 @@
+dnspython
+pycountry
 pytest
 pytest-cov
 wheel
-pycountry
-dnspython

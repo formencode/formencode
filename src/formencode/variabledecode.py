@@ -21,8 +21,6 @@ and list_char keyword args. For example, to have the GET/POST variables,
 """
 
 from .api import FancyValidator
-import six
-from six.moves import range
 
 __all__ = ['variable_decode', 'variable_encode', 'NestedVariables']
 
@@ -30,7 +28,7 @@ __all__ = ['variable_decode', 'variable_encode', 'NestedVariables']
 def _sort_key(item):
     """Robust sort key that sorts items with invalid keys last.
 
-    This is used to make sorting behave the same across Python 2 and 3.
+    This is used to make sorting work with keys that have difference types.
     """
     key = item[0]
     return not isinstance(key, int), key
@@ -41,7 +39,7 @@ def variable_decode(d, dict_char='.', list_char='-'):
     result = {}
     dicts_to_sort = set()
     known_lengths = {}
-    for key, value in six.iteritems(d):
+    for key, value in d.items():
         keys = key.split(dict_char)
         new_keys = []
         was_repetition_count = False
@@ -103,10 +101,10 @@ def variable_decode(d, dict_char='.', list_char='-'):
             to_sort = to_sort[sub_key]
         if None in to_sort:
             none_values = [(0, x) for x in to_sort.pop(None)]
-            none_values.extend(six.iteritems(to_sort))
+            none_values.extend(to_sort.items())
             to_sort = none_values
         else:
-            to_sort = six.iteritems(to_sort)
+            to_sort = to_sort.items()
         to_sort = [x[1] for x in sorted(to_sort, key=_sort_key)]
         if key in known_lengths:
             if len(to_sort) < known_lengths[key]:
@@ -122,7 +120,7 @@ def variable_encode(d, prepend='', result=None, add_repetitions=True,
     if result is None:
         result = {}
     if isinstance(d, dict):
-        for key, value in six.iteritems(d):
+        for key, value in d.items():
             if key is None:
                 name = prepend
             elif not prepend:

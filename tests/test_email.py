@@ -3,7 +3,6 @@ import unittest
 
 from formencode import Invalid
 from formencode.validators import Email
-import six
 
 
 class TestEmail(unittest.TestCase):
@@ -15,7 +14,7 @@ class TestEmail(unittest.TestCase):
         try:
             return self.validator.to_python(*args)
         except Invalid as e:
-            return six.text_type(e)
+            return str(e)
 
     def message(self, message_name, username, domain):
         email = '@'.join((username, domain))

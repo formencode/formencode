@@ -1,7 +1,6 @@
 from formencode import Invalid, htmlfill, Schema, validators
 
 from WebKit.Page import Page
-import six
 
 
 page_style = '''
@@ -74,8 +73,8 @@ class index(Page):
         try:
             fields = FormSchema.to_python(fields, self)
         except Invalid as e:
-            errors = dict((k, v.encode('utf-8'))
-                for k, v in six.iteritems(e.unpack_errors()))
+            errors = {k: v.encode('utf-8')
+                for k, v in e.unpack_errors().items()}
             print("Errors:", errors)
             self.rendered_form = htmlfill.render(form_template,
                 defaults=fields, errors=errors)

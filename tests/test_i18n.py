@@ -1,5 +1,4 @@
 import formencode
-import six
 
 ne = formencode.validators.NotEmpty()
 
@@ -7,15 +6,15 @@ ne = formencode.validators.NotEmpty()
 def _test_builtins(func):
     def dummy(s):
         return "builtins dummy"
-    import six.moves.builtins
-    six.moves.builtins._ = dummy
+    import builtins
+    builtins._ = dummy
 
     try:
         ne.to_python("")
     except formencode.api.Invalid as e:
         func(e)
 
-    del six.moves.builtins._
+    del builtins._
 
 
 def test_builtins():
@@ -34,7 +33,7 @@ def test_bultins_disabled():
 
 
 def test_state():
-    class st(object):
+    class st:
         def _(self, s):
             return "state dummy"
 
@@ -51,7 +50,7 @@ def _test_lang(language, notemptytext):
     try:
         ne.to_python("")
     except formencode.api.Invalid as e:
-        assert six.text_type(e) == notemptytext
+        assert str(e) == notemptytext
 
     formencode.api.set_stdtranslation()  # set back to defaults
 

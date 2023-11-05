@@ -3,14 +3,14 @@ Interfaces for FormEncode (for documentation purposes only)
 """
 
 
-class Attribute(object):
+class Attribute:
 
     def __init__(self, description, name=None):
         self.description = description
         self.name = name
 
 
-class Interface(object):
+class Interface:
     pass
 
 

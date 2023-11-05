@@ -1,11 +1,9 @@
 import doctest
 
 from formencode.htmlgen import html
-import six
 
 # A test value that can't be encoded as ascii:
-uni_value = u'\xff'
-str_value = uni_value if str is six.text_type else uni_value.encode('utf-8')
+uni_value = '\xff'
 
 
 def test_basic():
@@ -37,12 +35,12 @@ def test_unicode():
         assert False, (
             "We need something that can't be ASCII-encoded: %r (%r)"
             % (uni_value, uni_value.encode('ascii')))
-    assert six.text_type(html.b(uni_value)) == u'<b>%s</b>' % uni_value
+    assert str(html.b(uni_value)) == '<b>%s</b>' % uni_value
 
 
 def test_quote():
     assert html.quote('<hey>!') == '&lt;hey&gt;!'
-    assert html.quote(uni_value) == str_value
+    assert html.quote(uni_value) == uni_value
     assert html.quote(None) == ''
     assert html.str(None) == ''
     assert str(html.b('<hey>')) == '<b>&lt;hey&gt;</b>'
@@ -58,7 +56,7 @@ def test_comment():
         return s
 
     assert strip(html.comment('test')) == '<!--test-->'
-    assert strip(html.comment(uni_value)) == '<!--%s-->' % str_value
+    assert strip(html.comment(uni_value)) == '<!--%s-->' % uni_value
     assert strip(html.comment('test')('this')) == '<!--testthis-->'
 
 
@@ -76,7 +74,7 @@ def test_namespace():
 
 if __name__ == '__main__':
     # It's like a super-mini py.test...
-    for name, value in six.iteritems(globals()):
+    for name, value in globals().items():
         if name.startswith('test'):
             print(name)
             value()

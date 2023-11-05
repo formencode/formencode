@@ -2,14 +2,11 @@ import os
 import re
 import sys
 
-import xml.etree.ElementTree as ET
-import six
-try:
-    XMLParseError = ET.ParseError
-except AttributeError:  # Python < 2.7
-    from xml.parsers.expat import ExpatError as XMLParseError
+from html.entities import name2codepoint
 
-from six.moves.html_entities import name2codepoint
+import xml.etree.ElementTree as ET
+
+XMLParseError = ET.ParseError
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__)))))
@@ -46,7 +43,7 @@ def test_runfile(filename):
         data_content = ''
     namespace = {}
     if data_content:
-        six.exec_(data_content, namespace)
+        exec(data_content, namespace)
     data = namespace.copy()
     data['defaults'] = data.get('defaults', {})
     if 'check' in data:
@@ -89,7 +86,7 @@ def test_no_trailing_newline():
 
 
 def test_escape_defaults():
-    rarr = six.unichr(name2codepoint['rarr'])
+    rarr = chr(name2codepoint['rarr'])
     assert (htmlfill.render('<input type="submit" value="next&gt;&rarr;">', {}, {})
             == '<input type="submit" value="next&gt;%s">' % rarr)
     assert (htmlfill.render('<input type="submit" value="1&amp;2">', {}, {})
@@ -457,7 +454,7 @@ def test_error_class_textarea():
 
 def test_mix_str_and_unicode():
     html = '<input type="text" name="cheese">'
-    uhtml = six.text_type(html)
+    uhtml = str(html)
     cheese = dict(cheese='Käse')
     ucheese = dict(cheese='Käse')
     expected = '<input type="text" name="cheese" value="Käse">'

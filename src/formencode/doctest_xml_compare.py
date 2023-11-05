@@ -1,12 +1,7 @@
 import doctest
 import xml.etree.ElementTree as ET
-import six
-from six.moves import map
-from six.moves import zip
-try:
-    XMLParseError = ET.ParseError
-except AttributeError:  # Python < 2.7
-    from xml.parsers.expat import ExpatError as XMLParseError
+
+XMLParseError = ET.ParseError
 
 RealOutputChecker = doctest.OutputChecker
 
@@ -71,7 +66,7 @@ def xml_compare(x1, x2, reporter=None):
         if reporter:
             reporter('Tags do not match: %s and %s' % (x1.tag, x2.tag))
         return False
-    for name, value in six.iteritems(x1.attrib):
+    for name, value in x1.attrib.items():
         if x2.attrib.get(name) != value:
             if reporter:
                 reporter('Attributes do not match: %s=%r, %s=%r'
@@ -122,7 +117,7 @@ def make_xml(s):
 
 
 def make_string(xml):
-    if isinstance(xml, six.string_types):
+    if isinstance(xml, str):
         xml = make_xml(xml)
     s = ET.tostring(xml)
     if s == '<xml />':

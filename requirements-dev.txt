@@ -1,5 +1,5 @@
 build
 wheel
-black
 flake8
+sphinx
 -r requirements-test.txt

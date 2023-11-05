@@ -1,6 +1,6 @@
 import unittest
 
-from six.moves.urllib.parse import parse_qsl
+from urllib.parse import parse_qsl
 
 from formencode import Invalid, Validator, compound, foreach, validators
 from formencode.schema import Schema, merge_dicts, SimpleFormValidator
@@ -16,14 +16,14 @@ def _notranslation(s):
 def setup_module(module):
     """Disable i18n translation"""
 
-    import six.moves.builtins
-    six.moves.builtins._ = _notranslation
+    import builtins
+    builtins._ = _notranslation
 
 
 def teardown_module(module):
     """Remove translation function"""
-    import six.moves.builtins
-    del six.moves.builtins._
+    import builtins
+    del builtins._
 
 
 def d(**kw):
@@ -44,16 +44,15 @@ def cgi_parse(qs):
     return d
 
 
-class DecodeCase(object):
+class DecodeCase:
 
     error_expected = False
 
     def __init__(self, schema, input, **output):
-        self.raw_input = input
-        self.schema = schema
         if isinstance(input, str):
             input = cgi_parse(input)
         self.input = input
+        self.schema = schema
         self.output = output
         all_cases.append(self)
 
@@ -74,7 +73,7 @@ class BadCase(DecodeCase):
             self.output = self.output['text']
 
     def test(self):
-        print(repr(self.raw_input))
+        print(repr(self.input))
         try:
             print(repr(self.schema.to_python(self.input)))
         except Invalid as e:
@@ -211,7 +210,7 @@ def test_SimpleFormValidator_doc():
     assert f.__doc__ == g.__doc__, "Docstrings don't match!"
 
 
-class State(object):
+class State:
     pass
 
 
@@ -261,13 +260,12 @@ def test_state_manipulation():
     assert state.key == old_key, "key not restored"
 
 
-class TestAtLeastOneCheckboxIsChecked(object):
+class TestAtLeastOneCheckboxIsChecked:
     """Tests to address SourceForge bug #1777245
 
     The reporter is trying to enforce agreement to a Terms of Service
     agreement, with failure to check the 'I agree' checkbox handled as
     a validation failure. The tests below illustrate a working approach.
-
     """
 
     def setup(self):

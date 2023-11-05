@@ -1,14 +1,8 @@
-from six.moves import html_parser
 import re
-import six
-from six.moves import range
 
-try:
-    from html import escape
-except ImportError:  # Python < 3.2
-    from cgi import escape
-
-from six.moves.html_entities import name2codepoint
+from html import escape
+from html.entities import name2codepoint
+from html.parser import HTMLParser
 
 
 def html_quote(v):
@@ -16,26 +10,19 @@ def html_quote(v):
         return ''
     if hasattr(v, '__html__'):
         return v.__html__()
-    if isinstance(v, six.string_types):
+    if isinstance(v, str):
         return escape(v, True)
-    if hasattr(v, '__unicode__'):
-        v = six.text_type(v)
-    else:
-        v = str(v)
-    return escape(v, True)
+    return escape(str(v), True)
 
 
-class RewritingParser(html_parser.HTMLParser):
+class RewritingParser(HTMLParser):
 
     listener = None
     skip_next = False
 
     def __init__(self):
         self._content = []
-        try:
-            html_parser.HTMLParser.__init__(self, convert_charrefs=False)
-        except TypeError:  # Python < 3.4
-            html_parser.HTMLParser.__init__(self)
+        HTMLParser.__init__(self, convert_charrefs=False)
 
     def feed(self, data):
         self.data_is_str = isinstance(data, str)
@@ -44,7 +31,7 @@ class RewritingParser(html_parser.HTMLParser):
         self.source_pos = 1, 0
         if self.listener:
             self.listener.reset()
-        html_parser.HTMLParser.feed(self, data)
+        HTMLParser.feed(self, data)
 
     _entityref_re = re.compile(r'&([a-zA-Z][-.a-zA-Z\d]*);')
     _charref_re = re.compile(r'&#(\d+|[xX][a-fA-F\d]+);')
@@ -60,7 +47,7 @@ class RewritingParser(html_parser.HTMLParser):
             # If we don't recognize it, pass it through as though it
             # wasn't an entity ref at all
             return match.group(0)
-        return six.unichr(name2codepoint[name])
+        return chr(name2codepoint[name])
 
     def _sub_charref(self, match):
         num = match.group(1)
@@ -68,7 +55,7 @@ class RewritingParser(html_parser.HTMLParser):
             num = int(num[1:], 16)
         else:
             num = int(num)
-        return six.unichr(num)
+        return chr(num)
 
     def handle_misc(self, whatever):
         self.write_pos()
