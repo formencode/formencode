@@ -67,10 +67,11 @@ def set_stdtranslation(domain="FormEncode", languages=None,
 set_stdtranslation()
 
 # Dummy i18n translation function, nothing is translated here.
-# Instead this is actually done in api.Validator.message.
+# Instead, this is actually done in api.Validator.message.
 # The surrounding _('string') of the strings is only for extracting
 # the strings automatically.
-# If you run pygettext with this source comment this function out temporarily.
+# If you run pygettext with this source, comment this function out temporarily.
+
 _ = lambda s: s
 
 

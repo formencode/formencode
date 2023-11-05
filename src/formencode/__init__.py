@@ -19,7 +19,14 @@ from formencode import validators
 from formencode import national
 from formencode.variabledecode import NestedVariables
 
+__all__ = [
+    'NoDefault', 'Invalid', 'Validator', 'Identity', 'FancyValidator',
+    'is_empty', 'is_validator',
+    'Schema', 'CompoundValidator', 'Any', 'All', 'Pipe',
+    'ForEach', 'validators', 'national', 'NestedVariables',
+    '__version__']
+
 try:
     __version__ = version(__name__)
-except DistributionNotFound:  # package is not installed
+except PackageNotFoundError:  # package is not installed
     __version__ = 'local-test'
