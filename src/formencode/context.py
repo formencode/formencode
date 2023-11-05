@@ -44,9 +44,9 @@ Another is ``context.set_default(**vars)``, which will set only those
 variables to default values.  This will not affect the stack of scopes,
 but will only add defaults.
 
-this syntax would certainly be useful::
+A context can be also used like this::
 
-    with context(page='view'):
+    with context.set(page='view'):
         do stuff...
 
 And ``page`` will be set to ``'view'`` only inside that ``with`` block.
@@ -93,7 +93,7 @@ class Context:
 
     def __setattr__(self, attr, value):
         raise AttributeError(
-            "You can only write attribute on context object with the .set() method")
+            "You can only set attributes on context objects with the .set() method")
 
     def set(self, **kw):
         state_id = next(_restore_ids)
@@ -157,6 +157,12 @@ class RestoreState:
         self.state_id = state_id
         self.context = context
         self.restored = False
+
+    def __enter__(self):
+        return self.context
+
+    def __exit__(self, _exc_type, _exc_value, _exc_tb):
+        self.restore()
 
     def restore(self):
         if self.restored:

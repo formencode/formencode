@@ -53,3 +53,16 @@ def test_default():
     assert con.a == 2
     res.restore()
     assert con.a == 4
+
+
+def test_context_manager():
+    with c1.set(foo=1):
+        assert_is(c1, 'foo', 1)
+    assert_is(c1, 'foo', None)
+    with c1.set(foo=2), c2.set(foo='test'):
+        assert_is(c1, 'foo', 2)
+        assert_is(c2, 'foo', 'test')
+        change_state(c1, assert_is, c1, 'foo', 3, foo=3)
+        assert_is(c1, 'foo', 2)
+    assert_is(c1, 'foo', None)
+    assert not hasattr(c2, 'foo')
