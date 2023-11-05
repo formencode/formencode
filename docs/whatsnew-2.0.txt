@@ -7,7 +7,7 @@ compared to its predecessor,  `FormEncode` version 1.3.
 2.1.0
 -----
 
- - Add support for Python 3.7 to 3.22, end support for older Python versions
+ - Add support for Python 3.7 to 3.12, end support for older Python versions
  - Context.set() now works as a context manager
  - Fix binary of swedish translation
  - Some internal code cleanup and modernization
@@ -18,18 +18,17 @@ compared to its predecessor,  `FormEncode` version 1.3.
  - Add support for Python 3.10
  - use Pytest instead of Nose and GitHub Actions instead of Travis for tests
  - Documentation updates
- - Note this will be the last version to support Python 2.7. The next version
-   will be 2.1 to signal this change. If you want to keep support for Python
-   2.7 update your dependencies spec to be below 2.1
+ - Note this will be the last version to support Python 2.
+   The next version will be 2.1.0 to signal this change.
+   For compatibility with older Python versions, please use versions < 2.1.
 
 2.0.0
 -----
 
  -  `FormEncode` can now run on Python 3.6 and higher without needing to run 2to3 first.
  -  `FormEncode` 2.0 is no longer compatible with Python 2.6 and 3.2 to 3.5.
-   If you need Python 2.6 or 3.2 to 3.5 compatibility please use  `FormEncode` 1.3.
-   You might also try FormEncode` 2.0.0a1 which supports Python 2.6 and Python 3.3-3.5.
- - This will be the last major version to support Python 2.7
+   For compatibility with older Python versions, please use versions < 1.3.
+ - This will be the last major version to support Python 2.
  - Add strict flag to ``USPostalCode`` to raise error on postal codes that has too
    many digits instead of just truncating
  - Various Python 3 fixes
