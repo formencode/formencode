@@ -1,6 +1,14 @@
 FormEncode
 ==========
 
+.. |PyPI| image:: https://img.shields.io/pypi/v/formencode
+    :target: https://pypi.org/project/formencode
+    :alt: PyPI
+
+.. |Python| image:: https://img.shields.io/pypi/pyversions/formencode
+    :target: https://pypi.org/project/formencode
+    :alt: PyPI - Python Version
+
 .. image:: https://github.com/formencode/formencode/actions/workflows/run-tests.yml/badge.svg
    :target: https://github.com/formencode/formencode/actions
    :alt: Test Status
