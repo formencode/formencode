@@ -33,5 +33,5 @@ Backwards Incompatibilities
 Documentation Enhancements
 --------------------------
 
-- Superceded news with whatsnew documents that will be archived for each
+- Superseded news with whatsnew documents that will be archived for each
   version. Archived all news prior to 1.2.5 in :doc:`/whatsnew-0-to-1.2.4`.

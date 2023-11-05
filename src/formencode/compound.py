@@ -130,12 +130,12 @@ class Any(CompoundValidator):
 
 
 class All(CompoundValidator):
-    """Check if all of the specified validators are valid.
+    """Check that specified validators are valid.
 
-    This class is like an 'and' operator for validators.  All
-    validators must work, and the results are passed in turn through
-    all validators for conversion in the order of evaluation. All
-    is the same as `Pipe` but operates in the reverse order.
+    This class is like an 'and' operator for validators.
+    All validators must work, and the results are passed in turn through
+    all validators for conversion in the order of evaluation.
+    ``All`` is the same as ``Pipe`` but operates in the reverse order.
 
     The order of evaluation differs depending on if you are validating to
     Python or from Python as follows:
@@ -144,7 +144,7 @@ class All(CompoundValidator):
 
     The validators are evaluated left to right when validating from Python.
 
-    `Pipe` is more intuitive when predominantly validating to Python.
+    ``Pipe`` is more intuitive when predominantly validating to Python.
 
     Examples::
 

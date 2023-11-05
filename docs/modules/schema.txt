@@ -8,3 +8,5 @@ Module Contents
 
 .. autoclass:: Schema
 
+.. autoclass:: SimpleFormValidator
+

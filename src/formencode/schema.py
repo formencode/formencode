@@ -4,7 +4,7 @@ from .api import _, is_validator, FancyValidator, Invalid, NoDefault
 from . import declarative
 from .exc import FERuntimeWarning
 
-__all__ = ['Schema']
+__all__ = ['Schema', 'SimpleFormValidator']
 
 
 class Schema(FancyValidator):

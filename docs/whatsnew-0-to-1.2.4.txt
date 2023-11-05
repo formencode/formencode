@@ -60,7 +60,7 @@ What's New In FormEncode 0 to 1.2.4
 * Added :class:`formencode.validators.IPAddress`, validating IP
   addresses, from Leandro Lucarella.
 
-* Added :meth:`formencode.api.Invalid.__unicode__`
+* Added method ``Invalid.__unicode__``
 
 * In :mod:`formencode.htmlfill` use a default encoding of utf8 when
   handling mixed ``str``/``unicode`` content.  Also do not modify
@@ -125,7 +125,7 @@ What's New In FormEncode 0 to 1.2.4
   ``<form:error name="field_name" formatter="ignore" />`` -- this will
   cause the error to be swallowed, not shown to the user.
 
-* Added :class:`formencode.validators.XRI` for validation i-names,
+* Added ``formencode.validators.XRI`` for validation i-names,
   i-numbers, URLs, etc (as used in OpenID).
 
 * Look in ``/usr/share/locale`` for locale files, in addition to the
