@@ -28,17 +28,19 @@ It is separate from HTTP or any other input mechanism.
 Documentation
 -------------
 
-The latest documentation is available at https://www.formencode.org/
+The latest documentation is available at
+`www.formencode.org <https://www.formencode.org/>`.
 
 
 Testing
 -------
 
-Use `pytest formencode` to run the test suite.
-Use `tox` to run the test suite for all supported Python versions.
+Use ``pytest formencode`` to run the test suite.
+Use ``tox`` to run the test suite for all supported Python versions.
 
 
 Changes
 -------
 
-See the `What's new section of the documentation <https://www.formencode.org/en/latest/#what-s-new>`_.
+See the `What's new <https://www.formencode.org/en/latest/#what-s-new>`_
+section of the documentation.
