@@ -1,8 +1,6 @@
 """
 Validators for applying validations in sequence.
 """
-from __future__ import absolute_import
-
 from .api import (FancyValidator, Identity, Invalid, NoDefault, Validator,
     is_validator)
 import six

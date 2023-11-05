@@ -1,7 +1,5 @@
 """The formencode package"""
 
-from __future__ import absolute_import
-
 try:
     from importlib.metadata import version, PackageNotFoundError
 except ImportError:  # Python < 3.8

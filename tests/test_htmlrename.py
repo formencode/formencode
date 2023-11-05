@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from formencode.htmlrename import rename, add_prefix
 
 

@@ -1,7 +1,6 @@
 """
 Core classes for validation.
 """
-from __future__ import absolute_import
 
 from . import declarative
 import gettext

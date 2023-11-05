@@ -1,7 +1,6 @@
 """
 Country specific validators for use with FormEncode.
 """
-from __future__ import absolute_import
 import re
 
 from .api import FancyValidator

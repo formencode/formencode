@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from formencode import htmlfill
 
 
@@ -175,4 +174,3 @@ if __name__ == '__main__':
     test_error_attr_ignore()
     test_error_attr_form()
     test_error_attr_form_alt()
-    

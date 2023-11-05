@@ -1,7 +1,6 @@
 """
 Parser for HTML forms, that fills in defaults and errors.  See ``render``.
 """
-from __future__ import absolute_import
 
 import re
 

@@ -19,7 +19,6 @@ a dict or list, both variable_decode and variable_encode take dict_char
 and list_char keyword args. For example, to have the GET/POST variables,
 ``a_1=something`` as a list, you would use a ``list_char='_'``.
 """
-from __future__ import absolute_import
 
 from .api import FancyValidator
 import six

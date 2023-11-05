@@ -17,7 +17,6 @@ in a variable by that name.
 Also, you can define a __classinit__(cls, new_attrs) method, which
 will be called when the class is created (including subclasses).
 """
-from __future__ import absolute_import
 
 import copy
 import types

@@ -55,7 +55,6 @@ Examples::
     '<a href="#top">return to top</a>'
 
 """
-from __future__ import absolute_import
 
 import xml.etree.ElementTree as ET
 import six

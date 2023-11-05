@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 import warnings
 
 from .api import _, is_validator, FancyValidator, Invalid, NoDefault

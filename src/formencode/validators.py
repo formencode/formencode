@@ -4,7 +4,6 @@
 """
 Validator/Converters for use with FormEncode.
 """
-from __future__ import absolute_import
 
 import cgi
 import locale

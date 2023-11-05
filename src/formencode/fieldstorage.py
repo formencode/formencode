@@ -3,7 +3,7 @@
 """
 Wrapper class for use with cgi.FieldStorage types for file uploads
 """
-from __future__ import absolute_import
+
 
 import cgi
 

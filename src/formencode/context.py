@@ -51,7 +51,6 @@ When Python 2.5 comes out, this syntax would certainly be useful::
 
 And ``page`` will be set to ``'view'`` only inside that ``with`` block.
 """
-from __future__ import absolute_import
 
 import threading
 
