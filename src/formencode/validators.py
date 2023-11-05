@@ -1168,11 +1168,11 @@ class Set(FancyValidator):
        ['this', 'that']
        >>> s = Set(use_set=True)
        >>> s.to_python(None)
-       set([])
+       set()
        >>> s.to_python('this')
-       set(['this'])
+       {'this'}
        >>> s.to_python(('this',))
-       set(['this'])
+       {'this'}
     """
 
     use_set = False

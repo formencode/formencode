@@ -28,26 +28,6 @@ text_files = [
 base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-OutputChecker = doctest.OutputChecker
-
-
-class OutputChecker3(OutputChecker):
-    def check_output(self, want, got, optionflags):
-        if want.startswith("u'"):
-            want = want[1:]
-        elif want.startswith("set(["):
-            want = (
-                want[3:]
-                .replace("([", "{")
-                .replace("])", "}")
-                .replace("{}", "set()")
-            )
-        return OutputChecker.check_output(self, want, got, optionflags)
-
-
-doctest.OutputChecker = OutputChecker3
-
-
 def doctest_file(document, verbose, raise_error):
     failure_count, test_count = doctest.testfile(
         document,
