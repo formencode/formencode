@@ -1,2 +1,25 @@
 exclude .gitignore
 exclude .gitattributes
+
+include MANIFEST.in
+
+include LICENSE.txt
+include README.rst
+
+include tox.ini
+
+graft src/formencode
+graft src/formencode/javascript
+include src/formencode/i18n/*.pot
+recursive-include src/formencode/i18n *.po *.mo
+
+graft examples
+recursive-include examples *.py
+
+graft tests
+graft tests/htmlfill_data
+recursive-include docs *.rst conf.py Makefile make.bat
+prune docs/_build
+
+global-exclude */__pycache__/*
+global-exclude *.py[cod]
