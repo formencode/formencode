@@ -1,5 +1,6 @@
 exclude .gitignore
 exclude .gitattributes
+exclude .readthedocs.yaml
 
 include MANIFEST.in
 
