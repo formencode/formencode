@@ -1,5 +1,6 @@
-import sys
 import os
+import sys
+import warnings
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
@@ -9,8 +10,17 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 os.environ['LANGUAGE'] = 'C'
 
 # Enable deprecation warnings (which are disabled by default)
-import warnings
 warnings.simplefilter('default')
 
-import pkg_resources
-pkg_resources.require('FormEncode')
+try:
+    try:
+        import importlib.metadata as metadata
+        try:
+            metadata.distribution("FormEncode")
+        except metadata.PackageNotFoundError as error:
+            raise ImportError from error
+    except ImportError:  # Python < 3.8
+        import pkg_resources
+        pkg_resources.require('FormEncode')
+except ImportError as error:
+    raise ImportError("Install FormEncode before running the tests") from error

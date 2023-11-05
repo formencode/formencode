@@ -68,8 +68,8 @@ def render(form, defaults=None, errors=None, use_all_keys=False,
     ``listener`` can be an object that watches fields pass; the only
     one currently is in ``htmlfill_schemabuilder.SchemaBuilder``
 
-    ``encoding`` specifies an encoding to assume when mixing str and
-    unicode text in the template.
+    ``encoding`` specifies an encoding to assume when mixing bytes and
+    str text in the template.
 
     ``prefix_error`` specifies if the HTML created by auto_error_formatter is
     put before the input control (default) or after the control.

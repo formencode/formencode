@@ -841,8 +841,6 @@ class DateValidator(FancyValidator):
                 dt_mod, value.year, value.month, value.day)
             if value_as_date < today:
                 date_formatted = now.strftime(date_format)
-                if encoding:
-                    date_formatted = date_formatted.decode(encoding)
                 raise Invalid(
                     self.message('future', state, date=date_formatted),
                     value, state)

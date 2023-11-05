@@ -2,52 +2,43 @@
 Core classes for validation.
 """
 
-from . import declarative
 import gettext
 import os
 import re
 import textwrap
 import warnings
 
-try:
-    from pkg_resources import resource_filename
-except ImportError:
-    resource_filename = None
+from . import declarative
 
 __all__ = ['NoDefault', 'Invalid', 'Validator', 'Identity',
            'FancyValidator', 'is_empty', 'is_validator']
 
 
 def get_localedir():
-    """Retrieve the location of locales.
-
-    If we're built as an egg, we need to find the resource within the egg.
-    Otherwise, we need to look for the locales on the filesystem or in the
-    system message catalog.
-
-    """
-    locale_dir = ''
-    # Check the egg first
-    if resource_filename is not None:
-        try:
-            locale_dir = resource_filename(__name__, "i18n")
-        except NotImplementedError:
-            # resource_filename doesn't work with non-egg zip files
-            pass
+    """Retrieve the location of locales."""
+    file_dir = os.path.join(os.path.dirname(__file__), 'i18n')
     if not hasattr(os, 'access'):
-        # This happens on Google App Engine
-        return os.path.join(os.path.dirname(__file__), 'i18n')
-    if os.access(locale_dir, os.R_OK | os.X_OK):
-        # If the resource is present in the egg, use it
-        return locale_dir
+        # this happens on Google App Engine
+        return file_dir
 
-    # Otherwise, search the filesystem
-    locale_dir = os.path.join(os.path.dirname(__file__), 'i18n')
-    if not os.access(locale_dir, os.R_OK | os.X_OK):
-        # Fallback on the system catalog
-        locale_dir = os.path.normpath('/usr/share/locale')
+    import importlib.resources as resources
+    # try to get it via the resource
+    pkg_name = __name__.split('.', 1)[0]
+    try:
+        resource_dir = resources.files(pkg_name) / 'i18n'
+    except AttributeError:  # Python < 3.11
+        with resources.path(pkg_name, 'i18n') as resource_dir:
+            pass
+    if os.access(resource_dir, os.R_OK | os.X_OK):
+        # if the resource is present, use it
+        return resource_dir
 
-    return locale_dir
+    # otherwise, search the filesystem
+    if os.access(file_dir, os.R_OK | os.X_OK):
+        return file_dir
+
+    # fallback on the system catalog
+    return os.path.normpath('/usr/share/locale')
 
 
 def set_stdtranslation(domain="FormEncode", languages=None,
