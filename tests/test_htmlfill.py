@@ -29,6 +29,7 @@ def collect_values():
             fn = os.path.join(data_dir, fn)
             yield fn
 
+
 @pytest.mark.parametrize('filename', list(collect_values()))
 def test_runfile(filename):
     f = open(filename)

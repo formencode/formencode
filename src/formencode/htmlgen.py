@@ -113,6 +113,7 @@ class _HTML:
                 arg = arg.encode(default_encoding)
             return arg
 
+
 html = _HTML()
 
 

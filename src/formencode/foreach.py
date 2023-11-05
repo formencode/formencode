@@ -136,6 +136,5 @@ class ForEach(CompoundValidator):
             for _n in value:
                 break
             return value
-        ## @@: Should this catch any other errors?:
-        except TypeError:
+        except TypeError:  # @@: Should this catch any other errors?
             return [value]

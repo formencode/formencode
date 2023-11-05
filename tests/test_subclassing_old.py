@@ -239,7 +239,7 @@ class TestDeprecatedCustomCompoundValidator(unittest.TestCase):
         self.assertTrue(is_validator(self.validator))
 
     def test_to_python(self):
-        with warnings.catch_warnings(record=True) as _ignore:
+        with warnings.catch_warnings(record=True):
             ccv = self.validator
             self.assertEqual(ccv.to_python('2'), 2)
             self.assertEqual(ccv.to_python('4'), 4)

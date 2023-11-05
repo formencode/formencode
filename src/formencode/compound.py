@@ -7,10 +7,8 @@ import six
 
 __all__ = ['CompoundValidator', 'Any', 'All', 'Pipe']
 
-############################################################
-## Compound Validators
-############################################################
 
+# Compound Validators
 
 def to_python(validator, value, state):
     return validator.to_python(value, state)

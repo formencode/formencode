@@ -280,7 +280,7 @@ class FillingParser(RewritingParser):
                 str1 = six.text_type(str1)
             else:
                 str1 = str(str1)
-        if type(str1) == type(str2):
+        if type(str1) is type(str2):
             return str1 == str2
         if isinstance(str1, six.text_type):
             str1 = str1.encode(self.encoding or self.default_encoding)

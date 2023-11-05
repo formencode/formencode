@@ -248,9 +248,7 @@ class Schema(FancyValidator):
             previous_full_dict = getattr(state, 'full_dict', None)
             state.full_dict = value_dict
         try:
-            __traceback_info__ = None
             for name, value in six.iteritems(value_dict):
-                __traceback_info__ = 'for_python in %s' % name
                 try:
                     unused.remove(name)
                 except ValueError:
@@ -266,8 +264,6 @@ class Schema(FancyValidator):
                         new[name] = self.fields[name].from_python(value, state)
                     except Invalid as e:
                         errors[name] = e
-
-            del __traceback_info__
 
             for name in unused:
                 validator = self.fields[name]
@@ -289,7 +285,6 @@ class Schema(FancyValidator):
                 state.key = previous_key
 
             for validator in pre:
-                __traceback_info__ = 'for_python pre_validator %s' % validator
                 new = validator.from_python(new, state)
 
             return new
@@ -334,7 +329,7 @@ class Schema(FancyValidator):
         return result
 
     def is_empty(self, value):
-        ## Generally nothing is empty for us
+        # generally nothing is empty for us
         return False
 
     def empty_value(self, value):
@@ -350,8 +345,7 @@ class Schema(FancyValidator):
             for _v in value:
                 break
             return True
-        ## @@: Should this catch any other errors?:
-        except TypeError:
+        except TypeError:  # @@: should this catch any other errors?
             return False
 
 

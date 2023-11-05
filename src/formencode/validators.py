@@ -1,5 +1,5 @@
-## FormEncode, a  Form processor
-## Copyright (C) 2003, Ian Bicking <ianb@colorstudy.com>
+# FormEncode, a  Form processor
+# Copyright (C) 2003, Ian Bicking <ianb@colorstudy.com>
 
 """
 Validator/Converters for use with FormEncode.
@@ -36,18 +36,16 @@ from .api import (FancyValidator, Identity, Invalid, NoDefault, Validator,
 assert Identity and Invalid and NoDefault  # silence unused import warnings
 
 # Dummy i18n translation function, nothing is translated here.
-# Instead this is actually done in api.message.
+# Instead, this is actually done in api.message.
 # The surrounding _('string') of the strings is only for extracting
 # the strings automatically.
 # If you run pygettext with this source comment this function out temporarily.
 _ = lambda s: s
 
 
-############################################################
-## Utility methods
-############################################################
-
+# Utility methods
 # These all deal with accepting both datetime and mxDateTime modules and types
+
 datetime_module = None
 mxDateTime_module = None
 
@@ -98,9 +96,7 @@ def datetime_isotime(module):
         return module.ISO.Time
 
 
-############################################################
-## Wrapper Validators
-############################################################
+# Wrapper Validators
 
 class ConfirmType(FancyValidator):
     """
@@ -313,9 +309,7 @@ class Constant(FancyValidator):
     _convert_from_python = _convert_to_python
 
 
-############################################################
-## Normal validators
-############################################################
+# Normal validators
 
 class MaxLength(FancyValidator):
     """
@@ -1997,19 +1991,19 @@ class DateConverter(FancyValidator):
     _date_re = dict(
         dmy=re.compile(
             r'^\s*(\d\d?)[\-\./\\](\d\d?|%s)[\-\./\\](\d\d\d?\d?)\s*$'
-                % '|'.join(_month_names), re.I),
+            % '|'.join(_month_names), re.I),
         mdy=re.compile(
             r'^\s*(\d\d?|%s)[\-\./\\](\d\d?)[\-\./\\](\d\d\d?\d?)\s*$'
-                % '|'.join(_month_names), re.I),
+            % '|'.join(_month_names), re.I),
         ymd=re.compile(
             r'^\s*(\d\d\d?\d?)[\-\./\\](\d\d?|%s)[\-\./\\](\d\d?)\s*$'
-                % '|'.join(_month_names), re.I),
+            % '|'.join(_month_names), re.I),
         my=re.compile(
             r'^\s*(\d\d?|%s)[\-\./\\](\d\d\d?\d?)\s*$'
-                % '|'.join(_month_names), re.I),
+            % '|'.join(_month_names), re.I),
         ym=re.compile(
             r'^\s*(\d\d\d?\d?)[\-\./\\](\d\d?|%s)\s*$'
-                % '|'.join(_month_names), re.I))
+            % '|'.join(_month_names), re.I))
 
     _formats = dict(d='%d', m='%m', y='%Y')
 
@@ -2333,8 +2327,6 @@ class TimeConverter(FancyValidator):
             return '%i:%02i%s' % (hour, minute, ampm)
 
 
-
-
 class ISODateTimeConverter(FancyValidator):
     """
     Converts fields which contain both date and time, in the
@@ -2373,7 +2365,6 @@ class ISODateTimeConverter(FancyValidator):
 
     def _convert_from_python(self, value, state):
         return value.isoformat("T")
-
 
 
 def PostalCode(*kw, **kwargs):
@@ -2461,6 +2452,7 @@ class StringBool(FancyValidator):  # originally from TurboGears 1
 
     def _convert_from_python(self, value, state):
         return (self.true_values if value else self.false_values)[0]
+
 
 # Should deprecate:
 StringBoolean = StringBool
@@ -2764,10 +2756,12 @@ class RequireIfMissing(FormValidator):
             raise Invalid(
                 _('You must give a value for %s') % self.required,
                 value_dict, state,
-                error_dict={self.required:
-                    Invalid(self.message('empty', state),
+                error_dict={
+                    self.required: Invalid(
+                        self.message('empty', state),
                         value_dict.get(self.required), state)})
         return value_dict
+
 
 RequireIfPresent = RequireIfMissing
 
@@ -3075,15 +3069,17 @@ class CreditCardExpires(FormValidator):
                 dt_mod, next_month_year, next_month, 1)
             assert expires_date > today
         except ValueError:
-            return {self.cc_expires_month_field:
-                        self.message('notANumber', state),
-                    self.cc_expires_year_field:
-                        self.message('notANumber', state)}
+            return {
+                self.cc_expires_month_field:
+                    self.message('notANumber', state),
+                self.cc_expires_year_field:
+                    self.message('notANumber', state)}
         except AssertionError:
-            return {self.cc_expires_month_field:
-                        self.message('invalidNumber', state),
-                    self.cc_expires_year_field:
-                        self.message('invalidNumber', state)}
+            return {
+                self.cc_expires_month_field:
+                    self.message('invalidNumber', state),
+                self.cc_expires_year_field:
+                    self.message('invalidNumber', state)}
 
 
 class CreditCardSecurityCode(FormValidator):
@@ -3150,6 +3146,7 @@ class CreditCardSecurityCode(FormValidator):
 def validators():
     """Return the names of all validators in this module."""
     return [name for name, value in six.iteritems(globals())
-        if isinstance(value, type) and issubclass(value, Validator)]
+            if isinstance(value, type) and issubclass(value, Validator)]
+
 
 __all__ = ['Invalid'] + validators()

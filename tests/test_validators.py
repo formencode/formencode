@@ -705,13 +705,14 @@ class TestIPAddressValidator(unittest.TestCase):
         validate = self.validator(leading_zeros=True).to_python
         try:
             validate('1.2.3.037')
-        except Invalid as e:
+        except Invalid:
             self.fail('IP address octets with leading zeros should be valid')
         try:
             validate('1.2.3.0377')
         except Invalid as e:
-            self.assertTrue("The octets must be within the range of 0-255"
-                " (not '377')" in unicode(e).replace("u'", "'"))
+            self.assertTrue(
+                "The octets must be within the range of 0-255 (not '377')"
+                in unicode(e).replace("u'", "'"))
         else:
             self.fail(
                 'IP address octets should not be interpreted as octal numbers')
@@ -723,8 +724,9 @@ class TestURLValidator(unittest.TestCase):
         self.validator = validators.URL()
 
     def test_cojp(self):
-        self.assertEqual(self.validator.to_python('http://domain.co.jp'),
-                         'http://domain.co.jp')
+        self.assertEqual(
+            self.validator.to_python('http://domain.co.jp'),
+            'http://domain.co.jp')
 
     def test_1char_thirdlevel(self):
         self.assertEqual(self.validator.to_python(

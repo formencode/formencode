@@ -189,7 +189,7 @@ class Declarative(six.with_metaclass(DeclarativeMeta, object)):
             else:
                 break
         args.extend('%s=%s' % (name, source.makeRepr(value))
-                     for (name, value) in six.iteritems(vals))
+                    for (name, value) in six.iteritems(vals))
         return '%s(%s)' % (self.__class__.__name__,
                            ', '.join(args))
 

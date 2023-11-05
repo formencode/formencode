@@ -1,22 +1,25 @@
-.PHONY: docs
 init:
 	pip install -e .
 	pip install -r requirements-test.txt
 
-ci:
+.PHONY: tests
+
+tests:
 	pytest
 
 flake8:
-	flake8 --ignore=E501,F401,E128,E402,E731,F821 src/formencode
+	flake8 src tests
 
 coverage:
 	pytest --cov-config .coveragerc --verbose --cov-report term --cov-report xml --cov=formencode formencode
 
 publish:
-	pip install 'twine>=1.5.0' build
+	pip install "twine>=4" build
 	python -m build
 	twine upload dist/*
 	rm -fr build dist .egg src/FormEncode.egg-info
+
+.PHONY: docs
 
 docs:
 	cd docs && make html

@@ -27,9 +27,8 @@ def parse_schema(form):
     return listener.schema()
 
 
-default_validators = dict(
-    [(name.lower(), getattr(validators, name))
-     for name in dir(validators)])
+default_validators = {
+    name.lower(): getattr(validators, name) for name in dir(validators)}
 
 
 def get_messages(cls, message):
@@ -95,7 +94,7 @@ class SchemaBuilder(object):
         if required:
             v.validators.append(
                 validators.NotEmpty(
-                messages=get_messages(validators.NotEmpty, message)))
+                    messages=get_messages(validators.NotEmpty, message)))
         else:
             v.validators[0].if_missing = False
         if add_to_end:

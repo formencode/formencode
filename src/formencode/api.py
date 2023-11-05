@@ -63,6 +63,7 @@ def set_stdtranslation(domain="FormEncode", languages=None,
     except AttributeError:  # Python 3
         _stdtrans = t.gettext
 
+
 set_stdtranslation()
 
 # Dummy i18n translation function, nothing is translated here.
@@ -195,9 +196,7 @@ class Invalid(Exception):
         return self.msg
 
 
-############################################################
-## Base Classes
-############################################################
+# Base Classes
 
 class Validator(declarative.Declarative):
 
@@ -239,8 +238,9 @@ class Validator(declarative.Declarative):
     def from_python(self, value, state=None):
         return value
 
-    _message_vars_decode = None
-    if six.text_type is not str:
+    if six.text_type is str:
+        _message_vars_decode = None
+    else:
         def _message_vars_decode(self, message_vars):
             """
             Under python2, a form value in web frameworks may be encoded as
@@ -258,7 +258,7 @@ class Validator(declarative.Declarative):
                     if isinstance(v, six.text_type):
                         try:
                             v2 = v.encode('utf-8')
-                        except Exception as e:
+                        except Exception:
                             v2 = v
                         if v == v2:
                             message_vars[k] = v2
@@ -354,6 +354,7 @@ class _Identity(Validator):
 
     def __repr__(self):
         return 'validators.Identity'
+
 
 Identity = _Identity()
 
@@ -481,8 +482,7 @@ class FancyValidator(Validator):
                         stacklevel=cls._inheritance_level + 2)
                     setattr(cls, new, new_attrs[old])
             elif new in new_attrs:
-                    setattr(cls, old, deprecated(old=old, new=new)(
-                        new_attrs[new]))
+                setattr(cls, old, deprecated(old=old, new=new)(new_attrs[new]))
 
     def to_python(self, value, state=None):
         try:

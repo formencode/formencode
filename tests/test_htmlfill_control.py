@@ -94,6 +94,7 @@ def test_error_attr_ignore():
     rendered_html = htmlfill.render(html, errors={"foo": "bang"},
                                     force_defaults=True,
                                     data_formencode_form="b",)
+    assert expected_html == rendered_html
 
 
 def test_error_attr_form():

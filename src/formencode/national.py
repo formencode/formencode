@@ -24,9 +24,7 @@ else:
     no_country = ('Please easy_install pycountry or validators handling'
                   ' country names and/or languages will not work.')
 
-############################################################
-## country lists and functions
-############################################################
+# country lists and functions
 
 country_additions = [
     ('BY', _('Belarus')),
@@ -141,9 +139,7 @@ elif pycountry:
             return _l(pycountry.languages.get(alpha_2=code).name)
 
 
-############################################################
-## country, state and postal code validators
-############################################################
+# country, state and postal code validators
 
 class DelimitedDigitsPostalCode(Regex):
     """
@@ -193,8 +189,7 @@ class DelimitedDigitsPostalCode(Regex):
     def assembly_formatstring(self, partition_lengths, delimiter):
         if len(partition_lengths) == 1:
             return _('%d digits') % partition_lengths[0]
-        else:
-            return delimiter.join('n' * l for l in partition_lengths)
+        return delimiter.join('n' * n for n in partition_lengths)
 
     def assembly_grouping(self, partition_lengths, delimiter):
         digit_groups = ['%s' * length for length in partition_lengths]
@@ -404,8 +399,8 @@ class UKPostalCode(Regex):
                 value, state)
         value = match.group(1).upper()
         if not value.startswith('BFPO'):
-          value = value.replace(' ', '')
-          value = '%s %s' % (value[:-3], value[-3:])
+            value = ''.join(value.split())
+            value = '%s %s' % (value[:-3], value[-3:])
         return value
 
 
@@ -616,9 +611,7 @@ class USStateProvince(FancyValidator):
         return str(value).strip().upper()
 
 
-############################################################
-## phone number validators
-############################################################
+# phone number validators
 
 class USPhoneNumber(FancyValidator):
     """
@@ -801,9 +794,7 @@ class InternationalPhoneNumber(FancyValidator):
         return value
 
 
-############################################################
-## language validators
-############################################################
+# language validators
 
 class LanguageValidator(FancyValidator):
     """
@@ -870,5 +861,6 @@ def validators():
     """Return the names of all validators in this module."""
     return [name for name, value in list(globals().items())
         if isinstance(value, type) and issubclass(value, FancyValidator)]
+
 
 __all__ = ['Invalid'] + validators()

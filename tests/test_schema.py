@@ -176,8 +176,9 @@ class ChainedTest(Schema):
     b = validators.String()
     b_confirm = validators.String()
 
-    chained_validators = [validators.FieldsMatch('a', 'a_confirm'),
-                            validators.FieldsMatch('b', 'b_confirm')]
+    chained_validators = [
+        validators.FieldsMatch('a', 'a_confirm'),
+        validators.FieldsMatch('b', 'b_confirm')]
 
 
 def test_multiple_chained_validators_errors():

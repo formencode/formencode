@@ -2,7 +2,7 @@
 Custom exceptions and warnings.
 """
 
-__all__ = ['FERunTimeWarning']
+__all__ = ['FERuntimeWarning']
 
 
 class FERuntimeWarning(RuntimeWarning):

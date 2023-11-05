@@ -53,10 +53,10 @@ class TestEmail(unittest.TestCase):
             ('foo{bar}@example.com', 'foo{bar}@example.com'),
             # examples from RFC 3696
             #   punting on the difficult and extremely uncommon ones
-            #('"Abc\@def"@example.com', '"Abc\@def"@example.com'),
-            #('"Fred Bloggs"@example.com', '"Fred Bloggs"@example.com'),
-            #('"Joe\\Blow"@example.com', '"Joe\\Blow"@example.com'),
-            #('"Abc@def"@example.com', '"Abc@def"@example.com'),
+            # ('"Abc\@def"@example.com', '"Abc\@def"@example.com'),
+            # ('"Fred Bloggs"@example.com', '"Fred Bloggs"@example.com'),
+            # ('"Joe\\Blow"@example.com', '"Joe\\Blow"@example.com'),
+            # ('"Abc@def"@example.com', '"Abc@def"@example.com'),
             ('customer/department=shipping@example.com',
                 'customer/department=shipping@example.com'),
             ('$A12345@example.com', '$A12345@example.com'),
