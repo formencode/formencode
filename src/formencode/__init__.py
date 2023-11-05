@@ -1,12 +1,15 @@
+"""The formencode package"""
+
 from __future__ import absolute_import
-# formencode package
+
 try:
     from importlib.metadata import version, PackageNotFoundError
-except ImportError:
+except ImportError:  # Python < 3.8
     from pkg_resources import get_distribution
     from pkg_resources import DistributionNotFound as PackageNotFoundError
-    def version(pkg):
-        return get_distribution(__name__).version
+
+    def version(distribution_name):
+        return get_distribution(distribution_name).version
 
 from formencode.api import (
     NoDefault, Invalid, Validator, Identity,
@@ -20,6 +23,5 @@ from formencode.variabledecode import NestedVariables
 
 try:
     __version__ = version(__name__)
-except DistributionNotFound:
-     # package is not installed
+except DistributionNotFound:  # package is not installed
     __version__ = 'local-test'
