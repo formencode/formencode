@@ -2,6 +2,7 @@
 init:
 	pip install -e .
 	pip install -r requirements-test.txt
+
 ci:
 	pytest
 
