@@ -29,7 +29,7 @@ Documentation
 -------------
 
 The latest documentation is available at
-`www.formencode.org <https://www.formencode.org/>`.
+`www.formencode.org <https://www.formencode.org/>`_.
 
 
 Testing
@@ -42,5 +42,5 @@ Use ``tox`` to run the test suite for all supported Python versions.
 Changes
 -------
 
-See the `What's new <https://www.formencode.org/en/latest/#what-s-new>`_
+See the `What's New <https://www.formencode.org/en/latest/#what-s-new>`_
 section of the documentation.
