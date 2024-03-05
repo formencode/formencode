@@ -20,7 +20,7 @@ Validation (which encompasses conversion as well) is the core function
 of FormEncode.  FormEncode really tries to *encode* the values from
 one source into another (hence the name).  So a Python structure can
 be encoded in a series of HTML fields (a flat dictionary of strings).
-A HTML form submission can in turn be turned into a the original
+A HTML form submission can in turn be turned into a 
 Python structure.
 
 Using Validation
