@@ -18,7 +18,7 @@ mailing list formencode-cvs@lists.sf.net:
 
 The repository can be checked out with::
 
-    git clone git://github.com/formencode/formencode.git
+    git clone https://github.com/formencode/formencode.git
 
 Note: the SourceForge CVS repository and svn.colorstudy.com Subversion
 repositories and bitbucket Mercurial repositories are out of date and no longer used.

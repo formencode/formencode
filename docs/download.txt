@@ -6,7 +6,7 @@ Cheese Shop Page <http://cheeseshop.python.org/pypi/FormEncode>`_.
 
 The repository can be checked out with::
 
-    git clone git://github.com/formencode/formencode.git
+    git clone https://github.com/formencode/formencode.git
 
 Or you can download the repository as a zip file from here::
 
