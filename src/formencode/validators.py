@@ -1397,7 +1397,7 @@ class URL(FancyValidator):
         Traceback (most recent call last):
             ...
         Invalid: You must start your URL with http://, https://, etc
-        >>> u.to_python('http://www.formencode.org/does/not/exist/page.html')
+        >>> u.to_python('https://httpbin.org/status/404')
         Traceback (most recent call last):
             ...
         Invalid: The server responded that the page could not be found
@@ -1660,7 +1660,7 @@ class XRI(FancyValidator):
         if value.startswith('xri://'):
             value = value[6:]
 
-        if not value[0] in ('@', '=') and not (
+        if value[0] not in ('@', '=') and not (
                 self.xri_type == 'i-number' and value[0] == '!'):
             raise Invalid(self.message('noType', state), value, state)
 
