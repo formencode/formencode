@@ -1773,7 +1773,19 @@ class FieldStorageUploadConverter(FancyValidator):
     This doesn't do any conversion, but it can detect empty upload
     fields (which appear like normal fields, but have no filename when
     no upload was given).
+
+    Requires the legacy-cgi package on Python 3.13 and later.
     """
+
+    def __init__(self, *args, **kw):
+        if cgi is None:
+            warnings.warn(
+                "legacy-cgi <https://pypi.org/project/legacy-cgi/> is not"
+                "  installed on your system (or the cgi package cannot be"
+                " found). I cannot convert FieldStorage")
+            raise ImportError("no module named cgi")
+        super().__init__(*args, **kw)
+
     def _convert_to_python(self, value, state=None):
         if cgi and isinstance(value, cgi.FieldStorage):
             if getattr(value, 'filename', None):
@@ -1819,6 +1831,9 @@ class FileUploadKeeper(FancyValidator):
 
     Note that big file uploads mean big hidden fields, and lots of
     bytes passed back and forth in the case of an error.
+
+    Note: requires the legacy-cgi package on Python 3.13 and later to be able to handle
+    ``cgi.FieldStorage`` values.
     """
 
     upload_key = 'upload'
