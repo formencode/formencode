@@ -1,8 +1,23 @@
-What's New In FormEncode 2.0
+What's New In FormEncode 2.x
 ============================
 
-This article explains the latest changes in  `FormEncode` version 2.0
+This article explains the latest changes in  `FormEncode` version 2.x
 compared to its predecessor,  `FormEncode` version 1.3.
+
+2.1.1
+-----
+
+ - Add support for 3.13
+ - Don't require `legacy-cgi` to be installed on 3.13 and later
+   (`#176 <https://github.com/formencode/formencode/pull/176>`_)
+ - Don't permit `FieldStorageUploadConverter` to be instantiated without
+   having `legacy-cgi` installed since it does not make sense
+ - Releases are now automated through GitHub Actions
+   (`#184 <https://github.com/formencode/formencode/pull/184>`_)
+
+
+Note: This is the last version that will support Python 3.7 and 3.8 as
+those are now out of support.
 
 2.1.0
 -----
@@ -25,8 +40,8 @@ compared to its predecessor,  `FormEncode` version 1.3.
 2.0.0
 -----
 
- -  `FormEncode` can now run on Python 3.6 and higher without needing to run 2to3 first.
- -  `FormEncode` 2.0 is no longer compatible with Python 2.6 and 3.2 to 3.5.
+ - `FormEncode` can now run on Python 3.6 and higher without needing to run 2to3 first.
+ - `FormEncode` 2.0 is no longer compatible with Python 2.6 and 3.2 to 3.5.
    For compatibility with older Python versions, please use versions < 1.3.
  - This will be the last major version to support Python 2.
  - Add strict flag to ``USPostalCode`` to raise error on postal codes that has too
