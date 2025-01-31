@@ -13,14 +13,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
         os: [ubuntu-latest, macOS-latest, windows-latest]
         include:
           # pypy3 on Windows currently fails trying to
           # run dnspython tests. Moving pypy3 to only test linux.
-          - python-version: 'pypy-3.9'
+          - python-version: 'pypy3.10'
             os: ubuntu-latest
-          - python-version: 'pypy-3.10'
+          - python-version: '3.7'
+            os: ubuntu-22.04
+          - python-version: '3.7'
+            os: macos-13
+        exclude:
+          - python-version: '3.7'
+            os: macOS-latest
+          - python-version: '3.7'
             os: ubuntu-latest
 
     steps:

@@ -13,12 +13,6 @@ flake8:
 coverage:
 	pytest --cov-config .coveragerc --verbose --cov-report term --cov-report xml --cov=formencode formencode
 
-publish:
-	pip install "twine>=4" build
-	python -m build
-	twine upload dist/*
-	rm -fr build dist .egg src/FormEncode.egg-info
-
 .PHONY: docs
 
 docs:
