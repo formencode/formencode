@@ -1,0 +1,569 @@
+# Georgian translation for FormEncode.
+# Copyright (C) 2025 FormEncode authors
+# This file is distributed under the same license as the FormEncode project.
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: FormEncode 1.2.4\n"
+"Report-Msgid-Bugs-To: formencode-discuss@lists.sf.net\n"
+"POT-Creation-Date: 2012-09-14 03:22+0400\n"
+"PO-Revision-Date: 2025-01-25 04:22+0100\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+"X-Generator: Poedit 3.5\n"
+
+#: formencode/api.py:401 formencode/validators.py:432
+msgid "Please enter a value"
+msgstr "შეიყვანეთ მნიშვნელობა"
+
+#: formencode/api.py:402
+#, python-format
+msgid "The input must be a string (not a %(type)s: %(value)r)"
+msgstr "შეყვანის ტიპი სტრიქონი უნდა იყოს (და არა %(type)s: %(value)r)"
+
+#: formencode/api.py:403
+msgid "The input must be a string (not None)"
+msgstr "შეყვანის ტიპი სტრიქონი უნდა იყოს (და არა არაფერი)"
+
+#: formencode/national.py:31
+msgid "Belarus"
+msgstr "ბელარუსი"
+
+#: formencode/national.py:32
+msgid "Montenegro"
+msgstr "მონტენეგრო"
+
+#: formencode/national.py:33
+msgid "Tasmania"
+msgstr "ტასმანია"
+
+#: formencode/national.py:39
+msgid "Britain"
+msgstr "ბრიტანეთი"
+
+#: formencode/national.py:40
+msgid "Great Britain"
+msgstr "დიდი ბრიტანეთი"
+
+#: formencode/national.py:41
+msgid "Cote de Ivoire"
+msgstr "კოტ-დ’ივუარი"
+
+#: formencode/national.py:146
+#, python-format
+msgid "%d digits"
+msgstr "%d ციფრი"
+
+#: formencode/national.py:167
+#, python-format
+msgid "Please enter a zip code (%(format)s)"
+msgstr "შეიყვანეთ საფოსტო კოდი (%(format)s)"
+
+#: formencode/national.py:231 formencode/national.py:265
+#, python-format
+msgid "Please enter a zip code (%s)"
+msgstr "შეიყვანეთ საფოსტო კოდი (%s)"
+
+#: formencode/national.py:231
+msgid "LnnnnLLL"
+msgstr "LnnnnLLL"
+
+#: formencode/national.py:265
+msgid "LnL nLn"
+msgstr "LnL nLn"
+
+#: formencode/national.py:299
+msgid "Please enter a valid postal code (for format see BS 7666)"
+msgstr "შეიყვანეთ სწორი საფოსტო კოდი (ფორმატისთვის იხილეთ BS 7666)"
+
+#: formencode/national.py:340
+msgid "That country is not listed in ISO 3166"
+msgstr "მითითებული ქვეყანა არაა სიაში ISO 3166"
+
+#: formencode/national.py:395
+msgid "Given postal code does not match the country's format."
+msgstr "მითითებული საფოსტო კოდი ქვეყნის ფორმატს არ ემთხვევა."
+
+#: formencode/national.py:486
+msgid "Please enter a state code"
+msgstr "შეიყვანეთ ქვეყნის კოდი"
+
+#: formencode/national.py:487
+msgid "Please enter a state code with TWO letters"
+msgstr "შეიყვანეთ ქვეყნის კოდი ორი ასოთი"
+
+#: formencode/national.py:488
+msgid "That is not a valid state code"
+msgstr "ეს ქვეყნის კოდი არასწორია"
+
+#: formencode/national.py:541
+msgid ""
+"Please enter a number, with area code, in the form ###-###-####, optionally "
+"with \"ext.####\""
+msgstr ""
+"შეიყვანეთ ნომერი რეგიონის კოდით, ფორმით ###-###-####, ასევე შეგიძლიათ "
+"დაამატოთ 'ext.####'"
+
+#: formencode/national.py:648
+msgid "Please enter a number, with area code, in the form +##-###-#######."
+msgstr "შეიყვანეთ ნომერი რეგიონის კოდით, ფორმით +##-###-#######."
+
+#: formencode/national.py:727
+msgid "That language is not listed in ISO 639"
+msgstr "ეს ენა არაა სიაში ISO 639"
+
+#: formencode/schema.py:68
+#, python-format
+msgid "The input field %(name)s was not expected."
+msgstr "შეყვანის ველი %(name)s მოულოდნელია."
+
+#: formencode/schema.py:69
+msgid "Missing value"
+msgstr "აკლია მნიშვნელობა"
+
+#: formencode/schema.py:70
+#, python-format
+msgid "The input must be dict-like (not a %(type)s: %(value)r)"
+msgstr "შეყვანა ლექსიკონის მსგავსი უნდა იყოს (და არა %(type)s: %(value)r)"
+
+#: formencode/schema.py:72
+msgid "Please provide only one value"
+msgstr "შეიყვანეთ, მხოლოდ, ერთი მნიშვნელობა"
+
+#: formencode/validators.py:150
+#, python-format
+msgid "%(object)r is not a subclass of %(subclass)s"
+msgstr "%(object)r არ წარმოადგენს %(subclass)s-ის ქვეკლასს"
+
+#: formencode/validators.py:151
+#, python-format
+msgid "%(object)r is not a subclass of one of the types %(subclassList)s"
+msgstr "%(object)r არ წარმოადგენს %(subclassList)s-ის ტიპების ქვეკლასს"
+
+#: formencode/validators.py:152
+#, python-format
+msgid "%(object)r must be one of the types %(typeList)s"
+msgstr "%(object)r %(typeList)s-ის ერთ-ერთი ტიპის უნდა იყოს"
+
+#: formencode/validators.py:153
+#, python-format
+msgid "%(object)r must be of the type %(type)s"
+msgstr "%(object)r %(type)s-ის ტიპის უნდა იყოს"
+
+#: formencode/validators.py:344
+#, python-format
+msgid "Enter a value less than %(maxLength)i characters long"
+msgstr "შეიყვანეთ მნიშვნელობა, რომლის სიგრძეც %(maxLength)i სიმბოლოზე ნაკლებია"
+
+#: formencode/validators.py:345 formencode/validators.py:399
+msgid "Invalid value (value with length expected)"
+msgstr "არასწორი მნიშვნელობა (მოველოდი სიგრძის მნიშვნელობას)"
+
+#: formencode/validators.py:398
+#, python-format
+msgid "Enter a value at least %(minLength)i characters long"
+msgstr ""
+"შეიყვანეთ მნიშვნელობა, რომელიც, ყველაზე ცოტა, %(minLength)i სიმბოლოს შეიცავს"
+
+#: formencode/validators.py:455
+msgid "You cannot enter a value here"
+msgstr "აქ მნიშვნელობას ვერ შეიყვანთ"
+
+#: formencode/validators.py:504
+msgid "The input is not valid"
+msgstr "შეყვანა არასწორია"
+
+#: formencode/validators.py:557
+msgid "Enter only letters, numbers, or _ (underscore)"
+msgstr "შეიყვანეთ, მხოლოდ, ასოები, ციფრები, ან _ (ქვედა ტირე)"
+
+#: formencode/validators.py:595
+msgid "Invalid value"
+msgstr "არასწორი მნიშვნელობა"
+
+#: formencode/validators.py:596
+#, python-format
+msgid "Value must be one of: %(items)s (not %(value)r)"
+msgstr "მნიშვნელობა უნდა იყოს ერთ-ერთი: %(items)s (და არა %(value)r)"
+
+#: formencode/validators.py:657
+msgid "Choose something"
+msgstr "აირჩიეთ რამე"
+
+#: formencode/validators.py:658
+#, python-format
+msgid "Enter a value from: %(items)s"
+msgstr "შეიყვანეთ მნიშვნელობა ელემენტიდან: %(items)s"
+
+#: formencode/validators.py:659
+msgid "That value is not known"
+msgstr "ეს მნიშვნელობა უცნობია"
+
+#: formencode/validators.py:660
+#, python-format
+msgid ""
+"Nothing in my dictionary goes by the value %(value)s.  Choose one of: "
+"%(items)s"
+msgstr ""
+"ჩემს ლექსიკონში არაფერი ემთხვევა მნიშვნელობას %(value)s.  აირჩიეთ ერთ-ერთი: "
+"%(items)s"
+
+#: formencode/validators.py:724
+msgid "Must be an integer index"
+msgstr "უნდა იყოს მთელი რიცხვი ინდექსი"
+
+#: formencode/validators.py:725
+msgid "Index out of range"
+msgstr "ინდექსი დიაპაზონს გარეთაა"
+
+#: formencode/validators.py:726
+#, python-format
+msgid "Item %(value)s was not found in the list"
+msgstr "ელემენტი %(value)s სიაში აღმოჩენილი არაა"
+
+#: formencode/validators.py:796
+#, python-format
+msgid "Date must be after %(date)s"
+msgstr "თარიღი %(date)s-ის შემდეგ უნდა იყოს"
+
+#: formencode/validators.py:797
+#, python-format
+msgid "Date must be before %(date)s"
+msgstr "თარიღი %(date)s-მდე უნდა იყოს"
+
+#: formencode/validators.py:799
+#, python-format
+msgid "%%A, %%d %%B %%Y"
+msgstr "%%A, %%d %%B %%Y"
+
+#: formencode/validators.py:800
+msgid "The date must be sometime in the future"
+msgstr "თარიღი მომავალში უნდა იყოს"
+
+#: formencode/validators.py:901
+#, python-format
+msgid "Please enter a number that is %(min)s or greater"
+msgstr "შეიყვანეთ რიცხვი, რომელიც %(min)s ან მეტია"
+
+#: formencode/validators.py:902
+#, python-format
+msgid "Please enter a number that is %(max)s or smaller"
+msgstr "შეიყვანეთ რიცხვი, რომელიც %(max)s ან ნაკლებია"
+
+#: formencode/validators.py:939
+msgid "Please enter an integer value"
+msgstr "შეიყვანეთ მთელი რიცხვი"
+
+#: formencode/validators.py:975
+msgid "Please enter a number"
+msgstr "შეიყვანეთ რიცხვი"
+
+#: formencode/validators.py:1036
+#, python-format
+msgid "Enter a value not more than %(max)i characters long"
+msgstr "შეიყვანეთ მნიშვნელობა, რომელიც მაქს. %(max)i სიმბოლოს შეიცავს"
+
+#: formencode/validators.py:1037
+#, python-format
+msgid "Enter a value %(min)i characters long or more"
+msgstr "შეიყვანეთ მნიშვნელობა, რომელიც, სულ ცოტა, %(min)i სიმბოლოს შეიცავს"
+
+#: formencode/validators.py:1119
+msgid "Invalid data or incorrect encoding"
+msgstr "არასწორი მონაცემები ან არასწორი კოდირება"
+
+#: formencode/validators.py:1290
+msgid "Please enter an email address"
+msgstr "შეიყვანეთ ელფოსტის მისამართი"
+
+#: formencode/validators.py:1291
+msgid "An email address must contain a single @"
+msgstr "ელფოსტის მისამართი ერთ @-ს უნდა შეიცავდეს"
+
+#: formencode/validators.py:1292
+#, python-format
+msgid ""
+"The username portion of the email address is invalid (the portion before the "
+"@: %(username)s)"
+msgstr ""
+"ელფოსტის მისამართის მომხმარებლის სახელის ნაწილი არასწორია (ნაწილი @-მდე: "
+"%(username)s)"
+
+#: formencode/validators.py:1294 formencode/validators.py:1457
+#, python-format
+msgid "An error occured when trying to connect to the server: %(error)s"
+msgstr "შეცდომა სერვერთან მიერთების მცდელობისას: %(error)s"
+
+#: formencode/validators.py:1296
+#, python-format
+msgid ""
+"The domain portion of the email address is invalid (the portion after the @: "
+"%(domain)s)"
+msgstr ""
+"ელფოსტის მისამართის დომენის ნაწილი არასწორია (ნაწილი @-ის შემდეგ: %(domain)s)"
+
+#: formencode/validators.py:1298
+#, python-format
+msgid ""
+"The domain of the email address does not exist (the portion after the @: "
+"%(domain)s)"
+msgstr ""
+"ელფოსტის მისამართის დომენის ნაწილი არ არსებობს (ნაწილი @-ის შემდეგ: "
+"%(domain)s)"
+
+#: formencode/validators.py:1453
+msgid "You must start your URL with http://, https://, etc"
+msgstr "ბმული http://, https:// და ა.შ. პრეფიქსით უნდა იწყებოდეს"
+
+#: formencode/validators.py:1454
+msgid "That is not a valid URL"
+msgstr "ეს არასწორი ბმულია"
+
+#: formencode/validators.py:1455
+#, python-format
+msgid "An error occurred when trying to access the URL: %(error)s"
+msgstr "შეცდომა ბმულთან წვდომის მცდელობისას: %(error)s"
+
+#: formencode/validators.py:1459
+msgid "The server responded that the page could not be found"
+msgstr "სერვერმა დააბრუნა პასუხი, რომ გვერდი აღმოჩენილი არაა"
+
+#: formencode/validators.py:1460
+#, python-format
+msgid "The server responded with a bad status code (%(status)s)"
+msgstr "სერვერმა ცუდი სტატუსის კოდი დააბრუნა (%(status)s)"
+
+#: formencode/validators.py:1461
+#, python-format
+msgid "You must provide a full domain name (like %(domain)s.com)"
+msgstr "უნდა შეიყვანოთ სრული დომენის სახელი (მაგ: %(domain)s.com)"
+
+#: formencode/validators.py:1602
+msgid ""
+"The type of i-name is not defined; it may be either individual or "
+"organizational"
+msgstr ""
+"i-name-ის ტიპი აღწერილი არაა. ის, შეიძლება, იყოს ინდივიდუალური ან "
+"ორგანიზაციის"
+
+#: formencode/validators.py:1604
+msgid "Dots and dashes may not be repeated consecutively"
+msgstr "წერტილების და ტირეების თანმიმდევრულად გამეორება შეუძლებელია"
+
+#: formencode/validators.py:1605
+#, python-format
+msgid "\"%(iname)s\" is an invalid i-name"
+msgstr "\"%(iname)s\" არასწორი i-name-ია"
+
+#: formencode/validators.py:1606
+msgid "i-names may not start with numbers nor punctuation marks"
+msgstr "i-name არ შეიძლება, პუნქტუაციის ნიშნებით, ან რიცხვით იწყებოდეს"
+
+#: formencode/validators.py:1608
+#, python-format
+msgid "\"%(inumber)s\" is an invalid i-number"
+msgstr "\"%(inumber)s\" არასწორი i-number-ა"
+
+#: formencode/validators.py:1609
+#, python-format
+msgid "The XRI must be a string (not a %(type)s: %(value)r)"
+msgstr "XRI სტრიქონი უნდა იყოს (და არა %(type)s: %(value)r)"
+
+#: formencode/validators.py:1610
+#, python-format
+msgid "\"%(xri_type)s\" is not a valid type of XRI"
+msgstr "\"%(xri_type)s\" XRI-ის არასწორი ტიპია"
+
+#: formencode/validators.py:1709
+#, python-format
+msgid "\"%(id)s\" is not a valid OpenId (it is neither an URL nor an XRI)"
+msgstr "\"%(id)s\" სწორი OpenId არაა (ის არც ბმულია, არც XRI)"
+
+#: formencode/validators.py:1941 formencode/validators.py:1949
+#, python-format
+msgid "Please enter the date in the form %(format)s"
+msgstr "შეიყვანეთ თარიღი ფორმით %(format)s"
+
+#: formencode/validators.py:1942
+msgid "Please enter a month from 1 to 12"
+msgstr "შეიყვანეთ თვე 1-12"
+
+#: formencode/validators.py:1943
+msgid "Please enter a valid day"
+msgstr "შეიყვანეთ სწორი დღე"
+
+#: formencode/validators.py:1944
+#, python-format
+msgid "That month only has %(days)i days"
+msgstr "იმ თვეს, მხოლოდ, %(days)i დღე აქვს"
+
+#: formencode/validators.py:1945
+#, python-format
+msgid "That is not a valid day (%(exception)s)"
+msgstr "ეს არასწორი დღეა (%(exception)s)"
+
+#: formencode/validators.py:1946
+#, python-format
+msgid "Unknown month name: %(month)s"
+msgstr "უცნობი თვის სახელი: %(month)s"
+
+#: formencode/validators.py:1947
+msgid "Please enter a number for the year"
+msgstr "შეიყვანეთ რიცხვი წლისთვის"
+
+#: formencode/validators.py:1948
+msgid "Please enter a four-digit year after 1899"
+msgstr "შეიყვანეთ ოთხციფრიანი წელი 1899-ის შემდეგ"
+
+#: formencode/validators.py:2131
+msgid "You must indicate AM or PM"
+msgstr "უნდა მიუთითოთ, AM, თუ PM"
+
+#: formencode/validators.py:2132
+msgid "There are too many :'s"
+msgstr "გამოყენებულია მეტისმეტად ბევრი ':'"
+
+#: formencode/validators.py:2133
+msgid "You may not enter seconds"
+msgstr "წამები არ უნდა შეიყვანოთ"
+
+#: formencode/validators.py:2134
+msgid "You must enter seconds"
+msgstr "წამები უნდა შეიყვანოთ"
+
+#: formencode/validators.py:2135
+msgid "You must enter minutes (after a :)"
+msgstr "წუთები უნდა შეიყვანოთ (:-ის შემდეგ)"
+
+#: formencode/validators.py:2136
+#, python-format
+msgid "The %(part)s value you gave is not a number: %(number)r"
+msgstr "%(part)s-ის მნიშვნელობა, რომელიც შეიყვანეთ, რიცხვი არაა: %(number)r"
+
+#: formencode/validators.py:2137
+#, python-format
+msgid "You must enter an hour in the range %(range)s"
+msgstr "უნდა შეიყვანოთ საათი შუალედიდან %(range)s"
+
+#: formencode/validators.py:2138
+msgid "You must enter a minute in the range 0-59"
+msgstr "უნდა შეიყვანოთ წუთი შუალედიდან 0-59"
+
+#: formencode/validators.py:2139
+msgid "You must enter a second in the range 0-59"
+msgstr "უნდა შეიყვანოთ წამი შუალედიდან 0-59"
+
+#: formencode/validators.py:2285
+#, python-format
+msgid "The name %(name)s is missing"
+msgstr "სახელი %(name)s აკლია"
+
+#: formencode/validators.py:2328
+#, python-format
+msgid "Value should be %(true)r or %(false)r"
+msgstr "მნიშვნელობა უნდა იყოს %(true)r, ან %(false)r"
+
+#: formencode/validators.py:2363
+msgid "Value does not contain a signature"
+msgstr "მნიშვნელობა ხელმოწერას არ შეიცავს"
+
+#: formencode/validators.py:2364
+msgid "Signature is not correct"
+msgstr "ხელმოწერა არასწორია"
+
+#: formencode/validators.py:2439
+msgid "Please enter a valid IP address (a.b.c.d)"
+msgstr "შეიყვანეთ სწორი IP მისამართი (a.b.c.d)"
+
+#: formencode/validators.py:2440
+msgid "The octets must not have leading zeros"
+msgstr "ოქტეტებს წინ ნულები მიწერილი არ უნდა ჰქონდეთ"
+
+#: formencode/validators.py:2441
+#, python-format
+msgid "The octets must be within the range of 0-255 (not %(octet)r)"
+msgstr "ოქტეტები უნდა იყოს შუალედში 0-255 (და არა %(octet)r)"
+
+#: formencode/validators.py:2496
+msgid "Please enter a valid IP address (a.b.c.d) or IP network (a.b.c.d/e)"
+msgstr "შეიყვანეთ სწორი IP მისამართი (a.b.c.d.) ან IP ქსელი (a.b.c.d/e)"
+
+#: formencode/validators.py:2498
+#, python-format
+msgid "The network size (bits) must be within the range of 8-32 (not %(bits)r)"
+msgstr "ქსელის ზომა (ბიტები) უნდა იყოს შუალედიდან 8-32 (და არა %(bits)r)"
+
+#: formencode/validators.py:2547
+#, python-format
+msgid ""
+"A MAC address must contain 12 digits and A-F; the value you gave has "
+"%(length)s characters"
+msgstr ""
+"MAC მისამართი უნდა შეიცავდეს 12 ციფრს და ასოს შუალედიდან A-F. თქვენს "
+"შეყვანილ მნიშვნელობაში %(length)s სიმბოლოა"
+
+#: formencode/validators.py:2549
+#, python-format
+msgid ""
+"MAC addresses may only contain 0-9 and A-F (and optionally :), not %(char)r"
+msgstr ""
+"MAC მისამართი, მხოლოდ, 0-9 და A-F (და არასავალდებულო :) სიმბოლოებს შეიძლება, "
+"შეიცავდეს, მაგრამ არა სიმბოლოს %(char)r"
+
+#: formencode/validators.py:2657
+#, python-format
+msgid "You must give a value for %s"
+msgstr "%s-ის მნიშვნელობის შეყვანა აუცილებელია"
+
+#: formencode/validators.py:2691
+#, python-format
+msgid "Fields do not match (should be %(match)s)"
+msgstr "ველები არ ემთხვევა (უნდა იყოს %(match)s)"
+
+#: formencode/validators.py:2692
+msgid "Fields do not match"
+msgstr "ველები არ ემთხვევა"
+
+#: formencode/validators.py:2693
+msgid "Fields should be a dictionary"
+msgstr "ველები უნდა იყოს ლექსიკონი"
+
+#: formencode/validators.py:2769
+msgid "Please enter only the number, no other characters"
+msgstr "შეიყვანეთ, მხოლოდ, რიცხვი და არა სხვა სიმბოლოები"
+
+#: formencode/validators.py:2770
+msgid "You did not enter a valid number of digits"
+msgstr "თქვენ არ შეიყვანეთ ციფრების სწორი რაოდენობა"
+
+#: formencode/validators.py:2771
+msgid "That number is not valid"
+msgstr "ის რიცხვი არასწორია"
+
+#: formencode/validators.py:2772
+#, python-format
+msgid "The field %(key)s is missing"
+msgstr "ველი %(key)s აღმოჩენილი არაა"
+
+#: formencode/validators.py:2888
+msgid "Please enter numbers only for month and year"
+msgstr "შეიყვანეთ რიცხვები, მხოლოდ, თვისთვის და წლისთვის"
+
+#: formencode/validators.py:2889
+msgid "Invalid Expiration Date"
+msgstr "არასწორი ვადა"
+
+#: formencode/validators.py:2964
+msgid "Please enter numbers only for credit card security code"
+msgstr "შეიყვანეთ რიცხვები, მხოლოდ, საკრედიტო ბარათის უსაფრთხოების კოდისთვის"
+
+#: formencode/validators.py:2965
+msgid "Invalid credit card security code length"
+msgstr "არასწორი საკრედიტო ბარათის უსაფრთხოების კოდის სიგრძე"
